@@ -37,9 +37,17 @@ public class RandomizerByDistribution<T> {
         public String toString() {
             return "Share(" + entity + ":" + share + ")";
         }
+
+        public static <T> float calcSum(List<Share<T>> distribution) {
+            float sum = 0;
+            for(Share<T> share : distribution)
+                sum += share.share;
+            return sum;
+        }
     }
 
     final List<Share<T>> referenceDistribution;
+    final float shareSummary;
     Random rnd = new Random(System.currentTimeMillis());
 
     Comparator<Share<T>> BIGGER_GOES_FIRST = new Comparator<Share<T>>() {
@@ -53,10 +61,12 @@ public class RandomizerByDistribution<T> {
     public RandomizerByDistribution(List<Share<T>> referenceDistribution) {
         this.referenceDistribution = referenceDistribution;
         sort(this.referenceDistribution, BIGGER_GOES_FIRST);
+        this.shareSummary = Share.calcSum(this.referenceDistribution);
     }
 
     public T next() {
-        final float srch = rnd.nextFloat();
+        float srch = nextFloat();
+
         float left = 0F;
         for(Share<T> sh : referenceDistribution) {
             float right = left + sh.share;
@@ -65,5 +75,13 @@ public class RandomizerByDistribution<T> {
             left += sh.share;
         }
         return referenceDistribution.get( referenceDistribution.size() - 1 ).entity;
+    }
+
+    /**
+     * Get next random float from 0.0 to 1.0
+     * Then normalize that value because shareSummary is not 1.0 exactly in real environment.
+     */
+    private float nextFloat() {
+        return rnd.nextFloat() * shareSummary;
     }
 }
