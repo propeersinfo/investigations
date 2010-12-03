@@ -46,25 +46,23 @@ public class RandomizerByDistribution<T> {
         }
     }
 
-    final List<Share<T>> referenceDistribution;
-    final float shareSummary;
-    Random rnd = new Random(System.currentTimeMillis());
+    private final List<Share<T>> referenceDistribution;
+    private final float shareSummary;
+    private Random rnd = new Random(System.currentTimeMillis());
 
-    Comparator<Share<T>> BIGGER_GOES_FIRST = new Comparator<Share<T>>() {
+    private final Comparator<Share<T>> BIGGER_GOES_FIRST = new Comparator<Share<T>>() {
         public int compare(Share<T> o1, Share<T> o2) {
-            if (o1.share < o2.share) return +1;
-            else if (o1.share > o2.share) return -1;
-            else return 0;
+            return Float.valueOf(o1.share).compareTo(Float.valueOf(o2.share));
         }
     };
 
     public RandomizerByDistribution(List<Share<T>> referenceDistribution) {
         this.referenceDistribution = referenceDistribution;
         this.shareSummary = Share.calcSum(this.referenceDistribution);
-        initOptimize();
+        optimize();
     }
 
-    private void initOptimize() {
+    private void optimize() {
         sort(this.referenceDistribution, BIGGER_GOES_FIRST);
     }
 
