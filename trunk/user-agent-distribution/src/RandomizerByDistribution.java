@@ -60,8 +60,12 @@ public class RandomizerByDistribution<T> {
 
     public RandomizerByDistribution(List<Share<T>> referenceDistribution) {
         this.referenceDistribution = referenceDistribution;
-        sort(this.referenceDistribution, BIGGER_GOES_FIRST);
         this.shareSummary = Share.calcSum(this.referenceDistribution);
+        initOptimize();
+    }
+
+    private void initOptimize() {
+        sort(this.referenceDistribution, BIGGER_GOES_FIRST);
     }
 
     public T next() {
