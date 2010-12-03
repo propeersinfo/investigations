@@ -23,6 +23,7 @@ public class DistributionRandomizerTest {
         for(float share : shares) {
             ref.add(new RandomizerByDistribution.Share<String>("Obj"+share, share));
         }
+
         return ref;
     }
 }
