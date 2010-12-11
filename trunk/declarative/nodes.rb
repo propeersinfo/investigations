@@ -48,7 +48,7 @@ class Assignment < ParseNode
 
   def to_s; "#{self.class}[#{@elements.size}]"; end
 
-  def get_children; [ @elements ]; end
+  def get_children; @elements; end
 
   def eval(context)
     # evaluate the most right element
@@ -69,10 +69,10 @@ class Addition < ParseNode
 
   def to_s; "#{self.class}[#{@elements.size}]"; end
 
-  def get_children; [ @elements ]; end
+  def get_children; @elements; end
 
   def eval(context)
-
+    "<dummy eval's result for #{self.class}>"
   end
 end
 

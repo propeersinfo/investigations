@@ -4,6 +4,7 @@
     <list default="true" readonly="true" id="e72418f2-5501-40ac-89e2-db6fcd4a5dd4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nodes.rb" afterPath="$PROJECT_DIR$/nodes.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/util.rb" afterPath="$PROJECT_DIR$/util.rb" />
     </list>
     <ignored path="citrus.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,7 +31,7 @@
       <file leaf-file-name="nodes.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nodes.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="107" column="0" selection-start="2119" selection-end="2119" vertical-scroll-proportion="0.8370607">
+            <state line="71" column="0" selection-start="1516" selection-end="1516" vertical-scroll-proportion="0.6198083">
               <folding />
             </state>
           </provider>
@@ -57,7 +58,7 @@
       <file leaf-file-name="util.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/util.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="0" selection-start="33" selection-end="33" vertical-scroll-proportion="0.0">
+            <state line="28" column="1" selection-start="660" selection-end="660" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -87,8 +88,8 @@
         <option value="$PROJECT_DIR$/parser.rb" />
         <option value="$PROJECT_DIR$/runtime.rb" />
         <option value="$PROJECT_DIR$/declarative.rb" />
-        <option value="$PROJECT_DIR$/util.rb" />
         <option value="$PROJECT_DIR$/nodes.rb" />
+        <option value="$PROJECT_DIR$/util.rb" />
       </list>
     </option>
   </component>
@@ -332,14 +333,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/util.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="33" selection-end="33" vertical-scroll-proportion="0.0">
+        <state line="28" column="1" selection-start="660" selection-end="660" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nodes.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="107" column="0" selection-start="2119" selection-end="2119" vertical-scroll-proportion="0.8370607">
+        <state line="71" column="0" selection-start="1516" selection-end="1516" vertical-scroll-proportion="0.6198083">
           <folding />
         </state>
       </provider>
