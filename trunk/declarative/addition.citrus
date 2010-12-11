@@ -1,0 +1,56 @@
+grammar Addition
+  rule func_def
+    ( "def" s id s list_def s block )
+    {
+      Function.new(id.value, list_def.value, block.value)
+    }
+  end
+
+  rule list_def
+    ( "(" x:list_values* ")" )
+    {
+        x.value
+        #"(#{x.value})"
+    }
+  end
+
+  rule list_values
+    arg:"x" ( s "," s arg2:list_values)*
+    {
+        "~~~~~"
+    }
+  end
+
+  rule id
+    [a-zA-Z]+
+  end
+
+  rule block
+    "{" "}"
+  end
+
+  rule additive
+    (number plus term:(additive | number)) {
+        number.value + term.value
+    }
+  end
+
+  rule number
+    (x:[0-9]+ space) {
+        x.strip.to_i
+    }
+  end
+
+  rule plus
+    '+' space
+  end
+
+  rule s
+    [ \t\n]*
+  end
+
+  rule space
+    [ \t\n]+
+  end
+
+end
