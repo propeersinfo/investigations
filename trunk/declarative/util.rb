@@ -14,3 +14,9 @@ def print_tree(root, offset = 0)
     print_tree(e, offset+1)
   end
 end
+
+def assert_eq(expected, actual)
+  if expected != actual
+    throw "assertion failed: #{expected} vs #{actual}"
+  end
+end
