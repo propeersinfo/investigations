@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="e72418f2-5501-40ac-89e2-db6fcd4a5dd4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/declarative.rb" afterPath="$PROJECT_DIR$/declarative.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/declarative.treetop" afterPath="$PROJECT_DIR$/declarative.treetop" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nodes.rb" afterPath="$PROJECT_DIR$/nodes.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/util.rb" afterPath="$PROJECT_DIR$/util.rb" />
     </list>
     <ignored path="citrus.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,7 +33,7 @@
       <file leaf-file-name="nodes.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nodes.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="0" selection-start="1567" selection-end="1567" vertical-scroll-proportion="0.885">
+            <state line="84" column="14" selection-start="1677" selection-end="1677" vertical-scroll-proportion="2.28115">
               <folding />
             </state>
           </provider>
@@ -48,7 +51,7 @@
       <file leaf-file-name="declarative.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/declarative.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="0" selection-start="509" selection-end="509" vertical-scroll-proportion="0.0">
+            <state line="12" column="22" selection-start="296" selection-end="296" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -57,7 +60,7 @@
       <file leaf-file-name="util.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/util.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="21" selection-start="419" selection-end="419" vertical-scroll-proportion="0.0">
+            <state line="1" column="0" selection-start="33" selection-end="33" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -85,10 +88,10 @@
         <option value="$PROJECT_DIR$/treetop-example.rb" />
         <option value="$PROJECT_DIR$/declarative.treetop" />
         <option value="$PROJECT_DIR$/parser.rb" />
-        <option value="$PROJECT_DIR$/declarative.rb" />
-        <option value="$PROJECT_DIR$/util.rb" />
         <option value="$PROJECT_DIR$/runtime.rb" />
+        <option value="$PROJECT_DIR$/declarative.rb" />
         <option value="$PROJECT_DIR$/nodes.rb" />
+        <option value="$PROJECT_DIR$/util.rb" />
       </list>
     </option>
   </component>
@@ -251,14 +254,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1288" height="784" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34609494" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34609494" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.62174577" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.148" sideWeight="0.65390503" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.148" sideWeight="0.65390503" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37212864" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -272,7 +275,7 @@
     </layout>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
+    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="false" />
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="PERFORM_UPDATE_IN_BACKGROUND" value="true" />
     <option name="PERFORM_COMMIT_IN_BACKGROUND" value="true" />
@@ -325,17 +328,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/declarative.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="0" selection-start="509" selection-end="509" vertical-scroll-proportion="0.0" />
+        <state line="12" column="22" selection-start="296" selection-end="296" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/util.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="21" selection-start="419" selection-end="419" vertical-scroll-proportion="0.0" />
+        <state line="1" column="0" selection-start="33" selection-end="33" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nodes.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="0" selection-start="1567" selection-end="1567" vertical-scroll-proportion="0.885">
+        <state line="84" column="14" selection-start="1677" selection-end="1677" vertical-scroll-proportion="2.28115">
           <folding />
         </state>
       </provider>

@@ -10,7 +10,7 @@ parser = DeclarativeParser.new
 parser.consume_all_input = true
 
 #root = parser.parse("def myfunk( ) { s1 s2 }", :root => :func_def)
-root = parser.parse("{ x = y = 1 + 2; }", :root => :block)
+root = parser.parse(" { x = y = 1 + 2; }", :root => :block)
 
 if root
   puts "Node:   #{root}"

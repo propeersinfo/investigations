@@ -82,6 +82,26 @@ class IdUse < Node
   def initialize(id)
     @id = id
   end
-  def to_s; "'#{@id}'"; end
+  def to_s; "Id:#{@id}"; end
+  def get_children; []; end
+end
+
+###################################
+
+class NumLiteral < Node
+  def initialize(value)
+    @value = value
+  end
+  def to_s; "Num:#{@value}"; end
+  def get_children; []; end
+end
+
+###################################
+
+class StringLiteral < Node
+  def initialize(value)
+    @value = value
+  end
+  def to_s; "Str:#{@value}"; end
   def get_children; []; end
 end
