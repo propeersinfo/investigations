@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="e72418f2-5501-40ac-89e2-db6fcd4a5dd4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/declarative.rb" afterPath="$PROJECT_DIR$/declarative.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/declarative.treetop" afterPath="$PROJECT_DIR$/declarative.treetop" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nodes.rb" afterPath="$PROJECT_DIR$/nodes.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/util.rb" afterPath="$PROJECT_DIR$/util.rb" />
     </list>
     <ignored path="citrus.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,7 +30,7 @@
       <file leaf-file-name="nodes.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nodes.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="84" column="14" selection-start="1677" selection-end="1677" vertical-scroll-proportion="2.28115">
+            <state line="107" column="0" selection-start="2119" selection-end="2119" vertical-scroll-proportion="0.8370607">
               <folding />
             </state>
           </provider>
@@ -90,8 +87,8 @@
         <option value="$PROJECT_DIR$/parser.rb" />
         <option value="$PROJECT_DIR$/runtime.rb" />
         <option value="$PROJECT_DIR$/declarative.rb" />
-        <option value="$PROJECT_DIR$/nodes.rb" />
         <option value="$PROJECT_DIR$/util.rb" />
+        <option value="$PROJECT_DIR$/nodes.rb" />
       </list>
     </option>
   </component>
@@ -342,7 +339,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nodes.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="84" column="14" selection-start="1677" selection-end="1677" vertical-scroll-proportion="2.28115">
+        <state line="107" column="0" selection-start="2119" selection-end="2119" vertical-scroll-proportion="0.8370607">
           <folding />
         </state>
       </provider>

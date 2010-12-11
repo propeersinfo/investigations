@@ -1,7 +1,7 @@
 # Parse tree nodes.
 # Once built such a tree could be evaluated.
 
-class Node
+class ParseNode
   def eval(context)
     raise "eval is not implemented for class #{self.class}"
   end
@@ -9,7 +9,7 @@ end
 
 ###################################
 
-class FuncDef < Node
+class FuncDef < ParseNode
   def initialize(id, arglist, block)
     @id = id
     @arglist = arglist
@@ -21,7 +21,7 @@ end
 
 ###################################
 
-class Block < Node
+class Block < ParseNode
   def initialize(elements)
     @elements = elements
   end
@@ -40,7 +40,7 @@ end
 ###################################
 
 # Represents expressions like 'a = b = c' or just 'a'
-class Assignment < Node
+class Assignment < ParseNode
   def initialize(elements)
     raise "At least one element expected" unless (elements.size > 0)
     @elements = elements
@@ -62,7 +62,7 @@ end
 
 ###################################
 
-class Addition < Node
+class Addition < ParseNode
   def initialize(elements)
     @elements = elements
   end
@@ -78,7 +78,7 @@ end
 
 ###################################
 
-class IdUse < Node
+class IdUse < ParseNode
   def initialize(id)
     @id = id
   end
@@ -88,7 +88,7 @@ end
 
 ###################################
 
-class NumLiteral < Node
+class NumLiteral < ParseNode
   def initialize(value)
     @value = value
   end
@@ -98,7 +98,7 @@ end
 
 ###################################
 
-class StringLiteral < Node
+class StringLiteral < ParseNode
   def initialize(value)
     @value = value
   end
