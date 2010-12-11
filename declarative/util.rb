@@ -1,11 +1,16 @@
 def print_tree(root, offset = 0)
-  if root.class.to_s != "Array"
-    off = ' ' * offset
+  off = '  ' * offset
+  if root.class.to_s == "Array"
+    puts "#{off}[]"
+  else
     puts "#{off}#{root}"
   end
+
   chn = if root.class.to_s == "Array"
            root
          elsif root.class.to_s == "String"
+           []
+         elsif root.class.to_s == "Fixnum"
            []
          else
            root.get_children
