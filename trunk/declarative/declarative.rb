@@ -32,7 +32,8 @@ class Assignment
     @elements = elements
   end
   def to_s
-    "#{self.class}(#{@elements.join(',')})"
+    #"#{self.class}(#{@elements.join(',')})"
+    "#{self.class} [#{@elements.size}]"
   end
   def get_children; [ @elements ]; end
 end
@@ -42,7 +43,8 @@ class Addition
     @elements = elements
   end
   def to_s
-    "#{self.class}(#{@elements.join('+')})"
+    #"#{self.class}(#{@elements.join('+')})"
+    "#{self.class} [#{@elements.size}]"
   end
   def get_children
     [ @elements ]
