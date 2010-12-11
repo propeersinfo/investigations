@@ -1,0 +1,106 @@
+grammar Declarative
+    rule func_def
+        ws def space id ws arglist:list_def ws block ws {
+            def value
+                FuncDef.new(id.text_value, arglist, block)
+            end
+        }
+    end
+
+    rule list_def
+        ws "(" ws ")" ws {
+            def value
+                "new-list-definition"
+            end
+        }
+    end
+
+    rule block
+        ws '{' ws stmt:statement* ws '}' ws {
+            def value
+                stmt.elements.map do |e| e.value end
+            end
+        }
+    end
+
+    rule statement
+        ( assignment ) {
+            def value
+                assignment.value
+            end
+        }
+    end
+
+    rule assignment
+        ws first:addition others:( ws '=' ws other:addition )* ws ';' ws {
+            def value
+                Assignment.new(
+                    [first.value] + others.elements.map do |e| e.other.value end
+                )
+            end
+        }
+    end
+
+    rule addition
+        ws first:atom others:( ws "+" ws other:atom )* {
+            def minify(list)
+                list.size == 1 ? list[0] : Addition.new(list)
+            end
+            def value
+                minify( [first.value] + others.elements.map do |e| e.other.value end )
+            end
+        }
+    end
+
+    rule atom
+        id / num_const
+    end
+
+#    rule statement
+#        ws id ws '=' ws id ';' ws {
+#            def value
+#                "a-statemento"
+#            end
+#        }
+#    end
+
+    rule id
+        [_a-zA-Z] [_a-zA-Z0-9]* {
+            def value
+               IdUse.new(text_value)
+            end
+        }
+    end
+
+    rule num_const
+        [0-9]+ {
+            def value
+                "'#{text_value}'"
+            end
+        }
+    end
+
+    rule def
+        'def' !(!' ' .) {
+            def value
+                "<def>"
+            end
+        }
+    end
+
+    rule space
+        [\t ]+ {
+            def value
+                "<space>"
+            end
+        }
+    end
+
+    rule ws
+        [\t ]* {
+            def value
+                "<ws>"
+            end
+        }
+    end
+end
