@@ -18,7 +18,7 @@ grammar Declarative
     rule block
         ws '{' ws stmt:statement* ws '}' ws {
             def value
-                stmt.elements.map do |e| e.value end
+                Block.new( stmt.elements.map do |e| e.value end )
             end
         }
     end
