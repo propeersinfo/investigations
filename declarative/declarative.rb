@@ -72,15 +72,18 @@ parser.consume_all_input = true
 root = parser.parse("{ x = y = 1 + 2; }", :root => :block)
 
 def print_tree(root, offset = 0)
-  puts "#{'  ' * offset}#{root}"
-  chch = if root.class.to_s == "Array"
+  if root.class.to_s != "Array"
+    off = ' ' * offset
+    puts "#{off}#{root}"
+  end
+  chn = if root.class.to_s == "Array"
            root
          elsif root.class.to_s == "String"
            []
          else
            root.get_children
          end
-  chch.map do |e|
+  chn.map do |e|
     print_tree(e, offset+1)
   end
 end
