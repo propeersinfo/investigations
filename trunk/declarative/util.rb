@@ -1,5 +1,7 @@
 # Where root is a ParseNode
 def print_tree(root, offset = 0)
+  return if root == nil
+
   off = '  ' * offset
   if root.class.to_s == "Array"
     puts "#{off}[]"
