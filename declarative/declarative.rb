@@ -10,7 +10,7 @@ parser = DeclarativeParser.new
 parser.consume_all_input = true
 
 #root = parser.parse("def myfunk( ) { s1 s2 }", :root => :func_def)
-root = parser.parse(" { x = y = 1 + 2; }", :root => :block)
+root = parser.parse(" { x = y = 1 + 2; a=b; }", :root => :block)
 
 if root
   puts "Node:   #{root}"
@@ -19,8 +19,8 @@ if root
   puts "Tree:"
   print_tree(root.value)
 
-  context = EvaluationContext.new
-  root.value.eval(context)
+  #context = EvaluationContext.new
+  #root.value.eval(context)
 else
   puts ""
   puts "Failure: #{parser.failure_reason}"
