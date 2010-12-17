@@ -7,6 +7,14 @@ grammar Declarative
 #        }
 #    end
 
+    rule source_unit
+        _ stmts:statements _ {
+            def value
+                SourceUnit.new(stmts.value)
+            end
+        }
+    end
+
     rule list_def
         _ "(" _ ")" _ {
             def value
