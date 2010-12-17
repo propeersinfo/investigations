@@ -16,9 +16,17 @@ grammar Declarative
     end
 
     rule block
-        _ '{' _ stmt:statement* _ '}' _ {
+        _ '{' _ statements _ '}' _ {
             def value
-                Block.new( stmt.elements.map do |e| e.value end )
+                statements.value
+            end
+        }
+    end
+
+    rule statements
+        _ stmt:statement* _ {
+            def value
+                stmt.elements.map do |e| e.value end
             end
         }
     end
