@@ -21,17 +21,35 @@ end
 
 ###################################
 
-class Block < ParseNode
-  def initialize(elements)
-    @elements = elements
+class SourceUnit < ParseNode
+  def initialize(statements)
+    @statements = statements
   end
 
   def to_s; "#{self.class}"; end
 
-  def get_children; @elements; end
+  def get_children; @statements; end
 
   def eval(context)
-    @elements.map do |e|
+    @statements.map do |e|
+      e.eval(context)
+    end
+  end
+end
+
+###################################
+
+class Block < ParseNode
+  def initialize(statements)
+    @statements = statements
+  end
+
+  def to_s; "#{self.class}"; end
+
+  def get_children; @statements; end
+
+  def eval(context)
+    @statements.map do |e|
       e.eval(context)
     end
   end

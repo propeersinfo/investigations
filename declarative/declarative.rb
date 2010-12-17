@@ -24,7 +24,8 @@ def lambada() {
   sublocal1 = sublocal2;
 };
 SOURCE
-root = parser.parse(src, :root => :statements)
+#root = parser.parse(src, :root => :statements)
+root = parser.parse(src, :root => :source_unit)
 
 if root
   puts "Node:   #{root}"
