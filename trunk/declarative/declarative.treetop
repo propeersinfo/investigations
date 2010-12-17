@@ -1,12 +1,4 @@
 grammar Declarative
-#    rule func_def
-#        _ "def" space id _ arglist:list_def _ block _ {
-#            def value
-#                FuncDef.new(id.text_value, arglist, block)
-#            end
-#        }
-#    end
-
     rule source_unit
         _ stmts:statements _ {
             def value
@@ -73,21 +65,13 @@ grammar Declarative
     end
 
     rule named_func_def
-        _ "def" _ id _ "(" _ ")" block {
+        _ "def" _space_ id _ "(" _ ")" block {
             def value
                 #return "func-def-new: #{text_value}"
                 FuncDef.new(id.text_value, nil, block.value)
             end
         }
     end
-
-#    rule statement
-#        _ id _ '=' _ id ';' _ {
-#            def value
-#                "a-statemento: #{text_value}"
-#            end
-#        }
-#    end
 
     rule id
         [_a-zA-Z] [_a-zA-Z0-9]* {
@@ -105,6 +89,17 @@ grammar Declarative
         }
     end
 
+    rule _space_
+        [ \t\r\n]+
+    end
+
+    rule _
+        [ \t\r\n]*
+    end
+
+#
+# How to define keywords
+#
 #    rule def
 #        'def' !(!' ' .) {
 #            def value
@@ -113,11 +108,4 @@ grammar Declarative
 #        }
 #    end
 
-    rule space
-        [ \t\r\n]+
-    end
-
-    rule _
-        [ \t\r\n]*
-    end
 end
