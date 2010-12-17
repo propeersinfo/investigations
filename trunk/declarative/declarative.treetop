@@ -53,10 +53,10 @@ grammar Declarative
     end
 
     rule atom
-        fu_def / id / num_const
+        named_func_def / id / num_const
     end
 
-    rule fu_def
+    rule named_func_def
         _ "def" _ id _ "(" _ ")" block {
             def value
                 #return "func-def-new: #{text_value}"
