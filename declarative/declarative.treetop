@@ -60,7 +60,7 @@ grammar Declarative
         _ "def" _ id _ "(" _ ")" block {
             def value
                 #return "func-def-new: #{text_value}"
-                FuncDef.new(id.text_value, "argso", block.value)
+                FuncDef.new(id.text_value, nil, block.value)
             end
         }
     end
