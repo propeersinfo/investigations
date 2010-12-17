@@ -1,11 +1,11 @@
 grammar Declarative
-    rule func_def
-        _ "def" space id _ arglist:list_def _ block _ {
-            def value
-                FuncDef.new(id.text_value, arglist, block)
-            end
-        }
-    end
+#    rule func_def
+#        _ "def" space id _ arglist:list_def _ block _ {
+#            def value
+#                FuncDef.new(id.text_value, arglist, block)
+#            end
+#        }
+#    end
 
     rule list_def
         _ "(" _ ")" _ {
@@ -53,13 +53,22 @@ grammar Declarative
     end
 
     rule atom
-        id / num_const
+        fu_def / id / num_const
+    end
+
+    rule fu_def
+        _ "def" _ id _ "(" _ ")" block {
+            def value
+                #return "func-def-new: #{text_value}"
+                FuncDef.new(id.text_value, "argso", block.value)
+            end
+        }
     end
 
 #    rule statement
 #        _ id _ '=' _ id ';' _ {
 #            def value
-#                "a-statemento"
+#                "a-statemento: #{text_value}"
 #            end
 #        }
 #    end
