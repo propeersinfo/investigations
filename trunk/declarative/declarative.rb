@@ -15,8 +15,18 @@ Treetop.load "declarative"
 parser = DeclarativeParser.new
 parser.consume_all_input = true
 
+
 #root = parser.parse("def myfunk( ) { s1 s2 }", :root => :func_def)
-root = parser.parse(" { x = y = 1 + 2; f = def lambada() { sublocal1 = sublocal2; }; }", :root => :block)
+#root = parser.parse(" { x = y = 1 + 2; f = def lambada() { sublocal1 = sublocal2; }; }", :root => :block)
+src = <<SOURCE
+{
+  x = y = 1 + 2;
+  f = def lambada() {
+    sublocal1 = sublocal2;
+  };
+}
+SOURCE
+root = parser.parse(src, :root => :block)
 
 if root
   puts "Node:   #{root}"
