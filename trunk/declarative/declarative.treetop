@@ -24,7 +24,7 @@ grammar Declarative
     end
 
     rule statement
-        ( assignment ) {
+        assignment  _ ';' _ {
             def value
                 assignment.value
             end
@@ -32,7 +32,7 @@ grammar Declarative
     end
 
     rule assignment
-        _ first:addition others:( _ '=' _ other:addition )* _ ';' _ {
+        _ first:addition others:( _ '=' _ other:addition )* {
             def value
                 Assignment.new(
                     [first.value] + others.elements.map do |e| e.other.value end
