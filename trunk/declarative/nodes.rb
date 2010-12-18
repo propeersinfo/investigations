@@ -57,6 +57,23 @@ end
 
 ###################################
 
+class Statement < ParseNode
+  def initialize(underlying)
+    @underlying = underlying
+  end
+
+  def to_s; "#{self.class}"; end
+
+  def get_children; [@underlying]; end
+
+  def eval(context)
+    res = @underlying.eval(context)
+    puts ">>> #{res}"
+  end
+end
+
+###################################
+
 # Represents expressions like 'a = b = c' or just 'a'
 class Assignment < ParseNode
   def initialize(elements)
@@ -73,8 +90,13 @@ class Assignment < ParseNode
     rvalue = @elements.last.eval(context)
     # assign tat value to all the preceding elements
     @elements.reverse[1..-1].each do |e|
-      puts "perform assignment: #{e} = #{rvalue}"
+      raise "Only IdUse node is supported as rvalue" if e.class.to_s != "IdUse"
+      #puts "Perform assignment: #{e} = #{rvalue}"
+      #puts "  lvalue = #{e.class.to_s} with id = #{e.id}"
+      rt_var = context.get_id_or_create_local(e.id)
+      rt_var.assign(rvalue)
     end
+    rvalue
   end
 end
 
@@ -97,6 +119,7 @@ end
 ###################################
 
 class IdUse < ParseNode
+  attr_reader :id
   def initialize(id)
     @id = id
   end
@@ -106,12 +129,15 @@ end
 
 ###################################
 
-class NumLiteral < ParseNode
+class NumLiteralFunc < ParseNode
   def initialize(value)
     @value = value
   end
-  def to_s; "Num:#{@value}"; end
+  def to_s; "#{self.class}(#{@value})"; end
   def get_children; []; end
+  def eval(context)
+    return self
+  end
 end
 
 ###################################

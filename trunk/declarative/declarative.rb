@@ -16,10 +16,7 @@ parser = DeclarativeParser.new
 parser.consume_all_input = true
 
 src = <<SOURCE
-x = y = 1 + 2;
-def lambada() {
-  sublocal1 = sublocal2;
-};
+x = 1;
 SOURCE
 root = parser.parse(src, :root => :source_unit)
 
@@ -30,8 +27,8 @@ if root
   puts "Tree:"
   print_tree(root.value)
 
-  #context = EvaluationContext.new
-  #root.value.eval(context)
+  context = EvaluationContext.new
+  root.value.eval(context)
 else
   puts ""
   puts "Failure: #{parser.failure_reason}"
