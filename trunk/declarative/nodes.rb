@@ -67,8 +67,8 @@ class Statement < ParseNode
   def get_children; [@underlying]; end
 
   def eval(context)
-    res = @underlying.eval(context)
-    puts ">>> #{res}"
+    stmt_value = @underlying.eval(context)
+    puts "stmt> #{stmt_value}"
   end
 end
 
