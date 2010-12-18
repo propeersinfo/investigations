@@ -32,9 +32,9 @@ grammar Declarative
     end
 
     rule statement
-        assignment  _ ';' _ {
+        _ assignment  _ ';' _ {
             def value
-                assignment.value
+                Statement.new(assignment.value)
             end
         }
     end
@@ -84,7 +84,7 @@ grammar Declarative
     rule num_const
         [0-9]+ {
             def value
-                NumLiteral.new( Integer(text_value) )
+                NumLiteralFunc.new( Integer(text_value) )
             end
         }
     end
