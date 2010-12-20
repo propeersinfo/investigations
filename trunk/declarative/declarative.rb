@@ -16,7 +16,8 @@ parser = DeclarativeParser.new
 parser.consume_all_input = true
 
 src = <<SOURCE
-x = 1;
+def somefunk() {};
+x = y = 11;
 SOURCE
 root = parser.parse(src, :root => :source_unit)
 
@@ -27,7 +28,7 @@ if root
   puts "Tree:"
   print_tree(root.value)
 
-  context = EvaluationContext.new
+  context = EvaluationContext.new()
   root.value.eval(context)
 else
   puts ""
