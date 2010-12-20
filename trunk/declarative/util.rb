@@ -17,7 +17,7 @@ def print_tree(root, offset = 0)
          elsif root.class.to_s == "Fixnum"
            []
          else
-           root.get_children
+           root.children
          end
   chn.map do |e|
     print_tree(e, offset+1)

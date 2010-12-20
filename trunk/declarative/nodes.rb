@@ -7,7 +7,7 @@ class ParseNode
   end
 
   # declare children nodes; usefule for tree pretty print
-  def get_children()
+  def children()
     raise "get_children is not implemented for class #{self.class}"
   end
 end
@@ -23,7 +23,7 @@ class FuncDef < ParseNode
 
   def to_s(); "#{self.class}(id=#{@id} args=#{@arglist} block=#{@block})"; end
 
-  def get_children; [ @arglist, @block ]; end
+  def children; [ @arglist, @block ]; end
 
   def eval(context)
     raise "attach this function to context - that's all"
@@ -39,7 +39,7 @@ class SourceUnit < ParseNode
 
   def to_s; "#{self.class}"; end
 
-  def get_children; @statements; end
+  def children; @statements; end
 
   def eval(context)
     @statements.map do |e|
@@ -57,7 +57,7 @@ class Block < ParseNode
 
   def to_s; "#{self.class}"; end
 
-  def get_children; @statements; end
+  def children; @statements; end
 
   def eval(context)
     @statements.map do |e|
@@ -75,7 +75,7 @@ class Statement < ParseNode
 
   def to_s; "#{self.class}"; end
 
-  def get_children; [@underlying]; end
+  def children; [@underlying]; end
 
   def eval(context)
     stmt_value = @underlying.eval(context)
@@ -94,7 +94,7 @@ class Assignment < ParseNode
 
   def to_s; "#{self.class}[#{@elements.size}]"; end
 
-  def get_children; @elements; end
+  def children; @elements; end
 
   def eval(context)
     # evaluate the most right element
@@ -120,7 +120,7 @@ class Addition < ParseNode
 
   def to_s; "#{self.class}[#{@elements.size}]"; end
 
-  def get_children; @elements; end
+  def children; @elements; end
 
   def eval(context)
     "<dummy eval's result for #{self.class}>"
@@ -135,7 +135,7 @@ class IdUse < ParseNode
     @id = id
   end
   def to_s; "Id:#{@id}"; end
-  def get_children; []; end
+  def children; []; end
 end
 
 ###################################
@@ -145,7 +145,7 @@ class NumLiteralFunc < ParseNode
     @value = value
   end
   def to_s; "#{self.class}(#{@value})"; end
-  def get_children; []; end
+  def children; []; end
   def eval(context)
     return self
   end
@@ -158,5 +158,5 @@ class StringLiteral < ParseNode
     @value = value
   end
   def to_s; "Str:#{@value}"; end
-  def get_children; []; end
+  def children; []; end
 end
