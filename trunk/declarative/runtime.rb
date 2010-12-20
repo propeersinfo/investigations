@@ -50,3 +50,8 @@ class RuntimeVar
     @value = value
   end
 end
+
+class RuntimeValue
+  def initialize()
+  end
+end
