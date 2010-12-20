@@ -5,6 +5,11 @@ class ParseNode
   def eval(context)
     raise "eval is not implemented for class #{self.class}"
   end
+
+  # declare children nodes; usefule for tree pretty print
+  def get_children()
+    raise "get_children is not implemented for class #{self.class}"
+  end
 end
 
 ###################################
@@ -15,8 +20,14 @@ class FuncDef < ParseNode
     @arglist = arglist
     @block = block
   end
+
   def to_s(); "#{self.class}(id=#{@id} args=#{@arglist} block=#{@block})"; end
+
   def get_children; [ @arglist, @block ]; end
+
+  def eval(context)
+    raise "attach this function to context - that's all"
+  end
 end
 
 ###################################
@@ -91,7 +102,7 @@ class Assignment < ParseNode
     # assign tat value to all the preceding elements
     @elements.reverse[1..-1].each do |e|
       raise "Only IdUse node is supported as rvalue" if e.class.to_s != "IdUse"
-      #puts "Perform assignment: #{e} = #{rvalue}"
+      puts "Assigning #{e} = #{rvalue}"
       #puts "  lvalue = #{e.class.to_s} with id = #{e.id}"
       rt_var = context.get_id_or_create_local(e.id)
       rt_var.assign(rvalue)
