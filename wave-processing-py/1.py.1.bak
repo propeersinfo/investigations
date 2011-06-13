@@ -1,0 +1,60 @@
+import wave
+
+inn = wave.open("italiano.wav", "rb")
+
+print inn.getparams()
+(chs,sampw,hz,nframes,x,x) = inn.getparams()
+
+out = wave.open("out.wav", "wb")
+out.setparams(inn.getparams())
+
+# db = log10(value) * 20
+
+cnt = 0
+
+def handle_one_value(ch1, ch2, out):
+	value16 = ord(ch1) | ord(ch2) << 8
+	#value16 = ord(ch1) << 8 | ord(ch2)
+
+	if value16 & 0x8000 != 0:
+		value16 = value16 - 0x10000
+	
+	#value16 = value16 - 0xFFFF / 2
+
+	global cnt
+	if cnt < 10:
+		print value16
+		cnt = cnt + 1
+
+	hilimit = 15*1000
+	if value16 > hilimit: value16 = hilimit
+
+	#lolimit = -hilimit
+	#if value16 < lolimit: value16 = lolimit
+
+	value16 = value16 & 0xFFFF
+
+	out.write(chr(value16 & 0xFF))
+	out.write(chr(value16 >> 8))
+
+	#out.write(chr(value16 >> 8))
+	#out.write(chr(value16 & 0xFF))
+
+def alter(frame):
+	from cStringIO import StringIO
+	out = StringIO()
+	i = 0
+	while i < len(frame):
+		handle_one_value(frame[i], frame[i+1], out)
+		i = i + 2
+	return out.getvalue()
+
+i = 0
+while i < nframes:
+	frames = inn.readframes(11*1000)
+	frames_read = len(frames) / (chs*sampw)
+	conv = alter(frames)
+	out.writeframesraw(conv)
+	i = i + frames_read
+
+out.close()
