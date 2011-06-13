@@ -1,0 +1,66 @@
+from math import log10, fabs
+import wave
+
+inn = wave.open("italiano.wav", "rb")
+
+print inn.getparams()
+(chs,sampw,hz,nframes,x,x) = inn.getparams()
+
+out = wave.open("out.wav", "wb")
+out.setparams(inn.getparams())
+
+dbsum = 0
+dbcnt = 0
+
+def convert_sample_value(value16):
+	hilimit = 20*1000
+	if value16 > hilimit: value16 = hilimit
+	if value16 < -hilimit: value16 = -hilimit
+
+	#db = log10(fabs(value16 / 32767.0)) * 20
+	db = fabs(value16 / 32767.0) ** 2
+	global dbsum, dbcnt
+	dbsum = dbsum + db
+	dbcnt = dbcnt + 1
+
+	return value16
+
+def handle_sample_bytes(ch1, ch2, out):
+	value16 = ord(ch1) | ord(ch2) << 8
+	if value16 & 0x8000 != 0:
+		value16 = value16 - 0x10000
+	value16 = convert_sample_value(value16)
+	value16 = value16 & 0xFFFF
+	out.write(chr(value16 & 0xFF))
+	out.write(chr(value16 >> 8))
+
+#def handle_sample_bytes_DNB(ch1, ch2, out):
+#	value16 = ord(ch1) | ord(ch2) << 8
+#	value16 = value16 - int(0xFFFF / 2)
+#	value16 = convert_sample_value(value16)
+#	value16 = value16 + int(0xFFFF / 2)
+#	out.write(chr(value16 & 0xFF))
+#	out.write(chr(value16 >> 8))
+
+def alter(frame):
+	from cStringIO import StringIO
+	out = StringIO()
+	i = 0
+	while i < len(frame):
+		handle_sample_bytes(frame[i], frame[i+1], out)
+		i = i + 2
+	return out.getvalue()
+
+i = 0
+while i < nframes:
+	frames = inn.readframes(11*1000)
+	frames_read = len(frames) / (chs*sampw)
+	conv = alter(frames)
+	out.writeframesraw(conv)
+	i = i + frames_read
+
+out.close()
+
+print "dbcnt: ", dbcnt
+#print "db avg: ", (dbsum / dbcnt)
+print "db avg: ", log10(dbsum / dbcnt) * 10
