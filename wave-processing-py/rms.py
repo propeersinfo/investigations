@@ -10,9 +10,9 @@ MAX = 32768
 class StatHandlerPack:
     def __init__(self, handlers):
         self.handlers = handlers
-    def handle_value(self, relative_voltage_value):
+    def handle_value(self, value):
         for handler in self.handlers:
-            handler.handle_value(relative_voltage_value)
+            handler.handle_value(value)
     def clear(self):
         for handler in self.handlers:
             handler.clear()
@@ -70,41 +70,37 @@ def handle_stat(value16, stats):
 def handle_sample_bytes(ch1, ch2, out, stats):
     value16 = ord(ch1) | ord(ch2) << 8
     if value16 & 0x8000 != 0:
-        value16 = value16 - 0x10000
+        value16 -= 0x10000
     handle_stat(value16, stats)
-    value16 = process_frame(value16)
-    value16 = value16 & 0xFFFF
-    out.write(chr(value16 & 0xFF))
-    out.write(chr(value16 >> 8))
+    #value16 = process_frame(value16)
+    #value16 &= 0xFFFF
+    #out.write(chr(value16 & 0xFF))
+    #out.write(chr(value16 >> 8))
 
 def handle_frames(frames, stats):
-    from cStringIO import StringIO
-    out = StringIO()
+    #from cStringIO import StringIO
+    #out = StringIO()
     i = 0
     while i < len(frames):
         handle_sample_bytes(frames[i], frames[i+1], out, stats)
         i += 2
-    return out.getvalue()
+    #return out.getvalue()
 
 
-def read_frames(inn, out, chs, sampw, gfx):
+def read_frames(inn, out, max_frames, chs, sampw, gfx = None):
     i = 0
-    while i < nframes:
-        frames = inn.readframes(100)
+    while i < max_frames:
+        frames = inn.readframes(4000)
         frames_read = len(frames) / (chs * sampw)
         conv = handle_frames(frames, gfx.handlers)
         #out.writeframesraw(conv)
         i += frames_read
-
-        gfx.frame_pack_has_been_read()
+        if gfx: gfx.frame_pack_has_been_read()
 
 ################ MAIN
 
 import sys
 import pygame
-pygame.init()
-
-window = pygame.display.set_mode((640, 480))
 
 class Gfx:
     def __init__(self):
@@ -112,6 +108,9 @@ class Gfx:
         self.avg_db = AvgDb()
         self.handlers = StatHandlerPack([self.rms, self.avg_db])
         self.count = 0
+        pygame.init()
+        self.window = pygame.display.set_mode((640, 480))
+
     def frame_pack_has_been_read(self):
         rms = fabs(self.rms.get_rms())
         db = fabs(self.avg_db.get_avg_db())
@@ -121,11 +120,11 @@ class Gfx:
         koef = 5.0
         dbH = floor(y + db*koef)
         color_db = (100, 255, 100)
-        pygame.draw.line(window, color_db, (x, y), (x, dbH))
+        pygame.draw.line(self.window, color_db, (x, y), (x, dbH))
 
         rmsH = floor(y + rms*koef)
         color_rms = (200, 100, 100)
-        pygame.draw.line(window, color_rms, (x, y), (x, rmsH))
+        pygame.draw.line(self.window, color_rms, (x, y), (x, rmsH))
 
         self.count += 1
         pygame.display.flip()
@@ -142,7 +141,11 @@ class Gfx:
 
 ####################
 
-in_filename = "nano.wav"
+gfx = Gfx()
+#gfx = None
+
+#in_filename = "nano.wav"
+in_filename = "italiano.wav"
 
 print "file: %s" % in_filename
 
@@ -153,12 +156,11 @@ inn = wave.open(in_filename, "rb")
 
 out = None
 #out = wave.open("out.wav", "wb")
-#out.setparams(inn.getparams())
+if out: out.setparams(inn.getparams())
 
-gfx = Gfx()
-read_frames(inn, out, chs, sampw, gfx)
+read_frames(inn, out, nframes, chs, sampw, gfx)
 
-#out.close()
+if out: out.close()
 
 print "samples: ", nsamples
 print "db avg:  ", (dbsum / nsamples)
@@ -167,4 +169,4 @@ print "rms avg: ", log10(sqrt(rmssum / nsamples))*20
 
 ######################
 
-gfx.loop()
+if gfx: gfx.loop()
