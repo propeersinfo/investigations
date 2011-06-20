@@ -47,6 +47,21 @@ class RmsCalc:
         self.sum = 0
         self.nsamples = 0
 
+#class RmsCalc002:
+#    def __init__(self):
+#        self.sum = 0
+#        self.nsamples = 0
+#    def handle_value(self, relative_voltage_value):
+#        rms = fabs(relative_voltage_value) ** 2
+#        #rms = log10(sqrt(rms)) * 20
+#        self.sum += rms
+#        self.nsamples += 1
+#    def get_rms(self):
+#        return log10(sqrt(self.sum / self.nsamples)) * 20
+#    def clear(self):
+#        self.sum = 0
+#        self.nsamples = 0
+
 # @param val - 16 bit integer
 def process_frame(val):
     if val < 0:
@@ -108,6 +123,7 @@ class Gfx:
         self.avg_db = AvgDb()
         self.handlers = StatHandlerPack([self.rms, self.avg_db])
         self.count = 0
+        self.lastPointRms = None
         pygame.init()
         self.window = pygame.display.set_mode((640, 480))
 
@@ -117,20 +133,24 @@ class Gfx:
         print "rms/avg for a second: %.2f / %.2f" % (rms, db)
         x = 10 + self.count
         y = 10
-        koef = 5.0
-        dbH = floor(y + db*koef)
+        koefH = 5.0
+        dbH = floor(y + db*koefH)
         color_db = (100, 255, 100)
         pygame.draw.line(self.window, color_db, (x, y), (x, dbH))
 
-        rmsH = floor(y + rms*koef)
+        rmsH = floor(y + rms*koefH)
         color_rms = (200, 100, 100)
-        pygame.draw.line(self.window, color_rms, (x, y), (x, rmsH))
+        #pygame.draw.line(self.window, color_rms, (x, y), (x, rmsH))
+        rmsPoint = (x, rmsH)
+        if not self.lastPointRms: self.lastPointRms = rmsPoint
+        pygame.draw.line(self.window, color_rms, self.lastPointRms, rmsPoint)
+        self.lastPointRms = rmsPoint
 
         self.count += 1
         pygame.display.flip()
         self.handlers.clear()
 
-    def loop(self):
+    def gui_loop(self):
         while True:
            for event in pygame.event.get():
               if event.type == pygame.QUIT:
@@ -169,4 +189,4 @@ print "rms avg: ", log10(sqrt(rmssum / nsamples))*20
 
 ######################
 
-if gfx: gfx.loop()
+if gfx: gfx.gui_loop()
