@@ -1,11 +1,9 @@
 from math import log10, fabs, sqrt, floor
 import wave
 
-dbsum = 0
-nsamples = 0
-rmssum = 0
-
 MAX = 32768
+
+##################################### statistics calculators
 
 class StatHandlerPack:
     def __init__(self, handlers):
@@ -44,57 +42,32 @@ class PeakVoltage():
     def clear(self):
         self.max = 0
 
-# @param val - 16 bit integer
-def process_frame(val):
-    if val < 0:
-        val = int(val * 1.20)
-    return val
-
-
-def handle_stat(value16, stats):
-    percent_value = value16 / float(MAX)
-    abs = fabs(percent_value)
-    if abs != 0.0:
-        db = log10(abs) * 20
-        #db = fabs(value16 / MAX) ** 2
-        global dbsum, nsamples, rmssum
-        dbsum += db
-    rmssum += abs ** 2
-    nsamples += 1
-    stats.handle_value(percent_value)
-
+#####################################
 
 def handle_sample_bytes(ch1, ch2, out, stats):
     value16 = ord(ch1) | ord(ch2) << 8
     if value16 & 0x8000 != 0:
         value16 -= 0x10000
     handle_stat(value16, stats)
-    #value16 = process_frame(value16)
-    #value16 &= 0xFFFF
-    #out.write(chr(value16 & 0xFF))
-    #out.write(chr(value16 >> 8))
+    relative_value = value16 / float(MAX)
+    stats.handle_value(relative_value)
 
 def handle_frames(frames, out, stats):
-    #from cStringIO import StringIO
-    #out = StringIO()
     i = 0
     while i < len(frames):
         handle_sample_bytes(frames[i], frames[i+1], out, stats)
         i += 2
-    #return out.getvalue()
-
 
 def read_frames(inn, out, max_frames, chs, sampw, gfx, frames_per_pixel):
     i = 0
     while i < max_frames:
         frames = inn.readframes(frames_per_pixel)
         frames_read = len(frames) / (chs * sampw)
-        conv = handle_frames(frames, out, gfx.handlers)
-        #out.writeframesraw(conv)
+        handle_frames(frames, out, gfx.handlers)
         i += frames_read
         if gfx: gfx.frame_pack_has_been_read()
 
-################ MAIN
+#####################################
 
 import sys
 import pygame
@@ -143,38 +116,31 @@ class Gfx:
                   print event
 
 
-####################
+#####################################
 
 imgw = 1000
 imgh = 200
 
 gfx = Gfx()
-#gfx = None
 
 #in_filename = "wav/nano.wav"
-#in_filename = "wav/italiano.wav"
-in_filename = "C:\\Temp\\tour-11-disco-80s.wav"
+in_filename = "wav/italiano.wav"
+#in_filename = "C:\\Temp\\tour-11-disco-80s.wav"
 
 print "file: %s" % in_filename
 
 inn = wave.open(in_filename, "rb")
 
-#print inn.getparams()
 (chs,sampw,hz,nframes,x,x) = inn.getparams()
+
+frames_per_pixel = nframes / imgw
 
 print "channels: ", chs
 print "sampw:    ", sampw
 print "max: ", pow(2, sampw*8) / 2
-frames_per_pixel = nframes / imgw
+print "frames: ", nframes
 print "frames_per_pixel: ", frames_per_pixel
 
 read_frames(inn, None, nframes, chs, sampw, gfx, frames_per_pixel)
-
-print "samples: ", nsamples
-print "db avg:  ", (dbsum / nsamples)
-#print "db avg: ", log10(dbsum / dbcnt) * 10
-print "rms avg: ", log10(sqrt(rmssum / nsamples))*20
-
-######################
 
 if gfx: gfx.gui_loop()
