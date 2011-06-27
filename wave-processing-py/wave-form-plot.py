@@ -119,16 +119,16 @@ class Gfx:
         peak_vt = self.peak_db.get_peak_voltage()
         y1 = floor(base_y - peak_vt * max_h)
         y2 = floor(base_y + peak_vt * max_h)
-        color = (120, 220, 120)
-        pygame.draw.line(self.window, color, (base_x, base_y), (base_x, y1))
-        pygame.draw.line(self.window, color, (base_x, base_y), (base_x, y2))
-
-        avg_vt = self.average.get_average_voltage()
-        y1 = floor(base_y - avg_vt * max_h)
-        y2 = floor(base_y + avg_vt * max_h)
         color = (100, 200, 100)
         pygame.draw.line(self.window, color, (base_x, base_y), (base_x, y1))
         pygame.draw.line(self.window, color, (base_x, base_y), (base_x, y2))
+
+#        avg_vt = self.average.get_average_voltage()
+#        y1 = floor(base_y - avg_vt * max_h)
+#        y2 = floor(base_y + avg_vt * max_h)
+#        color = (100, 200, 100)
+#        pygame.draw.line(self.window, color, (base_x, base_y), (base_x, y1))
+#        pygame.draw.line(self.window, color, (base_x, base_y), (base_x, y2))
 
         self.count += 1
         pygame.display.flip()
@@ -151,8 +151,9 @@ imgh = 200
 gfx = Gfx()
 #gfx = None
 
-#in_filename = "nano.wav"
-in_filename = "italiano.wav"
+#in_filename = "wav/nano.wav"
+#in_filename = "wav/italiano.wav"
+in_filename = "C:\\Temp\\tour-11-disco-80s.wav"
 
 print "file: %s" % in_filename
 
@@ -161,6 +162,9 @@ inn = wave.open(in_filename, "rb")
 #print inn.getparams()
 (chs,sampw,hz,nframes,x,x) = inn.getparams()
 
+print "channels: ", chs
+print "sampw:    ", sampw
+print "max: ", pow(2, sampw*8) / 2
 frames_per_pixel = nframes / imgw
 print "frames_per_pixel: ", frames_per_pixel
 
