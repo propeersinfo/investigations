@@ -137,9 +137,9 @@ frames_per_pixel = nframes / imgw
 
 print "channels: ", chs
 print "sampw:    ", sampw
-print "max: ", pow(2, sampw*8) / 2
-print "frames: ", nframes
-print "frames_per_pixel: ", frames_per_pixel
+print "max:      ", pow(2, sampw*8) / 2
+print "frames:   ", nframes
+print "frames/pixel: ", frames_per_pixel
 
 read_frames(inn, None, nframes, chs, sampw, gfx, frames_per_pixel)
 
