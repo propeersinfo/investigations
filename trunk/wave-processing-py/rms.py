@@ -105,7 +105,7 @@ def handle_frames(frames, stats):
 def read_frames(inn, out, max_frames, chs, sampw, gfx = None):
     i = 0
     while i < max_frames:
-        frames = inn.readframes(4000)
+        frames = inn.readframes(20000)
         frames_read = len(frames) / (chs * sampw)
         conv = handle_frames(frames, gfx.handlers)
         #out.writeframesraw(conv)
@@ -128,20 +128,24 @@ class Gfx:
         self.window = pygame.display.set_mode((640, 480))
 
     def frame_pack_has_been_read(self):
-        rms = fabs(self.rms.get_rms())
-        db = fabs(self.avg_db.get_avg_db())
-        print "rms/avg for a second: %.2f / %.2f" % (rms, db)
-        x = 10 + self.count
-        y = 10
+        base_x = 10 + self.count*5
+        base_y = 10
         koefH = 5.0
-        dbH = floor(y + db*koefH)
-        color_db = (100, 255, 100)
-        pygame.draw.line(self.window, color_db, (x, y), (x, dbH))
 
-        rmsH = floor(y + rms*koefH)
+        """
+        db = fabs(self.avg_db.get_avg_db())
+        #print "rms/avg for a second: %.2f / %.2f" % (rms, db)
+        dbH = floor(base_y + db*koefH)
+        color_db = (100, 255, 100)
+        pygame.draw.line(self.window, color_db, (base_x, base_y), (base_x, dbH))
+        """
+
+        rms = fabs(self.rms.get_rms())
+        rmsH = floor(base_y + rms*koefH)
+        #rmsH = floor(base_y + rms)
         color_rms = (200, 100, 100)
         #pygame.draw.line(self.window, color_rms, (x, y), (x, rmsH))
-        rmsPoint = (x, rmsH)
+        rmsPoint = (base_x, rmsH)
         if not self.lastPointRms: self.lastPointRms = rmsPoint
         pygame.draw.line(self.window, color_rms, self.lastPointRms, rmsPoint)
         self.lastPointRms = rmsPoint

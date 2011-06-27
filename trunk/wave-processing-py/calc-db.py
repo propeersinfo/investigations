@@ -5,7 +5,7 @@ from math import log10, fabs
 
 MAX = 32767.0
 
-value = int(sys.argv[1])
+value = float(sys.argv[1])
 
-#print log10(value / MAX) * 20
-print log10((value / MAX) ** 2) * 10
+print log10(value / MAX) * 20
+#print log10((value / MAX) ** 2) * 10
