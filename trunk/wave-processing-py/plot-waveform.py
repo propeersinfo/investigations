@@ -23,7 +23,7 @@ def frame_pack(frames, out):
         i += 2
         i += 2
         #print volt
-    return (max_volt, min_volt)
+    return max_volt, min_volt
 
 def read_frames(inn, out, chs, sampw, total_frames):
     frame_cnt = 0
@@ -39,7 +39,7 @@ def read_frames(inn, out, chs, sampw, total_frames):
 in_file = ''
 try:
     in_file = sys.argv[1]
-except:
+except IndexError:
     in_file = "wav/italiano.wav"
 inn = open(in_file, "rb")
 
