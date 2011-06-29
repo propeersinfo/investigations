@@ -1,4 +1,6 @@
-import sys, wave
+# plot given audio into waveform image (via gnuplot currently)
+
+import sys, wave, array
 
 def get_16(ch1, ch2):
     value16 = ord(ch1) | ord(ch2) << 8
@@ -20,13 +22,14 @@ def frame_pack(frames, out):
             if volt < min_volt: min_volt = volt
         i += 2
         i += 2
+        #print volt
     return (max_volt, min_volt)
 
 def read_frames(inn, out, chs, sampw, total_frames):
     frame_cnt = 0
     pack_cnt = 0
     while frame_cnt < total_frames:
-        frames = inn.readframes(1024)
+        frames = inn.read(50*1024)
         frames_read = len(frames) / (chs*sampw)
         (max_volt, min_volt) = frame_pack(frames, out)
         print pack_cnt, max_volt, min_volt
@@ -38,9 +41,11 @@ try:
     in_file = sys.argv[1]
 except:
     in_file = "wav/italiano.wav"
-inn = wave.open(in_file, "rb")
-try:
-    (chs,sampw,hz,nframes,_,_) = inn.getparams()
-    read_frames(inn, sys.stdout, chs, sampw, nframes)
-finally:
-    inn.close()
+inn = open(in_file, "rb")
+
+arr = array.array("L")
+arr.fromfile(inn, 4)
+(chs,sampw,hz,nframes) = arr
+#print "(chs,sampw,hz,nframes) = ", (chs,sampw,hz,nframes)
+read_frames(inn, sys.stdout, chs, sampw, nframes)
+inn.close()
