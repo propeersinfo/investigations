@@ -1,3 +1,6 @@
+# concatenate given *.wav file into stdout
+# as a raw stream of samples without any meta data
+
 import sys, wave
 
 def frame_pack(frames, out):
