@@ -35,7 +35,7 @@ def read_frames(inn, out, out2, chs, sampw, nframes):
 
 out2 = open("values-from-internal.dat", "w")
 
-in_file = ''
+in_file = None
 try:
     in_file = sys.argv[1]
 except IndexError:
