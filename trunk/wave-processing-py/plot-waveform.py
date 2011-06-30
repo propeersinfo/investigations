@@ -24,17 +24,18 @@ def get_16(ch1, ch2):
 def frame_pack(frames):
     i = 0
     assert len(frames) % 4 == 0
-    max_volt = 0
-    min_volt = 0
+    left_channel = ExtremumFinder()
+    rite_channel = ExtremumFinder()
     while i < len(frames):
+        # left channel
         volt = get_16(frames[i], frames[i+1])
-        if volt > 0:
-            if volt > max_volt: max_volt = volt
-        else:
-            if volt < min_volt: min_volt = volt
+        left_channel.pass_value(volt)
         i += 2
+        # right channel
+        volt = get_16(frames[i], frames[i+1])
+        rite_channel.pass_value(volt)
         i += 2
-    return max_volt, min_volt
+    return left_channel.get_extremums(), rite_channel.get_extremums()
 
 def read_frames(inn, out, chs, sampw, hz, total_frames, frames_in_pack):
     frame_cnt = 0
@@ -44,9 +45,9 @@ def read_frames(inn, out, chs, sampw, hz, total_frames, frames_in_pack):
         frames_read = len(frames) / (chs*sampw)
         frame_cnt += frames_read
 
-        (max_volt, min_volt) = frame_pack(frames)
+        (left, rite) = frame_pack(frames)
         time_in_seconds = float(frame_cnt) / hz
-        print "%f %d %d" % (time_in_seconds, max_volt, min_volt)
+        print "%f %d %d %d %d" % (time_in_seconds, left[0], left[1], rite[0], rite[1])
 
         pack_cnt += 1
 
