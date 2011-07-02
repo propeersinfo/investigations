@@ -1,0 +1,1 @@
+sox 1.wav -n spectrogram -o spectrogram-test.png
