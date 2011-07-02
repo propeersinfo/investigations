@@ -60,13 +60,13 @@ def get_cmd_arg(argn, default):
         else:
             raise Exception("No command line argument %d" % argn)
 
-def set_stdout_binary():
+def set_stdin_binary():
     if sys.platform == "win32":
         import os, msvcrt
-        msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+        msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
 
-in_file = get_cmd_arg(1, "wav/italiano.wav")
-inn = open(in_file, "rb")
+set_stdin_binary()
+inn = sys.stdin
 
 arr = array.array("L")
 arr.fromfile(inn, 4)
@@ -76,7 +76,9 @@ print "; sample width: ", sampw
 print "; frequency: ", hz
 print "; frames: ", nframes
 
-frames_in_pack = nframes / 608 * 4 # 608 is standard width of a gnuplot produced image
+frames_in_pack = nframes / 608 * 4 # 608 is default width of a gnuplot produced image
 frames_in_pack += frames_in_pack % 4
+
 read_frames(inn, sys.stdout, chs, sampw, hz, nframes, frames_in_pack)
-inn.close()
+
+if inn != sys.stdin: inn.close()
