@@ -19,8 +19,8 @@ def frame_pack(frames, out, out2):
     i = 0
     while i < len(frames):
         out.write("%c%c" % (frames[i], frames[i+1]))
-        v16 = get_16(frames[i], frames[i+1])
-        out2.write("%d\n" % v16)
+        #v16 = get_16(frames[i], frames[i+1])
+        #out2.write("%d\n" % v16)
         global FRAME_COUNT
         FRAME_COUNT += 1
         i += 2
@@ -33,20 +33,29 @@ def read_frames(inn, out, out2, chs, sampw, nframes):
         frame_pack(frames, out, out2)
         i += frames_read
 
-out2 = open("values-from-internal.dat", "w")
+def get_cmd_arg(argn, default):
+    try:
+        return sys.argv[argn]
+    except IndexError:
+        if default:
+            return default
+        else:
+            raise Exception("No command line argument %d" % argn)
 
-in_file = None
-try:
-    in_file = sys.argv[1]
-except IndexError:
-    in_file = "wav/italiano.wav"
+def set_stdout_binary():
+    if sys.platform == "win32":
+        import os, msvcrt
+        msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+
+#out2 = open("values-from-internal.dat", "w")
+out2 = None
+
+in_file = get_cmd_arg(1, "wav/italiano.wav")
 
 inn = wave.open(in_file, "rb")
 (chs,sampw,hz,nframes,_,_) = inn.getparams()
 
-if sys.platform == "win32":
-    import os, msvcrt
-    msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+set_stdout_binary()
 
 out = sys.stdout
 
@@ -55,5 +64,4 @@ read_frames(inn, out, out2, chs, sampw, nframes)
 #out.close()
 inn.close()
 
-#out2.write("FRAME_COUNT = %d" % FRAME_COUNT)
-out2.close()
+if out2: out2.close()
