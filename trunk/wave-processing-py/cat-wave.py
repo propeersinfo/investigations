@@ -7,11 +7,11 @@ def write_ulong(out, values):
     arr = array.array('L', values) # 'L' means unsigned long
     arr.tofile(out)
 
-def get_16(ch1, ch2):
-    value16 = ord(ch1) | ord(ch2) << 8
-    if value16 & 0x8000 != 0:
-        value16 -= 0x10000
-    return value16
+#def get_16(ch1, ch2):
+#    value16 = ord(ch1) | ord(ch2) << 8
+#    if value16 & 0x8000 != 0:
+#        value16 -= 0x10000
+#    return value16
 
 def frame_pack(frames, out):
     i = 0
@@ -22,7 +22,7 @@ def frame_pack(frames, out):
 def read_frames(inn, out, chs, sampw, nframes):
     i = 0
     while i < nframes:
-        frames = inn.readframes(10*1024)
+        frames = inn.readframes(100*1024)
         frames_read = len(frames) / (chs*sampw)
         frame_pack(frames, out)
         i += frames_read
