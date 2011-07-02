@@ -51,11 +51,21 @@ def read_frames(inn, out, chs, sampw, hz, total_frames, frames_in_pack):
 
         pack_cnt += 1
 
-in_file = None
-try:
-    in_file = sys.argv[1]
-except IndexError:
-    in_file = "wav/italiano.wav"
+def get_cmd_arg(argn, default):
+    try:
+        return sys.argv[argn]
+    except IndexError:
+        if default:
+            return default
+        else:
+            raise Exception("No command line argument %d" % argn)
+
+def set_stdout_binary():
+    if sys.platform == "win32":
+        import os, msvcrt
+        msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+
+in_file = get_cmd_arg(1, "wav/italiano.wav")
 inn = open(in_file, "rb")
 
 arr = array.array("L")
