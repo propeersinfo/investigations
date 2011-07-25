@@ -1,0 +1,6 @@
+.user-picture img {
+  border: 2px #fff solid;
+  -moz-box-shadow: 0 4px 8px #999;
+  -webkit-box-shadow: 0 4px 8px #999;
+  box-shadow: 0 4px 8px #999;
+}

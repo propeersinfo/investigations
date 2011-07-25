@@ -1,0 +1,33 @@
+<!--
+<div class="tags">
+  <a href="/tags/music/">музыка</a>
+</div>
+-->
+
+<h1 class="published visible e2-smart-title">
+	{% if single_article %}
+		<span class="current">{{ article.title }}</span>
+		<sup><a href="/admin/article/edit/?id={{article.id}}">[edit]</a></sup>
+	{% else %}
+		<a href="{{article.path}}"><span class="current">{{ article.title }}</span></a>
+		<sup><a href="/admin/article/edit/?id={{article.id}}">[edit]</a></sup>
+	{% endif %}
+   	<span class="icons"></span>
+</h1>
+
+<p class="super-h">
+    {{ article.published_when|date:"j F Y" }}
+    / <a href="#">{{ article.tags|join:", " }}</a>
+</p>
+
+<div class="text published visible">
+    {{ article.html }}
+</div>
+
+{% if single_article %}
+    {% include "comments.html" %}
+{% else %}
+    <p>
+    <span id="e2-comments-count">{{article.comments_count}} comments</span>
+    </p>
+{% endif %}

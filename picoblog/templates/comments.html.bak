@@ -1,0 +1,106 @@
+<div class="comments">
+
+
+
+<h3 class="comments-heading">
+<span id="e2-comments-count">9 комментариев</span>
+<a class="rss-link" href="/comments-rss/">РСС</a>
+</h3>
+
+
+
+
+
+<!-- one comment -->      
+<div class="comment-and-reply">
+	<div class=" visible">
+	  <div class="comment e2-comment-control-group">
+		<div class="comment-meta-area">
+		  <div>
+			  <span class="comment-author" title="20 июля 2011, 21:46, GMT+06:00">
+				<span class="e2-markable ">Александр</span>
+			  </span>
+			  <span class="icons e2-comment-actions"></span>
+		  </div>
+		  <div class="meta" style="display: none">
+			<span class="admin-links"></span>
+		  </div>
+		</div>
+		<div class="comment-content-area">
+		  <div class="comment-actions-removed admin-links" style="display: none">
+		  </div>
+		  <div class="comment-content visible">
+		  Я конечно ничего не&nbsp;понимаю в&nbsp;создании такой музыки 
+		  (магия?), но на&nbsp;слух&nbsp;— мне очень нравится. Определенно, 
+		  скачиваем и&nbsp;слушаем.    
+		  <span class="icons">
+				  </span>
+		  </div>
+		</div>
+		<div class="clear"></div>
+	  </div>
+	</div>
+</div>
+
+
+
+
+
+  <h3>Ваш комментарий</h3>
+  <div class="humble-form">
+<form action="/comment-process/" method="post" accept-charset="UTF-8" name="form-comment" id="form-comment">
+<input name="note-id" value="2796" type="hidden">
+<input name="comment-id" value="new" type="hidden">
+<input name="from" value="" type="hidden">
+<input name="already-subscribed" value="" type="hidden">
+<div class="form">
+<div class="form-control">
+  <div class="label input-label"><label>Имя и&nbsp;фамилия</label></div>
+  <input class="text required width-2" tabindex="1" id="name" name="name" value="Павел Власов" type="text">
+</div>
+
+<div class="form-control">
+  <div class="label input-label"><label>Эл. почта</label></div>
+  <div style="position: relative">
+        <div style="position: absolute; z-index: 0; left: 0; top: 0">
+    <input class="text width-2" style="outline: medium none;" tabindex="-1" name="email" autocomplete="off" type="text">
+    </div>
+    <div style="position: relative; z-index: 1; left: 0; top: 0">
+        <input class="text required width-2" tabindex="2" id="email" name="elton-john" value="zeencd@gmail.com" type="text">
+    </div>
+  </div>
+  <p class="small baseline">
+    адрес не будет опубликован<br>  </p>
+</div>
+
+<div class="form-control">
+  <div class="label"><p><label>Текст</label></p>
+  </div>
+  <textarea name="text" class="required full-width" id="text" tabindex="3" style="height: 16.7em; overflow-x: hidden; overflow-y: visible;"></textarea>
+  <p class="small baseline">
+    ХТМЛ не работает<br>  </p>
+</div>
+
+<div class="form-control">
+  <label class="checkbox">
+  <input name="subscribe" class="checkbox" type="checkbox"> Получать комментарии других по почте
+  </label><br>
+</div>
+ 
+
+<div class="form-control">
+  <p></p>
+</div>
+
+
+<div class="submit-box">
+<div>
+  <input disabled="disabled" id="submit-button" tabindex="4" value="Отправить" type="submit"><span class="keyboard-shortcut">Ctrl<span class="tsp">&nbsp;</span>+<span class="tsp">&nbsp;</span>Enter</span>
+</div>
+</div>
+
+</div>
+
+</form>  </div>
+
+</div>
