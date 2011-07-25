@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="feeb6775-e87b-462f-8849-5698d75ce28c" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/picoblog.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/docutils.conf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/readers/python" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/readers" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/html4css1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/latex2e/default.tex" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/latex2e/docutils-05-compat.sty" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/latex2e/titlepage.tex" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/latex2e" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/newlatex2e/base.tex" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/newlatex2e" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/odf_odt/styles.odt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/odf_odt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/pep_html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/big-black/__base__" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/big-black" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/big-white" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/blank.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/iepngfix.htc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/medium-black/__base__" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/medium-black" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/medium-white" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/small-black/__base__" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/small-black" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/small-white" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/operablogimport" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/filters" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/atom-small.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/bg2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/enter.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/favicon.ico" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/loading-spinner.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/lock.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/login.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/rss2-small.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/search.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/star-stroke.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/tail.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/tick.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/userpic.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/comments.html.bak" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Google_App_Engine_SDK.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app.yaml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/blog.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/defs.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/_compat.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/_string_template_compat.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/core.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/examples.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/frontend.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/io.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/af.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/ca.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/cs.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/de.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/en.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/eo.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/es.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/fi.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/fr.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/gl.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/he.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/it.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/ja.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/nl.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/pl.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/pt_br.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/ru.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/sk.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/sv.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/zh_cn.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/languages/zh_tw.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/nodes.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/null.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives/admonitions.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives/body.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives/html.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives/images.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives/misc.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives/parts.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives/references.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/directives/tables.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/README.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isoamsa.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isoamsb.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isoamsc.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isoamsn.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isoamso.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isoamsr.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isobox.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isocyr1.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isocyr2.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isodia.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isogrk1.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isogrk2.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isogrk3.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isogrk4-wide.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isogrk4.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isolat1.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isolat2.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isomfrk-wide.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isomfrk.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isomopf-wide.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isomopf.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isomscr-wide.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isomscr.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isonum.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isopub.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/isotech.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/mmlalias.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/mmlextra-wide.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/mmlextra.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/s5defs.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/xhtml1-lat1.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/xhtml1-special.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/include/xhtml1-symbol.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/af.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/ca.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/cs.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/de.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/en.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/eo.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/es.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/fi.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/fr.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/gl.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/he.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/it.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/ja.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/nl.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/pl.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/pt_br.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/ru.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/sk.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/sv.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/zh_cn.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/languages/zh_tw.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/roles.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/states.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/parsers/rst/tableparser.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/readers/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/readers/doctree.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/readers/pep.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/readers/python/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/readers/python/moduleparser.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/readers/python/pynodes.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/readers/standalone.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/statemachine.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms/components.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms/frontmatter.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms/misc.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms/parts.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms/peps.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms/references.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms/universal.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/transforms/writer_aux.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/urischemes.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/utils.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/docutils_xml.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/html4css1/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/html4css1/html4css1.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/html4css1/template.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/latex2e/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/manpage.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/newlatex2e/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/newlatex2e/notes.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/newlatex2e/tests.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/newlatex2e/unicode_map.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/null.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/odf_odt/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/odf_odt/pygmentsformatter.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/pep_html/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/pep_html/pep.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/pep_html/template.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/pseudoxml.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/README.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/big-black/framing.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/big-black/pretty.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/big-white/framing.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/big-white/pretty.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/framing.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/opera.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/outline.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/pretty.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/print.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/s5-core.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/slides.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/default/slides.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/medium-black/pretty.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/medium-white/framing.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/medium-white/pretty.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/small-black/pretty.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/small-white/framing.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docutils/writers/s5_html/themes/small-white/pretty.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/importdata.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/index.yaml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/operablogimport/BeautifulSoup.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/operablogimport/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/operablogimport/post_parser.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/operablogimport/soupselect.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/cmdline.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/console.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/filter.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/filters/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatter.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/_mapping.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/bbcode.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/html.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/img.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/latex.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/other.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/rtf.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/svg.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/terminal.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/formatters/terminal256.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexer.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/_asybuiltins.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/_clbuiltins.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/_luabuiltins.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/_mapping.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/_phpbuiltins.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/_vimbuiltins.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/agile.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/asm.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/compiled.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/dotnet.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/functional.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/hdl.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/math.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/other.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/parsers.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/special.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/templates.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/text.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/lexers/web.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/plugin.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/scanner.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/style.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/autumn.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/borland.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/bw.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/colorful.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/default.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/emacs.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/friendly.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/fruity.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/manni.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/monokai.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/murphy.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/native.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/pastie.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/perldoc.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/tango.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/trac.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/vim.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/styles/vs.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/token.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/unistring.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygments/util.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/request.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/roman.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/rst.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/main.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/main_002.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/style.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/technorati.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin-edit.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin-main.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/archive.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/article.html.old.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/article.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/articles.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/base.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/base.original.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/comments.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/not-found.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/rss2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils.py" />
+    </list>
+    <ignored path="picoblog.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+    <option name="REVERSE_PATCH" value="false" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="picoblog" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf />
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/templates/article.html" />
+        <option value="C:/Temp/1.py" />
+        <option value="$PROJECT_DIR$/blog.py" />
+        <option value="$PROJECT_DIR$/templates/admin-edit.html" />
+        <option value="$PROJECT_DIR$/templates/base.html" />
+        <option value="$PROJECT_DIR$/templates/show-articles.html" />
+        <option value="$PROJECT_DIR$/admin.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="picoblog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="picoblog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="picoblog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Favorites" />
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="last_opened_file_path" value="C:/Temp" />
+  </component>
+  <component name="RunManager" selected="App Engine server.picoblog">
+    <configuration default="true" type="PythonUnitTestConfigurationType" factoryName="Python's unittest">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <module name="picoblog" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="PUREUNITTEST" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Python.AppEngineServer" factoryName="App Engine server">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <module name="picoblog" />
+      <option name="browserUrl" value="" />
+      <option name="additionalOptions" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="PythonDocTestRunConfigurationType" factoryName="Python's doctests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <module name="picoblog" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <method />
+    </configuration>
+    <configuration default="false" name="picoblog" type="Python.AppEngineServer" factoryName="App Engine server">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <module name="picoblog" />
+      <option name="browserUrl" value="" />
+      <option name="additionalOptions" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="App Engine server.picoblog" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="DETECT_NESTED_COPIES" value="true" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <configuration useDefault="true">C:\Users\Pavel\AppData\Roaming\Subversion</configuration>
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\workspace\investigations\picoblog" />
+          <option name="myCopyRoot" value="C:\workspace\investigations\picoblog" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\workspace\investigations\picoblog" />
+          <option name="myCopyRoot" value="C:\workspace\investigations\picoblog" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="feeb6775-e87b-462f-8849-5698d75ce28c" name="Default" comment="" />
+      <created>1300545637160</created>
+      <updated>1300545637160</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1288" height="784" extended-state="6" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32824427" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1752" sideWeight="0.67175573" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854864" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_NEW_TODO" value="true" />
+    <option name="myTodoPanelSettings">
+      <value>
+        <are-packages-shown value="false" />
+        <are-modules-shown value="false" />
+        <flatten-packages value="false" />
+        <is-autoscroll-to-source value="false" />
+      </value>
+    </option>
+    <option name="PERFORM_UPDATE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_COMMIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_CHECKOUT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="false" />
+    <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="false" />
+    <option name="ENABLE_BACKGROUND_PROCESSES" value="false" />
+    <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
+    <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
+    <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
+    <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
+    <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
+    <option name="LAST_COMMIT_MESSAGE" />
+    <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
+    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8" />
+    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5" />
+    <option name="ACTIVE_VCS_NAME" />
+    <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
+    <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
+    <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
+    <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/request.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="8" selection-start="1064" selection-end="1064" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/article.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rst.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="4" selection-start="3191" selection-end="3191" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admin-edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="113" column="14" selection-start="2771" selection-end="2771" vertical-scroll-proportion="0.60333335" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="137" column="17" selection-start="4609" selection-end="4609" vertical-scroll-proportion="0.24203822" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="8" selection-start="1016" selection-end="1016" vertical-scroll-proportion="0.028862478" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/blog.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="158" column="0" selection-start="4559" selection-end="4559" vertical-scroll-proportion="0.027642276" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="0" selection-start="928" selection-end="928" vertical-scroll-proportion="0.027070064" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

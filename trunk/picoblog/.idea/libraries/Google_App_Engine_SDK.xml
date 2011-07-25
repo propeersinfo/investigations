@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Google App Engine SDK">
+    <CLASSES>
+      <root url="file://C:/Python/gae" />
+      <root url="file://C:/Python/gae/lib/django_1_2" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>
