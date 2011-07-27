@@ -57,7 +57,6 @@ function onLoadForYoutube() {
 
 <div style="position: fixed; left: 0px; top: 0px; width: 100%; height: 1px; background: url(&quot;system/theme/images/loading-bar.gif&quot;) repeat-x scroll left center transparent; opacity: 0;" id="e2-thinkbar"></div>
 
-
 <div>
 
     <div class="top-spacer"></div>
@@ -106,41 +105,41 @@ function onLoadForYoutube() {
 	<div class="sidebar-element">
 		<!--h2>Styles</h2-->
 		<ul class="links-list">
-		<li><a href="#">jazz</a></li>
-		<li><a href="#">garage&ndash;beat</a></li>
-		<li><a href="#">pop</a>, <a href="#">disco</a></li>
-    	<li><a href="#">easy</a></li>
-    	<li><a href="#">shake&ndash;twist</a></li>
-    	<li><a href="#">psyche</a>, <a href="#">prog</a></li>
-    	<li><a href="#">electro</a></li>
+		<li>{% blog_tag "jazz" %}</li>
+		<li>{% blog_tag "garage" "garage/beat" %}</li>
+		<li>{% blog_tag "pop" %}, {% blog_tag "disco" %}</li>
+    	<li>{% blog_tag "easy" %}</li>
+    	<li>{% blog_tag "shake" "shake/twist" %}</li>
+    	<li>{% blog_tag "psyche" %}, {% blog_tag "prog" %}</li>
+    	<li>{% blog_tag "electro" %}</li>
 		</ul>
 	</div>
     <div class="sidebar-element">
         <ul class="links-list">
-		<li><a href="#">60's</a>, <a href="#">70's</a>, <a href="#">80's</a></li>
+		<li>{% blog_tag "60s" "60's" %}, {% blog_tag "70s" "70's" %}, {% blog_tag "80s" "80's" %}</li>
         </ul>
 	</div>
     <div class="sidebar-element">
 		<ul class="links-list">
-		<li><a href="#">mixes</a>, <a href="#">best</a></li>
+		<li>{% blog_tag "mixes" %}, {% blog_tag "best" %}</li>
 		</ul>
 	</div>
     <div class="sidebar-element">
 		<ul class="links-list">
-		<li><a href="#">russia</a></li>
-    	<li><a href="#">estonia</a></li>
-		<li><a href="#">latvia</a></li>
-		<li><a href="#">lithuania</a></li>
-		<li><a href="#">armenia</a></li>
-		<li><a href="#">azerbaijan</a></li>
-		<li><a href="#">georgia</a></li>
-    	<li><a href="#">ukraine</a></li>
-		<li><a href="#">moldova</a></li>
-		<li><a href="#">belarus</a></li>
-    	<li><a href="#">tajikistan</a></li>
-		<li><a href="#">turkmenia</a></li>
-		<li><a href="#">uzbekistan</a></li>
-		<li><a href="#">kazakstan</a></li>
+		<li>{% blog_tag "russia" %}</li>
+    	<li>{% blog_tag "estonia" %}</li>
+		<li>{% blog_tag "latvia" %}</li>
+		<li>{% blog_tag "lithuania" %}</li>
+		<li>{% blog_tag "armenia" %}</li>
+		<li>{% blog_tag "azerbaijan" %}</li>
+		<li>{% blog_tag "georgia" %}</li>
+    	<li>{% blog_tag "ukraine" %}</li>
+		<li>{% blog_tag "moldova" %}</li>
+		<li>{% blog_tag "belarus" %}</li>
+    	<li>{% blog_tag "tajikistan" %}</li>
+		<li>{% blog_tag "turkmenia" %}</li>
+		<li>{% blog_tag "uzbekistan" %}</li>
+		<li>{% blog_tag "kazakstan" %}</li>
     	</ul>
 	</div>
 

@@ -4,6 +4,18 @@
 </div>
 -->
 
+<tr class="fieldrow">
+  <th><label for="id_{{ fieldname }}">
+    {{ label }} 
+  </label></th>
+  <td>
+    {{ field }}<br>
+    {% if field.errors %}
+      <div class="error">{{ field.errors|join:", " }}</div>
+    {% endif %}
+  </td>
+</tr>
+
 <h1 class="published visible e2-smart-title">
 	{% if single_article %}
 		<span class="current">{{ article.title }}</span>
@@ -15,14 +27,19 @@
    	<span class="icons"></span>
 </h1>
 
-<p class="super-h">
-    {{ article.published_when|date:"j F Y" }}
-    / <a href="#">{{ article.tags|join:", " }}</a>
-</p>
-
 <div class="text published visible">
     {{ article.html }}
 </div>
+
+<p class="super-h">
+    {{ article.published_when|date:"j F Y" }}
+    /
+    {% for tag in article.tags %}
+    	<a href="/tag/{{tag}}">{{tag}}</a>,
+    {% endfor %}
+</p>
+
+<br>
 
 {% if single_article %}
     {% include "comments.html" %}

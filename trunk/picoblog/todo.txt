@@ -1,0 +1,20 @@
+Check list:
+- make sure admin links are viewable and accessible for admin only
+
+Top priority:
+- make sure admin's comments looks special both in old and new comments
++ implement tag links and tags-at-left
+- markup: single mp3
+- markup: playlist mp3
+- markup: mixcloud
+
+Middle priority:
+- dates in comments
+- impl google search
+- impl google stats
+
+Low priority:
+- implement archive listing
+- easy template switch
+- ajax comments
+- caching of each post and the front page

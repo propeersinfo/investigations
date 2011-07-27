@@ -173,7 +173,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
     def handle_custom_tag_youtube(self, input):
         import re
         regex = "\[\s*(http://)?(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9-_]+)\s*\]"
-        replace = '<iframe width="425" height="349" src="http://www.youtube.com/embed/\\3" frameborder="0" allowfullscreen></iframe>'
+        #replace = '<iframe width="425" height="349" src="http://www.youtube.com/embed/\\3" frameborder="0" allowfullscreen></iframe>'
         replace = '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg">'
         return re.sub(regex, replace, input)
 
@@ -363,6 +363,11 @@ class NotFoundPageHandler(AbstractPageHandler):
 # -----------------------------------------------------------------------------
 # Main program
 # -----------------------------------------------------------------------------
+
+from google.appengine.ext.webapp import template
+template.register_template_library('tags.mytags')
+
+webapp.template.register_template_library('my_tags')
 
 application = webapp.WSGIApplication(
     [('/', FrontPageHandler),
