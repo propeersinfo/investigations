@@ -10,7 +10,7 @@
 </h3>
 
 
-{% for comment in article.comment_set %}
+{% for comment in article.comments %}
 <div class="comment-and-reply">
 	<div class=" visible">
 	  <div class="comment e2-comment-control-group">
@@ -37,7 +37,7 @@
 		  <div class="comment-actions-removed admin-links" style="display: none">
 		  </div>
 		  <div class="comment-content visible">
-		      {{comment.text}}
+		      {{comment.html}}
               <sup><a href="/admin/comment/delete/{{comment.id}}">[remove]</a></sup>
 		      <span class="icons"></span>
 		  </div>

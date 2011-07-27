@@ -159,6 +159,12 @@ class AbstractPageHandler(request.BlogRequestHandler):
             article.path = utils.get_article_path(article)
             article.url = url_prefix + article.path
             article.comments_count = article.comment_set.count()
+            article.comments = [] # article.comment_set cannot be adjusted
+            for comment in article.comment_set:
+                comment.html = simplemarkup.markup2html(markup_text=comment.text,
+                                                        rich_markup=False,
+                                                        recognize_links=comment.blog_owner)
+                article.comments.append(comment)
 
     def render_articles(self,
                         articles,
