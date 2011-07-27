@@ -7,3 +7,7 @@ def slugify(s):
   s = re.sub("[']", '', s)                        # remove some chars
   s = re.sub('[^a-zA-Z0-9-]+', '-', s).strip('-') # replace the rest with '-'
   return s
+
+
+def get_article_path(article):
+    return '/%s-%s.html' % (article.id, slugify(article.title))

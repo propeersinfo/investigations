@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block title %}
+	{% if single_article %}
+		{{single_article.title|escape}} - Soviet Rare Groove
+	{% else %}
+		Soviet Rare Groove
+	{% endif %}
+{% endblock %}
+
 {% block main %}
   {% for article in articles %}
     {% include "article.html" %}
@@ -38,4 +46,3 @@
     </div>
   {% endif %}
 {% endblock %}
-
