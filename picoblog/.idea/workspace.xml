@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="feeb6775-e87b-462f-8849-5698d75ce28c" name="Default" comment="+ markup: make http links clickable">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/my_tags.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simplemarkup.py" />
+    <list default="true" readonly="true" id="feeb6775-e87b-462f-8849-5698d75ce28c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blog.py" afterPath="$PROJECT_DIR$/blog.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simplemarkup.py" afterPath="$PROJECT_DIR$/simplemarkup.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/comments.html" afterPath="$PROJECT_DIR$/templates/comments.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/todo.txt" afterPath="$PROJECT_DIR$/todo.txt" />
     </list>
     <ignored path="picoblog.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,19 +29,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="blog.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="blog.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/blog.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="157" column="0" selection-start="4521" selection-end="4521" vertical-scroll-proportion="0.0">
+            <state line="165" column="0" selection-start="5047" selection-end="5047" vertical-scroll-proportion="0.49522293">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="simplemarkup.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="simplemarkup.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simplemarkup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="48" column="0" selection-start="2489" selection-end="2489" vertical-scroll-proportion="0.77886176">
+            <state line="49" column="0" selection-start="2548" selection-end="2548" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -66,6 +67,7 @@
         <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/models.py" />
         <option value="$PROJECT_DIR$/markup.py" />
+        <option value="$PROJECT_DIR$/defs.py" />
         <option value="$PROJECT_DIR$/blog.py" />
         <option value="$PROJECT_DIR$/simplemarkup.py" />
       </list>
@@ -297,7 +299,7 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ markup: make http links clickable" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -357,30 +359,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/defs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="0" selection-start="524" selection-end="524" vertical-scroll-proportion="0.33280253">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="0" selection-start="726" selection-end="726" vertical-scroll-proportion="0.78503186">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="0" selection-start="321" selection-end="321" vertical-scroll-proportion="0.32484075">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/blog.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="157" column="0" selection-start="4521" selection-end="4521" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -392,9 +373,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/defs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="0" selection-start="556" selection-end="556" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/simplemarkup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="0" selection-start="2489" selection-end="2489" vertical-scroll-proportion="0.77886176">
+        <state line="49" column="0" selection-start="2548" selection-end="2548" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="170" column="0" selection-start="4940" selection-end="4940" vertical-scroll-proportion="0.8375796">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/blog.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="165" column="0" selection-start="5047" selection-end="5047" vertical-scroll-proportion="0.49522293">
           <folding />
         </state>
       </provider>
