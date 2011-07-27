@@ -20,6 +20,7 @@ import sys
 import math
 import random
 import datetime
+import re
 
 # Google AppEngine imports
 from google.appengine.api import users
@@ -131,12 +132,12 @@ class AbstractPageHandler(request.BlogRequestHandler):
         dates.reverse()
         return [DateCount(date, date_count[date]) for date in dates]
 
-    def augment_articles(self, articles, url_prefix, html=True):
+    def augment_articles(self, articles, url_prefix, produce_html=True):
         """
         Augment the ``Article`` objects in a list with the expanded
         HTML, the path to the article, and the full URL of the article.
         The augmented fields are:
-        
+
         - ``html``: the optionally expanded HTML
         - ``path``: the article's path
         - ``url``: the full URL to the article
@@ -152,56 +153,51 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 ``True`` to generate HTML from each article's RST
         """
         for article in articles:
-            if html:
-                try:
-                    def my_rst2html(markup):
-                        markup = markup.replace('\n', '<br>\n')
-                        return markup
-                    #article.html = rst2html(article.body)
-                    article.html = my_rst2html(article.body)
-                    article.html = self.handle_custom_tag_mp3(article.html)
-                    article.html = self.handle_custom_tag_youtube(article.html)
-                    article.html = self.handle_custom_tag_mixcloud(article.html)
-                except AttributeError, e:
-                    #article.html = 'an error occured performing rst2html()'
-                    raise e
+            if produce_html:
+                def my_rst2html(markup):
+                    markup = markup.replace('\n', '<br>\n')
+                    return markup
+                #article.html = rst2html(article.body)
+                article.html = my_rst2html(article.body)
+                article.html = self.handle_custom_tag_http_link(article.html)
+                article.html = self.handle_custom_tag_mp3(article.html)
+                article.html = self.handle_custom_tag_youtube(article.html)
+                article.html = self.handle_custom_tag_mixcloud(article.html)
             #article.path = '/' + defs.ARTICLE_URL_PATH + '/%s' % article.id
-            slug = utils.slugify(article.title)
-            article.path = '/%s-%s.html' % (article.id, slug)
+            article.path = utils.get_article_path(article)
             article.url = url_prefix + article.path
             article.comments_count = article.comment_set.count()
 
+    def handle_custom_tag_http_link(self, input):
+        for regex_and_replace in [
+                    ['^(http://[^\s]+)',    '<a href="\\1">\\1</a>'],
+                    ['(\s)(http://[^\s]+)', '\\1<a href="\\2">\\2</a>' ]
+        ]:
+            regex = regex_and_replace[0]
+            replace = regex_and_replace[1]
+            input = re.sub(regex, replace, input)
+        return input
+
     def handle_custom_tag_youtube(self, input):
-        import re
         regex = "\[\s*(http://)?(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9-_]+)\s*\]"
-        #replace = '<iframe width="425" height="349" src="http://www.youtube.com/embed/\\3" frameborder="0" allowfullscreen></iframe>'
         replace = '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg">'
         return re.sub(regex, replace, input)
 
     def handle_custom_tag_mp3(self, input):
         dropbox_user = "1883230"
 
-        #regex = "\[mp3 +([^\]]+)]"
         regex = "\[([^\]]+mp3)\]"
-
         repl_link  = "http://dl.dropbox.com/u/%s/sg/\\1" % (dropbox_user)
         repl_swf   = "http://dl.dropbox.com/u/%s/dewplayer-mini.swf" % (dropbox_user)
         repl_flash = "<object width='160' height='18'><embed src='" + repl_swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + repl_link + "' quality='high'></embed></object>"
         repl_dload = "<a href=\"%s\">\\1</a>" % (repl_link)
         repl = "%s %s" % (repl_flash, repl_dload)
 
-        import re
         return re.sub(regex, repl, input)
 
     def handle_custom_tag_mixcloud(self, input):
-        dropbox_user = "1883230"
-
-        #regex = "\[mp3 +([^\]]+)]"
         regex = "\[\s*(http://)?(www.)?mixcloud.com/([a-zA-Z0-9-]+)/([a-zA-Z0-9-]+)/?\s*\]"
-
         replace  = '<object height="400" width="400"><param name="movie" value="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\3%2F\\4%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\3%2F\\4%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="400" width="400"></object>'
-
-        import re
         return re.sub(regex, replace, input)
 
     def render_articles(self,
@@ -216,7 +212,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             url_prefix += ':%s' % port
 
         self.augment_articles(articles, url_prefix)
-        self.augment_articles(recent, url_prefix, html=False)
+        self.augment_articles(recent, url_prefix, produce_html=False)
 
         last_updated = datetime.datetime.now()
         if articles:
@@ -230,23 +226,39 @@ class AbstractPageHandler(request.BlogRequestHandler):
         media_path = '/' + defs.MEDIA_URL_PATH
         media_url = url_prefix + media_path
 
-        template_variables = {'blog_name'    : defs.BLOG_NAME,
-                              'canonical_blog_url' : defs.CANONICAL_BLOG_URL,
-                              'blog_owner'   : defs.BLOG_OWNER,
-                              'articles'     : articles,
-                              'tag_list'     : self.get_tag_counts(),
-                              'date_list'    : self.get_month_counts(),
-                              'version'      : '0.3',
-                              'last_updated' : last_updated,
-                              'blog_path'    : '/',
-                              'blog_url'     : blog_url,
-                              'archive_path' : '/' + defs.ARCHIVE_URL_PATH,
-                              'tag_path'     : tag_path,
-                              'tag_url'      : tag_url,
-                              'date_path'    : date_path,
-                              'date_url'     : date_url,
-                              'rss2_path'    : '/' + defs.RSS2_URL_PATH,
-                              'recent'       : recent}
+        class UserInfo:
+            def __init__(self, user, is_admin, login_url, logout_url):
+                self.user = user
+                self.is_admin = is_admin
+                self.login_url = login_url
+                self.logout_url = logout_url
+
+        user_info = UserInfo(user = users.get_current_user(),
+                             is_admin = users.is_current_user_admin(),
+                             login_url = users.create_login_url(request.path),
+                             logout_url = users.create_logout_url(request.path))
+
+        template_variables = {
+            'blog_name'    : defs.BLOG_NAME,
+            'canonical_blog_url' : defs.CANONICAL_BLOG_URL,
+            'blog_owner'   : defs.BLOG_OWNER,
+            'articles'     : articles,
+            'tag_list'     : self.get_tag_counts(),
+            'date_list'    : self.get_month_counts(),
+            'version'      : '0.3',
+            'last_updated' : last_updated,
+            'blog_path'    : '/',
+            'blog_url'     : blog_url,
+            'archive_path' : '/' + defs.ARCHIVE_URL_PATH,
+            'tag_path'     : tag_path,
+            'tag_url'      : tag_url,
+            'date_path'    : date_path,
+            'date_url'     : date_url,
+            'rss2_path'    : '/' + defs.RSS2_URL_PATH,
+            'recent'       : recent,
+            'user_info'    : user_info,
+            'blog_owner_name' : defs.BLOG_OWNER
+        }
 
         if additional_template_variables:
             template_variables.update(additional_template_variables)
@@ -321,7 +333,8 @@ class SingleArticleHandler(AbstractPageHandler):
         else:
             template = 'not-found.html'
             articles = []
-        additional_template_variables = {'single_article': True}
+        #additional_template_variables = {'single_article': True}
+        additional_template_variables = {'single_article': article}
         self.response.out.write(self.render_articles(articles,
                                                      self.request,
                                                      self.get_recent(),
@@ -354,14 +367,20 @@ class RSSFeedHandler(AbstractPageHandler):
 class AddCommentHandler(AbstractPageHandler):
     def post(self, article_id):
         article_id = int(article_id)
-        author = cgi.escape(self.request.get('author'))
-        text = cgi.escape(self.request.get('text'))
         article = Article.get(article_id)
-        
-        comment = Comment(article=article, author=author, text=text)
-        
+
+        #if True: raise Exception("article_id = %s, article = %s, article.id = %s" % (article_id, article, article.id))
+
+        author = cgi.escape(self.request.get('author')).strip()
+        #if author == '' and not users.is_current_user_admin():
+        #    author = 'Anonymous'
+
+        comment = Comment(article = article,
+                          author = author,
+                          text = cgi.escape(self.request.get('text')),
+                          blog_owner = users.is_current_user_admin())
         comment.save()
-        self.redirect('/%d-a-comment-added' % (article_id))
+        self.redirect(utils.get_article_path(article))
 
 class NotFoundPageHandler(AbstractPageHandler):
     """

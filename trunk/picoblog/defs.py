@@ -12,9 +12,9 @@ import os
 # Constants
 # -----------------------------------------------------------------------------
 
-BLOG_NAME = 'Soviet Rare Groove'
 CANONICAL_BLOG_URL = 'http://localhost:8080/'
-BLOG_OWNER = 'Blog Owner'
+BLOG_NAME = 'Soviet Rare Groove'
+BLOG_OWNER = 'Soviet Grooveee'
 
 TEMPLATE_SUBDIR = 'templates'
 

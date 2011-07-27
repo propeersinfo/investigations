@@ -2,13 +2,21 @@ Check list:
 - make sure admin links are viewable and accessible for admin only
 
 Top priority:
+- FETCH_THEM_ALL is quite a bad practice
 - make sure admin's comments looks special both in old and new comments
 + implement tag links and tags-at-left
 + markup: single mp3
 - markup: playlist mp3
 + markup: mixcloud
++ markup: make http links clickable
+- comments: enable simple markup
+- comments: make sure links are linked if by admin
+- comments: make sure links are not linked for the rest comments
++ comments: handle empty names
++ set up <title>
 
 Middle priority:
+- save commen't user name in cookies
 - dates in comments
 - impl google search
 - impl google stats
