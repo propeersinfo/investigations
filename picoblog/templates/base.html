@@ -20,9 +20,40 @@
 
 <title>Xxxxxxxxxxxxxxx</title>
 
+<!-- code related to replacing youtube images with clips -->
+<script>
+function byclass(className, callback) {
+	var ee = document.getElementsByClassName(className)
+	for(i = 0; i < ee.length; i++) {
+		callback(ee[i])
+	}
+}
+function replaceYoutubeImageWithClip(img) {
+	var ytid = img.getAttribute('ytid')
+	
+	repl = document.createElement('iframe')
+	repl.setAttribute('width', 480)
+	repl.setAttribute('height', 360)
+	repl.setAttribute('src', 'http://www.youtube.com/embed/'+ytid+'?autoplay=1&theme=dark')
+	repl.setAttribute('frameborder', 0)
+	repl.setAttribute('allowfullscreen', 1)
+	//repl.innerHTML = 'repl!'
+	
+	img.parentNode.replaceChild(repl, img)
+}
+function onLoadForYoutube() {
+	byclass("youtube", function(img) {
+		if(img.tagName == 'IMG') {
+			img.onclick = function(event) { replaceYoutubeImageWithClip(event.originalTarget) }
+		}
+	})
+}
+</script>
+
+
 </head>
 
-<body>
+<body onload="onLoadForYoutube();">
 
 <div style="position: fixed; left: 0px; top: 0px; width: 100%; height: 1px; background: url(&quot;system/theme/images/loading-bar.gif&quot;) repeat-x scroll left center transparent; opacity: 0;" id="e2-thinkbar"></div>
 
