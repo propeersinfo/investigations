@@ -4,9 +4,9 @@ Check list:
 Top priority:
 - make sure admin's comments looks special both in old and new comments
 + implement tag links and tags-at-left
-- markup: single mp3
++ markup: single mp3
 - markup: playlist mp3
-- markup: mixcloud
++ markup: mixcloud
 
 Middle priority:
 - dates in comments
