@@ -160,13 +160,22 @@ class AbstractPageHandler(request.BlogRequestHandler):
                     #article.html = rst2html(article.body)
                     article.html = my_rst2html(article.body)
                     article.html = self.handle_custom_tag_mp3(article.html)
-                except AttributeError:
-                    article.html = 'an error occured performing rst2html()'
+                    article.html = self.handle_custom_tag_youtube(article.html)
+                except AttributeError, e:
+                    #article.html = 'an error occured performing rst2html()'
+                    raise e
             #article.path = '/' + defs.ARTICLE_URL_PATH + '/%s' % article.id
             slug = utils.slugify(article.title)
             article.path = '/%s-%s.html' % (article.id, slug)
             article.url = url_prefix + article.path
             article.comments_count = article.comment_set.count()
+
+    def handle_custom_tag_youtube(self, input):
+        import re
+        regex = "\[\s*(http://)?(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9-_]+)\s*\]"
+        replace = '<iframe width="425" height="349" src="http://www.youtube.com/embed/\\3" frameborder="0" allowfullscreen></iframe>'
+        replace = '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg">'
+        return re.sub(regex, replace, input)
 
     def handle_custom_tag_mp3(self, input):
         dropbox_user = "1883230"
