@@ -38,7 +38,9 @@
 		  </div>
 		  <div class="comment-content visible">
 		      {{comment.html}}
-              <sup><a href="/admin/comment/delete/{{comment.id}}">[remove]</a></sup>
+		      {% if user_info.is_admin %}
+		        <sup><a href="/admin/comment/delete/{{comment.id}}">[remove]</a></sup>
+		      {% endif %}
 		      <span class="icons"></span>
 		  </div>
 		</div>

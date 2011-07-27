@@ -55,17 +55,6 @@ function onLoadForYoutube() {
 
 <body onload="onLoadForYoutube();">
 
-{% if user_info.user %}
-	<p>
-		{{user_info.user}} Is admin: {{user_info.is_admin}}
-		<a href="{{user_info.logout_url}}">logout</a>
-	</p>
-{% else %}
-	<p>
-		<a href="{{user_info.login_url}}">login</a>
-	</p>
-{% endif %}
-
 <div style="position: fixed; left: 0px; top: 0px; width: 100%; height: 1px; background: url(&quot;system/theme/images/loading-bar.gif&quot;) repeat-x scroll left center transparent; opacity: 0;" id="e2-thinkbar"></div>
 
 <div>
@@ -178,7 +167,12 @@ function onLoadForYoutube() {
 
 
 <div class="visual-login">
-login
+{% if user_info.user %}
+	admin:{{user_info.is_admin}} <a href="{{user_info.logout_url}}">logout</a>
+{% else %}
+	<a href="{{user_info.login_url}}">login</a>
+{% endif %}
+
 </div>
 
 <div class="copyrights icons">

@@ -230,9 +230,6 @@ class AbstractPageHandler(request.BlogRequestHandler):
             template_variables.update(additional_template_variables)
         return self.render_template(template_name, template_variables)
 
-    def setup_template_variables(self, template_variables):
-        pass
-    
     def get_recent(self):
         """
         Get up to ``defs.TOTAL_RECENT`` recent articles.
