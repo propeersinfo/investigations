@@ -1,5 +1,7 @@
 import re
 
+import defs
+
 """
 Simple markup support.
 Each new line character becomes a <br>.
@@ -27,13 +29,11 @@ def handle_custom_tag_youtube(input):
     return re.sub(regex, replace, input)
 
 def handle_custom_tag_mp3(input):
-    dropbox_user = "1883230"
-
     regex = "\[([^\]]+mp3)\]"
-    repl_link  = "http://dl.dropbox.com/u/%s/sg/\\1" % (dropbox_user)
-    repl_swf   = "http://dl.dropbox.com/u/%s/dewplayer-mini.swf" % (dropbox_user)
+    repl_link  = "http://dl.dropbox.com/u/%s/sg/\\1" % defs.DROPBOX_USER
+    repl_swf   = "http://dl.dropbox.com/u/%s/dewplayer-mini.swf" % defs.DROPBOX_USER
     repl_flash = "<object width='160' height='18'><embed src='" + repl_swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + repl_link + "' quality='high'></embed></object>"
-    repl_dload = "<a href=\"%s\">\\1</a>" % (repl_link)
+    repl_dload = "<a href=\"%s\">\\1</a>" % repl_link
     repl = "%s %s" % (repl_flash, repl_dload)
 
     return re.sub(regex, repl, input)
