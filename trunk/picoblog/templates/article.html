@@ -19,9 +19,10 @@
 <h1 class="published visible e2-smart-title">
 	{% if single_article %}
 		<span class="current">{{ article.title }}</span>
-		<sup><a href="/admin/article/edit/?id={{article.id}}">[edit]</a></sup>
 	{% else %}
 		<a href="{{article.path}}"><span class="current">{{ article.title }}</span></a>
+	{% endif %}
+	{% if user_info.is_admin %}
 		<sup><a href="/admin/article/edit/?id={{article.id}}">[edit]</a></sup>
 	{% endif %}
    	<span class="icons"></span>
