@@ -14,7 +14,7 @@
       <description>
         {{ article.html|escape }}
       </description>
-      <author>{{ blog_author }}</author>
+      <author>{{ blog_owner }}</author>
     </item>
     {% endfor %}
   </channel>

@@ -21,7 +21,7 @@ def set_unicode_cookie(response, key, value):
   c[key]["path"] = "/"
   response.headers.add_header('Set-Cookie', c[key].OutputString())
   
-def get_unicode_cookie(request, key, defult_value):
+def get_unicode_cookie(request, key, default_value):
   def unescape(s):
     m = re.match(r'^"(.*)"$', s)
     s = m.group(1) if m else s

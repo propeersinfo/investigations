@@ -67,6 +67,7 @@ $(document).ready(function() {
 });
 </script>
 
+{% include "googleanalytics.html" %}
 
 </head>
 
@@ -104,8 +105,12 @@ $(document).ready(function() {
 
 	<div class="blog-title-and-description">
 	  <h1>
-		<a href="/"><span id="e2-blog-title">Soviet Rare Groove</span></a> 
-			<a class="rss-link" style="" href="/rss/">RSS</a>
+	    {% if single_article %}
+          <a href="/"><span id="e2-blog-title">Soviet Rare Groove</span></a> 
+        {% else %}
+          <span id="e2-blog-title">Soviet Rare Groove</span>
+        {% endif %}
+		<a class="rss-link" style="" href="/rss/">RSS</a>
 	  </h1>
 	  <p><span id="e2-blog-description">
 		A blog about groovy, funky, jazzy, soulful, beat, easy, twist and psych sides of music produced in USSR during the period of 1965&ndash;85.
@@ -159,10 +164,6 @@ $(document).ready(function() {
 		<li>{% blog_tag "kazakstan" %}</li>
     	</ul>
 	</div>
-
-	<div class="sidebar-element">
-		<p><a href="/selected/">Избранное</a> <img src="/static/star-stroke.gif" class="icon" alt="" height="16" width="17"></p>
-	</div>
 </div>
 
 
@@ -193,7 +194,7 @@ $(document).ready(function() {
 </div>
 
 <div class="copyrights icons">
-©&nbsp;<span id="e2-blog-author">Илья Бирман</span>, 2002<span class="range">...</span>2011 
+©&nbsp;<span id="e2-blog-author">xxx xxxxx</span>, 2002<span class="range">...</span>2011 
 </div>
 
 <div class="engine-info">

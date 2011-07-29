@@ -224,7 +224,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'recent'       : recent,
             'user_info'    : user_info,
             'blog_owner_name' : defs.BLOG_OWNER,
-            "comment_author"  : utils.get_unicode_cookie(self.request, "comment_author", "")
+            'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', "")
         }
 
         #raise Exception("comment author: " + utils.get_cookie(self.request, "comment_author", ""))

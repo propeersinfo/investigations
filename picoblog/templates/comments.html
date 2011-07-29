@@ -64,7 +64,7 @@
 <div class="form-control">
   <div class="label input-label"><label>Name</label></div>
   {% if user_info.is_admin %}
-    <span class="input-label"><label>Administrator</label></span>
+    <span class="input-label"><label>{{blog_owner}}</label></span>
   {% else %}
     <input class="text required width-2" tabindex="1" id="name" name="author" value="{{comment_author|escape}}" type="text">
   {% endif %}
