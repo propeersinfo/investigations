@@ -4,9 +4,7 @@
     <list default="true" readonly="true" id="feeb6775-e87b-462f-8849-5698d75ce28c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simplemarkup.py" afterPath="$PROJECT_DIR$/simplemarkup.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/article.html" afterPath="$PROJECT_DIR$/templates/article.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/comments.html" afterPath="$PROJECT_DIR$/templates/comments.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/todo.txt" afterPath="$PROJECT_DIR$/todo.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/base.html" afterPath="$PROJECT_DIR$/templates/base.html" />
     </list>
     <ignored path="picoblog.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,10 +27,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="blog.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="blog.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/blog.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="232" column="0" selection-start="7760" selection-end="7760" vertical-scroll-proportion="0.027070064">
+            <state line="351" column="0" selection-start="12427" selection-end="12427" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="simplemarkup.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/simplemarkup.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="6" selection-start="812" selection-end="812" vertical-scroll-proportion="0.35284552">
               <folding />
             </state>
           </provider>
@@ -247,6 +254,7 @@
     <frame x="-8" y="-8" width="1288" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -259,7 +267,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32824427" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -290,7 +297,7 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ main page: introduce links to comments" />
+    <option name="LAST_COMMIT_MESSAGE" value="+ save commen't user name in cookies" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -310,6 +317,7 @@
     <MESSAGE value="+ markup: make http links clickable" />
     <MESSAGE value="+ comments: enable simple markup&#10;+ comments: make sure links are linked if by admin&#10;+ comments: make sure links are not linked for the rest comments" />
     <MESSAGE value="+ main page: introduce links to comments" />
+    <MESSAGE value="+ save commen't user name in cookies" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -370,16 +378,16 @@
         <state line="170" column="0" selection-start="4940" selection-end="4940" vertical-scroll-proportion="0.8375796" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simplemarkup.py">
+    <entry file="file://$PROJECT_DIR$/blog.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="0" selection-start="2379" selection-end="2379" vertical-scroll-proportion="0.61300814">
+        <state line="351" column="0" selection-start="12427" selection-end="12427" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/blog.py">
+    <entry file="file://$PROJECT_DIR$/simplemarkup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="232" column="0" selection-start="7760" selection-end="7760" vertical-scroll-proportion="0.027070064">
+        <state line="28" column="6" selection-start="812" selection-end="812" vertical-scroll-proportion="0.35284552">
           <folding />
         </state>
       </provider>

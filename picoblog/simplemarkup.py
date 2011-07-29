@@ -25,7 +25,10 @@ def handle_custom_tag_http_link(input):
 
 def handle_custom_tag_youtube(input):
     regex = "\[\s*(http://)?(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9-_]+)\s*\]"
-    replace = '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'
+    replace =\
+      '<a href="http://www.youtube.com/watch?v=\\3">'\
+      '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'\
+      '</a>'
     return re.sub(regex, replace, input)
 
 def handle_custom_tag_mp3(input):
