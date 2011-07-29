@@ -46,6 +46,10 @@
     {% include "comments.html" %}
 {% else %}
     <p>
-    <span id="e2-comments-count">{{article.comments_count}} comments</span>
+    <span id="e2-comments-count">
+    	<a href="{{article.path}}#comments">
+    		{{article.comments_count}} comments
+    	</a>
+    </span>
     </p>
 {% endif %}

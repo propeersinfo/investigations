@@ -25,7 +25,7 @@ def handle_custom_tag_http_link(input):
 
 def handle_custom_tag_youtube(input):
     regex = "\[\s*(http://)?(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9-_]+)\s*\]"
-    replace = '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg">'
+    replace = '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'
     return re.sub(regex, replace, input)
 
 def handle_custom_tag_mp3(input):
@@ -43,6 +43,7 @@ def handle_custom_tag_mixcloud(input):
     replace  = '<object height="400" width="400"><param name="movie" value="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\3%2F\\4%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\3%2F\\4%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="400" width="400"></object>'
     return re.sub(regex, replace, input)
 
+# main function
 def markup2html(markup_text, rich_markup = True, recognize_links = True):
     html = markup_text.replace('\n', '<br>\n')
     if recognize_links:
