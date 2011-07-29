@@ -1,6 +1,8 @@
 import os
 import re
 import unicodedata
+import urllib
+import Cookie
 
 def slugify(s):
   s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').lower()
@@ -10,4 +12,21 @@ def slugify(s):
 
 
 def get_article_path(article):
-    return '/%s-%s.html' % (article.id, slugify(article.title))
+  return '/%s-%s.html' % (article.id, slugify(article.title))
+    
+def set_unicode_cookie(response, key, value):
+  c = Cookie.SimpleCookie()
+  c[key] = value.encode('unicode-escape')
+  c[key]["expires"] = "Sun, 31-May-2020 23:59:59 GMT"
+  c[key]["path"] = "/"
+  response.headers.add_header('Set-Cookie', c[key].OutputString())
+  
+def get_unicode_cookie(request, key, defult_value):
+  def unescape(s):
+    m = re.match(r'^"(.*)"$', s)
+    s = m.group(1) if m else s
+    return s.replace("\\\\", "\\")
+  if request.cookies.has_key(key):
+    return unescape(request.cookies[key]).decode('unicode-escape')
+  else:
+    return default_value

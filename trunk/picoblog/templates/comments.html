@@ -66,7 +66,7 @@
   {% if user_info.is_admin %}
     <span class="input-label"><label>Administrator</label></span>
   {% else %}
-    <input class="text required width-2" tabindex="1" id="name" name="author" value="" type="text">
+    <input class="text required width-2" tabindex="1" id="name" name="author" value="{{comment_author|escape}}" type="text">
   {% endif %}
 </div>
 
