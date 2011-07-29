@@ -223,8 +223,11 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'rss2_path'    : '/' + defs.RSS2_URL_PATH,
             'recent'       : recent,
             'user_info'    : user_info,
-            'blog_owner_name' : defs.BLOG_OWNER
+            'blog_owner_name' : defs.BLOG_OWNER,
+            "comment_author"  : utils.get_unicode_cookie(self.request, "comment_author", "")
         }
+
+        #raise Exception("comment author: " + utils.get_cookie(self.request, "comment_author", ""))
 
         if additional_template_variables:
             template_variables.update(additional_template_variables)
@@ -343,6 +346,7 @@ class AddCommentHandler(AbstractPageHandler):
                           text = cgi.escape(self.request.get('text')),
                           blog_owner = users.is_current_user_admin())
         comment.save()
+        utils.set_unicode_cookie(self.response, "comment_author", author)
         self.redirect(utils.get_article_path(article))
 
 class NotFoundPageHandler(AbstractPageHandler):
