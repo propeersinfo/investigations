@@ -55,7 +55,7 @@ function replaceYoutubeImageWithClip(img) {
 function prepareYoutubeClips() {
   $("img.youtube").each(function(pos,img){
     img.style.backgroundImage = "url(" + img.src + ")"
-    img.src = "static/playvideo341.png"
+    img.src = "static/playvideo480.png"
     var a = img.parentNode
     if(a) {
       a.onclick = function(event) { replaceYoutubeImageWithClip(img); return false; }
