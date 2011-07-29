@@ -28,7 +28,11 @@ def handle_custom_tag_youtube(input):
     replace =\
       '<a href="http://www.youtube.com/watch?v=\\3">'\
       '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'\
-      '</a>'
+      '</a>'\
+      ''
+      #'<noscript>'\
+      #'<iframe src="http://www.youtube.com/embed/\\3?autoplay=1&theme=dark" width="480" height="360" frameborder="0" allowfullscreen="1"></iframe>'\
+      #'</noscript>'\
     return re.sub(regex, replace, input)
 
 def handle_custom_tag_mp3(input):
