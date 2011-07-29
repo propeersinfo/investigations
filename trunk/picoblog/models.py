@@ -3,7 +3,7 @@ import sys
 
 from google.appengine.ext import db
 
-FETCH_THEM_ALL = sys.maxint - 1
+FETCH_THEM_ALL = 12345
 
 class Article(db.Model):
 

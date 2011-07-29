@@ -2,9 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="feeb6775-e87b-462f-8849-5698d75ce28c" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/googleanalytics.html" />
+      <change type="DELETED" beforePath="C:\workspace\investigations\picoblog\templates\base.original.html" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simplemarkup.py" afterPath="$PROJECT_DIR$/simplemarkup.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.yaml" afterPath="$PROJECT_DIR$/app.yaml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blog.py" afterPath="$PROJECT_DIR$/blog.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/defs.py" afterPath="$PROJECT_DIR$/defs.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models.py" afterPath="$PROJECT_DIR$/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/admin-edit.html" afterPath="$PROJECT_DIR$/templates/admin-edit.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/base.html" afterPath="$PROJECT_DIR$/templates/base.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/comments.html" afterPath="$PROJECT_DIR$/templates/comments.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/rss2.xml" afterPath="$PROJECT_DIR$/templates/rss2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/todo.txt" afterPath="$PROJECT_DIR$/todo.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils.py" afterPath="$PROJECT_DIR$/utils.py" />
     </list>
     <ignored path="picoblog.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,19 +37,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="blog.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="blog.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/blog.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="351" column="0" selection-start="12427" selection-end="12427" vertical-scroll-proportion="0.0">
+            <state line="226" column="0" selection-start="7567" selection-end="7567" vertical-scroll-proportion="0.72133756">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="simplemarkup.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="simplemarkup.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simplemarkup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="6" selection-start="812" selection-end="812" vertical-scroll-proportion="0.35284552">
+            <state line="41" column="148" selection-start="1598" selection-end="1598" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -66,8 +76,8 @@
         <option value="$PROJECT_DIR$/models.py" />
         <option value="$PROJECT_DIR$/markup.py" />
         <option value="$PROJECT_DIR$/defs.py" />
-        <option value="$PROJECT_DIR$/blog.py" />
         <option value="$PROJECT_DIR$/simplemarkup.py" />
+        <option value="$PROJECT_DIR$/blog.py" />
       </list>
     </option>
   </component>
@@ -112,6 +122,34 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="picoblog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="picoblog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="picoblog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="picoblog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="picoblog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -297,7 +335,7 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ save commen't user name in cookies" />
+    <option name="LAST_COMMIT_MESSAGE" value=" enhanced youtube markup" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -318,6 +356,7 @@
     <MESSAGE value="+ comments: enable simple markup&#10;+ comments: make sure links are linked if by admin&#10;+ comments: make sure links are not linked for the rest comments" />
     <MESSAGE value="+ main page: introduce links to comments" />
     <MESSAGE value="+ save commen't user name in cookies" />
+    <MESSAGE value=" enhanced youtube markup" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -378,16 +417,16 @@
         <state line="170" column="0" selection-start="4940" selection-end="4940" vertical-scroll-proportion="0.8375796" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/blog.py">
+    <entry file="file://$PROJECT_DIR$/simplemarkup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="351" column="0" selection-start="12427" selection-end="12427" vertical-scroll-proportion="0.0">
+        <state line="41" column="148" selection-start="1598" selection-end="1598" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simplemarkup.py">
+    <entry file="file://$PROJECT_DIR$/blog.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="6" selection-start="812" selection-end="812" vertical-scroll-proportion="0.35284552">
+        <state line="226" column="0" selection-start="7567" selection-end="7567" vertical-scroll-proportion="0.72133756">
           <folding />
         </state>
       </provider>

@@ -14,7 +14,7 @@ import os
 
 CANONICAL_BLOG_URL = 'http://localhost:8080/'
 BLOG_NAME = 'Soviet Rare Groove'
-BLOG_OWNER = 'Soviet Grooveee'
+BLOG_OWNER = 'Soviet Groove'
 
 DROPBOX_USER = "1883230"
 

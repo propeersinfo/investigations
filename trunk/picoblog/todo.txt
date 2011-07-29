@@ -18,7 +18,7 @@ Top priority:
 
 Middle priority:
 + save commen't user name in cookies
-- dates in comments
++ dates in comments
 - impl google search
 - impl google stats
 
