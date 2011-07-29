@@ -14,20 +14,32 @@
 
 <link rel="e2-theme-image" id="e2-i-loading-spinner" href="/static/loading-spinner.gif">
 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
 <meta name="viewport" content="width=1024">
 
 <meta name="robots" content="index, follow">
 
 <title>{% block title %}{% endblock %}</title>
 
+<style>
+/*
+img.youtube {
+  -webkit-background-size: 100% 100%;
+  -moz-background-size: 100% 100%;
+  -o-background-size: 100% 100%;
+  background-size: 100% 100%;
+}*/
+</style>
+
 <!-- code related to replacing youtube images with clips -->
 <script>
-function byclass(className, callback) {
-	var ee = document.getElementsByClassName(className)
-	for(i = 0; i < ee.length; i++) {
-		callback(ee[i])
-	}
-}
+//function byclass(className, callback) {
+//	var ee = document.getElementsByClassName(className)
+//	for(i = 0; i < ee.length; i++) {
+//		callback(ee[i])
+//	}
+//}
 function replaceYoutubeImageWithClip(img) {
 	var ytid = img.getAttribute('ytid')
 	
@@ -37,23 +49,28 @@ function replaceYoutubeImageWithClip(img) {
 	repl.setAttribute('src', 'http://www.youtube.com/embed/'+ytid+'?autoplay=1&theme=dark')
 	repl.setAttribute('frameborder', 0)
 	repl.setAttribute('allowfullscreen', 1)
-	//repl.innerHTML = 'repl!'
 	
 	img.parentNode.replaceChild(repl, img)
 }
-function onLoadForYoutube() {
-	byclass("youtube", function(img) {
-		if(img.tagName == 'IMG') {
-			img.onclick = function(event) { replaceYoutubeImageWithClip(event.originalTarget) }
-		}
-	})
+function prepareYoutubeClips() {
+  $("img.youtube").each(function(pos,img){
+    img.style.backgroundImage = "url(" + img.src + ")"
+    img.src = "static/playvideo341.png"
+    var a = img.parentNode
+    if(a) {
+      a.onclick = function(event) { replaceYoutubeImageWithClip(img); return false; }
+    }
+  })
 }
+$(document).ready(function() {
+  prepareYoutubeClips()
+});
 </script>
 
 
 </head>
 
-<body onload="onLoadForYoutube();">
+<body>
 
 <div style="position: fixed; left: 0px; top: 0px; width: 100%; height: 1px; background: url(&quot;system/theme/images/loading-bar.gif&quot;) repeat-x scroll left center transparent; opacity: 0;" id="e2-thinkbar"></div>
 
