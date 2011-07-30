@@ -20,10 +20,10 @@ Middle priority:
 + save commen't user name in cookies
 + dates in comments
 - impl google search
-- impl google stats
++ impl google analytics
 
 Low priority:
 - implement archive listing
-- easy template switch
++ easy template switch
 - ajax comments
 - caching of each post and the front page
