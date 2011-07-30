@@ -176,6 +176,18 @@ $(document).ready(function() {
 	<div class="only note">
     	{% block main %}{% endblock %}
 	</div>
+	
+	{% if prev_page_url %}
+	  ← <a href="{{prev_page_url}}">previous</a>
+	{% else %}
+	  ← previous
+	{% endif %}
+	
+	{% if next_page_url %}
+	  <a href="{{next_page_url}}">next</a> →
+	{% else %}
+	  next →
+	{% endif %}
 </div>
 
 <div class="clear"></div>

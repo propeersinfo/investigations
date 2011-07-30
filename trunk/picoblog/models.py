@@ -3,8 +3,6 @@ import sys
 
 from google.appengine.ext import db
 
-from unique import Unique
-
 FETCH_THEM_ALL = 12345
 FETCH_THEM_ALL_COMMENTS = 100
 MAX_ARTICLES_PER_DAY = 10
@@ -45,6 +43,11 @@ class Article(db.Model):
         return Article.published_query()\
                       .order('-published_date')\
                       .fetch(FETCH_THEM_ALL)
+
+    @classmethod
+    def published_no_fetch(cls):
+        return Article.published_query()\
+                      .order('-published_date')
 
     @classmethod
     def get_all_tags(cls):
@@ -119,12 +122,13 @@ class Article(db.Model):
                (self.published_date.strftime('%Y/%m/%d %H:%M'), self.title)
 
     def create_uniq_id(self):
+        # TODO this could be rewritten with max(id)+1 for current day's articles
         for i in xrange(MAX_ARTICLES_PER_DAY):
-            suffix = "" if i == 0 else str(i)
+            unique = "" if i == 0 else str(i)
             id_str = "%04d%02d%02d%s" % (int(self.published_date.year),
                                          int(self.published_date.month),
                                          int(self.published_date.day),
-                                         suffix)
+                                         unique)
             id = int(id_str)
             if not Article.get(id):
                 return id
