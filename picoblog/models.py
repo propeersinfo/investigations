@@ -3,25 +3,29 @@ import sys
 
 from google.appengine.ext import db
 
+from unique import Unique
+
 FETCH_THEM_ALL = 12345
+FETCH_THEM_ALL_COMMENTS = 100
+MAX_ARTICLES_PER_DAY = 10
 
 class Article(db.Model):
 
     id = db.IntegerProperty()
-    title = db.StringProperty(required=True)
+    title = db.StringProperty(required=True, indexed=False)
     #title_slug = db.StringProperty(required=True)
-    body = db.TextProperty()
-    published_when = db.DateTimeProperty(auto_now_add=True)
+    body = db.TextProperty(indexed=False)
+    published_date = db.DateTimeProperty(auto_now_add=True, indexed=True)
     tags = db.ListProperty(db.Category)
     draft = db.BooleanProperty(required=True, default=False)
 
     def get_comments(self):
-        return self.comment_set.fetch(100)
+        return self.comment_set.fetch(FETCH_THEM_ALL_COMMENTS)
 
     @classmethod
     def get_all(cls):
         q = db.Query(Article)
-        q.order('-published_when')
+        q.order('-published_date')
         return q.fetch(FETCH_THEM_ALL)
 
     @classmethod
@@ -39,7 +43,7 @@ class Article(db.Model):
     @classmethod
     def published(cls):
         return Article.published_query()\
-                      .order('-published_when')\
+                      .order('-published_date')\
                       .fetch(FETCH_THEM_ALL)
 
     @classmethod
@@ -63,9 +67,9 @@ class Article(db.Model):
     def get_all_datetimes(cls):
         dates = {}
         for article in Article.published():
-            date = datetime.datetime(article.published_when.year,
-                                     article.published_when.month,
-                                     article.published_when.day)
+            date = datetime.datetime(article.published_date.year,
+                                     article.published_date.month,
+                                     article.published_date.day)
             try:
                 dates[date] += 1
             except KeyError:
@@ -85,16 +89,16 @@ class Article(db.Model):
 
         end_date = datetime.date(next_year, next_month, 1)
         return Article.published_query()\
-                       .filter('published_when >=', start_date)\
-                       .filter('published_when <', end_date)\
-                       .order('-published_when')\
+                       .filter('published_date >=', start_date)\
+                       .filter('published_date <', end_date)\
+                       .order('-published_date')\
                        .fetch(FETCH_THEM_ALL)
 
     @classmethod
     def all_for_tag(cls, tag):
         return Article.published_query()\
                       .filter('tags = ', tag)\
-                      .order('-published_when')\
+                      .order('-published_date')\
                       .fetch(FETCH_THEM_ALL)
 
     @classmethod
@@ -112,7 +116,19 @@ class Article(db.Model):
 
     def __str__(self):
         return '[%s] %s' %\
-               (self.published_when.strftime('%Y/%m/%d %H:%M'), self.title)
+               (self.published_date.strftime('%Y/%m/%d %H:%M'), self.title)
+
+    def create_uniq_id(self):
+        for i in xrange(MAX_ARTICLES_PER_DAY):
+            suffix = "" if i == 0 else str(i)
+            id_str = "%04d%02d%02d%s" % (int(self.published_date.year),
+                                         int(self.published_date.month),
+                                         int(self.published_date.day),
+                                         suffix)
+            id = int(id_str)
+            if not Article.get(id):
+                return id
+        raise Exception("Cannot create an article id for date %s after %d tries" % (self.published_date, MAX_ARTICLES_PER_DAY))
 
     def save(self):
         previous_version = Article.get(self.id)
@@ -123,22 +139,14 @@ class Article(db.Model):
 
         if draft and (not self.draft):
             # Going from draft to published. Update the timestamp.
-            self.published_when = datetime.datetime.now()
+            self.published_date = datetime.datetime.now()
 
-        try:
-            obj_id = self.key().id()
-            resave = False
-        except db.NotSavedError:
-            # No key, hence no ID yet. This one hasn't been saved.
-            # We'll save it once without the ID field; this first
-            # save will cause GAE to assign it a key. Then, we can
-            # extract the ID, put it in our ID field, and resave
-            # the object.
-            resave = True
-
-        self.put()
-        if resave:
-            self.id = self.key().id()
+        if self.is_saved():
+            self.put()
+        else:
+            id = self.create_uniq_id()
+            self.put()
+            self.id = id
             self.put()
 
 
@@ -146,8 +154,8 @@ class Comment(db.Model):
 
     id = db.IntegerProperty()
     article = db.ReferenceProperty(Article)
-    author = db.StringProperty() # Could be None for anonymouses of myopera
     blog_owner = db.BooleanProperty(required=True, default=False)
+    author = db.StringProperty() # Could be None for anonymouses of myopera
     text = db.TextProperty(required=True)
     published_date = db.DateTimeProperty(auto_now_add=True)
     
@@ -158,13 +166,9 @@ class Comment(db.Model):
         return q.get()
 
     def save(self):
-        try:
-            self.key().id()
-            resave = False
-        except db.NotSavedError:
-            resave = True
-        self.put()
-        if resave:
+        if self.is_saved():
+            self.put()
+        else:
+            self.put()
             self.id = self.key().id()
             self.put()
-

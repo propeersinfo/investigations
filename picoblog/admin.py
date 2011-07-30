@@ -39,7 +39,7 @@ class NewArticleHandler(request.BlogRequestHandler):
     def get(self):
         article = Article(title='New article',
                           body='Content goes here',
-                          draft=True)
+                          draft=False)
         template_vars = {'article' : article}
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))
@@ -54,7 +54,7 @@ class SaveArticleHandler(request.BlogRequestHandler):
         s_id = cgi.escape(self.request.get('id'))
         id = int(s_id) if s_id else None
         tags = cgi.escape(self.request.get('tags'))
-        published_when = cgi.escape(self.request.get('published_when'))
+        published_date = cgi.escape(self.request.get('published_date'))
         draft = cgi.escape(self.request.get('draft'))
         if tags:
             tags = [t.strip() for t in tags.split(',')]
