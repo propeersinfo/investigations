@@ -182,7 +182,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
 
         last_updated = datetime.datetime.now()
         if articles:
-            last_updated = articles[0].published_when
+            last_updated = articles[0].published_date
 
         blog_url = url_prefix
         tag_path = '/' + defs.TAG_URL_PATH

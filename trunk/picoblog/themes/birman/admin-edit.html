@@ -85,7 +85,7 @@ function cancel_edit()
         Tags: <input type="text" width="80" name="tags" value="{{ article.tag_string}}"/>
 
         {% if article.draft %}
-        Draft: <input type="checkbox" name="draft" checked="false"/>
+        Draft: <input type="checkbox" name="draft" checked/>
         {% else %}
         Draft: <input type="checkbox" name="draft"/>
         {% endif %}

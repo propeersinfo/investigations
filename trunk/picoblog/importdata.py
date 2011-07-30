@@ -16,7 +16,7 @@ def import_post_object(post):
 
     article = Article(title = post['title'],
                       body = post['content'],
-                      published_when = post['date'],
+                      published_date = post['date'],
                       draft = False,
                       tags = map(string2category, post['tags']))
     article.save()
