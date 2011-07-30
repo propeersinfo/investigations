@@ -16,6 +16,9 @@ Top priority:
 + set up <title>
 + main page: introduce links to comments
 + make article ids not integers (99) but dates (20110730)
++ pagination in front page and archives
+- pagination in comments
+- show draft articles to admin (front page, archive)
 
 Middle priority:
 + save commen't user name in cookies

@@ -33,7 +33,7 @@ import defs
 import request
 import utils
 import simplemarkup
-from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo
+from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo
 
 # -----------------------------------------------------------------------------
 # Classes
@@ -74,42 +74,42 @@ class AbstractPageHandler(request.BlogRequestHandler):
     this class exists to consolidate common logic.
     """
 
-    def get_tag_counts(self):
-        """
-        Get tag counts and calculate tag cloud frequencies.
-        
-        :rtype: list
-        :return: list of ``TagCount`` objects, in random order
-        """
-        tag_counts = Article.get_all_tags()
-        result = []
-        if tag_counts:
-            maximum = max(tag_counts.values())
-
-            for tag, count in tag_counts.items():
-                tc = TagCount(tag, count)
-
-                # Determine the popularity of this term as a percentage.
-
-                percent = math.floor((tc.count * 100) / maximum)
-
-                # determine the CSS class for this term based on the percentage
-
-                if percent <= 20:
-                    tc.css_class = 'tag-cloud-tiny'
-                elif 20 < percent <= 40:
-                    tc.css_class = 'tag-cloud-small'
-                elif 40 < percent <= 60:
-                    tc.css_class = 'tag-cloud-medium'
-                elif 60 < percent <= 80:
-                    tc.css_class = 'tag-cloud-large'
-                else:
-                    tc.css_class = 'tag-cloud-huge'
-                    
-                result.append(tc)
-
-        random.shuffle(result)
-        return result
+#    def get_tag_counts(self):
+#        """
+#        Get tag counts and calculate tag cloud frequencies.
+#
+#        :rtype: list
+#        :return: list of ``TagCount`` objects, in random order
+#        """
+#        tag_counts = Article.get_all_tags()
+#        result = []
+#        if tag_counts:
+#            maximum = max(tag_counts.values())
+#
+#            for tag, count in tag_counts.items():
+#                tc = TagCount(tag, count)
+#
+#                # Determine the popularity of this term as a percentage.
+#
+#                percent = math.floor((tc.count * 100) / maximum)
+#
+#                # determine the CSS class for this term based on the percentage
+#
+#                if percent <= 20:
+#                    tc.css_class = 'tag-cloud-tiny'
+#                elif 20 < percent <= 40:
+#                    tc.css_class = 'tag-cloud-small'
+#                elif 40 < percent <= 60:
+#                    tc.css_class = 'tag-cloud-medium'
+#                elif 60 < percent <= 80:
+#                    tc.css_class = 'tag-cloud-large'
+#                else:
+#                    tc.css_class = 'tag-cloud-huge'
+#
+#                result.append(tc)
+#
+#        random.shuffle(result)
+#        return result
 
     def get_month_counts(self):
         """
@@ -186,9 +186,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
         self.augment_articles(articles, url_prefix)
         self.augment_articles(recent, url_prefix, produce_html=False)
 
-        last_updated = datetime.datetime.now()
-        if articles:
-            last_updated = articles[0].published_date
+        last_updated = last_updated = (articles[0].published_date) if (articles) else (datetime.datetime.now())
 
         blog_url = url_prefix
         tag_path = '/' + defs.TAG_URL_PATH
@@ -215,8 +213,8 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'canonical_blog_url' : defs.CANONICAL_BLOG_URL,
             'blog_owner'   : defs.BLOG_OWNER,
             'articles'     : articles,
-            'tag_list'     : self.get_tag_counts(),
-            'date_list'    : self.get_month_counts(),
+            'tag_list'     : None, #self.get_tag_counts(),
+            'date_list'    : None, #self.get_month_counts(),
             'version'      : '0.3',
             'last_updated' : last_updated,
             'blog_path'    : '/',
@@ -241,21 +239,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
         return self.render_template(template_name, template_variables)
 
     def get_recent(self):
-        """
-        Get up to ``defs.TOTAL_RECENT`` recent articles.
-
-        :rtype: list
-        :return: list of recent ``Article`` objects
-        """
-        articles = Article.published()
-
-        total_recent = min(len(articles), defs.TOTAL_RECENT)
-        if articles:
-            recent = articles[0:total_recent]
-        else:
-            recent = []
-
-        return recent
+        return []
 
 class FrontPageHandler(AbstractPageHandler):
     """
@@ -268,7 +252,7 @@ class FrontPageHandler(AbstractPageHandler):
         #if len(articles) > defs.MAX_ARTICLES_PER_PAGE:
         #    articles = articles[:defs.MAX_ARTICLES_PER_PAGE]
 
-        page_info = PageInfo(PagedQuery(Article.published_no_fetch(), defs.MAX_ARTICLES_PER_PAGE),
+        page_info = PageInfo(PagedQuery(Article.published_query(), defs.MAX_ARTICLES_PER_PAGE),
                              page_num,
                              "/page%d",
                              "/")
@@ -306,16 +290,10 @@ class SingleArticleHandler(AbstractPageHandler):
     """
     def get(self, id):
         article = Article.get(int(id))
-        if article:
-            template = 'articles.html'
-            articles = [article]
-            more = None
-        else:
-            template = 'not-found.html'
-            articles = []
+        template = 'articles.html' if article else 'not-found.html'
         #additional_template_variables = {'single_article': True}
         additional_template_variables = {'single_article': article}
-        self.response.out.write(self.render_articles(articles,
+        self.response.out.write(self.render_articles(SinglePageInfo(article),
                                                      self.request,
                                                      self.get_recent(),
                                                      template,
@@ -327,7 +305,7 @@ class ArchivePageHandler(AbstractPageHandler):
     """
     def get(self, page_num):
         page_num = int(page_num) if page_num else 1
-        page_info = PageInfo(PagedQuery(Article.published_no_fetch(), defs.MAX_ARTICLES_PER_PAGE_ARCHIVE),
+        page_info = PageInfo(PagedQuery(Article.published_query(), defs.MAX_ARTICLES_PER_PAGE_ARCHIVE),
                              page_num,
                              "/archive/%d",
                              "/archive/")

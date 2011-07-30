@@ -70,7 +70,7 @@ $(document).ready(function() {
 });
 </script>
 
-{% include "../../googleanalytics.html" %}
+{% include "../googleanalytics.html" %}
 
 </head>
 
@@ -177,17 +177,21 @@ $(document).ready(function() {
     	{% block main %}{% endblock %}
 	</div>
 	
-	{% if prev_page_url %}
-	  ← <a href="{{prev_page_url}}">previous</a>
-	{% else %}
-	  ← previous
-	{% endif %}
-	
-	{% if next_page_url %}
-	  <a href="{{next_page_url}}">next</a> →
-	{% else %}
-	  next →
-	{% endif %}
+	<div class="pagination">
+	    Articles
+		<!-- prev page link -->
+		{% if prev_page_url %}
+		  &larr; <a href="{{prev_page_url}}">previous</a>
+		{% else %}
+		  &larr; previous
+		{% endif %}
+		<!-- next page link -->
+		{% if next_page_url %}
+		  <a href="{{next_page_url}}">next</a> &rarr;
+		{% else %}
+		  next &rarr;
+		{% endif %}
+	</div>
 </div>
 
 <div class="clear"></div>

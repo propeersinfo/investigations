@@ -805,3 +805,7 @@ th {
 *+html .note {
   zoom: 1;
 }
+
+.pagination {
+	font-size: 13pt;
+}
