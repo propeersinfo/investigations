@@ -3,7 +3,6 @@ import sys
 
 from google.appengine.ext import db
 
-FETCH_THEM_ALL = 12345
 FETCH_THEM_ALL_COMMENTS = 100
 MAX_ARTICLES_PER_DAY = 10
 
@@ -21,10 +20,9 @@ class Article(db.Model):
         return self.comment_set.fetch(FETCH_THEM_ALL_COMMENTS)
 
     @classmethod
-    def get_all(cls):
+    def get_all_query(cls):
         q = db.Query(Article)
-        q.order('-published_date')
-        return q.fetch(FETCH_THEM_ALL)
+        return q.order('-published_date')
 
     @classmethod
     def get(cls, id):
@@ -32,56 +30,61 @@ class Article(db.Model):
         q.filter('id = ', id)
         return q.get()
 
+#    @classmethod
+#    def published_query(cls):
+#        q = db.Query(Article)
+#        q.filter('draft = ', False)
+#        return q
+#
+#    @classmethod
+#    def published(cls):
+#        return Article.published_query()\
+#                      .order('-published_date')\
+#                      .fetch(FETCH_THEM_ALL)
+
     @classmethod
     def published_query(cls):
-        q = db.Query(Article)
-        q.filter('draft = ', False)
-        return q
+        return db.Query(Article)\
+                 .filter('draft = ', False)\
+                 .order('-published_date')
+
+#    @classmethod
+#    def published_query(cls):
+#        return Article.published_query()\
+#                      .filter('draft = ', False)\
+#                      .order('-published_date')
+#
+#    @classmethod
+#    def get_all_tags(cls):
+#        """
+#        Return all tags, as TagCount objects, optionally sorted by frequency
+#        (highest to lowest).
+#        """
+#        tag_counts = {}
+#        for article in Article.published():
+#            for tag in article.tags:
+#                tag = unicode(tag)
+#                try:
+#                    tag_counts[tag] += 1
+#                except KeyError:
+#                    tag_counts[tag] = 1
+#        return tag_counts
+#
+#    @classmethod
+#    def get_all_datetimes(cls):
+#        dates = {}
+#        for article in Article.published():
+#            date = datetime.datetime(article.published_date.year,
+#                                     article.published_date.month,
+#                                     article.published_date.day)
+#            try:
+#                dates[date] += 1
+#            except KeyError:
+#                dates[date] = 1
+#        return dates
 
     @classmethod
-    def published(cls):
-        return Article.published_query()\
-                      .order('-published_date')\
-                      .fetch(FETCH_THEM_ALL)
-
-    @classmethod
-    def published_no_fetch(cls):
-        return Article.published_query()\
-                      .order('-published_date')
-
-    @classmethod
-    def get_all_tags(cls):
-        """
-        Return all tags, as TagCount objects, optionally sorted by frequency
-        (highest to lowest).
-        """
-        tag_counts = {}
-        for article in Article.published():
-            for tag in article.tags:
-                tag = unicode(tag)
-                try:
-                    tag_counts[tag] += 1
-                except KeyError:
-                    tag_counts[tag] = 1
-
-        return tag_counts
-
-    @classmethod
-    def get_all_datetimes(cls):
-        dates = {}
-        for article in Article.published():
-            date = datetime.datetime(article.published_date.year,
-                                     article.published_date.month,
-                                     article.published_date.day)
-            try:
-                dates[date] += 1
-            except KeyError:
-                dates[date] = 1
-
-        return dates
-
-    @classmethod
-    def all_for_month(cls, year, month):
+    def all_for_month_query(cls, year, month):
         start_date = datetime.date(year, month, 1)
         if start_date.month == 12:
             next_year = start_date.year + 1
@@ -94,15 +97,13 @@ class Article(db.Model):
         return Article.published_query()\
                        .filter('published_date >=', start_date)\
                        .filter('published_date <', end_date)\
-                       .order('-published_date')\
-                       .fetch(FETCH_THEM_ALL)
+                       .order('-published_date')
 
     @classmethod
-    def all_for_tag(cls, tag):
+    def all_for_tag_query(cls, tag):
         return Article.published_query()\
                       .filter('tags = ', tag)\
-                      .order('-published_date')\
-                      .fetch(FETCH_THEM_ALL)
+                      .order('-published_date')
 
     @classmethod
     def convert_string_tags(cls, tags):
