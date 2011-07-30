@@ -160,6 +160,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             article.path = utils.get_article_path(article)
             article.url = url_prefix + article.path
             article.comments_count = article.comment_set.count()
+            article.published_class = 'draft' if article.draft else 'published'
             article.comments = [] # article.comment_set cannot be adjusted
             for comment in article.comment_set:
                 comment.html = simplemarkup.markup2html(markup_text=comment.text,
@@ -197,16 +198,13 @@ class AbstractPageHandler(request.BlogRequestHandler):
         media_url = url_prefix + media_path
 
         class UserInfo:
-            def __init__(self, user, is_admin, login_url, logout_url):
-                self.user = user
-                self.is_admin = is_admin
-                self.login_url = login_url
-                self.logout_url = logout_url
+            def __init__(self, request):
+                self.user = users.get_current_user()
+                self.is_admin = users.is_current_user_admin()
+                self.login_url = users.create_login_url(request.path)
+                self.logout_url = users.create_logout_url(request.path)
 
-        user_info = UserInfo(user = users.get_current_user(),
-                             is_admin = users.is_current_user_admin(),
-                             login_url = users.create_login_url(request.path),
-                             logout_url = users.create_logout_url(request.path))
+        user_info = UserInfo(request)
 
         template_variables = {
             'blog_name'    : defs.BLOG_NAME,
@@ -252,7 +250,8 @@ class FrontPageHandler(AbstractPageHandler):
         #if len(articles) > defs.MAX_ARTICLES_PER_PAGE:
         #    articles = articles[:defs.MAX_ARTICLES_PER_PAGE]
 
-        page_info = PageInfo(PagedQuery(Article.published_query(), defs.MAX_ARTICLES_PER_PAGE),
+        q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
+        page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE),
                              page_num,
                              "/page%d",
                              "/")
@@ -289,9 +288,12 @@ class SingleArticleHandler(AbstractPageHandler):
     Handles nonexistent IDs.
     """
     def get(self, id):
-        article = Article.get(int(id))
-        template = 'articles.html' if article else 'not-found.html'
-        #additional_template_variables = {'single_article': True}
+        id = int(id)
+        article = Article.get(id)
+        if article.draft and not users.is_current_user_admin():
+            template = '403.html'
+        else:
+            template = 'articles.html' if article else '404.html'
         additional_template_variables = {'single_article': article}
         self.response.out.write(self.render_articles(SinglePageInfo(article),
                                                      self.request,
@@ -353,7 +355,7 @@ class NotFoundPageHandler(AbstractPageHandler):
         self.response.out.write(self.render_articles(EmptyPageInfo(),
                                                      self.request,
                                                      [],
-                                                     'not-found.html'))
+                                                     '404.html'))
 
 # -----------------------------------------------------------------------------
 # Main program

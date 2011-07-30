@@ -27,8 +27,9 @@ class ShowArticlesHandler(request.BlogRequestHandler):
     with links to their corresponding edit pages.
     """
     def get(self):
-        articles = Article.get_all()
-        template_vars = {'articles' : articles}
+        #articles = Article.get_all()
+        #template_vars = {'articles' : articles}
+        template_vars = {}
         self.response.out.write(self.render_template('admin-main.html',
                                                      template_vars))
 
@@ -95,14 +96,14 @@ class SaveArticleHandler(request.BlogRequestHandler):
         if edit_again:
             self.redirect('/admin/article/edit/?id=%s' % article.id)
         else:
-            self.redirect('/admin/')
+            self.redirect(utils.get_article_path(article))
 
 class EditArticleHandler(request.BlogRequestHandler):
     """
     Handles requests to edit an article.
     """
-    def get(self):
-        id = int(self.request.get('id'))
+    def get(self, id):
+        id = int(id)
         article = Article.get(id)
         if not article:
             raise ValueError, 'Article with ID %d does not exist.' % id
@@ -144,11 +145,12 @@ def alert_the_media():
 
 
 application = webapp.WSGIApplication(
-        [('/admin/?', ShowArticlesHandler),
+        [
+         ('/admin/?', ShowArticlesHandler),
          ('/admin/article/new/?', NewArticleHandler),
          ('/admin/article/delete/?', DeleteArticleHandler),
          ('/admin/article/save/?', SaveArticleHandler),
-         ('/admin/article/edit/?', EditArticleHandler),
+         ('/admin/article/edit/(\d+)$', EditArticleHandler),
          ('/admin/comment/delete/(\d+)$', DeleteCommentHandler),
          ],
 

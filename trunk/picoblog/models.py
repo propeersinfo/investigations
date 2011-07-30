@@ -20,11 +20,6 @@ class Article(db.Model):
         return self.comment_set.fetch(FETCH_THEM_ALL_COMMENTS)
 
     @classmethod
-    def get_all_query(cls):
-        q = db.Query(Article)
-        return q.order('-published_date')
-
-    @classmethod
     def get(cls, id):
         q = db.Query(Article)
         q.filter('id = ', id)
@@ -43,10 +38,14 @@ class Article(db.Model):
 #                      .fetch(FETCH_THEM_ALL)
 
     @classmethod
-    def published_query(cls):
-        return db.Query(Article)\
-                 .filter('draft = ', False)\
-                 .order('-published_date')
+    def query_all(cls):
+        return db.Query(Article).order('-published_date')
+
+    @classmethod
+    def query_published(cls):
+        return cls.query_all()\
+                  .filter('draft = ', False)\
+                  .order('-published_date')
 
 #    @classmethod
 #    def published_query(cls):
