@@ -6,7 +6,7 @@ BLOG_OWNER = 'Soviet Groove'
 DROPBOX_USER = '1883230'
 
 THEME_DIR = 'themes/birman'
-TEMPLATE_DIR = 'templates'
+TEMPLATE_DIR = '.'
 
 TAG_URL_PATH = 'tag'
 DATE_URL_PATH = 'date'
