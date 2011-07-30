@@ -35,6 +35,10 @@ import utils
 import simplemarkup
 from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo
 
+from google.appengine.ext.webapp import template
+template.register_template_library('my_tags')
+
+
 # -----------------------------------------------------------------------------
 # Classes
 # -----------------------------------------------------------------------------

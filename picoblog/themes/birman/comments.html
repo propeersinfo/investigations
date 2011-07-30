@@ -31,17 +31,21 @@
 			  <span class="icons e2-comment-actions"></span>
 		  </div>
 		  <div class="meta" style="display: none">
-			<span class="admin-links"></span>
+			<span class="admin-links">xx</span>
 		  </div>
 		</div>
 		<div class="comment-content-area">
+			{% if user_info.is_admin %}
+			  <span class=icons>
+				<a href="/admin/comment/delete/{{comment.id}}" title="Delete comment">
+					<img src="/static/delete16.png" alt="[delete comment]">
+				</a>
+			  </span>
+			{% endif %}
 		  <div class="comment-actions-removed admin-links" style="display: none">
 		  </div>
 		  <div class="comment-content visible">
 		      {{comment.html}}
-		      {% if user_info.is_admin %}
-		        <sup><a href="/admin/comment/delete/{{comment.id}}">[remove]</a></sup>
-		      {% endif %}
 		      <span class="icons"></span>
 		  </div>
 		</div>
