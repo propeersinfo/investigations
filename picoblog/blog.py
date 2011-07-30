@@ -224,13 +224,12 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'recent'       : recent,
             'user_info'    : user_info,
             'blog_owner_name' : defs.BLOG_OWNER,
-            'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', "")
+            'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', '')
         }
-
-        #raise Exception("comment author: " + utils.get_cookie(self.request, "comment_author", ""))
 
         if additional_template_variables:
             template_variables.update(additional_template_variables)
+
         return self.render_template(template_name, template_variables)
 
     def get_recent(self):
@@ -328,7 +327,7 @@ class RSSFeedHandler(AbstractPageHandler):
         self.response.out.write(self.render_articles(articles,
                                                      self.request,
                                                      [],
-                                                     'rss2.xml'))
+                                                     '../../rss.xml'))
 
 class AddCommentHandler(AbstractPageHandler):
     def post(self, article_id):

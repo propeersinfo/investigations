@@ -54,10 +54,13 @@ function replaceYoutubeImageWithClip(img) {
 }
 function prepareYoutubeClips() {
   $("img.youtube").each(function(pos,img){
-    img.style.backgroundImage = "url(" + img.src + ")"
+    var preview = img.src
+    img.style.background = "black url(" + preview + ")"
     img.src = "static/playvideo480.png"
     var a = img.parentNode
     if(a) {
+      a.style.background = "url(" + preview + ")"
+      a.style.display = "inline-block"
       a.onclick = function(event) { replaceYoutubeImageWithClip(img); return false; }
     }
   })
@@ -67,7 +70,7 @@ $(document).ready(function() {
 });
 </script>
 
-{% include "googleanalytics.html" %}
+{% include "../../googleanalytics.html" %}
 
 </head>
 
@@ -105,11 +108,7 @@ $(document).ready(function() {
 
 	<div class="blog-title-and-description">
 	  <h1>
-	    {% if single_article %}
-          <a href="/"><span id="e2-blog-title">Soviet Rare Groove</span></a> 
-        {% else %}
-          <span id="e2-blog-title">Soviet Rare Groove</span>
-        {% endif %}
+        <a href="/"><span id="e2-blog-title">Soviet Rare Groove</span></a> 
 		<a class="rss-link" style="" href="/rss/">RSS</a>
 	  </h1>
 	  <p><span id="e2-blog-description">

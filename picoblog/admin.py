@@ -15,6 +15,8 @@ from google.appengine.ext.webapp import util
 from models import *
 import request
 
+import utils
+
 # -----------------------------------------------------------------------------
 # Classes
 # -----------------------------------------------------------------------------
@@ -126,7 +128,7 @@ class DeleteCommentHandler(request.BlogRequestHandler):
         if comment:
             article = comment.article
             comment.delete()
-            self.redirect('/%d#comment-removed' % (article.id))
+            self.redirect(utils.get_article_path(article))
         else:
             self.redirect('/')
 

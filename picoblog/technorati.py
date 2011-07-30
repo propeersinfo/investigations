@@ -103,7 +103,7 @@ class GoogleXMLRPCTransport(object):
 # -----------------------------------------------------------------------------
 
 def ping_technorati():
-    if defs.ON_GAE:
+    if defs.PRODUCTION:
         url = TECHNORATI_PING_RPC_URL
     else:
         url = FAKE_TECHNORATI_PING_RPC_URL

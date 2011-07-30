@@ -33,8 +33,9 @@ class BlogRequestHandler(webapp.RequestHandler):
         :return: the full path to the template. Does *not* ensure that the
                  template exists.
         """
-        return os.path.join(os.path.dirname(__file__), 
-                            defs.TEMPLATE_SUBDIR,
+        return os.path.join(os.path.dirname(__file__),
+                            defs.THEME_DIR,
+                            defs.TEMPLATE_DIR,
                             template_name)
 
     def render_template(self, template_name, template_vars):
