@@ -599,7 +599,15 @@ th {
 }
 
 .note h1 { margin: 0 }
-.note h1.draft { font-style: italic }
+
+.note h1.draft {
+	position: relative;
+}
+.note h1.draft:before {
+    content: url(/static/edit16.png);
+    position: absolute;
+    left: -30px;
+}
 
 .note h1 {
   font-size: 145%;

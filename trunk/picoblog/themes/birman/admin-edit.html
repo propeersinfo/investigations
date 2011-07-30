@@ -1,10 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="/static/style.css" rel="stylesheet" type="text/css"/>
-<title>Example blog: Edit Article</title>
-</head>
+{% extends "base.html" %}
+
+{% block title %}
+	Edit article
+{% endblock %}
+
+
+{% block main %}
 
 <script type="text/javascript">
 
@@ -79,10 +80,10 @@ function cancel_edit()
 
     <br/><br/>
 
-    <textarea name="content" cols="100%" rows="20" style="width:95%">{{ article.body }}</textarea>
+    <textarea name="content" cols="100%" rows="15" style="width:100%">{{ article.body }}</textarea>
 
     <p>
-        Tags: <input type="text" width="80" name="tags" value="{{ article.tag_string}}"/>
+        Tags: <input type="text" cols="80" name="tags" value="{{ article.tag_string}}"/>
 
         {% if article.draft %}
         Draft: <input type="checkbox" name="draft" checked/>
@@ -93,8 +94,8 @@ function cancel_edit()
 
     <p>
         <input type="button" name="save" onClick="save_article()" value="Save"/>
-        <input type="button" name="save" onClick="save_and_reedit()" value="Save and Keep Editing"/>
         <!--
+        <input type="button" name="save" onClick="save_and_reedit()" value="Save and Keep Editing"/>
         <input type="button" name="cancel" onClick="cancel_edit()" value="Cancel"/>
         -->
         <input type="button" name="delete" onClick="del()" value="Delete"/>
@@ -109,13 +110,6 @@ function cancel_edit()
 
 </div>
 
-<h1 class="admin-page-title">Preview:</h1>
-<div style="border-top: 1px solid black">
-<iframe src="/{{ article.id }}" width="97%" scrolling="auto" height="750"
-        frameborder="0">
-</iframe>
-</div>
-
 </td></tr></table>
-</body>
-</html>
+
+{% endblock %}
