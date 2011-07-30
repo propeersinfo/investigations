@@ -16,7 +16,8 @@ ATOM_URL_PATH = 'atom'
 RSS2_URL_PATH = 'rss'
 ARCHIVE_URL_PATH = 'archive'
 
-MAX_ARTICLES_PER_PAGE = 10
+MAX_ARTICLES_PER_PAGE = 3
+MAX_ARTICLES_PER_PAGE_ARCHIVE = 3
 TOTAL_RECENT = 10
 
 if os.environ.get('SERVER_SOFTWARE','').lower().find('development') >= 0:

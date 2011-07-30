@@ -33,6 +33,7 @@ import defs
 import request
 import utils
 import simplemarkup
+from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo
 
 # -----------------------------------------------------------------------------
 # Classes
@@ -167,11 +168,16 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 article.comments.append(comment)
 
     def render_articles(self,
-                        articles,
+                        page_info,
                         request,
                         recent,
                         template_name='articles.html',
                         additional_template_variables = None):
+        if not isinstance(page_info, PageInfoBase):
+            raise Exception("Use 'page_info' instead of 'articles'; actual = %s" % type(page_info.articles))
+
+        articles = page_info.articles
+
         url_prefix = 'http://' + request.environ['SERVER_NAME']
         port = request.environ['SERVER_PORT']
         if port:
@@ -224,7 +230,9 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'recent'       : recent,
             'user_info'    : user_info,
             'blog_owner_name' : defs.BLOG_OWNER,
-            'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', '')
+            'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
+            'prev_page_url'   : page_info.prev_page_url,
+            'next_page_url'   : page_info.next_page_url
         }
 
         if additional_template_variables:
@@ -253,12 +261,19 @@ class FrontPageHandler(AbstractPageHandler):
     """
     Handles requests to display the front (or main) page of the blog.
     """
-    def get(self):
-        articles = Article.published()
-        if len(articles) > defs.MAX_ARTICLES_PER_PAGE:
-            articles = articles[:defs.MAX_ARTICLES_PER_PAGE]
+    def get(self, page_num = 1):
+        page_num = int(page_num)
+        
+        #articles = Article.published()
+        #if len(articles) > defs.MAX_ARTICLES_PER_PAGE:
+        #    articles = articles[:defs.MAX_ARTICLES_PER_PAGE]
 
-        self.response.out.write(self.render_articles(articles,
+        page_info = PageInfo(PagedQuery(Article.published_no_fetch(), defs.MAX_ARTICLES_PER_PAGE),
+                             page_num,
+                             "/page%d",
+                             "/")
+        #raise Exception("page_info: %s" % type(page_info))
+        self.response.out.write(self.render_articles(page_info,
                                                      self.request,
                                                      self.get_recent()))
 
@@ -310,9 +325,13 @@ class ArchivePageHandler(AbstractPageHandler):
     """
     Handles requests to display the list of all articles in the blog.
     """
-    def get(self):
-        articles = Article.published()
-        self.response.out.write(self.render_articles(articles,
+    def get(self, page_num):
+        page_num = int(page_num) if page_num else 1
+        page_info = PageInfo(PagedQuery(Article.published_no_fetch(), defs.MAX_ARTICLES_PER_PAGE_ARCHIVE),
+                             page_num,
+                             "/archive/%d",
+                             "/archive/")
+        self.response.out.write(self.render_articles(page_info,
                                                      self.request,
                                                      [],
                                                      'archive.html'))
@@ -353,7 +372,7 @@ class NotFoundPageHandler(AbstractPageHandler):
     Handles pages that aren't found.
     """
     def get(self):
-        self.response.out.write(self.render_articles([],
+        self.response.out.write(self.render_articles(EmptyPageInfo(),
                                                      self.request,
                                                      [],
                                                      'not-found.html'))
@@ -369,10 +388,11 @@ webapp.template.register_template_library('my_tags')
 
 application = webapp.WSGIApplication(
     [('/', FrontPageHandler),
+     ('/page(\d+)', FrontPageHandler),
      ('/tag/([^/]+)/*$', ArticlesByTagHandler),
      ('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),
      ('/(\d+).*$', SingleArticleHandler),
-     ('/archive/?$', ArchivePageHandler),
+     ('/archive/(\d+)?$', ArchivePageHandler),
      ('/rss/?$', RSSFeedHandler),
      ('/comment/add/(\d+)$', AddCommentHandler),
      ('/.*$', NotFoundPageHandler),
