@@ -1,0 +1,10 @@
+from google.appengine.ext.webapp import template
+
+register = template.create_template_register()
+
+@register.filter(name='wld')
+def wld(result):
+    if result == 1 : return "win"
+    if result == 0 : return "loss"
+    if result == 0.5 : return "draw"
+    return "unknown"
