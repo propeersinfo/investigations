@@ -599,15 +599,24 @@ th {
 }
 
 .note h1 { margin: 0 }
-
-.note h1.draft {
-	position: relative;
-}
-.note h1.draft:before {
+.note h1 { position: relative; }
+.note h1 span.icons { position: absolute; left: -26px; }
+.note h1.draft   { color: #d33; }
+.note h1.draft a { color: #d33; }
+/*.note h1.draft:before {
     content: url(/static/edit16.png);
     position: absolute;
     left: -30px;
+}*/
+
+.comment-content-area .icons {
+	position: relative;
 }
+.comment-content-area .icons {
+	position: absolute;
+	left: -26px;
+}
+
 
 .note h1 {
   font-size: 145%;
@@ -817,3 +826,5 @@ th {
 .pagination {
 	font-size: 13pt;
 }
+
+
