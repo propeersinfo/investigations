@@ -58,6 +58,8 @@ class SaveArticleHandler(request.BlogRequestHandler):
     Handles form submissions to save an edited article.
     """
     def post(self):
+        #url_from = cgi.escape(self.request.get('from'))
+        url_from = self.request.get('from')
         title = cgi.escape(self.request.get('title'))
         body = cgi.escape(self.request.get('content'))
         s_id = cgi.escape(self.request.get('id'))
@@ -103,6 +105,8 @@ class SaveArticleHandler(request.BlogRequestHandler):
         edit_again = edit_again and (edit_again.lower() == 'true')
         if edit_again:
             self.redirect('/admin/article/edit/?id=%s' % article.id)
+        elif url_from:
+            self.redirect(url_from)
         else:
             self.redirect(utils.get_article_path(article))
 
@@ -117,7 +121,10 @@ class EditArticleHandler(request.BlogRequestHandler):
             raise ValueError, 'Article with ID %d does not exist.' % id
 
         article.tag_string = ', '.join(article.tags)
-        template_vars = {'article'  : article}
+        template_vars = {
+            'article'  : article,
+            'from'     : cgi.escape(self.request.get('from'))
+        }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))
 
@@ -128,7 +135,11 @@ class DeleteArticleHandler(request.BlogRequestHandler):
         if article:
             article.delete()
 
-        self.redirect('/admin/')
+        url_from = self.request.get("from")
+        if url_from:
+            self.redirect(url_from)
+        else:
+            self.redirect('/')
 
 class DeleteCommentHandler(request.BlogRequestHandler):
     def get(self, comment_id):

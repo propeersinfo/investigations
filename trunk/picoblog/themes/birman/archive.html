@@ -10,7 +10,7 @@ Archive - {{blog_name}}
     <ul>
     {% for article in articles %}
       <li>
-        <a href="/admin/article/edit/{{article.id}}">
+        <a href="/admin/article/edit/{{article.id}}?from={{current_path}}">
           <img src="/static/edit16.png">
         </a>
         {{ article.published_date|date:"Y-m-j" }}
