@@ -836,9 +836,23 @@ div.reply-to a {
   border-bottom-style: dashed;
 }
 
-.owner-reply .comment-author {
+/*.owner-reply .comment-author {
 	background: #eeb;
 	padding: 0.2em 0.44em;
 	margin-left:  -0.44em;
 	border-radius: 0.35em;
+}*/
+.comment-content-area {
+	padding-left: 0.5em;
+	margin-left: -0.7em;
+	border-left: 0.2em solid white;
+}
+.owner-reply .comment-content-area {
+  padding-left: 0.5em;
+  margin-left: -0.7em;
+  border-left: 0.2em solid #ddb;
+  -webkit-border-radius: 0.3em;
+     -moz-border-radius: 0.3em;
+       -o-border-radius: 0.3em;
+          border-radius: 0.3em;
 }

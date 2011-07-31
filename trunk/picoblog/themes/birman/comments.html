@@ -52,8 +52,6 @@
 			  <div class="reply-to">
 				{% if comment.repliable %}
 					<a href="javascript:replyToComment({{comment.id}});">reply to this</a>
-				{% else %}
-					replied to #{{comment.replied_comment_id}}
 				{% endif %}
 			  </div>
 		  {% endif %}
