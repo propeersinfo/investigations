@@ -4,6 +4,7 @@ Check list:
 Top priority:
 - handling of a 404 article is broken
 - investigate is it ok to use RSS for admin comment tracking
++ semi-tree comments
 + markup: playlist mp3
 + rss.xml to use <guid>
 + using FETCH_THEM_ALL is quite a bad practice
@@ -25,9 +26,9 @@ Middle priority:
 - all comments RSS
 - friendly links at the right
 - RSS icon
-- make sure admin's comments looks special both in old and new comments
++ make sure admin's comments looks special both in old and new comments
 - impl google search
-- pagination in comments
+- pagination in comments?
 - attribute 'deleted' in Article/Comment
 + after edit, redirect browser to a page user came from
 + redirect from "/123.html" or "/123-outdated-title.html" to "/123-fresh-title.html"
