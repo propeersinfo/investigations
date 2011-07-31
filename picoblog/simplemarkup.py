@@ -54,6 +54,16 @@ def handle_custom_tag_mixcloud(input):
     replace  = '<object height="400" width="400"><param name="movie" value="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\3%2F\\4%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\3%2F\\4%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="400" width="400"></object>'
     return re.sub(regex, replace, input)
 
+def handle_custom_tag_playlist(input):
+    regex = '\[([^\]]+playlist)\]'
+    replace = '<object width="240" height="200">'\
+              '<embed src="http://dl.dropbox.com/u/%s/dewplayer-playlist.swf" '\
+              'width="240" height="200" '\
+              'type="application/x-shockwave-flash" '\
+              'flashvars="&xml=http://dl.dropbox.com/u/%s/sg/\\1&autoreplay=1" quality="high">'\
+              '</embed></object>' % (defs.DROPBOX_USER, defs.DROPBOX_USER)
+    return re.sub(regex, replace, input)
+
 # main function
 def markup2html(markup_text, rich_markup = True, recognize_links = True):
     html = markup_text.replace('\n', '<br>\n')
@@ -63,4 +73,5 @@ def markup2html(markup_text, rich_markup = True, recognize_links = True):
         html = handle_custom_tag_mp3(html)
         html = handle_custom_tag_youtube(html)
         html = handle_custom_tag_mixcloud(html)
+        html = handle_custom_tag_playlist(html)
     return html
