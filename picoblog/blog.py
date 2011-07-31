@@ -34,6 +34,7 @@ import request
 import utils
 import simplemarkup
 from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo
+from user import UserInfo
 
 from google.appengine.ext.webapp import template
 template.register_template_library('my_tags')
@@ -201,13 +202,6 @@ class AbstractPageHandler(request.BlogRequestHandler):
         media_path = '/' + defs.MEDIA_URL_PATH
         media_url = url_prefix + media_path
 
-        class UserInfo:
-            def __init__(self, request):
-                self.user = users.get_current_user()
-                self.is_admin = users.is_current_user_admin()
-                self.login_url = users.create_login_url(request.path)
-                self.logout_url = users.create_logout_url(request.path)
-
         user_info = UserInfo(request)
 
         template_variables = {
@@ -311,7 +305,8 @@ class ArchivePageHandler(AbstractPageHandler):
     """
     def get(self, page_num):
         page_num = int(page_num) if page_num else 1
-        page_info = PageInfo(PagedQuery(Article.published_query(), defs.MAX_ARTICLES_PER_PAGE_ARCHIVE),
+        q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
+        page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE_ARCHIVE),
                              page_num,
                              "/archive/%d",
                              "/archive/")
@@ -372,7 +367,7 @@ webapp.template.register_template_library('my_tags')
 
 application = webapp.WSGIApplication(
     [('/', FrontPageHandler),
-     ('/page(\d+)', FrontPageHandler),
+     ('/page(\d+)/?', FrontPageHandler),
      ('/tag/([^/]+)/*$', ArticlesByTagHandler),
      ('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),
      ('/(\d+).*$', SingleArticleHandler),
