@@ -2,10 +2,11 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
-- all comments RSS
+- handling of a 404 article is broken
 - investigate is it ok to use RSS for admin comment tracking
 - markup: playlist mp3
-+ FETCH_THEM_ALL is quite a bad practice
++ rss.xml to use <guid>
++ using FETCH_THEM_ALL is quite a bad practice
 + implement tag links and tags-at-left
 + markup: single mp3
 + markup: mixcloud
@@ -21,11 +22,14 @@ Top priority:
 + show draft articles to admin (front page, archive)
 
 Middle priority:
+- all comments RSS
+- friendly links at the right
 - RSS icon
 - make sure admin's comments looks special both in old and new comments
 - impl google search
 - pagination in comments
 - attribute 'deleted' in Article/Comment
++ redirect from "/123.html" or "/123-outdated-title.html" to "/123-fresh-title.html"
 + impl google analytics
 + save commen't user name in cookies
 + dates in comments

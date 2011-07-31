@@ -33,7 +33,7 @@ import defs
 import request
 import utils
 import simplemarkup
-from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo
+from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo, NoPagingPageInfo
 from user import UserInfo
 
 from google.appengine.ext.webapp import template
@@ -164,6 +164,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 article.html = simplemarkup.markup2html(article.body)
             article.path = utils.get_article_path(article)
             article.url = url_prefix + article.path
+            article.guid = url_prefix + utils.get_article_guid(article)
             article.comments_count = article.comment_set.count()
             article.published_class = 'draft' if article.draft else 'published'
             article.comments = [] # article.comment_set cannot be adjusted
@@ -288,16 +289,27 @@ class SingleArticleHandler(AbstractPageHandler):
     def get(self, id):
         id = int(id)
         article = Article.get(id)
-        if article.draft and not users.is_current_user_admin():
-            template = '403.html'
-        else:
-            template = 'articles.html' if article else '404.html'
+
+        if article:
+            true_path = utils.get_article_path(article)
+            if self.request.path != true_path:
+                self.redirect(true_path, permanent=True)
+                return
+
+        template = self.get_template_file(article)
         additional_template_variables = {'single_article': article}
         self.response.out.write(self.render_articles(SinglePageInfo(article),
                                                      self.request,
                                                      self.get_recent(),
                                                      template,
                                                      additional_template_variables))
+    def get_template_file(self, article):
+        if not article:
+            return '404.html'
+        elif article.draft and not users.is_current_user_admin():
+            return '403.html'
+        else:
+            return 'articles.html'
 
 class ArchivePageHandler(AbstractPageHandler):
     """
@@ -315,17 +327,17 @@ class ArchivePageHandler(AbstractPageHandler):
                                                      [],
                                                      'archive.html'))
 
-class RSSFeedHandler(AbstractPageHandler):
+class RssArticlesHandler(AbstractPageHandler):
     """
     Handles request for an RSS2 feed of the blog's contents.
     """
     def get(self):
-        articles = Article.published()
+        pager = NoPagingPageInfo(PagedQuery(Article.query_published(), defs.MAX_ARTICLES_RSS))
         self.response.headers['Content-Type'] = 'text/xml'
-        self.response.out.write(self.render_articles(articles,
+        self.response.out.write(self.render_articles(pager,
                                                      self.request,
                                                      [],
-                                                     '../../rss.xml'))
+                                                     '../rss-articles.xml'))
 
 class AddCommentHandler(AbstractPageHandler):
     def post(self, article_id):
@@ -372,7 +384,7 @@ application = webapp.WSGIApplication(
      ('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),
      ('/(\d+).*$', SingleArticleHandler),
      ('/archive/(\d+)?$', ArchivePageHandler),
-     ('/rss/?$', RSSFeedHandler),
+     ('/rss/?$', RssArticlesHandler),
      ('/comment/add/(\d+)$', AddCommentHandler),
      ('/.*$', NotFoundPageHandler),
      ],
