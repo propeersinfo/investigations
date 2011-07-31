@@ -159,9 +159,11 @@ class Comment(db.Model):
     id = db.IntegerProperty()
     article = db.ReferenceProperty(Article)
     blog_owner = db.BooleanProperty(required=True, default=False)
-    author = db.StringProperty() # Could be None for anonymouses of myopera
+    author = db.StringProperty() # Could be None for anonymous users of myopera
     text = db.TextProperty(required=True)
     published_date = db.DateTimeProperty(auto_now_add=True)
+    #replied_comment = db.SelfReferenceProperty()
+    replied_comment_id = db.IntegerProperty()
     
     @classmethod
     def get(cls, id):
@@ -175,4 +177,6 @@ class Comment(db.Model):
         else:
             self.put()
             self.id = self.key().id()
+            if not self.replied_comment_id:
+                self.replied_comment_id = self.id
             self.put()

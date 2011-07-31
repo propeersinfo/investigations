@@ -33,3 +33,44 @@ indexes:
   properties:
   - name: published_when
     direction: desc
+
+- kind: Comment
+  properties:
+  - name: article
+  - name: published_date
+
+- kind: Comment
+  properties:
+  - name: article
+  - name: published_date
+  - name: replied_comment
+
+- kind: Comment
+  properties:
+  - name: article
+  - name: published_date
+  - name: replied_comment_id
+
+- kind: Comment
+  properties:
+  - name: article
+  - name: published_date
+    direction: desc
+
+- kind: Comment
+  properties:
+  - name: article
+  - name: replied_comment
+  - name: published_date
+
+- kind: Comment
+  properties:
+  - name: article
+  - name: replied_comment_id
+  - name: published_date
+
+- kind: Comment
+  properties:
+  - name: article.id
+  - name: published_date
+    direction: desc
