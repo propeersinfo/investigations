@@ -167,12 +167,56 @@ class AbstractPageHandler(request.BlogRequestHandler):
             article.guid = url_prefix + utils.get_article_guid(article)
             article.comments_count = article.comment_set.count()
             article.published_class = 'draft' if article.draft else 'published'
-            article.comments = [] # article.comment_set cannot be adjusted
-            for comment in article.comment_set:
-                comment.html = simplemarkup.markup2html(markup_text=comment.text,
-                                                        rich_markup=False,
-                                                        recognize_links=comment.blog_owner)
-                article.comments.append(comment)
+            self.augment_comments_for(article)
+
+    def augment_comments_for(self, article):
+        q = db.Query(Comment)\
+              .filter("article = ", article)\
+              .order('replied_comment_id')\
+              .order('published_date')
+        comments = []
+        for comment in q.fetch(100):
+            comment.html = simplemarkup.markup2html(markup_text=comment.text,
+                                                    rich_markup=False,
+                                                    recognize_links=comment.blog_owner)
+            comment.repliable = (comment.id == comment.replied_comment_id)
+            comments.append(comment)
+        article.comments = comments
+    
+#    def augment_comments_for(self, article):
+#        comments = []
+#        for comment in article.comment_set:
+#            comment.html = simplemarkup.markup2html(markup_text=comment.text,
+#                                                    rich_markup=False,
+#                                                    recognize_links=comment.blog_owner)
+#            comments.append(comment)
+#        article.comments = comments
+
+#    def _augment_comments_for(self, article):
+#        class Group(list):
+#            def __init__(self, comment):
+#                super(list, self).__init__()
+#                self.id = comment.id
+#                self.append(comment)
+#            def __hash__(self):
+#                return self.id
+#        hash = {}
+#        groups = []
+#        for comment in article.comment_set:
+#            comment.html = simplemarkup.markup2html(markup_text=comment.text,
+#                                                    rich_markup=False,
+#                                                    recognize_links=comment.blog_owner)
+#            if comment.replied_comment and hash.has_key(comment.replied_comment.id):
+#                #raise Exception("adding to hash")
+#                hash[comment.replied_comment.id].append(comment)
+#            else:
+#                gr = Group(comment)
+#                hash[comment.id] = gr
+#                groups.append(gr)
+#        article.comments = [] # article.comment_set cannot be adjusted
+#        for gr in groups:
+#            article.comments.extend(gr)
+#        #raise Exception(len(article.comments))
 
     def render_articles(self,
                         page_info,
@@ -341,11 +385,16 @@ class RssArticlesHandler(AbstractPageHandler):
                                                      '../rss-articles.xml'))
 
 class AddCommentHandler(AbstractPageHandler):
+    def get_replied_comment_id(self):
+        str = self.request.get('reply-to').strip()
+        if str:
+            c = Comment.get(int(str))
+            if c: return c.id
+        return None
+
     def post(self, article_id):
         article_id = int(article_id)
         article = Article.get(article_id)
-
-        #if True: raise Exception("article_id = %s, article = %s, article.id = %s" % (article_id, article, article.id))
 
         author = cgi.escape(self.request.get('author')).strip()
         #if author == '' and not users.is_current_user_admin():
@@ -354,7 +403,8 @@ class AddCommentHandler(AbstractPageHandler):
         comment = Comment(article = article,
                           author = author,
                           text = cgi.escape(self.request.get('text')),
-                          blog_owner = users.is_current_user_admin())
+                          blog_owner = users.is_current_user_admin(),
+                          replied_comment_id = self.get_replied_comment_id())
         comment.save()
         utils.set_unicode_cookie(self.response, "comment_author", author)
         self.redirect(utils.get_article_path(article))

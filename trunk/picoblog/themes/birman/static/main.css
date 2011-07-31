@@ -748,7 +748,6 @@ th {
 }
 
 
-
 .visual-login,
 .copyrights,
 .engine-info {
@@ -828,3 +827,18 @@ th {
 }
 
 
+div.reply-to {
+  font-size: 80%;
+}
+div.reply-to a {
+  text-decoration: none;
+  border-width: 1px;
+  border-bottom-style: dashed;
+}
+
+.owner-reply .comment-author {
+	background: #eeb;
+	padding: 0.2em 0.44em;
+	margin-left:  -0.44em;
+	border-radius: 0.35em;
+}

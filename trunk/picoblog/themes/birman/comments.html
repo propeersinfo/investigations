@@ -14,10 +14,10 @@
 {% for comment in article.comments %}
 <div class="comment-and-reply">
 	<div class=" visible">
-	  <div class="comment e2-comment-control-group">
+	  <div class="comment e2-comment-control-group {%if comment.blog_owner%}owner-reply{%endif%}">
 		<div class="comment-meta-area">
 		  <div>
-			  <span class="comment-author" title="{{comment.published_date|date:"r"}}">
+			  <span class="comment-author" title="#{{comment.id}} {{comment.published_date|date:"r"}}">
 			    {% if comment.blog_owner %}
 						<span class="e2-markable ">{{blog_owner_name}}</span>
 				{% else %}
@@ -28,11 +28,11 @@
 					{% endif %}
 				{% endif %}
 			  </span>
-			  <span class="icons e2-comment-actions"></span>
+			  <!--span class="icons e2-comment-actions"></span-->
 		  </div>
-		  <div class="meta" style="display: none">
+		  <!--<div class="meta" style="display: none">
 			<span class="admin-links">xx</span>
-		  </div>
+		  </div>-->
 		</div>
 		<div class="comment-content-area">
 			{% if user_info.is_admin %}
@@ -48,6 +48,15 @@
 		      {{comment.html}}
 		      <span class="icons"></span>
 		  </div>
+		  {% if user_info.is_admin %}
+			  <div class="reply-to">
+				{% if comment.repliable %}
+					<a href="javascript:replyToComment({{comment.id}});">reply to this</a>
+				{% else %}
+					replied to #{{comment.replied_comment_id}}
+				{% endif %}
+			  </div>
+		  {% endif %}
 		</div>
 		<div class="clear"></div>
 	  </div>
@@ -63,6 +72,7 @@
 <input name="comment-id" value="new" type="hidden">
 <input name="from" value="" type="hidden">
 <input name="already-subscribed" value="" type="hidden">
+<input id="reply-to" name="reply-to" value="" type="hidden">
 <div class="form">
 
 <div class="form-control">
