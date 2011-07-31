@@ -209,7 +209,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'blog_name'    : defs.BLOG_NAME,
             'canonical_blog_url' : defs.CANONICAL_BLOG_URL,
             'blog_owner'   : defs.BLOG_OWNER,
-            'current_path' : request.path,
+            'current_path' : cgi.escape(request.path),
             'articles'     : articles,
             'tag_list'     : None, #self.get_tag_counts(),
             'date_list'    : None, #self.get_month_counts(),
