@@ -16,6 +16,10 @@ from models import *
 import request
 
 import utils
+from user import UserInfo
+
+from google.appengine.ext.webapp import template
+template.register_template_library('my_tags')
 
 # -----------------------------------------------------------------------------
 # Classes
@@ -41,7 +45,11 @@ class NewArticleHandler(request.BlogRequestHandler):
         article = Article(title='New article',
                           body='Content goes here',
                           draft=False)
-        template_vars = {'article' : article}
+        user_info = UserInfo(self.request)
+        template_vars = {
+            'article'   : article,
+            'user_info' : user_info
+        }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))
 
