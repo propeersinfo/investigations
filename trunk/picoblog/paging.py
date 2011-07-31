@@ -33,6 +33,12 @@ class SinglePageInfo(PageInfoBase):
     self.prev_page_url = None
     self.next_page_url = None
 
+class NoPagingPageInfo(PageInfoBase):
+  def __init__(self, paged_query):
+    self.articles = paged_query.fetch_page(1) # 1-based index is used by PagedQuery
+    self.prev_page_url = None
+    self.next_page_url = None
+
 class PagedQuery(object):
 	'''
 	This class is a facade to a db.Query object that offers additional

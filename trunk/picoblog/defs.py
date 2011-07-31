@@ -18,6 +18,7 @@ ARCHIVE_URL_PATH = 'archive'
 
 MAX_ARTICLES_PER_PAGE = 3
 MAX_ARTICLES_PER_PAGE_ARCHIVE = 3
+MAX_ARTICLES_RSS = 2
 TOTAL_RECENT = 10
 
 if os.environ.get('SERVER_SOFTWARE','').lower().find('development') >= 0:

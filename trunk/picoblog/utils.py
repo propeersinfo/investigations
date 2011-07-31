@@ -10,9 +10,11 @@ def slugify(s):
   s = re.sub('[^a-zA-Z0-9-]+', '-', s).strip('-') # replace the rest with '-'
   return s
 
-
 def get_article_path(article):
   return '/%s-%s.html' % (article.id, slugify(article.title))
+    
+def get_article_guid(article):
+  return '/%s.html' % (article.id)
     
 def set_unicode_cookie(response, key, value):
   c = Cookie.SimpleCookie()
