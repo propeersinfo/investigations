@@ -159,15 +159,16 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 ``True`` to generate HTML from each article's RST
         """
         for article in articles:
-            if produce_html:
-                #article.html = rst2html(article.body)
-                article.html = simplemarkup.markup2html(article.body)
-            article.path = utils.get_article_path(article)
-            article.url = url_prefix + article.path
-            article.guid = url_prefix + utils.get_article_guid(article)
-            article.comments_count = article.comment_set.count()
-            article.published_class = 'draft' if article.draft else 'published'
-            self.augment_comments_for(article)
+            if article:
+                if produce_html:
+                    #article.html = rst2html(article.body)
+                    article.html = simplemarkup.markup2html(article.body)
+                article.path = utils.get_article_path(article)
+                article.url = url_prefix + article.path
+                article.guid = url_prefix + utils.get_article_guid(article)
+                article.comments_count = article.comment_set.count()
+                article.published_class = 'draft' if article.draft else 'published'
+                self.augment_comments_for(article)
 
     def augment_comments_for(self, article):
         q = db.Query(Comment)\
@@ -237,7 +238,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
         self.augment_articles(articles, url_prefix)
         self.augment_articles(recent, url_prefix, produce_html=False)
 
-        last_updated = last_updated = (articles[0].published_date) if (articles) else (datetime.datetime.now())
+        #last_updated = last_updated = (articles[0].published_date) if (articles) else (datetime.datetime.now())
 
         blog_url = url_prefix
         tag_path = '/' + defs.TAG_URL_PATH
@@ -258,7 +259,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'tag_list'     : None, #self.get_tag_counts(),
             'date_list'    : None, #self.get_month_counts(),
             'version'      : '0.3',
-            'last_updated' : last_updated,
+            #'last_updated' : last_updated,
             'blog_path'    : '/',
             'blog_url'     : blog_url,
             'archive_path' : '/' + defs.ARCHIVE_URL_PATH,
@@ -309,9 +310,14 @@ class ArticlesByTagHandler(AbstractPageHandler):
     Handles requests to display a set of articles that have a
     particular tag.
     """
-    def get(self, tag):
-        articles = Article.all_for_tag(tag)
-        self.response.out.write(self.render_articles(articles,
+    def get(self, tag, page_num = 1):
+        page_num = int(page_num)
+        q = Article.query_for_tag(tag)
+        page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE),
+                             page_num,
+                             '/tag/' + tag + '/page%d',
+                             '/tag/' + tag + '/')
+        self.response.out.write(self.render_articles(page_info,
                                                      self.request,
                                                      self.get_recent()))
 
@@ -341,20 +347,21 @@ class SingleArticleHandler(AbstractPageHandler):
                 self.redirect(true_path, permanent=True)
                 return
 
-        template = self.get_template_file(article)
+        response_code, template = self.get_code_and_template(article)
+        self.response.set_status(response_code)
         additional_template_variables = {'single_article': article}
         self.response.out.write(self.render_articles(SinglePageInfo(article),
                                                      self.request,
                                                      self.get_recent(),
                                                      template,
                                                      additional_template_variables))
-    def get_template_file(self, article):
+    def get_code_and_template(self, article):
         if not article:
-            return '404.html'
+            return 404, '404.html'
         elif article.draft and not users.is_current_user_admin():
-            return '403.html'
+            return 403, '403.html'
         else:
-            return 'articles.html'
+            return 200, 'articles.html'
 
 class ArchivePageHandler(AbstractPageHandler):
     """
@@ -410,10 +417,8 @@ class AddCommentHandler(AbstractPageHandler):
         self.redirect(utils.get_article_path(article))
 
 class NotFoundPageHandler(AbstractPageHandler):
-    """
-    Handles pages that aren't found.
-    """
     def get(self):
+        self.response.set_status(404)
         self.response.out.write(self.render_articles(EmptyPageInfo(),
                                                      self.request,
                                                      [],
@@ -431,7 +436,8 @@ webapp.template.register_template_library('my_tags')
 application = webapp.WSGIApplication(
     [('/', FrontPageHandler),
      ('/page(\d+)/?', FrontPageHandler),
-     ('/tag/([^/]+)/*$', ArticlesByTagHandler),
+     ('/tag/([^/]+)/?$', ArticlesByTagHandler),
+     ('/tag/([^/]+)/page(\d+)/?$', ArticlesByTagHandler),
      ('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),
      ('/(\d+).*$', SingleArticleHandler),
      ('/archive/(\d+)?$', ArchivePageHandler),

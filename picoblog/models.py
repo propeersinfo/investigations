@@ -99,10 +99,9 @@ class Article(db.Model):
                        .order('-published_date')
 
     @classmethod
-    def all_for_tag_query(cls, tag):
-        return Article.published_query()\
-                      .filter('tags = ', tag)\
-                      .order('-published_date')
+    def query_for_tag(cls, tag):
+        return Article.query_published() \
+                      .filter('tags = ', tag)
 
     @classmethod
     def convert_string_tags(cls, tags):
