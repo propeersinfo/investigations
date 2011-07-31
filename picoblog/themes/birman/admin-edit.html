@@ -79,7 +79,7 @@ function cancel_edit()
     <input type="text" align="left" width="80" style="width:95%" name="title" value="{{ article.title }}"/>
 
     <br/><br/>
-
+    
     <textarea name="content" cols="100%" rows="15" style="width:100%">{{ article.body }}</textarea>
 
     <p>
@@ -106,6 +106,7 @@ function cancel_edit()
 {% endif %}
 <input type="hidden" name="loaded_draft" value="{{ article.draft }}"/>
 <input type="hidden" name="edit_again" value="false"/>
+<input type="hidden" name="from" value="{{from}}"/>
 </form>
 
 </div>

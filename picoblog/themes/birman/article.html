@@ -21,7 +21,7 @@
 <h1 class="{{article.published_class}} visible e2-smart-title">
    	<span class="icons">
 		{% if user_info.is_admin %}
-			<a href="/admin/article/edit/{{article.id}}" title="Edit article">
+			<a href="/admin/article/edit/{{article.id}}?from={{current_path}}" title="Edit article">
 				<img src="/static/edit16.png" alt="[edit]">
 			</a>
 		{% endif %}
@@ -32,12 +32,6 @@
 	{% else %}
 		<a href="{{article.path}}"><span class="current">{{ article.title }}</span></a>
 	{% endif %}
-	
-	{% comment %}
-	{% if user_info.is_admin %}
-		<sup><a href="/admin/article/edit/{{article.id}}">[edit]</a></sup>
-	{% endif %}
-	{% endcomment %}
 </h1>
 
 <div class="text published visible">

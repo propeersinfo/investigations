@@ -4,7 +4,7 @@ Check list:
 Top priority:
 - handling of a 404 article is broken
 - investigate is it ok to use RSS for admin comment tracking
-- markup: playlist mp3
++ markup: playlist mp3
 + rss.xml to use <guid>
 + using FETCH_THEM_ALL is quite a bad practice
 + implement tag links and tags-at-left
@@ -29,6 +29,7 @@ Middle priority:
 - impl google search
 - pagination in comments
 - attribute 'deleted' in Article/Comment
++ after edit, redirect browser to a page user came from
 + redirect from "/123.html" or "/123-outdated-title.html" to "/123-fresh-title.html"
 + impl google analytics
 + save commen't user name in cookies
