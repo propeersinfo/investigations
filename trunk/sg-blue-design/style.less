@@ -8,27 +8,27 @@
 .theWidth (@column: 1, @theGutter: 0) {
   width: (@columnWidth * @column) + (@gutter * @theGutter);
 }
- 
- 
-.grid_1 { .theWidth(1,0); }
-.grid_2 { .theWidth(2,2); }
-.grid_3 { .theWidth(3,4); }
-.grid_4 { .theWidth(4,6); }
-.grid_5 { .theWidth(5,8); }
-.grid_6 { .theWidth(6,10); }
-.grid_7 { .theWidth(7,12); }
-.grid_8 { .theWidth(8,14); }
-.grid_9 { .theWidth(9,16); }
-.grid_10 { .theWidth(10,18); }
-.grid_11 { .theWidth(11,20); }
-.grid_12 { .theWidth(12,22); }
- 
-.column {
+
+.column-mixin {
 	margin: 0 @gutter;
 	overflow: hidden;
 	float: left;
 	display: inline;
 }
+ 
+.width_1  { .column-mixin; .theWidth(1,0); }
+.width_2  { .column-mixin; .theWidth(2,2); }
+.width_3  { .column-mixin; .theWidth(3,4); }
+.width_4  { .column-mixin; .theWidth(4,6); }
+.width_5  { .column-mixin; .theWidth(5,8); }
+.width_6  { .column-mixin; .theWidth(6,10); }
+.width_7  { .column-mixin; .theWidth(7,12); }
+.width_8  { .column-mixin; .theWidth(8,14); }
+.width_9  { .column-mixin; .theWidth(9,16); }
+.width_10 { .column-mixin; .theWidth(10,18); }
+.width_11 { .column-mixin; .theWidth(11,20); }
+.width_12 { .column-mixin; .theWidth(12,22); }
+ 
 .row {
 	width: @totalWidth;
 	margin: 0 auto;
