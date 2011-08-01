@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>The 1Kb Grid Demo – 12 columns, 60 pixels each, with 20 pixel gutter</title>
+	<link rel="stylesheet/less" href="style.less" type="text/css" />
+	<script src="less-1.0.21.min.js"></script>
+ 
+	<style type="text/css" media="screen">
+ 
+		body { margin: 0 0 0 0; }
+		p {
+			color: #000;
+			/*border: 1px solid lightgrey;*/
+			/*background: #eee;*/
+			margin: 0 0 20px 0;
+			line-height: 130%;
+		}
+		a {
+			color: #6EC6FE; 
+			color: #20a8fe;
+			color: #0b9ffe;
+		}
+		h1 {
+			margin: 0; padding-top: 10px;
+			text-indent: -9999px;
+			background: url("h1.png") #6EC6FE no-repeat;
+			background-position: bottom left;
+			background-repeat: no-repeat;
+			padding-top: 30px;
+		}
+		h2 {
+			margin-top:0;
+			text-indent: -9999px;
+			background: url("h2.png") white no-repeat;
+			background-position: bottom left;
+			background-repeat: no-repeat;
+		}
+		
+.about {
+	font-size: 14px;
+	margin-bottom: 1.7em;
+	max-width: 650px;
+}
+.about a {
+	color: black;
+	text-decoration: none;
+}
+.about a:hover {
+	color: white;
+}
+.below_top { margin-top: 1em; }
+
+.all_tags, .all_tags p {
+	color: #555;
+	font-size: 14px;
+}
+.all_tags a {
+	color: #555;
+	text-decoration: none;
+}
+.all_tags a:hover {
+	color: #555;
+	text-decoration: underline;
+}
+.all_tags .group {
+	padding-bottom: 10px;
+}
+.tracks { font-size: 14px; }
+.info { font-size: 14px; font-style: italic; }
+.top {
+	background-color: #6EC6FE;
+	background-image: url(volna-top.png);
+	background-position: bottom;
+	background-repeat: repeat-x;
+}
+.download {
+	font-size: 14px;
+	margin-left: 60px;
+}
+</style>
+ 
+</head>
+<body>
+ 
+<div class="row top">
+	<div class="column grid_2"><p>12</p></div>
+	<div class="column grid_10">
+		<h1>Soviet Rare Groove</h1>
+		<div class="about">
+			A blog about groovy, funky, soulful, beat, twist and psych sides of music produced
+			in&nbsp;USSR during the&nbsp;period of 1965—85.
+			Feel free to comment, ask and supply rare stuff / <a href="#">mail@sovietgroove</a>
+		</div>
+	</div>
+</div>
+
+<div class="row below_top">
+	<div class="column grid_2 all_tags">
+	    <p>
+	    	<a href="#">Jazz</a>,
+	    	<a href="#">psych</a>,
+	    	<a href="#">pop</a>,
+	    	<a href="#">prog</a>,
+	    	<a href="#">shake</a>,
+	    	<a href="#">rest</a>
+	    </p>
+
+	    <p>
+	    	<a href="#">60</a>,
+	    	<a href="#">70</a>,
+	    	<a href="#">80</a>
+	    </p>
+
+	    <p>
+	    	<a href="#">Russia</a>
+	    <br/><a href="#">Armenia</a>
+	    <br/><a href="#">Azerbaijan</a>
+	    <br/><a href="#">Georgia</a>
+	    <br/><a href="#">Estonia</a>
+	    <br/><a href="#">Latvia</a>
+	    <br/><a href="#">Lithuania</a>
+	    <br/><a href="#">Tajikistan</a>
+	    <br/><a href="#">Turkmenia</a>
+	    <br/><a href="#">Uzbekistan</a>
+	    <br/><a href="#">Kazakstan</a>
+	    <br/><a href="#">Moldova</a>
+	    <br/><a href="#">Ukraine</a>
+	    <br/><a href="#">Belarus</a>
+	    </p>
+	</div>
+	<div class="column grid_9">
+	    <h2>IGOR BRILL 1983</h2>
+		<p>
+		Another LP of a great lithuanian band “Oktava”.
+		“C30” in vinyl's ID means the release was represented as folklore music — actually it is not.
+		First time in the internet, brought to you by <b>DJ Weedska</b> — Oktava!
+		</p>
+		<div class="row">
+    		<div class="column grid_2">
+    			<img src="cover.jpg" width="140"/>
+    		</div>
+    		<div class="column grid_6">
+    			<div class="row">
+    				<div class="column grid_2 tracks">
+						<p>
+						<a href="#">A1. Mediniai Ratai</a>
+						<br/>A2. As - Berzas
+						<br/>A3. Ateisiu Tylia Nakti
+						<br/><a href="#">A4. Saule</a>
+						<br/>A5. Uzmirstoji taure
+						</p>
+    				</div>
+    				<div class="column grid_2 tracks">
+						<p>
+						B1. Rudenio pasaka
+						<br/>B2. Svajoniu Vygej
+						<br/>B3. Zuvedra
+						<br/>B4. Vinguriavo Takelis
+						<br/>B5. Vasara
+						</p>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="column grid_6 info">
+    					<p>
+						Title: Mindaugo Tamošiūno Kūriniai
+						<br/>Written by M. Tamošiūnas
+						<br/>Performed by Oktava
+						<br/>Soloists: V. Petrušonis (A side, male), S. Bagdonaitė (B side, female)
+						<br/>Melodiya LP C30-04787-88
+						</p>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="column grid_8"><p class="download">
+				Download 227 MB, flac:
+				<br/><a href="#">http://rapidshare.com/files/456995370/Oktava-1974-Mindaugo-Tamosiuno-Kuriniai.zip</a>
+				<br/><a href="#">http://narod.ru/disk/9930805001/Oktava-1974-Mindaugo-Tamosiuno-Kuriniai.zip.html</a>
+			</p></div>
+    	</div>
+        <p>2 comments</p>
+	</div>
+    <div class="column grid_1">
+        right
+    </div>
+</div>
+ 
+</body>
+</html>
