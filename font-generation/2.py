@@ -7,6 +7,9 @@ import Image
 PIXEL_PRESENCE_THRESHOLD = 253.0
 COLOR_WHITE = (255, 255, 255)
 
+def unicode_to_latin(unicode):
+    return unicodedata.normalize('NFKD', unicode).encode('ascii', 'ignore').lower()
+
 def get_pixel_brightness(pixel):
     if type(pixel) == int:
         raise Exception("pixel should be an int array - use full color images")
@@ -156,7 +159,7 @@ class Renderer():
         left = 0
         print "text's length: %d" % len(text)
         for char in text:
-            glyph = self.map2glyph.get(char)
+            glyph = self.find_glyph(char)
             if glyph:
                 blind_left, blind_right = glyph.get_blind_pixels_info()
                 if blind_left or blind_right:
@@ -169,6 +172,13 @@ class Renderer():
             else:
                 print "a glyph is missed for ord:%s" % ord(char)
         return render
+    def find_glyph(self, original_char):
+        # find glyph by a character
+        # if not found try to convert the character to latin-1 then
+        for char in (original_char, unicode_to_latin(original_char)):
+            glyph = self.map2glyph.get(char)
+            if glyph: return glyph
+        return None
 
 renderer = Renderer(char_gap=3, space_width=8)
 font_files = [
@@ -188,5 +198,5 @@ for pair in font_files:
 
 
 unicode = u"Romualdas Grabštas Ensemble 197x"
-print unicodedata.normalize('NFKD', unicode).encode('ascii', 'ignore').lower()
-# renderer.render(unicode).show()
+#print unicodedata.normalize('NFKD', unicode).encode('ascii', 'ignore').lower()
+renderer.render(unicode).show()
