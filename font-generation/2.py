@@ -2,8 +2,8 @@
 
 import unicodedata
 
-import Image
-#from pypng import Image
+#import Image
+from pypng import Image
 
 PIXEL_PRESENCE_THRESHOLD = 253.0
 COLOR_WHITE = (255, 255, 255)
@@ -124,6 +124,7 @@ class Renderer():
         self.char_gap = char_gap
         self.map2glyph = GlyphMap()
         space_glyph = Glyph(Image.new("RGB", (space_width,1), COLOR_WHITE))
+        space_glyph.image.source = "space-image"
         self.map2glyph.set(' ', space_glyph)
     def parse_glyphs_file(self, abc_file, chars):
         Glyph(abc_file).break_into_glyph_map(chars, self.map2glyph)
@@ -136,6 +137,7 @@ class Renderer():
         if known_width:
             height = self.map2glyph.map.values()[0].get_height() # get any glyph to calculate image's height
             result_image = Image.new("RGB", (known_width,height), COLOR_WHITE)
+            result_image.source ="font-render-image"
         else:
             result_image = None
         def_glyph = self.map2glyph.get('?')
