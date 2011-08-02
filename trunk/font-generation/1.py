@@ -4,9 +4,9 @@ CHAR_SIZE = (46,68)
 
 # zero based
 CHAR_TO_GLYPH = {
-'a': (0,0),
-'b': (1,0),
-'c': (1,4),
+'a' : (0,0),
+'b' : (1,0),
+'c' : (1,4),
 'd' : (1,10),
 'e' : (2,4),
 'f' : (3,5),
@@ -20,7 +20,7 @@ CHAR_TO_GLYPH = {
 'n' : (6,14),
 'o' : (7,10),
 'p' : (8,11),
-'q' : (8, 14),
+'q' : (8,14),
 'r' : (9,0),
 's' : (9,9),
 't' : (10,2),
@@ -84,8 +84,8 @@ def get_glyph_by_char(glyhps_file, char):
 def render(text):
     def remove_extra_space(glyph):
         left, right = glyph.get_horiz_paddings()
-        left = min(left, left-3)
-        right = min(right, right-3)
+        left = min(left, left-2)
+        right = min(right, right-2)
         return glyph.crop_removing_at_left_and_right(left,right)
     new = Image.new("RGB", (800, CHAR_SIZE[1]))
     left = 0
@@ -132,7 +132,9 @@ def calc_glyph_paddings(img):
 glyphs_file = "parcel1.png"
 
 #extract_glyph_images(glyphs_file)
-render("abcdefghijklmnopqrstuvwxyz")
+
+#render("abcdefghijklmnopqrstuvwxyz")
+render("igor brill - twilight")
 
 #calc_glyph_paddings(get_glyph_by_char(glyphs_file, 'a'))
 
