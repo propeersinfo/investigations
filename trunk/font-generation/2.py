@@ -2,24 +2,23 @@
 
 import Image
 
+PIXEL_PRESENCE_THRESHOLD = 250.0
+
 def get_pixel_brightness(pixel):
     if type(pixel) == int:
         raise Exception("pixel should be an int array - use full color images")
     return float(pixel[0] + pixel[1] + pixel[2]) / 3.0
 
-PRESENCE_THRESHOLD = 250.0
+def get_column_brightness(img, column):
+    num_pixels = img.size[1]
+    sum_brightness = 0.0
+    for row in xrange(num_pixels):
+        pixel = img.getpixel((column, row))
+        sum_brightness += get_pixel_brightness(pixel)
+    return sum_brightness / num_pixels
 
 def is_column_filled(img, column):
     return get_column_brightness(img, column) != 255.0
-
-def get_column_brightness(img, column):
-    height = img.size[1]
-    sum_brightness = 0.0
-    for row in xrange(height):
-        pixel = img.getpixel((column, row))
-        sum_brightness += get_pixel_brightness(pixel)
-    avg_brightness = sum_brightness / height
-    return avg_brightness
 
 def calc_glyph_paddings(img):
     def get_left_padding(img):
