@@ -127,8 +127,13 @@ class Renderer():
     def parse_glyphs_file(self, abc_file, chars):
         Glyph(abc_file).break_into_glyph_map(chars, self.map2glyph)
     def render(self, text):
+        width = self.render_pass(text, None)
+        print "width: ", width
+        return self.render_pass(text, width)
+    def render_pass(self, text, known_width):
+        width = known_width if known_width else 600
         height = self.map2glyph.map.values()[0].get_height() # get any glyph to calculate image's height
-        render = Image.new("RGB", (600,height), COLOR_WHITE)
+        result_image = Image.new("RGB", (width,height), COLOR_WHITE)
         def_glyph = self.map2glyph.get('?')
         print "default glyph: %s" % def_glyph
         left = 0
@@ -138,12 +143,12 @@ class Renderer():
                 blind_left, blind_right = glyph.get_blind_pixels_info()
                 if blind_left or blind_right:
                     print "blind pixels detected: %s %s" % (blind_left, blind_right)
-                render.paste(glyph.image, (left,0))
+                result_image.paste(glyph.image, (left,0))
                 left += glyph.get_width()
                 left += self.char_gap
                 #left -= blind_left + blind_right
                 #left += int(11.00000)
-        return render
+        return result_image if known_width else left
     def find_glyph(self, original_char, default_glyph):
         # find glyph by a character
         # if not found try to convert the character to latin-1 then
@@ -156,9 +161,8 @@ class Renderer():
 renderer = Renderer(char_gap=3, space_width=8)
 font_files = [
     [ "a-z0-9_37pt.png",  u"abcdefghijklmnopqrstuvwxyz0123456789`_" ],
-    [ "special_37pt.png", u"`~!@#№$\%^&*()-_=+[]{}:;'\"<>,./\\?__" ],
+    #[ "special_37pt.png", u"`~!@#№$\%^&*()-_=+[]{}:;'\"<>,./\\?__" ], # outdated
     [ "abc-cyr_37pt.png", u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_" ],
-
     [ "special_2_37pt.png", u"`~!@#№$%^&*()- _ = + []{}:;'\" >< ,./\\?" ],
 ]
 for pair in font_files:
@@ -170,6 +174,6 @@ if __name__ == "__main__":
     #renderer.render(u"Alexander Gradsky / А. Градский 1971-74").show()
 
     #unicode = u"Romualdas Grabštas Ensemble 197x"
-    unicode = u"Romualdas Grabštas Ensemble 197x"
+    unicode = u"Romualdas Grabštas Ensemble 197x №17"
     #print unicodedata.normalize('NFKD', unicode).encode('ascii', 'ignore').lower()
     renderer.render(unicode).show()
