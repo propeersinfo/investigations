@@ -100,6 +100,8 @@ class Glyph():
         #    raise Exception("%s > %s" % (len(glyphs), len(chars)))
         count = min(len(glyphs), len(chars))
         for i in xrange(count):
+            #print "mapping %s" % chars[i]
+            #glyphs[i].show()
             map.set(chars[i], glyphs[i])
         return map
     def get_blind_pixels_info(self):
@@ -116,35 +118,6 @@ class GlyphMap():
     def get(self, char):
         return self.map.get(char)
 
-"""
-def get_glyph_by_char(glyhps_file, char):
-    char = char.lower()
-    img = Image.open(glyhps_file)
-    if CHAR_TO_GLYPH.has_key(char):
-        row, col = CHAR_TO_GLYPH[char]
-        return get_glyph_by_position(img, row, col)
-    return None
-"""
-
-"""
-def render(text):
-    def remove_extra_space(glyph):
-        left, right = glyph.get_horiz_paddings()
-        left = min(left, left-2)
-        right = min(right, right-2)
-        return glyph.crop_removing_at_left_and_right(left,right)
-    new = Image.new("RGB", (800, CHAR_SIZE[1]))
-    left = 0
-    for ch in text:
-        glyph = get_glyph_by_char('parcel1.png', ch)
-        if glyph:
-            glyph = remove_extra_space(glyph)
-            print glyph
-            new.paste(glyph.image, (left,0))
-            left += glyph.get_width()
-    new.show()
-"""
-
 class Renderer():
     def __init__(self, char_gap, space_width):
         self.char_gap = char_gap
@@ -156,10 +129,11 @@ class Renderer():
     def render(self, text):
         height = self.map2glyph.map.values()[0].get_height() # get any glyph to calculate image's height
         render = Image.new("RGB", (600,height), COLOR_WHITE)
+        def_glyph = self.map2glyph.get('?')
+        print "default glyph: %s" % def_glyph
         left = 0
-        print "text's length: %d" % len(text)
         for char in text:
-            glyph = self.find_glyph(char)
+            glyph = self.find_glyph(char, def_glyph)
             if glyph:
                 blind_left, blind_right = glyph.get_blind_pixels_info()
                 if blind_left or blind_right:
@@ -169,34 +143,33 @@ class Renderer():
                 left += self.char_gap
                 #left -= blind_left + blind_right
                 #left += int(11.00000)
-            else:
-                print "a glyph is missed for ord:%s" % ord(char)
         return render
-    def find_glyph(self, original_char):
+    def find_glyph(self, original_char, default_glyph):
         # find glyph by a character
         # if not found try to convert the character to latin-1 then
         for char in (original_char, unicode_to_latin(original_char)):
             glyph = self.map2glyph.get(char)
             if glyph: return glyph
-        return None
+        print "a glyph is missed for ord:%s" % ord(original_char)
+        return default_glyph
 
 renderer = Renderer(char_gap=3, space_width=8)
 font_files = [
     [ "a-z0-9_37pt.png",  u"abcdefghijklmnopqrstuvwxyz0123456789`_" ],
-    [ "special_37pt.png", u"`~!@#№$\%^&*()-_=+[]{}:;'\"<>,./\?__" ],
-    [ "abc-cyr_37pt.png", u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_" ]
+    [ "special_37pt.png", u"`~!@#№$\%^&*()-_=+[]{}:;'\"<>,./\\?__" ],
+    [ "abc-cyr_37pt.png", u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_" ],
+
+    [ "special_2_37pt.png", u"`~!@#№$%^&*()- _ = + []{}:;'\" >< ,./\\?" ],
 ]
 for pair in font_files:
-    renderer.parse_glyphs_file(pair[0], pair[1])
-#renderer.parse_glyphs_file("a-z0-9_37pt.png",  u"abcdefghijklmnopqrstuvwxyz0123456789`_")
-#renderer.parse_glyphs_file("special_37pt.png", u"`~!@#№$%^&*()-_=+[]{}:;'\"<>,./\?__")
-#renderer.parse_glyphs_file("abc-cyr_37pt.png", u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_")
+    renderer.parse_glyphs_file(pair[0], pair[1].replace(' ', ''))
 
-#renderer.render(font_files[0][1]).show()
-#renderer.render(u"Ludvikovsky & Garanian 1971").show()
-#renderer.render(u"Alexander Gradsky / А. Градский 1971-74").show()
+if __name__ == "__main__":
+    #renderer.render(font_files[0][1]).show()
+    #renderer.render(u"Ludvikovsky & Garanian 1971").show()
+    #renderer.render(u"Alexander Gradsky / А. Градский 1971-74").show()
 
-
-unicode = u"Romualdas Grabštas Ensemble 197x"
-#print unicodedata.normalize('NFKD', unicode).encode('ascii', 'ignore').lower()
-renderer.render(unicode).show()
+    #unicode = u"Romualdas Grabštas Ensemble 197x"
+    unicode = u"Romualdas Grabštas Ensemble 197x"
+    #print unicodedata.normalize('NFKD', unicode).encode('ascii', 'ignore').lower()
+    renderer.render(unicode).show()
