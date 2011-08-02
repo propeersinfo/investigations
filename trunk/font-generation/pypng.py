@@ -33,16 +33,7 @@ class Image():
         x, y = point
         row = self.pixel_data[y]
         start = x * self.meta['planes']
-        try:
-            return row[start + 0], row[start + 1], row[start + 2]
-        except IndexError, e:
-            print "x, y = %s, %s" % point
-            print "start: %s" % start
-            print "image: %s %s" % self.size
-            print "len(self.pixel_data): %s" % len(self.pixel_data)
-            print "len(row): %s" % len(row)
-            print "source: %s" % self.source
-            raise e
+        return row[start + 0], row[start + 1], row[start + 2]
     @classmethod
     def new(cls, type, size, color):
         meta = { 'size': size, 'bitdepth': 8, 'planes': 3, 'greyscale': False, 'alpha': False }
@@ -70,16 +61,19 @@ class Image():
         img = Image(size=size, meta=meta, pixel_data=list(img[2]))
         img.source = file
         return img
-    def save(self, file):
-        f = open(file, 'wb')      # binary mode is important
+    def save(self, out):
+        close = False
+        if type(out) == str:
+            out = open(out, 'wb')      # binary mode is important
+            close = True
         w = png.Writer(self.get_width(),
                        self.get_height(),
                        greyscale=self.meta['greyscale'],
                        bitdepth=self.meta['bitdepth'],
                        planes=self.meta['planes'],
                        alpha=self.meta['alpha'])
-        w.write(f, self.pixel_data)
-        f.close()
+        w.write(out, self.pixel_data)
+        if close: out.close()
     def show(self):
         file = "C:\\Temp\\pypng.png"
         self.save(file)
