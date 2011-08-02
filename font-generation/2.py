@@ -3,6 +3,7 @@
 import unicodedata
 
 import Image
+#from pypng import Image
 
 PIXEL_PRESENCE_THRESHOLD = 253.0
 COLOR_WHITE = (255, 255, 255)
@@ -133,9 +134,8 @@ class Renderer():
         # 1st pass - calculate width requirment - return width integer
         # 2nd pass - render result image itself
         if known_width:
-            width = known_width if known_width else 600
             height = self.map2glyph.map.values()[0].get_height() # get any glyph to calculate image's height
-            result_image = Image.new("RGB", (width,height), COLOR_WHITE)
+            result_image = Image.new("RGB", (known_width,height), COLOR_WHITE)
         else:
             result_image = None
         def_glyph = self.map2glyph.get('?')
