@@ -2,17 +2,24 @@
 
 import Image
 
-def is_pixel_white(pixel):
+def get_pixel_brightness(pixel):
     if type(pixel) == int:
-        raise Exception("pixel should be an int array - use colored images only")
-    return pixel[0] == 255 and pixel[1] == 255 and pixel[2] == 255
+        raise Exception("pixel should be an int array - use full color images")
+    return float(pixel[0] + pixel[1] + pixel[2]) / 3.0
+
+PRESENCE_THRESHOLD = 250.0
 
 def is_column_filled(img, column):
-    for row in xrange(img.size[1]):
+    return get_column_brightness(img, column) != 255.0
+
+def get_column_brightness(img, column):
+    height = img.size[1]
+    sum_brightness = 0.0
+    for row in xrange(height):
         pixel = img.getpixel((column, row))
-        if not is_pixel_white(pixel):
-            return True
-    return False
+        sum_brightness += get_pixel_brightness(pixel)
+    avg_brightness = sum_brightness / height
+    return avg_brightness
 
 def calc_glyph_paddings(img):
     def get_left_padding(img):
@@ -84,9 +91,10 @@ class Glyph():
         return char_glyphs
     def break_into_glyph_map(self, chars, map):
         glyphs = self.break_into_glyphs()
-        if len(glyphs) > len(chars):
-            raise Exception("%s > %s" % (len(glyphs), len(chars)))
-        for i in xrange(len(glyphs)):
+        #if len(glyphs) > len(chars):
+        #    raise Exception("%s > %s" % (len(glyphs), len(chars)))
+        count = min(len(glyphs), len(chars))
+        for i in xrange(count):
             map.set(chars[i], glyphs[i])
         return map
 
@@ -150,7 +158,10 @@ class Renderer():
         return render
 
 renderer = Renderer(space_width=8)
-renderer.parse_glyphs_file("a-z0-9_37pt.png",  u"abcdefghijklmnopqrstuvwxyz0123456789`_")
-renderer.parse_glyphs_file("special_37pt.png", u"`~!@#№$%^&*()-_=+[]{}:;'\"<>,./\?__")
-renderer.parse_glyphs_file("abc-cyr_37pt.png", u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_")
-renderer.render(u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_").show()
+renderer.parse_glyphs_file("a-z0-9_37pt.png",  u"a")
+renderer.render("aaa").show()
+
+#renderer.parse_glyphs_file("a-z0-9_37pt.png",  u"abcdefghijklmnopqrstuvwxyz0123456789`_")
+#renderer.parse_glyphs_file("special_37pt.png", u"`~!@#№$%^&*()-_=+[]{}:;'\"<>,./\?__")
+#renderer.parse_glyphs_file("abc-cyr_37pt.png", u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_")
+#renderer.render(u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_").show()
