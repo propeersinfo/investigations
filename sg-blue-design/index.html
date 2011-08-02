@@ -38,7 +38,7 @@ h2 {
 }
 	
 .about {
-	font-size: 14px;
+	font-size: 82%;
 	margin-bottom: 1.7em;
 }
 .about a {
@@ -49,13 +49,25 @@ h2 {
 }
 .below_top { margin-top: 1em; }
 
+.all_tags {
+	font-size: 14px;
+}
+.all_tags ul {
+	list-style-type: none;
+	padding-left: 0;
+	margin-bottom: 0.2em;
+}
+.all_tags ul li {
+	margin-bottom: 0.25em;
+}
+.all_tags ul li.title {
+	font-style: normal;
+}
 .all_tags, .all_tags p {
 	color: #555;
-	font-size: 14px;
 }
 .all_tags a {
 	color: #555;
-	text-decoration: none;
 }
 .all_tags a:hover {
 	color: #555;
@@ -93,7 +105,15 @@ pre {
 		<p>&nbsp;</p>
 	</div>
 	<div class="width_10">
-		<h1>Soviet Rare Groove</h1>
+		
+		<div class="row" style="">
+			<div class="width_7">
+				<h1>Soviet Rare Groove</h1>
+			</div>
+			<div class="width_3" style="padding-top:38px; white-space:nowrap;">
+				<input type="text" value="search" style="width:98%; font-style:italic;"/>
+			</div>
+		</div>
 		<div class="about">
 			<!--
 			A blog about groovy, funky, soulful, beat, twist and psych sides of music produced
@@ -107,7 +127,7 @@ pre {
 	    	<a href="#">disco</a>,
 	    	<a href="#">electro</a>,
 	    	<a href="#">shake</a> and the
-	    	<a href="#">rest</a> music produced in USSR during the
+	    	<a href="#">rest</a> cool music from USSR of
 	    	<a href="#">60's</a>,
 	    	<a href="#">70's</a> and
 	    	<a href="#">80's</a>.
@@ -134,27 +154,40 @@ pre {
 	    </p>
 		-->
 	    <p>
-	    	 <a href="#">Russia</a>
-	    <br/><a href="#">Armenia</a>
-	    <br/><a href="#">Azerbaijan</a>
-	    <br/><a href="#">Georgia</a>
-	    <br/><a href="#">Estonia</a>
-	    <br/><a href="#">Latvia</a>
-	    <br/><a href="#">Lithuania</a>
-	    <br/><a href="#">Tajikistan</a>
-	    <br/><a href="#">Turkmenia</a>
-	    <br/><a href="#">Uzbekistan</a>
-	    <br/><a href="#">Kazakstan</a>
-	    <br/><a href="#">Moldova</a>
-	    <br/><a href="#">Ukraine</a>
-	    <br/><a href="#">Belarus</a>
+	    
+	    <ul>
+		<li><a href="#">Russia</a></li>
+	    <li><a href="#">Ukraine</a></li>
+	    <li><a href="#">Moldova</a></li>
+	    <li><a href="#">Belarus</a></li>
+	    </ul>
+	    
+	    <ul>
+	    <li><a href="#">Armenia</a></li>
+	    <li><a href="#">Azerbaijan</a></li>
+	    <li><a href="#">Georgia</a></li>
+	    </ul>
+	    
+	    <ul>
+	    <li><a href="#">Estonia</a></li>
+	    <li><a href="#">Latvia</a></li>
+	    <li><a href="#">Lithuania</a></li>
+	    </ul>
+	    
+	    <ul>
+	    <li><a href="#">Kazakstan</a></li>
+	    <li><a href="#">Tajikistan</a></li>
+	    <li><a href="#">Turkmenia</a></li>
+	    <li><a href="#">Uzbekistan</a></li>
+	    <li><a href="#">Kyrgyzstan</a></li>
+	    </ul>
 	    </p>
 	</div>
 	<div class="width_8">
 	    <h2 style="margin-bottom:0.2em;">IGOR BRILL 1983</h2>
 	    <p style="margin:0em; font-style:italic; font-size:85%; color:grey;">
-	    	20 July 2011
-	    	<a href="#">lithuania</a>
+	    	20 July 2011,
+	    	<a href="#">lithuania</a>,
 	    	<a href="#">70s</a>
 	    </p>
 		<p>
@@ -226,7 +259,7 @@ pre {
     			Welcome
 			</p></div>
         </div>
-        <p><br/><b>Your comment:</b></p>
+        <p><br/><b>One more comment:</b></p>
         <div class="row">
     		<div class="width_2"><p>
     			Name
@@ -240,7 +273,15 @@ pre {
     			Message
 			</p></div>
     		<div class="width_6"><p>
-    			<textarea rows="10" style="width: 98%;"></textarea>
+    			<textarea rows="8" style="width: 98%;"></textarea>
+			</p></div>
+        </div>
+        <div class="row">
+    		<div class="width_2"><p>
+    			&nbsp;
+			</p></div>
+    		<div class="width_6"><p>
+    			<input type="submit" value='Send'/>
 			</p></div>
         </div>
 	</div>
