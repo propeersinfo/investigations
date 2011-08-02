@@ -163,6 +163,7 @@ class Comment(db.Model):
     published_date = db.DateTimeProperty(auto_now_add=True)
     #replied_comment = db.SelfReferenceProperty()
     replied_comment_id = db.IntegerProperty()
+    image = db.BlobProperty()
     
     @classmethod
     def get(cls, id):
@@ -170,7 +171,16 @@ class Comment(db.Model):
         q.filter('id = ', id)
         return q.get()
 
+    @classmethod
+    def get_for_article(cls, article):
+        return db.Query(Comment)\
+                 .filter("article = ", article)\
+                 .order('replied_comment_id')\
+                 .order('published_date')\
+                 .fetch(FETCH_THEM_ALL_COMMENTS)
+
     def save(self):
+        self.image = '12345'
         if self.is_saved():
             self.put()
         else:

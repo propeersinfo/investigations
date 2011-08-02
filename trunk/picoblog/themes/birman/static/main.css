@@ -836,13 +836,7 @@ div.reply-to a {
   border-bottom-style: dashed;
 }
 
-/*.owner-reply .comment-author {
-	background: #eeb;
-	padding: 0.2em 0.44em;
-	margin-left:  -0.44em;
-	border-radius: 0.35em;
-}*/
-.comment-content-area {
+/*.comment-content-area {
 	padding-left: 0.5em;
 	margin-left: -0.7em;
 	border-left: 0.2em solid white;
@@ -850,9 +844,25 @@ div.reply-to a {
 .owner-reply .comment-content-area {
   padding-left: 0.5em;
   margin-left: -0.7em;
-  border-left: 0.2em solid #ddb;
+  border-left: 0.2em solid #eeb;
   -webkit-border-radius: 0.3em;
      -moz-border-radius: 0.3em;
        -o-border-radius: 0.3em;
           border-radius: 0.3em;
+}*/
+
+/*.owner-reply .comment-author {
+  position: relative;
 }
+.owner-reply .comment-author:before {
+  content: url(/static/replysquare.gif);
+  position: absolute;
+  left: -25px;
+}*/
+
+/*.owner-reply .comment-content-area {
+  background: #fafafa;
+  padding:      0.4em 0.7em;
+  margin-left: -0.7em;
+  margin-top:  -0.4em;
+}*/

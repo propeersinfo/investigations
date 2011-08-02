@@ -171,12 +171,8 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 self.augment_comments_for(article)
 
     def augment_comments_for(self, article):
-        q = db.Query(Comment)\
-              .filter("article = ", article)\
-              .order('replied_comment_id')\
-              .order('published_date')
         comments = []
-        for comment in q.fetch(100):
+        for comment in Comment.get_for_article(article):
             comment.html = simplemarkup.markup2html(markup_text=comment.text,
                                                     rich_markup=False,
                                                     recognize_links=comment.blog_owner)

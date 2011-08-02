@@ -23,6 +23,9 @@ handlers:
   script: importdata.py
   login: admin
 
+- url: /font.*
+  script: fontgen/fontgen.py
+
 - url: /.*
   script: blog.py
 
