@@ -128,12 +128,16 @@ class Renderer():
         Glyph(abc_file).break_into_glyph_map(chars, self.map2glyph)
     def render(self, text):
         width = self.render_pass(text, None)
-        print "width: ", width
         return self.render_pass(text, width)
     def render_pass(self, text, known_width):
-        width = known_width if known_width else 600
-        height = self.map2glyph.map.values()[0].get_height() # get any glyph to calculate image's height
-        result_image = Image.new("RGB", (width,height), COLOR_WHITE)
+        # 1st pass - calculate width requirment - return width integer
+        # 2nd pass - render result image itself
+        if known_width:
+            width = known_width if known_width else 600
+            height = self.map2glyph.map.values()[0].get_height() # get any glyph to calculate image's height
+            result_image = Image.new("RGB", (width,height), COLOR_WHITE)
+        else:
+            result_image = None
         def_glyph = self.map2glyph.get('?')
         print "default glyph: %s" % def_glyph
         left = 0
@@ -143,12 +147,13 @@ class Renderer():
                 blind_left, blind_right = glyph.get_blind_pixels_info()
                 if blind_left or blind_right:
                     print "blind pixels detected: %s %s" % (blind_left, blind_right)
-                result_image.paste(glyph.image, (left,0))
+                if result_image:
+                    result_image.paste(glyph.image, (left,0))
                 left += glyph.get_width()
                 left += self.char_gap
                 #left -= blind_left + blind_right
                 #left += int(11.00000)
-        return result_image if known_width else left
+        return result_image if result_image else left
     def find_glyph(self, original_char, default_glyph):
         # find glyph by a character
         # if not found try to convert the character to latin-1 then
