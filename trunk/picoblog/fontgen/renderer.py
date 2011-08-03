@@ -168,10 +168,10 @@ class Renderer():
 if __name__ == "__main__":
     renderer = Renderer(char_gap=3, space_width=8)
     font_files = [
-        [ "a-z0-9_37pt.png",  u"abcdefghijklmnopqrstuvwxyz0123456789`_" ],
+        [ "font-37pt-latin.png",  u"abcdefghijklmnopqrstuvwxyz0123456789`_" ],
         #[ "special_37pt.png", u"`~!@#№$\%^&*()-_=+[]{}:;'\"<>,./\\?__" ], # outdated
-        [ "abc-cyr_37pt.png", u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_" ],
-        [ "special_2_37pt.png", u"`~!@#№$%^&*()- _ = + []{}:;'\" >< ,./\\?" ],
+        [ "font-37pt-cyr.png", u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_" ],
+        [ "font-37pt-special.png", u"`~!@#№$%^&*()- _ = + []{}:;'\" >< ,./\\?" ],
     ]
     for pair in font_files:
         renderer.parse_glyphs_file(pair[0], pair[1].replace(' ', ''))
