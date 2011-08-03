@@ -20,6 +20,7 @@ a {
 	color: #6EC6FE; 
 	color: #20a8fe;
 	color: #0b9ffe;
+	color: #00a;
 }
 h1 {
 	margin: 0; padding-top: 10px;
@@ -29,14 +30,28 @@ h1 {
 	background-repeat: no-repeat;
 	padding-top: 30px;
 }
-h2 {
+/*h2 {
 	margin-top:0;
 	text-indent: -9999px;
 	background: url("h2.png") white no-repeat;
 	background-position: bottom left;
 	background-repeat: no-repeat;
+}*/
+
+h2 {
+	width: 100%;
+	height: 35px;
+	position: relative;
+	margin: 0 0 0.2em 0;
+	vertical-align: bottom;
 }
-	
+h2 span {
+	background: url(http://127.0.0.1:8080/font?text=Raimondsss+Pauls) no-repeat, url(white.png) repeat;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
 .about {
 	font-size: 82%;
 	margin-bottom: 1.7em;
@@ -49,33 +64,27 @@ h2 {
 }
 .below_top { margin-top: 1em; }
 
+
 .all_tags {
 	font-size: 14px;
 }
 .all_tags ul {
 	list-style-type: none;
 	padding-left: 0;
-	margin-bottom: 0.2em;
+	margin:0 0 1em 0;
 }
 .all_tags ul li {
 	margin-bottom: 0.25em;
+	margin: 10 10;
 }
 .all_tags ul li.title {
 	font-style: normal;
 }
-.all_tags, .all_tags p {
-	color: #555;
-}
-.all_tags a {
-	color: #555;
-}
-.all_tags a:hover {
-	color: #555;
-	text-decoration: underline;
-}
 .all_tags .group {
-	padding-bottom: 10px;
+	margin-bottom: 10px;
 }
+
+
 .tracks { font-size: 14px; }
 .info { font-size: 14px; font-style: italic; }
 .top {
@@ -136,25 +145,8 @@ pre {
 </div>
 
 <div class="row below_top">
-	<div class="width_2 all_tags">
-		<!--
-	    <p>
-	    	<a href="#">Jazz</a>,
-	    	<a href="#">psych</a>,
-	    	<a href="#">pop</a>,
-	    	<a href="#">prog</a>,
-	    	<a href="#">shake</a>,
-	    	<a href="#">rest</a>
-	    </p>
-
-	    <p>
-	    	<a href="#">60's</a>,
-	    	<a href="#">70's</a>,
-	    	<a href="#">80's</a>
-	    </p>
-		-->
-	    <p>
-	    
+	<div class="width_2">
+		<div class="all_tags">
 	    <ul>
 		<li><a href="#">Russia</a></li>
 	    <li><a href="#">Ukraine</a></li>
@@ -181,10 +173,13 @@ pre {
 	    <li><a href="#">Uzbekistan</a></li>
 	    <li><a href="#">Kyrgyzstan</a></li>
 	    </ul>
-	    </p>
+	    </div>
 	</div>
 	<div class="width_8">
-	    <h2 style="margin-bottom:0.2em;">IGOR BRILL 1983</h2>
+	    <!--h2 style="margin-bottom:0.2em;">IGOR BRILL 1983</h2-->
+	    <h2>
+	    	<span></span>Raimonds Pauls Raimonds Pauls
+	    </h2>
 	    <p style="margin:0em; font-style:italic; font-size:85%; color:grey;">
 	    	20 July 2011,
 	    	<a href="#">lithuania</a>,
