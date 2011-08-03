@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
-import cgi
-import logging
+import re
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -17,6 +15,8 @@ from fontgen.renderer import Renderer
 class RenderFontHandler(request.BlogRequestHandler):
     def get(self):
         text = self.request.get("text")
+        text = text.strip()
+        text = re.sub(r'\s+', ' ', text)
         
         #self.response.headers['Content-Type'] = "text/plain"
         #self.response.out.write("text: %s" % text)
