@@ -15,12 +15,13 @@
     		<div class="width_6"><p>
     			{{comment.html}}
 				{% if user_info.is_admin %}
-					<div class="comment-administration">
+					<br/>
+					<span class="comment-administration">
 						<a href="/admin/comment/delete/{{comment.id}}" title="Delete comment">delete</a>
 						{% if comment.repliable %}
 							/ <a href="javascript:replyToComment({{comment.id}});">reply to this</a>
 						{% endif %}
-					</div>
+					</span>
 				{% endif %}
 			</p></div>
         </div>
@@ -35,7 +36,7 @@
 				{% if user_info.is_admin %}
 				<span class="input-label"><label>{{blog_owner}}</label></span>
 				{% else %}
-    			<input name="author" type="text" vlue="{{comment_author|escape}}" style="width: 98%;"></input>
+    			<input name="author" type="text" value="{{comment_author|escape}}" style="width: 98%;"></input>
 				{% endif %}
 			</p></div>
         </div>

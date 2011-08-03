@@ -10,20 +10,25 @@ p {
 	line-height: 130%;
 }
 a {
-	color: #6EC6FE; 
-	color: #20a8fe;
-	color: #0b9ffe;
 	color: #00a;
 }
 a:hover { color: #e22; }
-/*h1 {
-	margin: 0; padding-top: 10px;
+.top {
+	background-color: #6EC6FE;
+	background-image: url(volna-top.png);
+	background-position: bottom;
+	background-repeat: repeat-x;
+}
+.top h1 {
+	margin: 0;
+	padding-top: 0px;
 	text-indent: -9999px;
 	background: url("/static/h1.png") #6EC6FE no-repeat;
+	background: url("/static/856ce8af31a517b3bb37206b95bedd.png") #6EC6FE no-repeat;
 	background-position: bottom left;
 	background-repeat: no-repeat;
 	padding-top: 30px;
-}*/
+}
 /*h2 {
 	margin-top:0;
 	text-indent: -9999px;
@@ -81,12 +86,6 @@ h2 span {
 
 .tracks { font-size: 14px; }
 .info { font-size: 14px; font-style: italic; }
-.top {
-	background-color: #6EC6FE;
-	background-image: url(volna-top.png);
-	background-position: bottom;
-	background-repeat: repeat-x;
-}
 .download {
 	font-size: 85%;
 	overflow: hidden;
@@ -106,17 +105,17 @@ pre {
 }
 input.search { width:98%; font-style:italic; }
 
-div.comment-administration {
+.comment-administration {
   font-size: 80%;
   margin-top: 0em;
 }
-div.comment-administration a {
+.comment-administration a {
   color: grey;
   /*text-decoration: none;
   border-width: 1px;
   border-bottom-style: dashed;*/
 }
-div.comment-administration a:hover { color: red; }
+.comment-administration a:hover { color: red; }
 
 
 

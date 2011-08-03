@@ -19,6 +19,7 @@ Middle priority:
 - ajax adding/deleting comments
 
 Low priority:
+- let users to edit their comments for some time (using cookies)
 - all comments RSS
 - implement archive listing
 - ajax comments
