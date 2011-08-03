@@ -181,6 +181,7 @@ if __name__ == "__main__":
     #renderer.render(u"Alexander Gradsky / А. Градский 1971-74").show()
 
     #unicode = u"Romualdas Grabštas Ensemble 197x"
-    unicode = u"Romualdas Grabštas Ensemble 197x №17"
+    #unicode = u"Romualdas Grabštas Ensemble 197x №17"
+    unicode = u"hello, there!"
     #print unicodedata.normalize('NFKD', unicode).encode('ascii', 'ignore').lower()
     renderer.render(unicode).show()
