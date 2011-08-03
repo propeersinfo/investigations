@@ -5,7 +5,7 @@ api_version: 1
 
 handlers:
 - url: /static
-  static_dir: themes/birman/static
+  static_dir: themes/grid/static
 
 - url: /favicon.ico
   static_files: static/favicon.ico

@@ -5,7 +5,8 @@ BLOG_OWNER = 'Soviet Groove'
 
 DROPBOX_USER = '1883230'
 
-THEME_DIR = 'themes/birman'
+#THEME_DIR = 'themes/birman'
+THEME_DIR = 'themes/grid'
 TEMPLATE_DIR = '.'
 
 TAG_URL_PATH = 'tag'
