@@ -119,7 +119,8 @@ class GlyphMap():
     def get(self, char):
         return self.map.get(char)
 
-chars_open_right = u"lp" + u"р" + u"7"
+# latin + cyrillic + other
+HINT_CHARS_OPEN_RIGHT = u"lp" + u"р" + u"7"
 
 class Renderer():
     def __init__(self, char_gap, space_width):
@@ -155,7 +156,7 @@ class Renderer():
                     result_image.paste(glyph.image, (left,0))
                 left += glyph.get_width()
                 left += self.char_gap
-                if chars_open_right.find(char.lower()) >= 0:
+                if HINT_CHARS_OPEN_RIGHT.find(char.lower()) >= 0:
                     left -= 1
                 #left -= blind_left + blind_right
                 #left += int(11.00000)
