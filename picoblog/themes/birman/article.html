@@ -28,9 +28,13 @@
    	</span>
    	
 	{% if single_article %}
-		<span class="current">{{ article.title }}</span>
+		<!--span class="current">{{ article.title }}</span-->
+		<img src="/font?text={{article.title|escape}}" alt="{{article.title|escape}}">
 	{% else %}
-		<a href="{{article.path}}"><span class="current">{{ article.title }}</span></a>
+		<a href="{{article.path}}">
+			<!--span class="current">{{ article.title }}</span-->
+			<img src="/font?text={{article.title|escape}}" alt="{{article.title|escape}}">
+		</a>
 	{% endif %}
 </h1>
 
