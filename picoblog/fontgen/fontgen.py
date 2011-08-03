@@ -18,7 +18,7 @@ class RenderFontHandler(request.BlogRequestHandler):
     def get(self):
         text = self.request.get("text")
 
-        renderer = Renderer(char_gap=3, space_width=8)
+        renderer = Renderer(char_gap=3, space_width=7)
         font_files = [
             [ "font-37pt-latin.png",  u"abcdefghijklmnopqrstuvwxyz0123456789`_" ],
             #[ "special_37pt.png", u"`~!@#№$\%^&*()-_=+[]{}:;'\"<>,./\\?__" ], # outdated

@@ -120,7 +120,7 @@ class GlyphMap():
         return self.map.get(char)
 
 # latin + cyrillic + other
-HINT_CHARS_OPEN_RIGHT = u"lp" + u"р" + u"7"
+HINT_CHARS_OPEN_RIGHT = u"lp" + u"ру" + u"7"
 
 class Renderer():
     def __init__(self, char_gap, space_width):
