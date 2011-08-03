@@ -1,3 +1,4 @@
+import cgi
 from google.appengine.ext import webapp
 
 from django import template as django_template
@@ -11,8 +12,11 @@ def blog_tag(blog_tag_name, blog_tag_title = None):
   if not blog_tag_title:
     blog_tag_title = blog_tag_name
   return '<a href="/tag/%s">%s</a>' % (blog_tag_name, blog_tag_title)
-
 register.simple_tag(blog_tag)
+
+def h2_render(text):
+  return '<img src="/font?text=%s">' % cgi.escape(text)
+register.simple_tag(h2_render)
 
 ###################
 
