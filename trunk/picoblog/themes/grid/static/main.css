@@ -130,10 +130,6 @@ h1 {
 	font-size: 25px;
 }
 h1 span {
-	/*
-	background: url(http://127.0.0.1:8080/font?text=Raimonds+Pauls+/+Раймонд+Паулс+1972) no-repeat, url(white.png) repeat;
-	background-image: url(/static/h1.png);
-	*/
 	background-repeat: no-repeat, repeat;
 	position: absolute;
 	width: 100%;

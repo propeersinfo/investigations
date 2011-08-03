@@ -16,15 +16,18 @@
 </style>
 
 <script>
-jQuery.fn.exists = function() { return jQuery(this).length > 0; }
+jQuery.fn.exists = function() {
+	return jQuery(this).length > 0;
+}
 jQuery.fn.getInnerText = function() {
+	function isTextNode() { return this.nodeType == 3 }
+	return this.contents().filter(isTextNode).text()
 }
 
 function adjustHeader(headerId) {
 	var h1 = $("#"+headerId)
 	
-	function isTextNode() { return this.nodeType == 3 }
-	var text = h1.contents().filter(isTextNode).text()
+	var text = h1.getInnerText()
 	text = jQuery.trim(text)
 	
 	h1.find("a").first().each(function(idx, aTag) {
