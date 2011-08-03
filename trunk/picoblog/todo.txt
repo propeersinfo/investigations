@@ -2,6 +2,7 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
+- layout is broken when nothing found by a tag
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
 + correct HTTP response codes for 403/404

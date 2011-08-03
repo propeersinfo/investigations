@@ -83,11 +83,10 @@ h2 span {
 .all_tags ul {
 	list-style-type: none;
 	padding-left: 0;
-	margin:0 0 1em 0;
+	margin: 0 0 0.8em 0;
 }
 .all_tags ul li {
 	margin-bottom: 0.25em;
-	margin: 10 10;
 }
 .all_tags ul li.title {
 	font-style: normal;
