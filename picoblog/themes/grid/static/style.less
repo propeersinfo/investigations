@@ -1,44 +1,101 @@
-@columnWidth: 60px;
-@gutter: 10px;
- 
-@allColumns: @columnWidth * 12;
-@allGutters: (@gutter * 12) * 2;
-@totalWidth: @allColumns + @allGutters;
-
-// @param logical_width - number of logical counts the column will take 
-.theWidth (@logical_width) {
-  @gutter_count: (@logical_width - 1) * 2;
-  width: (@columnWidth * @logical_width) + (@gutter * @gutter_count);
-}
-
+.theWidth { width:-20px; }
 .column-mixin {
-	margin: 0 @gutter;
-	overflow: hidden;
-	float: left;
-	display: inline;
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
 }
-
-.width_1  { .column-mixin; .theWidth(1); }
-.width_2  { .column-mixin; .theWidth(2); }
-.width_3  { .column-mixin; .theWidth(3); }
-.width_4  { .column-mixin; .theWidth(4); }
-.width_5  { .column-mixin; .theWidth(5); }
-.width_6  { .column-mixin; .theWidth(6); }
-.width_7  { .column-mixin; .theWidth(7); }
-.width_8  { .column-mixin; .theWidth(8); }
-.width_9  { .column-mixin; .theWidth(9); }
-.width_10 { .column-mixin; .theWidth(10); }
-.width_11 { .column-mixin; .theWidth(11); }
-.width_12 { .column-mixin; .theWidth(12); }
-
+.width_1 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:60px;
+}
+.width_2 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:140px;
+}
+.width_3 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:220px;
+}
+.width_4 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:300px;
+}
+.width_5 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:380px;
+}
+.width_6 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:460px;
+}
+.width_7 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:540px;
+}
+.width_8 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:620px;
+}
+.width_9 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:700px;
+}
+.width_10 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:780px;
+}
+.width_11 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:860px;
+}
+.width_12 {
+  margin:0 10px;
+  overflow:hidden;
+  float:left;
+  display:inline;
+  width:940px;
+}
 .row {
-	width: @totalWidth;
-	margin: 0 auto;
-	overflow: hidden;
-	background: red;
+  width:960px;
+  margin:0 auto;
+  overflow:hidden;
 }
 .row .row {
-	margin: 0 (@gutter * -1);
-	width: auto;
-	display: inline-block;
+  margin:0 -10px;
+  width:auto;
+  display:inline-block;
 }
