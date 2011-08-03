@@ -16,16 +16,26 @@
 </style>
 
 <script>
+jQuery.fn.exists = function() { return jQuery(this).length > 0; }
+jQuery.fn.getInnerText = function() {
+}
+
 function adjustHeader(headerId) {
-	var h1 = document.getElementById('article_header_' + headerId)
-	if(h1 && h1.children.length == 1 && h1.children[0].tagName == 'SPAN') {
-		span = h1.children[0]
-		text = "a fake header image"
-		alert(span.style.background)
+	var h1 = $("#"+headerId)
+	
+	function isTextNode() { return this.nodeType == 3 }
+	var text = h1.contents().filter(isTextNode).text()
+	text = jQuery.trim(text)
+	
+	h1.find("a").first().each(function(idx, aTag) {
+		trim = jQuery.trim(aTag.innerHTML)
+		if(trim) text = trim
+	})
+	
+	if(text) {
+		var span = h1.find("span")[0]
+		text = text.replace(/\s/g, '%20') // NB: escape() handles unicode in a way incompatible with GAE.
 		span.style.backgroundImage = "url(/font?text=" + text + ")"
-		//span.style.backgroundImage = "url(/static/h1.png)"
-		//h1.style.backgroundImage = ''
-		//alert(text)
 	}
 }
 </script>
