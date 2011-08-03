@@ -97,7 +97,7 @@ class Image():
 
 if __name__ == "__main__":
     #img = Image.open('special_37pt.png')
-    img = Image.open('a-z0-9_37pt.png')
+    img = Image.open('font-37pt-latin.png')
     print img
     print img.getpixel((0,0))
     #img.save('out.png')
