@@ -13,14 +13,14 @@ a {
 	color: #00a;
 }
 a:hover { color: #e22; }
-h1 {
+/*h1 {
 	margin: 0; padding-top: 10px;
 	text-indent: -9999px;
 	background: url("/static/h1.png") #6EC6FE no-repeat;
 	background-position: bottom left;
 	background-repeat: no-repeat;
 	padding-top: 30px;
-}
+}*/
 /*h2 {
 	margin-top:0;
 	text-indent: -9999px;
@@ -29,7 +29,7 @@ h1 {
 	background-repeat: no-repeat;
 }*/
 
-h2 {
+/*h2 {
 	width: 100%;
 	height: 35px;
 	position: relative;
@@ -41,7 +41,7 @@ h2 span {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-}
+}*/
 
 .about {
 	font-size: 82%;
@@ -102,3 +102,20 @@ pre {
 	color:grey;
 }
 input.search { width:98%; font-style:italic; }
+
+
+
+
+h1 { margin: 0 }
+h1 { position: relative; }
+h1 span.icons { position: absolute; top: 26px; z-index:1000; }
+
+
+div.reply-to {
+  font-size: 80%;
+}
+div.reply-to a {
+  text-decoration: none;
+  border-width: 1px;
+  border-bottom-style: dashed;
+}
