@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Edit article
+{% endblock %}
+
+
+{% block main %}
+
+<script type="text/javascript">
+
+String.prototype.trim = function() 
+{
+    return this.replace(/^\s+|\s+$/g,"");
+}
+
+String.prototype.ltrim = function() 
+{
+    return this.replace(/^\s+/,"");
+}
+
+String.prototype.rtrim = function() 
+{
+    return this.replace(/\s+$/,"");
+}
+
+function save_article()
+{
+    if (document.article.title.value.trim() == '')
+    {
+        alert("You must supply a title.")
+        return
+    }
+
+    if (document.article.content.value.trim() == '')
+    {
+        alert("You must supply content.")
+        return
+    }
+
+    document.article.action = "/admin/article/save/"
+    document.article.submit()
+}
+
+function save_and_reedit()
+{
+    document.article.action = "/admin/article/save/"
+    document.article.edit_again.value = "true"
+    document.article.submit()
+}
+
+function del()
+{
+    if (confirm("Really delete this article?"))
+    {
+        document.article.action= "/admin/article/delete/"
+        document.article.method = "get"
+        document.article.submit()
+    }
+}
+
+function cancel_edit()
+{
+    if (confirm("Really cancel?"))
+        document.location = '/admin/'
+}
+
+</script>
+
+<body>
+<table id="container"><tr><td>
+
+<h1 class="admin-page-title">Edit article</h1>
+
+<div class="admin-page-area">
+
+<form action="" method="post" name="article">
+
+    <input type="text" align="left" width="80" style="width:98%" name="title" value="{{ article.title }}"/>
+
+    <br/><br/>
+    
+    <textarea name="content" cols="98%" rows="15" style="width:98%">{{ article.body }}</textarea>
+
+    <p>
+        Tags: <input type="text" cols="80" name="tags" value="{{ article.tag_string}}"/>
+
+        {% if article.draft %}
+        Draft: <input type="checkbox" name="draft" checked/>
+        {% else %}
+        Draft: <input type="checkbox" name="draft"/>
+        {% endif %}
+    </p>
+
+    <p>
+        <input type="button" name="save" onClick="save_article()" value="Save"/>
+        <!--
+        <input type="button" name="save" onClick="save_and_reedit()" value="Save and Keep Editing"/>
+        <input type="button" name="cancel" onClick="cancel_edit()" value="Cancel"/>
+        -->
+        <input type="button" name="delete" onClick="del()" value="Delete"/>
+    </p>
+
+{% if article.id %}
+<input type="hidden" name="id" value="{{ article.id }}"/>
+{% endif %}
+<input type="hidden" name="loaded_draft" value="{{ article.draft }}"/>
+<input type="hidden" name="edit_again" value="false"/>
+<input type="hidden" name="from" value="{{from}}"/>
+</form>
+
+</div>
+
+</td></tr></table>
+
+{% endblock %}

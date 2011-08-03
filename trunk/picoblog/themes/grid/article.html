@@ -1,0 +1,118 @@
+<h1 id="article_header_{{article.id}}" class="{{article.published_class}} visible e2-smart-title">
+	<span id="xxxxxxx"></span>
+	{% if single_article %}
+		{{ article.title }}
+		<!--
+		<img src="/font?text={{article.title|escape}}" alt="{{article.title|escape}}">
+		-->
+	{% else %}
+		<a href="{{article.path}}">
+			{{ article.title }}
+			<!--
+			<img src="/font?text={{article.title|escape}}" alt="{{article.title|escape}}">
+			-->
+		</a>
+	{% endif %}
+</h1>
+<script>
+//adjustHeader({{article.id}});
+//var span = document.getElementById("xxxxxxx")
+//span.style.backgroundImage = "url(/font?text=" + 12345678 + ")"
+//alert(span.parentNode.innerHTML)
+var text = $("#article_header_{{article.id}}").contents().filter(function() {
+             return this.nodeType == 3;
+           }).text();
+text = jQuery.trim(text)
+if(text) {
+	text = text.replace(/\s/g, '%20')
+	var span = document.getElementById("xxxxxxx")
+	span.style.backgroundImage = "url(/font?text=" + text + ")"
+}
+</script>
+
+<!-- <p><img src="/font?text={{article.title}}"></p> -->
+
+{% if user_info.is_admin %}
+	<div class="comment-administration">
+	<a href="/admin/article/edit/{{article.id}}?from={{current_path}}" title="Edit article">
+		edit
+	</a>
+	</div>
+{% endif %}
+
+
+	    <!--
+	    <h2>
+	    	<span></span>{{article.title}}
+	    </h2>
+	    -->
+	    <p class="article-tags">
+	    	20 July 2011,
+	    	<a href="#">lithuania</a>,
+	    	<a href="#">70s</a>
+	    </p>
+		<p>
+		{{article.html}}
+		</p>
+		<!--
+		<div class="row">
+    		<div class="width_2">
+    			<img src="/static/cover.jpg" width="140"/>
+    		</div>
+    		<div class="width_6">
+    			<div class="row">
+    				<div class="width_2 tracks">
+						<p>
+						<a href="#">A1. Mediniai Ratai</a>
+						<br/>A2. As - Berzas
+						<br/>A3. Ateisiu Tylia Nakti
+						<br/><a href="#">A4. Saule</a>
+						<br/>A5. Uzmirstoji taure
+						</p>
+    				</div>
+    				<div class="width_2 tracks">
+						<p>
+						B1. Rudenio pasaka
+						<br/>B2. Svajoniu Vygej
+						<br/>B3. Zuvedra
+						<br/>B4. Vinguriavo Takelis
+						<br/>B5. Vasara
+						</p>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="width_6 info">
+    					<p>
+						Title: Mindaugo Tamošiūno Kūriniai
+						<br/>Written by M. Tamošiūnas
+						<br/>Performed by Oktava
+						<br/>Soloists: V. Petrušonis (A side, male), S. Bagdonaitė (B side, female)
+						<br/>Melodiya LP C30-04787-88
+						</p>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="width_1"><p>
+			</p></div>
+    		<div class="width_7"><p class="download">
+				Download 227 MB, flac:
+				<br/><a href="#">http://rapidshare.com/files/456995370/Oktava-1974-Mindaugo-Tamosiuno-Kuriniai.zip</a>
+				<br/><a href="#">http://narod.ru/disk/9930805001/Oktava-1974-Mindaugo-Tamosiuno-Kuriniai.zip.html</a>
+			</p></div>
+    	</div>
+    	-->
+
+
+{% if single_article %}
+    {% include "comments.html" %}
+{% else %}
+    <p>
+    <span id="e2-comments-count">
+    	<a href="{{article.path}}#comments">
+    		{{article.comments_count}} comments
+    	</a>
+    </span>
+    </p>
+{% endif %}

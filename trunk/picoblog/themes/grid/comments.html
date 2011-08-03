@@ -1,0 +1,58 @@
+﻿        <p><b>{{article.comments_count}} comments:</b></p>
+{% for comment in article.comments %}
+        <div class="row comment">
+    		<div class="width_2"><p>
+				{% if comment.blog_owner %}
+					<span title="#{{comment.id}} {{comment.published_date|date:"r"}}">{{blog_owner_name}}</span>
+				{% else %}
+					{% if not comment.author %}
+						<span title="#{{comment.id}} {{comment.published_date|date:"r"}}">Anonymous</span>
+					{% else %}
+						<span title="#{{comment.id}} {{comment.published_date|date:"r"}}">{{comment.author}}</span>
+					{% endif %}
+				{% endif %}
+			</p></div>
+    		<div class="width_6"><p>
+    			{{comment.html}}
+				{% if user_info.is_admin %}
+					<div class="comment-administration">
+						<a href="/admin/comment/delete/{{comment.id}}" title="Delete comment">delete</a>
+						{% if comment.repliable %}
+							/ <a href="javascript:replyToComment({{comment.id}});">reply to this</a>
+						{% endif %}
+					</div>
+				{% endif %}
+			</p></div>
+        </div>
+{% endfor %}
+        <p><br/><b>Your comment:</b></p>
+        <form action="/comment/add/{{article.id}}" method="post" accept-charset="UTF-8">
+        <div class="row">
+    		<div class="width_2"><p>
+    			Name
+			</p></div>
+    		<div class="width_6"><p>
+				{% if user_info.is_admin %}
+				<span class="input-label"><label>{{blog_owner}}</label></span>
+				{% else %}
+    			<input name="author" type="text" vlue="{{comment_author|escape}}" style="width: 98%;"></input>
+				{% endif %}
+			</p></div>
+        </div>
+        <div class="row">
+    		<div class="width_2"><p>
+    			Message
+			</p></div>
+    		<div class="width_6"><p>
+    			<textarea name="text" rows="8" style="width: 98%;"></textarea>
+			</p></div>
+        </div>
+        <div class="row">
+    		<div class="width_2"><p>
+    			&nbsp;
+			</p></div>
+    		<div class="width_6"><p>
+    			<input type="submit" value='Send'/>
+			</p></div>
+        </div>
+		</form>
