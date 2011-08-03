@@ -55,10 +55,19 @@ function adjustHeader(headerId) {
 	</div>
 	<div class="width_10">
 		<div class="row">
+			<!--
 			<div class="width_7">
-				<h1><a href="/">Soviet Rare Groove</a></h1>
+				<h1><a href="/"><span></span>Soviet Rare Groove</a></h1>
 			</div>
 			<div class="width_3" style="padding-top:38px; white-space:nowrap;">
+				<input class="search" type="text" value="search"/>
+			</div>
+			<h1><a href="/">Soviet Rare Groove</a></h1>
+			-->
+			<div class="width_7">
+				<h1><a href="#"><span></span>Soviet Rare Groove</a></h1>
+			</div>
+			<div class="width_3">
 				<input class="search" type="text" value="search"/>
 			</div>
 		</div>
@@ -83,36 +92,9 @@ function adjustHeader(headerId) {
 	</div>
 </div>
 
-<div class="row below_top">
+<div class="row below-top">
 	<div class="width_2">
-		<div class="all_tags">
-	    <ul>
-		<li><a href="#">Russia</a></li>
-	    <li><a href="#">Ukraine</a></li>
-	    <li><a href="#">Moldova</a></li>
-	    <li><a href="#">Belarus</a></li>
-	    </ul>
-	    
-	    <ul>
-	    <li><a href="#">Armenia</a></li>
-	    <li><a href="#">Azerbaijan</a></li>
-	    <li><a href="#">Georgia</a></li>
-	    </ul>
-	    
-	    <ul>
-	    <li><a href="#">Estonia</a></li>
-	    <li><a href="#">Latvia</a></li>
-	    <li><a href="#">Lithuania</a></li>
-	    </ul>
-	    
-	    <ul>
-	    <li><a href="#">Kazakstan</a></li>
-	    <li><a href="#">Tajikistan</a></li>
-	    <li><a href="#">Turkmenia</a></li>
-	    <li><a href="#">Uzbekistan</a></li>
-	    <li><a href="#">Kyrgyzstan</a></li>
-	    </ul>
-	    </div>
+		{% include "tags.html" %}
 	</div>
 	<div class="width_8">
 		{% block main %}{% endblock %}
