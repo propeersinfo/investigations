@@ -10,9 +10,25 @@
 -->
 <link href="/static/style.less.css" type="text/css" rel="stylesheet"/>
 <link href="/static/main.css" type="text/css" rel="stylesheet"/>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
  
 <style type="text/css" media="screen">
 </style>
+
+<script>
+function adjustHeader(headerId) {
+	var h1 = document.getElementById('article_header_' + headerId)
+	if(h1 && h1.children.length == 1 && h1.children[0].tagName == 'SPAN') {
+		span = h1.children[0]
+		text = "a fake header image"
+		alert(span.style.background)
+		span.style.backgroundImage = "url(/font?text=" + text + ")"
+		//span.style.backgroundImage = "url(/static/h1.png)"
+		//h1.style.backgroundImage = ''
+		//alert(text)
+	}
+}
+</script>
  
 </head>
 <body>

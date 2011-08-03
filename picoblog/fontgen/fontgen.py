@@ -17,6 +17,11 @@ from fontgen.renderer import Renderer
 class RenderFontHandler(request.BlogRequestHandler):
     def get(self):
         text = self.request.get("text")
+        
+        #self.response.headers['Content-Type'] = "text/plain"
+        #self.response.out.write("text: %s" % text)
+        #return
+        #raise Exception("text: %s" % text)
 
         renderer = Renderer(char_gap=3, space_width=7)
         font_files = [
