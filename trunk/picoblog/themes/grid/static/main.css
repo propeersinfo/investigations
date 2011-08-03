@@ -18,16 +18,29 @@ a:hover { color: #e22; }
 	background-image: url(volna-top.png);
 	background-position: bottom;
 	background-repeat: repeat-x;
+	padding-top: 10px;
+	margin-bottom: 0.7em;
 }
 .top h1 {
-	margin: 0;
-	padding-top: 0px;
+	margin: 0 0 0 0;
+	padding: 0px;
+	position: relative;
+	height: 20px;
+	overflow: hidden;
+	/*
 	text-indent: -9999px;
 	background: url("/static/h1.png") #6EC6FE no-repeat;
 	background: url("/static/856ce8af31a517b3bb37206b95bedd.png") #6EC6FE no-repeat;
 	background-position: bottom left;
 	background-repeat: no-repeat;
-	padding-top: 30px;
+	*/
+}
+.top h1 span {
+	position: absolute;
+	background: url("/static/856ce8af31a517b3bb37206b95bedd.png");
+	background-repeat: no-repeat;
+	width: 250px;
+	height: 100%;
 }
 /*h2 {
 	margin-top:0;
@@ -120,7 +133,7 @@ input.search { width:98%; font-style:italic; }
 
 
 
-h1 {
+.below-top h1 {
 	width: 100%;
 	height: 35px;
 	position: relative;
@@ -128,7 +141,7 @@ h1 {
 	vertical-align: bottom;
 	font-size: 25px;
 }
-h1 span {
+.below-top h1 span {
 	background-repeat: no-repeat, repeat;
 	position: absolute;
 	width: 100%;
