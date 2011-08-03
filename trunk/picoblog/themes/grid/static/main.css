@@ -1,0 +1,104 @@
+body { margin: 0 0 0 0; }
+p {
+	color: #000;
+	/*border: 1px solid lightgrey;*/
+	/*background: #eee;*/
+	margin: 0 0 20px 0;
+	line-height: 130%;
+}
+a {
+	color: #6EC6FE; 
+	color: #20a8fe;
+	color: #0b9ffe;
+	color: #00a;
+}
+a:hover { color: #e22; }
+h1 {
+	margin: 0; padding-top: 10px;
+	text-indent: -9999px;
+	background: url("/static/h1.png") #6EC6FE no-repeat;
+	background-position: bottom left;
+	background-repeat: no-repeat;
+	padding-top: 30px;
+}
+/*h2 {
+	margin-top:0;
+	text-indent: -9999px;
+	background: url("h2.png") white no-repeat;
+	background-position: bottom left;
+	background-repeat: no-repeat;
+}*/
+
+h2 {
+	width: 100%;
+	height: 35px;
+	position: relative;
+	margin: 0 0 0.2em 0;
+	vertical-align: bottom;
+}
+h2 span {
+	background: url(/font?text=Raimonds+Pauls+/+Раймонд+Паулс+1972) no-repeat, url(white.png) repeat;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+.about {
+	font-size: 82%;
+	margin-bottom: 1.7em;
+}
+.about a {
+	color: black;
+}
+.about a:hover {
+	color: #e22;
+}
+.below_top { margin-top: 1em; }
+
+
+.all_tags {
+	font-size: 14px;
+}
+.all_tags ul {
+	list-style-type: none;
+	padding-left: 0;
+	margin:0 0 1em 0;
+}
+.all_tags ul li {
+	margin-bottom: 0.25em;
+	margin: 10 10;
+}
+.all_tags ul li.title {
+	font-style: normal;
+}
+.all_tags .group {
+	margin-bottom: 10px;
+}
+
+
+.tracks { font-size: 14px; }
+.info { font-size: 14px; font-style: italic; }
+.top {
+	background-color: #6EC6FE;
+	background-image: url(volna-top.png);
+	background-position: bottom;
+	background-repeat: repeat-x;
+}
+.download {
+	font-size: 85%;
+	overflow: hidden;
+	white-space:nowrap;
+}
+.red  { background: red; }
+.blue { background: blue; }
+pre {
+  font-family: serif;
+  font-size: 80%;
+}
+.article-tags {
+	margin:0em;
+	font-style:italic;
+	font-size:85%;
+	color:grey;
+}
+input.search { width:98%; font-style:italic; }
