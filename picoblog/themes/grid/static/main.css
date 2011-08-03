@@ -112,9 +112,9 @@ div.comment-administration {
 }
 div.comment-administration a {
   color: grey;
-  text-decoration: none;
+  /*text-decoration: none;
   border-width: 1px;
-  border-bottom-style: dashed;
+  border-bottom-style: dashed;*/
 }
 div.comment-administration a:hover { color: red; }
 

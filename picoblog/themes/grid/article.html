@@ -1,33 +1,15 @@
-<h1 id="article_header_{{article.id}}" class="{{article.published_class}} visible e2-smart-title">
-	<span id="xxxxxxx"></span>
+<h1 id="article_header_{{article.id}}" class="{{article.published_class}}">
+	<span></span>
 	{% if single_article %}
 		{{ article.title }}
-		<!--
-		<img src="/font?text={{article.title|escape}}" alt="{{article.title|escape}}">
-		-->
 	{% else %}
 		<a href="{{article.path}}">
 			{{ article.title }}
-			<!--
-			<img src="/font?text={{article.title|escape}}" alt="{{article.title|escape}}">
-			-->
 		</a>
 	{% endif %}
 </h1>
 <script>
-//adjustHeader({{article.id}});
-//var span = document.getElementById("xxxxxxx")
-//span.style.backgroundImage = "url(/font?text=" + 12345678 + ")"
-//alert(span.parentNode.innerHTML)
-var text = $("#article_header_{{article.id}}").contents().filter(function() {
-             return this.nodeType == 3;
-           }).text();
-text = jQuery.trim(text)
-if(text) {
-	text = text.replace(/\s/g, '%20')
-	var span = document.getElementById("xxxxxxx")
-	span.style.backgroundImage = "url(/font?text=" + text + ")"
-}
+adjustHeader("article_header_{{article.id}}")
 </script>
 
 <!-- <p><img src="/font?text={{article.title}}"></p> -->
