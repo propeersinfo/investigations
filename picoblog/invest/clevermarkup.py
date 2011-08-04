@@ -110,7 +110,7 @@ def markup2html(markup_text, rich_markup = True, recognize_links = True):
     result_string = ''
     for p in paragraphs:
         p_html = handle_paragraph(p)
-        result_string += p_html
+        result_string += "<p>%s</p>\n" % p_html
     return result_string
 
 class TestTransformations(unittest.TestCase):
@@ -124,22 +124,14 @@ class TestTransformations(unittest.TestCase):
         self.assertEqual(["111","222"], break_into_paragraphs("111\r\r222"))     # mac os
         self.assertEqual(["111","222"], break_into_paragraphs("111\n\n222"))     # unix
         self.assertEqual(["111","222"], break_into_paragraphs("111\n\n\n\n\n\n\n\n222"))
-#    def test_no_line_breaks(self):
-#        input = "111"
-#        expected = "111"
-#        self.assertEqual(expected, markup2html(input))
-#    def test_one_line_break(self):
-#        input = "111\n222"
-#        expected = "111<br>\n222"
-#        self.assertEqual(expected, markup2html(input))
-#    def test_two_line_breaks(self):
-#        input = "111\n\n222"
-#        expected = "111<br>\n<br>\n222"
-#        self.assertEqual(expected, markup2html(input))
-#    def test_three_line_breaks(self):
-#        input = "111\n\n\n222"
-#        expected = "111<br>\n<br>\n<br>\n222"
-#        self.assertEqual(expected, markup2html(input))
+    def test_no_line_breaks(self):
+        self.assertEqual("<p>111</p>\n", markup2html("111"))
+    def test_one_line_break(self):
+        self.assertEqual("<p>111<br>\n222</p>\n", markup2html("111\n222"))
+    def test_two_line_breaks(self):
+        self.assertEqual("<p>111</p>\n<p>222</p>\n", markup2html("111\n\n222"))
+    def test_three_line_breaks(self):
+        self.assertEqual("<p>111</p>\n<p>222</p>\n", markup2html("111\n\n\n222"))
 
 if __name__ == '__main__':
     unittest.main()
