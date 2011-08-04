@@ -1,0 +1,32 @@
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
+<style>
+#edit { width: 50%; }
+</style>
+
+<script>
+function edit(object) {
+	//document.designMode = "On"
+	object.contentEditable = true
+	object.style.backgroundColor = "#ddd"
+	object.focus()
+}
+function finish(object) {
+	object.style.backgroundColor = "white"
+	document.getElementById("debug").innerHTML = object.innerHTML
+}
+</script>
+
+<div id="edit" onclick="edit(this)" onblur="finish(this)">
+	<p class="my_p" id="para1">
+	<img src="https://developer.mozilla.org/skins/mdn/Transitional/img/mdn-logo-compact.png" align=left>
+	Scott from Scott’s Pizza Tours is obsessed with pizza box engineering, and posts YouTube videos
+	about the pizza boxes people send him from all over the world. In this installment,
+	<b>he explores</b> a fantastic box from Eataly that is coated with a recyclable, reflective
+	finish that keeps the food hot and prevents the grease from getting on the cardboard.
+	Pizza boxes with grease on them can’t be recycled (and they really screw up the recycling
+	system if they slip through!), so this is a major breakthrough.</p>
+</div>
+
+<xmp id="debug">
+</xmp>
