@@ -125,9 +125,9 @@ class CleverMarkup(SimpleMarkup):
             print "paragraphs:", len(pp)
             print "images:", images
             print "downloads:", downloads
-            if not images or len(images) != 1:
+            if len(images) != 1:
                 raise self.CleverMarkupFailedToMatchInput("image paragraphs must be 1")
-            if not downloads or len(downloads) != 1:
+            if len(downloads) != 1:
                 raise self.CleverMarkupFailedToMatchInput("download paragraphs must be 1")
         except self.CleverMarkupFailedToMatchInput:
             print "NB: Failed to recognize clever markup!"
@@ -137,7 +137,7 @@ class CleverMarkup(SimpleMarkup):
         for idx, p in enumerate(paragraphs):
             if MarkupTagImage.is_presented_in_markup(p):
                 indices.append(idx)
-        return indices if len(indices) > 0 else None
+        return indices
     def find_download_paragraphs(self, paragraphs):
         def is_dl_presented(text):
             return re.search(r'(rapidshare\.com|narod\.ru)', text)
@@ -145,7 +145,7 @@ class CleverMarkup(SimpleMarkup):
         for idx, p in enumerate(paragraphs):
             if is_dl_presented(p):
                 indices.append(idx)
-        return indices if len(indices) > 0 else None
+        return indices
 
 # main function
 def markup2html(markup_text, rich_markup = True, recognize_links = True):
@@ -192,8 +192,10 @@ if __name__ == '__main__':
     CleverMarkup().generate_html(
         "000\n\n"
         "111\n\n"
-        "222 [222.jpg] 222\n\n"
+        "# picture\n"
+        "[222.jpg] 222\n\n"
         "33\n\n"
+        "# download\n"
         "Download: rapidshare.com 127 MB\n\n"
         "end1\n\n"
         "end1\n\n"
