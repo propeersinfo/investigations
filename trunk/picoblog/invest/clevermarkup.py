@@ -66,18 +66,6 @@ def handle_custom_tag_playlist(input):
               '</embed></object>' % (defs.DROPBOX_USER, defs.DROPBOX_USER)
     return re.sub(regex, replace, input)
 
-# main function
-#def markup2html(markup_text, rich_markup = True, recognize_links = True):
-#    html = markup_text.replace('\n', '<br>\n')
-#    if recognize_links or rich_markup:
-#        html = handle_custom_tag_http_link(html)
-#    if rich_markup:
-#        html = handle_custom_tag_mp3(html)
-#        html = handle_custom_tag_playlist(html)
-#        html = handle_custom_tag_youtube(html)
-#        html = handle_custom_tag_mixcloud(html)
-#    return html
-
 def handle_paragraph(markup_text, rich_markup = True, recognize_links = True):
     html = markup_text.replace('\n', '<br>\n')
     if recognize_links or rich_markup:
@@ -93,9 +81,7 @@ def break_into_paragraphs(markup_text):
     def convert_line_ends_to_unix_type(str):
         return str.replace('\r\n', '\n').replace('\r', '\n')
     s = markup_text
-    #print "s: %s" % [ ord(ch) for ch in s]
     s = convert_line_ends_to_unix_type(s)
-    #print "s: %s" % [ ord(ch) for ch in s]
 
     double_break = re.compile(r'\n\n')
     pp = double_break.split(s)                # break into paragraphs
