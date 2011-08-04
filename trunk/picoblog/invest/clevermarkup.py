@@ -66,7 +66,7 @@ def handle_custom_tag_playlist(input):
               '</embed></object>' % (defs.DROPBOX_USER, defs.DROPBOX_USER)
     return re.sub(regex, replace, input)
 
-def handle_paragraph(markup_text, rich_markup = True, recognize_links = True):
+def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = True):
     html = markup_text.replace('\n', '<br>\n')
     if recognize_links or rich_markup:
         html = handle_custom_tag_http_link(html)
@@ -89,19 +89,33 @@ def break_into_paragraphs(markup_text):
     pp = filter(lambda str: len(str) > 0, pp) # skip empty paragraphs
     return pp
 
+class SimpleMarkup():
+    def __init__(self, rich_markup = True, recognize_links = True):
+        self.rich_markup = rich_markup
+        self.recognize_links = recognize_links
+    def generate_html(self, markup_text):
+        paragraphs = break_into_paragraphs(markup_text)
+
+        result_string = ''
+        for p in paragraphs:
+            p_html = markup2html_paragraph(p)
+            result_string += "<p>%s</p>\n" % p_html
+        return result_string
+
+class CleverMarkup():
+    def __init__(self, rich_markup = True, recognize_links = True):
+        self.rich_markup = rich_markup
+        self.recognize_links = recognize_links
+    def generate_html(self, markup_text):
+        pp = break_into_paragraphs(markup_text)
+
 # main function
 def markup2html(markup_text, rich_markup = True, recognize_links = True):
-    paragraphs = break_into_paragraphs(markup_text)
+    return SimpleMarkup(rich_markup, recognize_links).generate_html(markup_text)
 
-    result_string = ''
-    for p in paragraphs:
-        p_html = handle_paragraph(p)
-        result_string += "<p>%s</p>\n" % p_html
-    return result_string
+############## tests
 
-class TestTransformations(unittest.TestCase):
-    def setUp(self):
-        pass
+class TestBreakIntoParagraphs(unittest.TestCase):
     def test_break_into_paragraphs(self):
         self.assertEqual(["111"], break_into_paragraphs("111"))
         self.assertEqual(["111"], break_into_paragraphs("111\n"))
@@ -110,14 +124,18 @@ class TestTransformations(unittest.TestCase):
         self.assertEqual(["111","222"], break_into_paragraphs("111\r\r222"))     # mac os
         self.assertEqual(["111","222"], break_into_paragraphs("111\n\n222"))     # unix
         self.assertEqual(["111","222"], break_into_paragraphs("111\n\n\n\n\n\n\n\n222"))
+
+class TestSimpleMarkup(unittest.TestCase):
+    def html(self, markup):
+        return SimpleMarkup().generate_html(markup)
     def test_no_line_breaks(self):
-        self.assertEqual("<p>111</p>\n", markup2html("111"))
+        self.assertEqual("<p>111</p>\n", self.html("111"))
     def test_one_line_break(self):
-        self.assertEqual("<p>111<br>\n222</p>\n", markup2html("111\n222"))
+        self.assertEqual("<p>111<br>\n222</p>\n", self.html("111\n222"))
     def test_two_line_breaks(self):
-        self.assertEqual("<p>111</p>\n<p>222</p>\n", markup2html("111\n\n222"))
+        self.assertEqual("<p>111</p>\n<p>222</p>\n", self.html("111\n\n222"))
     def test_three_line_breaks(self):
-        self.assertEqual("<p>111</p>\n<p>222</p>\n", markup2html("111\n\n\n222"))
+        self.assertEqual("<p>111</p>\n<p>222</p>\n", self.html("111\n\n\n222"))
 
 if __name__ == '__main__':
     unittest.main()
