@@ -1,5 +1,5 @@
 import re
-import cgi
+import unittest
 
 import defs
 
@@ -67,9 +67,18 @@ def handle_custom_tag_playlist(input):
     return re.sub(regex, replace, input)
 
 # main function
-def markup2html(markup_text, rich_markup = True, recognize_links = True):
-    #s = [ ord(ch) for ch in markup_text]
-    #raise Exception("markup_text: %s" % s)
+#def markup2html(markup_text, rich_markup = True, recognize_links = True):
+#    html = markup_text.replace('\n', '<br>\n')
+#    if recognize_links or rich_markup:
+#        html = handle_custom_tag_http_link(html)
+#    if rich_markup:
+#        html = handle_custom_tag_mp3(html)
+#        html = handle_custom_tag_playlist(html)
+#        html = handle_custom_tag_youtube(html)
+#        html = handle_custom_tag_mixcloud(html)
+#    return html
+
+def handle_paragraph(markup_text, rich_markup = True, recognize_links = True):
     html = markup_text.replace('\n', '<br>\n')
     if recognize_links or rich_markup:
         html = handle_custom_tag_http_link(html)
@@ -79,3 +88,58 @@ def markup2html(markup_text, rich_markup = True, recognize_links = True):
         html = handle_custom_tag_youtube(html)
         html = handle_custom_tag_mixcloud(html)
     return html
+
+def break_into_paragraphs(markup_text):
+    def convert_line_ends_to_unix_type(str):
+        return str.replace('\r\n', '\n').replace('\r', '\n')
+    s = markup_text
+    #print "s: %s" % [ ord(ch) for ch in s]
+    s = convert_line_ends_to_unix_type(s)
+    #print "s: %s" % [ ord(ch) for ch in s]
+
+    double_break = re.compile(r'\n\n')
+    pp = double_break.split(s)                # break into paragraphs
+    pp = map(lambda str: str.strip(), pp)     # strip each paragraph
+    pp = filter(lambda str: len(str) > 0, pp) # skip empty paragraphs
+    return pp
+
+# main function
+def markup2html(markup_text, rich_markup = True, recognize_links = True):
+    paragraphs = break_into_paragraphs(markup_text)
+
+    result_string = ''
+    for p in paragraphs:
+        p_html = handle_paragraph(p)
+        result_string += p_html
+    return result_string
+
+class TestTransformations(unittest.TestCase):
+    def setUp(self):
+        pass
+    def test_break_into_paragraphs(self):
+        self.assertEqual(["111"], break_into_paragraphs("111"))
+        self.assertEqual(["111"], break_into_paragraphs("111\n"))
+        self.assertEqual(["111"], break_into_paragraphs("\n111"))
+        self.assertEqual(["111","222"], break_into_paragraphs("111\r\n\r\n222")) # windows
+        self.assertEqual(["111","222"], break_into_paragraphs("111\r\r222"))     # mac os
+        self.assertEqual(["111","222"], break_into_paragraphs("111\n\n222"))     # unix
+        self.assertEqual(["111","222"], break_into_paragraphs("111\n\n\n\n\n\n\n\n222"))
+#    def test_no_line_breaks(self):
+#        input = "111"
+#        expected = "111"
+#        self.assertEqual(expected, markup2html(input))
+#    def test_one_line_break(self):
+#        input = "111\n222"
+#        expected = "111<br>\n222"
+#        self.assertEqual(expected, markup2html(input))
+#    def test_two_line_breaks(self):
+#        input = "111\n\n222"
+#        expected = "111<br>\n<br>\n222"
+#        self.assertEqual(expected, markup2html(input))
+#    def test_three_line_breaks(self):
+#        input = "111\n\n\n222"
+#        expected = "111<br>\n<br>\n<br>\n222"
+#        self.assertEqual(expected, markup2html(input))
+
+if __name__ == '__main__':
+    unittest.main()
