@@ -95,7 +95,7 @@ class Paragraph():
         self.body = body
     @classmethod
     def parse(cls, input):
-        m = re.search(r'^#\s*(\w+)\s*([\r\n].*)$', input)
+        m = re.search('#\s*(\w+)\s*([\r\n].*)', input, re.MULTILINE|re.DOTALL)
         if m:
             return Paragraph(m.group(1).strip(), m.group(2).strip())
         else:
@@ -130,7 +130,7 @@ def break_into_paragraphs(markup_text):
     s = markup_text
     s = convert_line_ends_to_unix_type(s)
 
-    double_break = re.compile(r'\n\n')
+    double_break = re.compile(r'\n\n', re.MULTILINE|re.DOTALL)
     pp = double_break.split(s)                # break into paragraphs
     pp = map(lambda str: str.strip(), pp)     # strip each paragraph
     pp = filter(lambda str: len(str) > 0, pp) # skip empty paragraphs
@@ -138,36 +138,91 @@ def break_into_paragraphs(markup_text):
     return ParagraphCollection(pp)
 
 class SimpleMarkup():
-    def __init__(self, rich_markup = True, recognize_links = True):
+    def __init__(self, for_comment, rich_markup = True, recognize_links = True):
+        self.for_comment = for_comment
         self.rich_markup = rich_markup
         self.recognize_links = recognize_links
     def generate_html(self, markup_text):
         paragraphs = break_into_paragraphs(markup_text)
-        assert type(paragraphs[0]) == Paragraph
+        #assert type(paragraphs[0]) == Paragraph
         result_string = ''
         for p in paragraphs:
-            result_string += "<p>%s</p>\n" % markup2html_paragraph(p)
+            result_string += "<p>%s</p>\n" % markup2html_paragraph(p.body)
         return result_string
 
 class CleverMarkup(SimpleMarkup):
     class CleverMarkupFailedToMatchInput(Exception):
         pass
-    def __init__(self, rich_markup = True, recognize_links = True):
-        SimpleMarkup.__init__(self, rich_markup, recognize_links)
+    def __init__(self, for_comment, rich_markup = True, recognize_links = True):
+        SimpleMarkup.__init__(self, for_comment, rich_markup, recognize_links)
     def generate_html(self, markup_text):
+        if self.for_comment:
+            return SimpleMarkup.generate_html(self, markup_text)
+
         pp = break_into_paragraphs(markup_text)
-        print "picture:", pp.get_named_paragraph("picture")
-        print "tracklist:", pp.get_named_paragraph("tracklist")
-        print "techinfo:", pp.get_named_paragraph("techinfo")
-        print "download:", pp.get_named_paragraph("download")
+
+#        print "picture:", pp.get_named_paragraph("picture").body
+#        print "tracklist:", pp.get_named_paragraph("tracklist")
+#        print "techinfo:", pp.get_named_paragraph("techinfo")
+#        print "download:", pp.get_named_paragraph("download").body
+#        for p in pp:
+#            print "####", p.name
+#            print p.body
+
         result_string = ''
-        for p in pp:
-            result_string += "<p>%s</p>\n" % p.body
+        #for p in pp:
+        #    result_string += "<p>%s</p>\n" % p.body
         before, named, after = pp.break_into_three_groups(['picture', 'tracklist', 'techinfo', 'download'])
-        print len(before)
-        print len(named)
-        print len(after)
+        #print len(before)
+        #print len(named)
+        #print len(after)
+        for p in before:
+            result_string += "<p>%s</p>\n" % p.body
+        result_string += self.get_the_middle(pp)
+        for p in after:
+            result_string += "<p>%s</p>\n" % p.body
         return result_string
+    def get_the_middle(self, pp):
+        download = pp.get_named_paragraph('download')
+        download_text = download.body if download else 'no-downloads'
+        techinfo = pp.get_named_paragraph('techinfo')
+        techinfo_text = techinfo.body if techinfo else 'no-techinfo'
+        return """
+		<div class="row">
+    		<div class="width_2">
+    			image here
+    		</div>
+    		<div class="width_6">
+    			<div class="row">
+    				<div class="width_2 tracks">
+						<p>
+						tracks left
+						</p>
+    				</div>
+    				<div class="width_2 tracks">
+						<p>
+						track right
+						</p>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="width_6 info">
+    					<p>
+						%s
+						</p>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="width_1"><p>
+    		    &nbsp;
+			</p></div>
+    		<div class="width_7"><p class="download">
+				%s
+			</p></div>
+    	</div>
+        """ % (techinfo_text, download_text)
 #    def find_image_paragraphs(self, paragraphs):
 #        indices = []
 #        for idx, p in enumerate(paragraphs):
@@ -184,9 +239,9 @@ class CleverMarkup(SimpleMarkup):
 #        return indices
 
 # main function
-def markup2html(markup_text, rich_markup = True, recognize_links = True):
+def markup2html(markup_text, for_comment, rich_markup = True, recognize_links = True):
     #return SimpleMarkup(rich_markup, recognize_links).generate_html(markup_text)
-    return CleverMarkup(rich_markup, recognize_links).generate_html(markup_text)
+    return CleverMarkup(for_comment, rich_markup, recognize_links).generate_html(markup_text)
 
 ############## tests
 
@@ -214,14 +269,15 @@ class TestSimpleMarkup(unittest.TestCase):
 
 class TestCleverMarkup(unittest.TestCase):
     def test_some(self):
-        CleverMarkup().generate_html(
+        CleverMarkup(for_comment=False).generate_html(
             "000\n\n"
             "111\n\n"
             "# picture\n"
             "[222.jpg]\n\n"
             "33\n\n"
             "# download\n"
-            "Download: rapidshare.com 127 MB\n\n"
+            "Download: rapidshare.com 127 MB\n"
+            "Download: continued\n\n"
             "end1\n\n"
             "end1\n\n"
         )

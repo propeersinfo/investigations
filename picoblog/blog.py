@@ -163,7 +163,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             if article:
                 if produce_html:
                     #article.html = rst2html(article.body)
-                    article.html = markup.markup2html(article.body)
+                    article.html = markup.markup2html(article.body, for_comment=False)
                 article.path = utils.get_article_path(article)
                 article.url = url_prefix + article.path
                 article.guid = url_prefix + utils.get_article_guid(article)
@@ -176,8 +176,9 @@ class AbstractPageHandler(request.BlogRequestHandler):
         comments = []
         for comment in Comment.get_for_article(article):
             comment.html = markup.markup2html(markup_text=comment.text,
-                                                    rich_markup=False,
-                                                    recognize_links=comment.blog_owner)
+                                              for_comment=True,
+                                              rich_markup=False,
+                                              recognize_links=comment.blog_owner)
             comment.repliable = (comment.id == comment.replied_comment_id)
             comments.append(comment)
         article.comments = comments
