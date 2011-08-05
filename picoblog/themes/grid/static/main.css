@@ -115,11 +115,19 @@ pre {
 	font-size:85%;
 	color:grey;
 }
-input.search { width:98%; font-style:italic; }
+input.search { width:98%; font-style:italic; font-family: serif; }
+
+div.comment {
+	margin-bottom: 1em !important;
+}
+div.comment p {
+	line-height: 1.4em;
+	margin-bottom: 0.6em;
+}
 
 .comment-administration {
   font-size: 80%;
-  margin-top: 0em;
+  margin-bottom: 0.4em;
 }
 .comment-administration a {
   color: grey;
