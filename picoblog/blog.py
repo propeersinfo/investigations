@@ -165,17 +165,6 @@ class AbstractPageHandler(request.BlogRequestHandler):
                     #article.html = rst2html(article.body)
                     article.html = 'article.html is not available anymore'
                     article.complex_html = markup.markup2html(article.body, for_comment=False, article_id=article.id)
-
-                    #if True: raise  Exception(article.paragraphs['middle'])
-
-                    #if not article.paragraphs.has_key('middle'):
-                    #    #raise  Exception("there was no the middle")
-                    #    article.paragraphs['middle'] = {
-                    #        'techinfo': 'def',
-                    #        'picture': 'def',
-                    #        'download': 'def',
-                    #        'tracklist': 'def'
-                    #    }
                 article.path = utils.get_article_path(article)
                 article.url = url_prefix + article.path
                 article.guid = url_prefix + utils.get_article_guid(article)
