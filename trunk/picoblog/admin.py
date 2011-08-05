@@ -42,8 +42,8 @@ class NewArticleHandler(request.BlogRequestHandler):
     Handles requests to create and edit a new article.
     """
     def get(self):
-        article = Article(title='New article',
-                          body='Content goes here',
+        article = Article(title='-',
+                          body=utils.read_file('new-article.txt'),
                           draft=False)
         user_info = UserInfo(self.request)
         template_vars = {

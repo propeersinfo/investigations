@@ -27,7 +27,7 @@
 			</a>
 {% endif %}
 	    </p>
-
+	    
 	    {% for p in article.complex_html.before %}
 		<p>{{p}}</p>
 		{% endfor %}
@@ -35,7 +35,7 @@
 		{% if article.complex_html.middle %}
 			{% include "article-clever.html" %}
 		{% endif %}
-		
+			
 	    {% for p in article.complex_html.after %}
 		<p>{{p}}</p>
 		{% endfor %}
