@@ -163,7 +163,8 @@ class AbstractPageHandler(request.BlogRequestHandler):
             if article:
                 if produce_html:
                     #article.html = rst2html(article.body)
-                    article.html = markup.markup2html(article.body, for_comment=False)
+                    article.html = 'article.html is not available anymore'
+                    article.complex_html = markup.markup2html(article.body, for_comment=False)
                 article.path = utils.get_article_path(article)
                 article.url = url_prefix + article.path
                 article.guid = url_prefix + utils.get_article_guid(article)
