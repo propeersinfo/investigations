@@ -158,24 +158,9 @@ class CleverMarkup(SimpleMarkup):
     def generate_html(self, markup_text):
         if self.for_comment:
             return SimpleMarkup.generate_html(self, markup_text)
-
         pp = break_into_paragraphs(markup_text)
-
-#        print "picture:", pp.get_named_paragraph("picture").body
-#        print "tracklist:", pp.get_named_paragraph("tracklist")
-#        print "techinfo:", pp.get_named_paragraph("techinfo")
-#        print "download:", pp.get_named_paragraph("download").body
-#        for p in pp:
-#            print "####", p.name
-#            print p.body
-
         result_string = ''
-        #for p in pp:
-        #    result_string += "<p>%s</p>\n" % p.body
         before, named, after = pp.break_into_three_groups(['picture', 'tracklist', 'techinfo', 'download'])
-        #print len(before)
-        #print len(named)
-        #print len(after)
         for p in before:
             result_string += "<p>%s</p>\n" % p.body
         result_string += self.get_the_middle(pp)
@@ -184,9 +169,9 @@ class CleverMarkup(SimpleMarkup):
         return result_string
     def get_the_middle(self, pp):
         download = pp.get_named_paragraph('download')
-        download_text = download.body if download else 'no-downloads'
+        download_text = markup2html_paragraph(download.body if download else 'no-downloads')
         techinfo = pp.get_named_paragraph('techinfo')
-        techinfo_text = techinfo.body if techinfo else 'no-techinfo'
+        techinfo_text = markup2html_paragraph(techinfo.body if techinfo else 'no-techinfo')
         return """
 		<div class="row">
     		<div class="width_2">
