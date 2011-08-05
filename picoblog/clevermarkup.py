@@ -17,7 +17,7 @@ Custom []-styled tags are supported:
 
 class MarkupTagImage():
     regex = '\[([^\]]+\.(jpg|jpeg|png|gif))\]'
-    replacement = '<img src="\1">'
+    replacement = '<img src="\1" alt="\1">'
     @classmethod
     def replace_in_markup(cls, markup_text):
         return re.sub(cls.regex, cls.replacement, markup_text)
@@ -25,6 +25,12 @@ class MarkupTagImage():
     def is_presented_in_markup(cls, markup_text):
         modified = cls.replace_in_markup(markup_text)
         return modified != markup_text
+
+def handle_custom_tag_image(input):
+    regex = '\[([^\]]+\.(jpg|jpeg|png|gif))\]'
+    #replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\1" alt="\1>' % defs.DROPBOX_USER
+    replacement = '<img src="http://dl.dropbox.com/u/1883230/sg/img/krugozor-1971-04.jpg" width=140>'
+    return re.sub(regex, replacement, input)
 
 # [http://ya.ru/]
 def handle_custom_tag_http_link(input):
@@ -83,6 +89,7 @@ def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = Tru
     if recognize_links or rich_markup:
         html = handle_custom_tag_http_link(html)
     if rich_markup:
+        html = handle_custom_tag_image(html)
         html = handle_custom_tag_mp3(html)
         html = handle_custom_tag_playlist(html)
         html = handle_custom_tag_youtube(html)
@@ -151,6 +158,7 @@ class SimpleMarkup():
         return result_string
 
 class CleverMarkup(SimpleMarkup):
+    RECOGNIZED_PARAGRAPH_NAMES = ['picture', 'tracklist', 'techinfo', 'download']
     class CleverMarkupFailedToMatchInput(Exception):
         pass
     def __init__(self, for_comment, rich_markup = True, recognize_links = True):
@@ -160,72 +168,30 @@ class CleverMarkup(SimpleMarkup):
             return SimpleMarkup.generate_html(self, markup_text)
         pp = break_into_paragraphs(markup_text)
         result_string = ''
-        before, named, after = pp.break_into_three_groups(['picture', 'tracklist', 'techinfo', 'download'])
-        for p in before:
-            result_string += "<p>%s</p>\n" % p.body
-        result_string += self.get_the_middle(pp)
-        for p in after:
-            result_string += "<p>%s</p>\n" % p.body
-        return result_string
+        before, named, after = pp.break_into_three_groups(self.RECOGNIZED_PARAGRAPH_NAMES)
+        def para2html(paragraph):
+            return markup2html_paragraph(paragraph.body)
+        return {
+            'before': map(para2html, before),
+            'middle': self.get_the_middle(pp),
+            'after':  map(para2html, after)
+        }
     def get_the_middle(self, pp):
-        download = pp.get_named_paragraph('download')
-        download_text = markup2html_paragraph(download.body if download else 'no-downloads')
-        techinfo = pp.get_named_paragraph('techinfo')
-        techinfo_text = markup2html_paragraph(techinfo.body if techinfo else 'no-techinfo')
-        picture = pp.get_named_paragraph('picture')
-        picture_text = markup2html_paragraph(picture.body if picture else 'no-picture')
-        tracklist = pp.get_named_paragraph('tracklist')
-        tracklist_text = markup2html_paragraph(tracklist.body if tracklist else 'no-tracklist')
-        return """
-		<div class="row">
-    		<div class="width_2">
-    			%s
-    		</div>
-    		<div class="width_6">
-    			<div class="row">
-    				<div class="width_2 tracks">
-						<p>
-						tracks left
-						</p>
-    				</div>
-    				<div class="width_2 tracks">
-						<p>
-						track right
-						</p>
-    				</div>
-    			</div>
-    			<div class="row">
-    				<div class="width_6 info">
-    					<p>
-						%s
-						</p>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    	<div class="row">
-    		<div class="width_1"><p>
-    		    &nbsp;
-			</p></div>
-    		<div class="width_7"><p class="download">
-				%s
-			</p></div>
-    	</div>
-        """ % (picture_text, techinfo_text, download_text)
-#    def find_image_paragraphs(self, paragraphs):
-#        indices = []
-#        for idx, p in enumerate(paragraphs):
-#            if MarkupTagImage.is_presented_in_markup(p):
-#                indices.append(idx)
-#        return indices
-#    def find_download_paragraphs(self, paragraphs):
-#        def is_dl_presented(text):
-#            return re.search(r'(rapidshare\.com|narod\.ru)', text)
-#        indices = []
-#        for idx, p in enumerate(paragraphs):
-#            if is_dl_presented(p):
-#                indices.append(idx)
-#        return indices
+        def break_tracklist(text):
+            return 'side a broken', 'side b broken'
+        hash = {}
+        for name in self.RECOGNIZED_PARAGRAPH_NAMES:
+            p = pp.get_named_paragraph(name)
+            if name == 'tracklist':
+                side_a, side_b = break_tracklist(p.body)
+                if side_a and side_b:
+                    hash[name] = {
+                        'side_a' : side_a,
+                        'side_b' : side_b
+                    }
+                    continue
+            hash[name] = markup2html_paragraph(p.body if p else 'no-named-p-%s' % name)
+        return hash
 
 # main function
 def markup2html(markup_text, for_comment, rich_markup = True, recognize_links = True):
