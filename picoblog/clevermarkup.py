@@ -1,3 +1,4 @@
+import sys
 import re
 import unittest
 
@@ -88,6 +89,41 @@ def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = Tru
         html = handle_custom_tag_mixcloud(html)
     return html
 
+class Paragraph():
+    def __init__(self, name, body):
+        self.name = name
+        self.body = body
+    @classmethod
+    def parse(cls, input):
+        m = re.search(r'^#\s*(\w+)\s*([\r\n].*)$', input)
+        if m:
+            return Paragraph(m.group(1).strip(), m.group(2).strip())
+        else:
+            return Paragraph(None, input)
+
+class ParagraphCollection(list):
+    hash = {}
+    def __init__(self, p_list = []):
+        list.__init__(self)
+        for p in p_list:
+            self.append(p)
+            if p.name:
+                self.hash[p.name.lower()] = p
+    def get_named_paragraph(self, name):
+        return self.hash.get(name.lower())
+    def break_into_three_groups(self, names_wanted):
+        before = ParagraphCollection()
+        named = ParagraphCollection()
+        after = ParagraphCollection()
+        where_to_add_to = before
+        for idx, p in enumerate(self):
+            if p.name and names_wanted.index(p.name) >= 0:
+                named.append(p)
+                where_to_add_to = after
+            else:
+                where_to_add_to.append(p)
+        return before, named, after
+
 def break_into_paragraphs(markup_text):
     def convert_line_ends_to_unix_type(str):
         return str.replace('\r\n', '\n').replace('\r', '\n')
@@ -98,7 +134,8 @@ def break_into_paragraphs(markup_text):
     pp = double_break.split(s)                # break into paragraphs
     pp = map(lambda str: str.strip(), pp)     # strip each paragraph
     pp = filter(lambda str: len(str) > 0, pp) # skip empty paragraphs
-    return pp
+    pp = map(lambda str: Paragraph.parse(str), pp)
+    return ParagraphCollection(pp)
 
 class SimpleMarkup():
     def __init__(self, rich_markup = True, recognize_links = True):
@@ -106,10 +143,10 @@ class SimpleMarkup():
         self.recognize_links = recognize_links
     def generate_html(self, markup_text):
         paragraphs = break_into_paragraphs(markup_text)
+        assert type(paragraphs[0]) == Paragraph
         result_string = ''
         for p in paragraphs:
-            p_html = markup2html_paragraph(p)
-            result_string += "<p>%s</p>\n" % p_html
+            result_string += "<p>%s</p>\n" % markup2html_paragraph(p)
         return result_string
 
 class CleverMarkup(SimpleMarkup):
@@ -118,38 +155,38 @@ class CleverMarkup(SimpleMarkup):
     def __init__(self, rich_markup = True, recognize_links = True):
         SimpleMarkup.__init__(self, rich_markup, recognize_links)
     def generate_html(self, markup_text):
-        try:
-            pp = break_into_paragraphs(markup_text)
-            images = self.find_image_paragraphs(pp)
-            downloads = self.find_download_paragraphs(pp)
-            print "paragraphs:", len(pp)
-            print "images:", images
-            print "downloads:", downloads
-            if len(images) != 1:
-                raise self.CleverMarkupFailedToMatchInput("image paragraphs must be 1")
-            if len(downloads) != 1:
-                raise self.CleverMarkupFailedToMatchInput("download paragraphs must be 1")
-        except self.CleverMarkupFailedToMatchInput:
-            print "NB: Failed to recognize clever markup!"
-            return SimpleMarkup.generate_html(self, markup_text)
-    def find_image_paragraphs(self, paragraphs):
-        indices = []
-        for idx, p in enumerate(paragraphs):
-            if MarkupTagImage.is_presented_in_markup(p):
-                indices.append(idx)
-        return indices
-    def find_download_paragraphs(self, paragraphs):
-        def is_dl_presented(text):
-            return re.search(r'(rapidshare\.com|narod\.ru)', text)
-        indices = []
-        for idx, p in enumerate(paragraphs):
-            if is_dl_presented(p):
-                indices.append(idx)
-        return indices
+        pp = break_into_paragraphs(markup_text)
+        print "picture:", pp.get_named_paragraph("picture")
+        print "tracklist:", pp.get_named_paragraph("tracklist")
+        print "techinfo:", pp.get_named_paragraph("techinfo")
+        print "download:", pp.get_named_paragraph("download")
+        result_string = ''
+        for p in pp:
+            result_string += "<p>%s</p>\n" % p.body
+        before, named, after = pp.break_into_three_groups(['picture', 'tracklist', 'techinfo', 'download'])
+        print len(before)
+        print len(named)
+        print len(after)
+        return result_string
+#    def find_image_paragraphs(self, paragraphs):
+#        indices = []
+#        for idx, p in enumerate(paragraphs):
+#            if MarkupTagImage.is_presented_in_markup(p):
+#                indices.append(idx)
+#        return indices
+#    def find_download_paragraphs(self, paragraphs):
+#        def is_dl_presented(text):
+#            return re.search(r'(rapidshare\.com|narod\.ru)', text)
+#        indices = []
+#        for idx, p in enumerate(paragraphs):
+#            if is_dl_presented(p):
+#                indices.append(idx)
+#        return indices
 
 # main function
 def markup2html(markup_text, rich_markup = True, recognize_links = True):
-    return SimpleMarkup(rich_markup, recognize_links).generate_html(markup_text)
+    #return SimpleMarkup(rich_markup, recognize_links).generate_html(markup_text)
+    return CleverMarkup(rich_markup, recognize_links).generate_html(markup_text)
 
 ############## tests
 
@@ -177,7 +214,17 @@ class TestSimpleMarkup(unittest.TestCase):
 
 class TestCleverMarkup(unittest.TestCase):
     def test_some(self):
-        CleverMarkup().generate_html("[1.jpg]\n\n222\n\n333[3.jpg]")
+        CleverMarkup().generate_html(
+            "000\n\n"
+            "111\n\n"
+            "# picture\n"
+            "[222.jpg]\n\n"
+            "33\n\n"
+            "# download\n"
+            "Download: rapidshare.com 127 MB\n\n"
+            "end1\n\n"
+            "end1\n\n"
+        )
 
 class TestMarkupTagImage(unittest.TestCase):
     def test_all(self):
@@ -188,15 +235,5 @@ class TestMarkupTagImage(unittest.TestCase):
         self.assertFalse(MarkupTagImage.is_presented_in_markup("[111jpg]"))
 
 if __name__ == '__main__':
-    #unittest.main()
-    CleverMarkup().generate_html(
-        "000\n\n"
-        "111\n\n"
-        "# picture\n"
-        "[222.jpg] 222\n\n"
-        "33\n\n"
-        "# download\n"
-        "Download: rapidshare.com 127 MB\n\n"
-        "end1\n\n"
-        "end1\n\n"
-    )
+    unittest.main()
+    #TestCleverMarkup().test_some()
