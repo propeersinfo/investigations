@@ -172,10 +172,14 @@ class CleverMarkup(SimpleMarkup):
         download_text = markup2html_paragraph(download.body if download else 'no-downloads')
         techinfo = pp.get_named_paragraph('techinfo')
         techinfo_text = markup2html_paragraph(techinfo.body if techinfo else 'no-techinfo')
+        picture = pp.get_named_paragraph('picture')
+        picture_text = markup2html_paragraph(picture.body if picture else 'no-picture')
+        tracklist = pp.get_named_paragraph('tracklist')
+        tracklist_text = markup2html_paragraph(tracklist.body if tracklist else 'no-tracklist')
         return """
 		<div class="row">
     		<div class="width_2">
-    			image here
+    			%s
     		</div>
     		<div class="width_6">
     			<div class="row">
@@ -207,7 +211,7 @@ class CleverMarkup(SimpleMarkup):
 				%s
 			</p></div>
     	</div>
-        """ % (techinfo_text, download_text)
+        """ % (picture_text, techinfo_text, download_text)
 #    def find_image_paragraphs(self, paragraphs):
 #        indices = []
 #        for idx, p in enumerate(paragraphs):
