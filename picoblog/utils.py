@@ -32,3 +32,8 @@ def get_unicode_cookie(request, key, default_value):
     return unescape(request.cookies[key]).decode('unicode-escape')
   else:
     return default_value
+
+
+def read_file(file):
+    full = os.path.join(os.path.split(__file__)[0], file)
+    return open(full).read()
