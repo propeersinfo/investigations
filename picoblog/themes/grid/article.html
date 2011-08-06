@@ -29,7 +29,7 @@
 	    </p>
 	    
 	    {% for p in article.complex_html.before %}
-		<p>{{p}}</p>
+		<p>{{ p|typographus }}</p>
 		{% endfor %}
 		
 		{% if article.complex_html.middle %}
@@ -37,7 +37,7 @@
 		{% endif %}
 			
 	    {% for p in article.complex_html.after %}
-		<p>{{p}}</p>
+		<p>{{ p|typographus }}</p>
 		{% endfor %}
 		
 		</p>

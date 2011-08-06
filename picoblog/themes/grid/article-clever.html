@@ -10,17 +10,17 @@
     						{% if article.complex_html.middle.tracklist.side_a %}
     							<div class="width_3 tracks">
 									<p>
-										{{article.complex_html.middle.tracklist.side_a}}
+										{{ article.complex_html.middle.tracklist.side_a|typographus }}
 									</p>
 								</div><div class="width_3 tracks">
 									<p>
-										{{article.complex_html.middle.tracklist.side_b}}
+										{{ article.complex_html.middle.tracklist.side_b|typographus }}
 									</p>
     							</div>
 							{% else %}
 								<div class="width_6 tracks">
 								<p>
-									{{article.complex_html.middle.tracklist}}
+									{{ article.complex_html.middle.tracklist|typographus }}
 								</p>
 								</div>
 							{% endif %}
@@ -33,7 +33,7 @@
     			<div class="row">
     				<div class="width_6 info">
     					<p>
-						{{article.complex_html.middle.techinfo}}
+						{{ article.complex_html.middle.techinfo|typographus }}
 						</p>
     				</div>
     			</div>
@@ -44,6 +44,6 @@
     		    &nbsp;
 			</p></div>
     		<div class="width_7"><p class="download">
-				{{article.complex_html.middle.download}}
+				{{ article.complex_html.middle.download|typographus }}
 			</p></div>
     	</div>

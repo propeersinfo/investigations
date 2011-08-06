@@ -4,6 +4,8 @@ from google.appengine.ext import webapp
 from django import template as django_template
 from django.template import resolve_variable, Node, TemplateSyntaxError, VariableDoesNotExist
 
+from typographus import Typographus
+
 register = webapp.template.create_template_register()
 
 ###################
@@ -44,3 +46,9 @@ def sidebar_link(url, title, description):
 	return '<p><a href="%s">%s</a><br>\n%s</p>\n' % (url, title, description)
 	#return '<li><a href="%s" alt="%s">%s</li>\n' % (url, description, title)
 register.simple_tag(sidebar_link)
+
+###################
+
+def typographus(s):
+	return Typographus().process(s)
+register.simple_tag(typographus)
