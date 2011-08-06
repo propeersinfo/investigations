@@ -17,6 +17,11 @@ class RenderFontHandler(request.BlogRequestHandler):
         text = self.request.get("text")
         text = text.strip()
         text = re.sub(r'\s+', ' ', text)
+
+        #text = u"`~!@#№$%^&*()- _ = + []{}:;'\" >< ,./\\?"
+        #text = u"`~!@#№$%^&*()- _ = + []{}:;'\" >"
+        #text = u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+        #text = u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
         
         #self.response.headers['Content-Type'] = "text/plain"
         #self.response.out.write("text: %s" % text)

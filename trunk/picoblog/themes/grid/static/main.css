@@ -155,6 +155,13 @@ div.comment p {
 	height: 100%;
 }
 
+.links {
+	color: grey;
+}
+.links:hover {
+	color: black;
+}
+
 .bottom {
 	margin-top: 3em;
 }

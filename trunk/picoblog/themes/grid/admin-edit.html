@@ -76,11 +76,11 @@ function cancel_edit()
 
 <form action="" method="post" name="article">
 
-    <input type="text" align="left" width="80" style="width:98%" name="title" value="{{ article.title }}"/>
+    <input type="text" align="left" width="80" style="width:98%" name="title" value="{{ article.title|escape }}"/>
 
     <br/><br/>
     
-    <textarea name="content" cols="98%" rows="15" style="width:98%">{{ article.body }}</textarea>
+    <textarea name="content" cols="98%" rows="15" style="width:98%">{{ article.body|escape }}</textarea>
 
     <p>
         Tags: <input type="text" cols="80" name="tags" value="{{ article.tag_string}}"/>
