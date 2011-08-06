@@ -93,82 +93,21 @@ function adjustHeader(headerId) {
 </div>
 
 <div class="row below-top">
+
 	<div class="width_2">
 		{% include "tags.html" %}
 	</div>
+	
 	<div class="width_8">
 		{% block main %}{% endblock %}
 	</div>
-    <div class="width_2"><pre>
-    Discographies
-    of soviet artists
 
-    Melodia vinyl catalog
-    the most complete, ver. 8
-
-    Obscured little beasties
-    many baltic vinyl rips
-
-    Ретро Grad
-    unsorted soviet vinyl
-
-    Skameikin
-    unsorted soviet vinyl
-
-    Plastinka.org
-    unsorted soviet vinyl
-
-    Russian rock
-    soviet garage in particular
-
-    Funk Petersburg
-    major russian funk/soul forum
-
-    Ensembles of USSR (ВИА)
-    amazing online collection
-
-    Melodija
-    a soviet vinyl crate digger*
-
-    Forum “music80”
-    80's tape rips
-
-    Soviet grooves community
-    registration required
-
-    Soviet grooves at Musicdawn
-    among all the black funk
-
-    Orbita Stereo
-    a soviet groove podcast
-
-    Valdas &amp; Dingo
-    a hugh collection of baltic music
-
-    Estonian progrock
-    an encyclopaedia
-
-    Melodiya ensemble / Мелодия
-    full discography
-
-    Soviet funk
-    single tracks
-
-    My video channel
-    SG in motion
-
-    Krugozor magazine
-    журнал Кругозор
-
-    Soviet Grooves
-    at mixcloud.com
-
-    Re-edits
-    at soundcloud.com
-    </pre></div>
+    <div class="width_2">
+    {% include "links.html" %}
+    </div>
 </div>
- 
-<div class="row">
+
+<div class="row bottom">
 	<div class="width_2"><p>
 		{% if user_info.user %}
 			admin:{{user_info.is_admin}} <a href="{{user_info.logout_url}}">logout</a>
