@@ -85,7 +85,7 @@ def handle_custom_tag_playlist(input):
     return re.sub(regex, replace, input)
 
 def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = True):
-    html = markup_text.replace('\n', '<br>\n')
+    html = markup_text
     if recognize_links or rich_markup:
         html = handle_custom_tag_http_link(html)
     if rich_markup:
@@ -94,6 +94,7 @@ def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = Tru
         html = handle_custom_tag_playlist(html)
         html = handle_custom_tag_youtube(html)
         html = handle_custom_tag_mixcloud(html)
+    html = html.replace('\n', '<br>\n') # the last transformation
     return html
 
 class Paragraph():
