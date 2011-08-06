@@ -7,10 +7,10 @@ Top priority:
 - reimplement youtube JS code
 - special chars like double quote in article title breaks layout
 - fontgen: '/' maps to '.' incorrectly
-- bad <a> handling: http://rapidshare.com/xxxxx.zip<br>
 - layout is broken when nothing found by a tag
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
++ bad <a> handling: http://rapidshare.com/xxxxx.zip<br>
 + image tag broken
 + correct HTTP response codes for 403/404
 + handling of a 404 article is broken
