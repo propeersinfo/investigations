@@ -166,14 +166,10 @@ class CleverMarkup(SimpleMarkup):
     def __init__(self, for_comment, rich_markup = True, recognize_links = True):
         SimpleMarkup.__init__(self, for_comment, rich_markup, recognize_links)
     def generate_html(self, markup_text):
-        #raise Exception("markup_text for %s is %s" % (self.article_id, markup_text))
         if self.for_comment:
             return SimpleMarkup.generate_html(self, markup_text)
         pp = break_into_paragraphs(markup_text)
-        #raise Exception("pp: %s" % [p.body for p in pp])
-        result_string = ''
         before, named, after = pp.break_into_three_groups(self.RECOGNIZED_PARAGRAPH_NAMES)
-        #raise Exception("named: %s" % [p.body for p in named]) # ok
         def para2html(paragraph):
             return markup2html_paragraph(paragraph.body)
         rv = {
@@ -181,13 +177,9 @@ class CleverMarkup(SimpleMarkup):
             'middle': self.get_the_middle(pp),
             'after':  map(para2html, after)
         }
-        #raise Exception('rv: %s' % rv)
         return rv
     def get_the_middle(self, pp):
-        #raise Exception("get_the_middle begin: %s" % [p.body for p in pp]) # still okay
         def break_tracklist_into_sides(text):
-            #divider = re.compile('B\d\.?\s', re.MULTILINE|re.IGNORECASE)
-            #res = re.split(divider, text, 1)
             m = re.search('^(.*)(B0?1\.?\s.*)$', text, re.MULTILINE|re.IGNORECASE|re.DOTALL)
             if m:
                 return markup2html_paragraph(m.group(1).strip()),\
@@ -196,19 +188,8 @@ class CleverMarkup(SimpleMarkup):
                 return None, None
         hash = {}
 
-        msg1 = 'list items: %s' % [p.body for p in pp]
-        msg2 = 'hash items: %s' % [p.body for p in pp.hash.values()]
-        #raise Exception('\nmsg1: %s\nmsg2: %s' % (msg1, msg2))
-
-        #msg1 = "pp before loop: %s" % [p.body for p in pp]
-        #msg2 = "picture: %s" % pp.get_named_paragraph('picture').body
-        #if True: raise Exception("\n%s\n%s" % (msg1, msg2))
-        pp_id_1 = id(pp)
         for name in self.RECOGNIZED_PARAGRAPH_NAMES:
             p = pp.get_named_paragraph(name)
-            pp_id_2 = id(pp)
-            #raise Exception("%s vs %s" % (pp_id_1, pp_id_2))
-            #if True: raise Exception("p = %s" % p.body) # WRONG!
             if p:
                 if name == 'tracklist':
                     side_a, side_b = break_tracklist_into_sides(p.body)
@@ -219,10 +200,7 @@ class CleverMarkup(SimpleMarkup):
                         }
                         continue
                 hash[name] = markup2html_paragraph(p.body if p else 'no-named-p-%s' % name)
-        #if True: raise Exception("get_the_middle end: %s / article:%s" % (hash, self.article_id)) # wrong here!
         return hash if len(hash) > 0 else None
-        #raise Exception(len(hash))
-        #return None
 
 # main function
 def markup2html(markup_text, for_comment, rich_markup = True, recognize_links = True, article_id = None):
@@ -279,9 +257,5 @@ class TestMarkupTagImage(unittest.TestCase):
         self.assertFalse(MarkupTagImage.is_presented_in_markup("[111jpg]"))
 
 if __name__ == '__main__':
-    #unittest.main()
+    unittest.main()
     #TestCleverMarkup().test_some()
-    s = ',, [saarsalu-1980.jpg] ,, [111.mp3]'
-    s = handle_custom_tag_image(s)
-    s = handle_custom_tag_mp3(s)
-    print s
