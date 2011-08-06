@@ -1,3 +1,4 @@
+import cgi
 import sys
 import re
 import unittest
@@ -15,22 +16,21 @@ Custom []-styled tags are supported:
 - [http://mixcloud.com/...]
 """
 
-class MarkupTagImage():
-    regex = '\[([^\]]+\.(jpg|jpeg|png|gif))\]'
-    replacement = '<img src="\1" alt="\1">'
-    @classmethod
-    def replace_in_markup(cls, markup_text):
-        return re.sub(cls.regex, cls.replacement, markup_text)
-    @classmethod
-    def is_presented_in_markup(cls, markup_text):
-        modified = cls.replace_in_markup(markup_text)
-        return modified != markup_text
+#class MarkupTagImage():
+#    regex = '\[([^\]]+\.(jpg|jpeg|png|gif))\]'
+#    replacement = '<img src="\1" width="140" alt="\1">'
+#    @classmethod
+#    def replace_in_markup(cls, markup_text):
+#        return re.sub(cls.regex, cls.replacement, markup_text)
+#    @classmethod
+#    def is_presented_in_markup(cls, markup_text):
+#        modified = cls.replace_in_markup(markup_text)
+#        return modified != markup_text
 
-def handle_custom_tag_image(input):
-    regex = '\[([^\]]+\.(jpg|jpeg|png|gif))\]'
-    #replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\1" alt="\1>' % defs.DROPBOX_USER
-    replacement = '<img src="http://dl.dropbox.com/u/1883230/sg/img/krugozor-1971-04.jpg" width=140>'
-    return re.sub(regex, replacement, input)
+def handle_custom_tag_image(text):
+    regex = re.compile("\[([^\]]+jpg)\]", re.IGNORECASE)
+    replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\\1" width="140" alt="\\1">' % defs.DROPBOX_USER
+    return regex.sub(replacement, text)
 
 # [http://ya.ru/]
 def handle_custom_tag_http_link(input):
@@ -278,5 +278,9 @@ class TestMarkupTagImage(unittest.TestCase):
         self.assertFalse(MarkupTagImage.is_presented_in_markup("[111jpg]"))
 
 if __name__ == '__main__':
-    unittest.main()
+    #unittest.main()
     #TestCleverMarkup().test_some()
+    s = ',, [saarsalu-1980.jpg] ,, [111.mp3]'
+    s = handle_custom_tag_image(s)
+    s = handle_custom_tag_mp3(s)
+    print s
