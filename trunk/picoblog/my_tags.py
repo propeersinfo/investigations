@@ -37,3 +37,10 @@ class MyNode(django_template.Node):
         return "my var is: %s" % my_var
 
 register.tag(mytag)
+
+###################
+
+def sidebar_link(url, title, description):
+	return '<p><a href="%s">%s</a><br>\n%s</p>\n' % (url, title, description)
+	#return '<li><a href="%s" alt="%s">%s</li>\n' % (url, description, title)
+register.simple_tag(sidebar_link)

@@ -170,7 +170,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 article.guid = url_prefix + utils.get_article_guid(article)
                 article.comments_count = article.comment_set.count()
                 article.published_class = 'draft' if article.draft else 'published'
-                article.title = cgi.escape(article.title)
+                #article.title = cgi.escape(article.title)
                 self.augment_comments_for(article)
 
     def augment_comments_for(self, article):

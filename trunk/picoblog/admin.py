@@ -60,8 +60,8 @@ class SaveArticleHandler(request.BlogRequestHandler):
     def post(self):
         #url_from = cgi.escape(self.request.get('from'))
         url_from = self.request.get('from')
-        title = cgi.escape(self.request.get('title'))
-        body = cgi.escape(self.request.get('content'))
+        title = self.request.get('title')
+        body = self.request.get('content')
         s_id = cgi.escape(self.request.get('id'))
         id = int(s_id) if s_id else None
         tags = cgi.escape(self.request.get('tags'))

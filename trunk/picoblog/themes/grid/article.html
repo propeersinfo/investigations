@@ -1,11 +1,11 @@
 		<h1 id="article_header_{{article.id}}" class="{{article.published_class}}">
 			{% if single_article %}
 				<span></span>
-				{{ article.title }}
+				{{ article.title|escape }}
 			{% else %}
 				<a href="{{article.path}}">
 					<span></span>
-					{{ article.title }}
+					{{ article.title|escape }}
 				</a>
 			{% endif %}
 		</h1>
