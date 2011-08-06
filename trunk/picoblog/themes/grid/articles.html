@@ -10,7 +10,13 @@
 
 
 {% block main %}
+
   {% for article in articles %}
     {% include "article.html" %}
   {% endfor %}
+  
+	{% if not single_article %}
+		{% include "pagination.html" %}
+	{% endif %}
+  
 {% endblock %}

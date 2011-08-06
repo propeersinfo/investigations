@@ -94,7 +94,7 @@ def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = Tru
         html = handle_custom_tag_playlist(html)
         html = handle_custom_tag_youtube(html)
         html = handle_custom_tag_mixcloud(html)
-    html = html.replace('\n', '<br>\n') # the last transformation
+    html = html.replace('\n', '<br>\n') # NB: the last transformation
     return html
 
 class Paragraph():
