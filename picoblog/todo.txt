@@ -5,9 +5,9 @@ Top priority:
 - fontgen: JS part forms bad request strings for chars like "#$%^"
 - cache images in DB
 - typograhy
-- reimplement youtube JS code
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
++ reimplement youtube JS code
 + special chars like double quote in article title breaks layout
 + fontgen: '/' maps to '.' incorrectly
 + theme 'grid': layout is broken when nothing found by a tag
