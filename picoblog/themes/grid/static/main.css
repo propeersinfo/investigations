@@ -155,12 +155,13 @@ div.comment p {
 	height: 100%;
 }
 
-.links {
-	color: grey;
-}
-.links:hover {
-	color: black;
-}
+.links { color: grey; font-size: 14px; }
+.links p { color: grey; }
+.links a { color: grey; text-decoration: none;}
+.links:hover { color: black; }
+.links:hover p { color: black; }
+.links:hover a { color: blue; text-decoration: underline; }
+.links:hover a:hover { color: red; }
 
 .bottom {
 	margin-top: 3em;
