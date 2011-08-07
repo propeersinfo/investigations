@@ -2,11 +2,10 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
-- fontgen: JS part forms bad request strings for chars like "#$%^"
-- cache images in DB
-- typograhy
+- distinguish draft articles visually
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
++ cache images in DB
 + reimplement youtube JS code
 + special chars like double quote in article title breaks layout
 + fontgen: '/' maps to '.' incorrectly
@@ -19,6 +18,8 @@ Top priority:
 + investigate is it ok to use RSS for admin comment tracking
 
 Middle priority:
+- introcude tag counters
+- fontgen: JS part forms bad request strings for chars like "#$%^"
 - implement E-Tag
 - implement no-expiration technique for resources?
 - new player
@@ -29,6 +30,8 @@ Middle priority:
 - pagination in comments?
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
+- make typograhy wester style (tipogriphy)
++ typograhy
 
 Low priority:
 - let users to edit their comments for some time (using cookies)

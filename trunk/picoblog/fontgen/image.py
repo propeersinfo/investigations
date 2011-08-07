@@ -1,5 +1,6 @@
 import os
 import subprocess
+import StringIO
 
 import png
 
@@ -69,6 +70,13 @@ class Image():
                        alpha=self.meta['alpha'])
         w.write(out, self.pixel_data)
         if close: out.close()
+    def get_data_as_string(self):
+        try:
+            output = StringIO.StringIO()
+            self.save(output)
+            return output.getvalue()
+        finally:
+            output.close()
     def show(self):
         file = "C:\\Temp\\pypng.png"
         self.save(file)
