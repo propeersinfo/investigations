@@ -190,22 +190,21 @@ class Comment(db.Model):
                 self.replied_comment_id = self.id
             self.put()
 
+# generated images cache
+# such entries could be cleaned out without any problems
 class FontRenderCache(db.Model):
     hash = db.IntegerProperty(required=True, indexed=True)
     width = db.IntegerProperty(required=True, indexed=False)
     height = db.IntegerProperty(required=True, indexed=False)
     render = db.BlobProperty(required=True, indexed=False)
-
     @classmethod
     def calc_hash(cls, font_name, font_size, text):
         return ("%s%s%s" % (font_name, font_size, text)).__hash__()
-
     @classmethod
     def find(cls, font_name, font_size, text):
         q = db.Query(FontRenderCache)
         q.filter('hash = ', cls.calc_hash(font_name, font_size, text))
         return q.get()
-
     @classmethod
     def insert_new(cls, font_name, font_size, text, image):
         obj = FontRenderCache(hash = cls.calc_hash(font_name, font_size, text),
@@ -213,6 +212,5 @@ class FontRenderCache(db.Model):
                               height = image.get_height(),
                               render = image.get_data_as_string())
         obj.save()
-
     def save(self):
         self.put()
