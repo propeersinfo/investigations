@@ -14,13 +14,15 @@ a {
 }
 a:hover { color: #e22; }
 .top {
-	background-color: #6EC6FE;
+	/*background-color: #6EC6FE;
 	background-image: url(volna-top.png);
 	background-position: bottom;
-	background-repeat: repeat-x;
+	background-repeat: repeat-x;*/
 	padding-top: 10px;
 	margin-bottom: 0.7em;
 }
+.top   { color: lightgrey !important; }
+.top a { color: lightgrey !important; }
 .top h1 {
 	margin: 0 0 0 0;
 	padding: 0px;
@@ -77,23 +79,24 @@ h2 span {
 .below_top { margin-top: 1em; }
 
 
-.all_tags {
+.sidebar-tags {
 	font-size: 14px;
 }
-.all_tags ul {
+.sidebar-tags ul {
 	list-style-type: none;
 	padding-left: 0;
 	margin: 0 0 0.8em 0;
 }
-.all_tags ul li {
+.sidebar-tags ul li {
 	margin-bottom: 0.25em;
 }
-.all_tags ul li.title {
+.sidebar-tags ul li.title {
 	font-style: normal;
 }
-.all_tags .group {
+.sidebar-tags .group {
 	margin-bottom: 10px;
 }
+.sidebar-tags a { color: lightgrey; }
 
 
 .tracks { font-size: 14px; }
@@ -105,15 +108,10 @@ h2 span {
 }
 .red  { background: red; }
 .blue { background: blue; }
-pre {
-  font-family: serif;
-  font-size: 80%;
-}
 .article-tags {
-	margin:0em;
-	font-style:italic;
-	font-size:85%;
-	color:grey;
+	margin: 0em;
+	font-size: 85%;
+	color: grey;
 }
 input.search { width:98%; font-style:italic; font-family: serif; }
 
@@ -155,13 +153,13 @@ div.comment p {
 	height: 100%;
 }
 
-.links { color: grey; font-size: 14px; }
-.links p { color: grey; }
-.links a { color: grey; text-decoration: none;}
-.links:hover { color: black; }
-.links:hover p { color: black; }
-.links:hover a { color: blue; text-decoration: underline; }
-.links:hover a:hover { color: red; }
+.sidebar-links { color: lightgrey; font-size: 14px; }
+.sidebar-links p { color: lightgrey; }
+.sidebar-links a { color: lightgrey; text-decoration: none;}
+.sidebar-links:hover { color: black; }
+.sidebar-links:hover p { color: black; }
+.sidebar-links:hover a { color: blue; text-decoration: underline; }
+.sidebar-links:hover a:hover { color: red; }
 
 .bottom {
 	margin-top: 3em;

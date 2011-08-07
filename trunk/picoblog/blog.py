@@ -35,7 +35,7 @@ import utils
 #import simplemarkup as markup
 import clevermarkup as markup
 from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo, NoPagingPageInfo
-from user import UserInfo
+from userinfo import UserInfo
 
 from google.appengine.ext.webapp import template
 template.register_template_library('my_tags')
@@ -414,6 +414,7 @@ class AddCommentHandler(AbstractPageHandler):
                           replied_comment_id = self.get_replied_comment_id())
         comment.save()
         utils.set_unicode_cookie(self.response, "comment_author", author)
+        utils.send_mail_to_admin_about_new_comment(comment)
         self.redirect(utils.get_article_path(article))
 
 class NotFoundPageHandler(AbstractPageHandler):

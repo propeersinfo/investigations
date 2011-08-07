@@ -2,6 +2,8 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
+- introduce Tag model
+- introcude tag counters
 - distinguish draft articles visually
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
@@ -18,19 +20,18 @@ Top priority:
 + investigate is it ok to use RSS for admin comment tracking
 
 Middle priority:
-- introcude tag counters
+- send mails periodically, in the cron way (a proposal)
 - fontgen: JS part forms bad request strings for chars like "#$%^"
 - implement E-Tag
 - implement no-expiration technique for resources?
 - new player
-- typography
 - friendly links at the right
 - RSS icon
 - impl google search
 - pagination in comments?
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
-- make typograhy wester style (tipogriphy)
+- make typograhy wester style (tipogriphy?)
 + typograhy
 
 Low priority:
