@@ -16,7 +16,7 @@ from models import *
 import request
 
 import utils
-from user import UserInfo
+from userinfo import UserInfo
 
 from google.appengine.ext.webapp import template
 template.register_template_library('my_tags')

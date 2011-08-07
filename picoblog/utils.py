@@ -3,6 +3,7 @@ import re
 import unicodedata
 import urllib
 import Cookie
+from google.appengine.api import mail
 
 def slugify(s):
   s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').lower()
@@ -37,3 +38,15 @@ def get_unicode_cookie(request, key, default_value):
 def read_file(file):
     full = os.path.join(os.path.split(__file__)[0], file)
     return open(full).read()
+
+def send_mail_to_admin_about_new_comment(comment):
+    mail.send_mail(sender='zeencd@gmail.com',
+                   to='zeencd@gmail.com',
+                   subject='New comment in "%s"' % comment.article.title,
+                   body='''
+Author: %s
+
+Text: %s
+
+Address: %s
+''' % (comment.author, comment.text, get_article_path(comment.article)))
