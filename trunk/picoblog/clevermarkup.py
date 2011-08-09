@@ -36,8 +36,8 @@ def handle_custom_tag_image(text):
 # [http://ya.ru/]
 def handle_custom_tag_http_link(input):
     for regex_and_replace in [
-                [ r'^(http://[^\s]+)',    '<a href="\\1">\\1</a>'    ], # a link at the most beginning
-                [ r'(\s)(http://[^\s]+)', '\\1<a href="\\2">\\2</a>' ]  # all other cases
+                [ r'^(https?://[^\s]+)',    '<a href="\\1">\\1</a>'    ], # a link at the most beginning
+                [ r'(\s)(https?://[^\s]+)', '\\1<a href="\\2">\\2</a>' ]  # all other cases
     ]:
         regex = regex_and_replace[0]
         replace = regex_and_replace[1]
