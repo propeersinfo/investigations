@@ -94,3 +94,8 @@ indexes:
   properties:
   - name: category
   - name: counter
+
+- kind: TagCounter
+  properties:
+  - name: category
+  - name: name

@@ -29,7 +29,8 @@ Custom []-styled tags are supported:
 
 def handle_custom_tag_image(text):
     regex = re.compile("\[([^\]]+jpg)\]", re.IGNORECASE)
-    replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\\1" width="140" alt="\\1">' % defs.DROPBOX_USER
+    #replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\\1" width="140" alt="\\1">' % defs.DROPBOX_USER
+    replacement = '<img src="/static/cover.jpg" width="140" alt="\\1">'
     return regex.sub(replacement, text)
 
 # [http://ya.ru/]
@@ -45,16 +46,21 @@ def handle_custom_tag_http_link(input):
 
 # [http://www.youtube.com/watch?v=XXXXXXXXX]
 def handle_custom_tag_youtube(input):
-    regex = "\[\s*(http://)?(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9-_]+)\s*\]"
-    replace =\
-      '<a href="http://www.youtube.com/watch?v=\\3">'\
-      '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'\
-      '</a>'\
-      ''
-      #'<noscript>'\
-      #'<iframe src="http://www.youtube.com/embed/\\3?autoplay=1&theme=dark" width="480" height="360" frameborder="0" allowfullscreen="1"></iframe>'\
-      #'</noscript>'\
-    return re.sub(regex, replace, input)
+    def form1(input):
+        regex = "\[\s*(http://)?(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9-_]+)\s*\]"
+        replace = '<a href="http://www.youtube.com/watch?v=\\3">'\
+                  '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'\
+                  '</a>'
+        return re.sub(regex, replace, input)
+    def form2(input):
+        regex = "\[\s*(http://)?(www\.)?youtube\.com/v/([a-zA-Z0-9-_]+)\s*\]"
+        replace = '<a href="http://www.youtube.com/watch?v=\\3">'\
+                  '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'\
+                  '</a>'
+        return re.sub(regex, replace, input)
+    input = form1(input)
+    input = form2(input)
+    return input
 
 # [dir/cool track.mp3]
 def handle_custom_tag_mp3(input):
@@ -63,7 +69,8 @@ def handle_custom_tag_mp3(input):
     repl_swf   = "http://dl.dropbox.com/u/%s/dewplayer-mini.swf" % defs.DROPBOX_USER
     repl_flash = "<object width='160' height='18'><embed src='" + repl_swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + repl_link + "' quality='high'></embed></object>"
     repl_dload = "<a href=\"%s\">\\1</a>" % repl_link
-    repl = "%s %s" % (repl_flash, repl_dload)
+    #repl = "%s %s" % (repl_flash, repl_dload)
+    repl = "%s %s" % ("playa-herrre!", repl_dload)
 
     return re.sub(regex, repl, input)
 

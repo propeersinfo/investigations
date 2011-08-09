@@ -50,6 +50,7 @@ class TagCounter(db.Model):
                  .fetch(FETCH_ALL_REGION_TAGS)
         for tag in tags:
             tag_cloud[tag.name] = tag.counter
+        #raise Exception("returning %s" % tag_cloud)
         return tag_cloud
 
 class Article(db.Model):
@@ -213,8 +214,7 @@ class Comment(db.Model):
     published_date = db.DateTimeProperty(auto_now_add=True)
     #replied_comment = db.SelfReferenceProperty()
     replied_comment_id = db.IntegerProperty()
-    image = db.BlobProperty()
-    
+
     @classmethod
     def get(cls, id):
         q = db.Query(Comment)
@@ -230,7 +230,6 @@ class Comment(db.Model):
                  .fetch(FETCH_THEM_ALL_COMMENTS)
 
     def save(self):
-        self.image = '12345'
         if self.is_saved():
             self.put()
         else:
