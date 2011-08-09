@@ -42,6 +42,21 @@ jQuery.fn.getInnerText = function() {
 	function isTextNode() { return this.nodeType == 3 }
 	return this.contents().filter(isTextNode).text()
 }
+// NB: standard escape() handles unicode in a way incompatible with GAE: %UABCD
+function customEscape(text) {
+	text = text.replace(/&amp;/g, '&')
+	var res = ''
+	var len = text.length
+	for(var i = 0; i < len; i++) {
+		var ch = text[i]
+		var code = text.charCodeAt(i)
+		if(code < 256)
+			res += '%' + code.toString(16)
+		else
+			res += ch
+	}
+	return res
+}
 function adjustHeader(headerId) {
 	function getText(h1) {
 		var text = ''
@@ -56,12 +71,7 @@ function adjustHeader(headerId) {
 	var text = getText(h1)
 	if(text) {
 		var span = h1.find("span")[0]
-		text = text.replace(/\s/g, '%20') // NB: escape() handles unicode in a way incompatible with GAE.
-		text = text.replace(/\"/g, '%22')
-		text = text.replace(/\'/g, '%27')
-		text = text.replace(/\(/g, '_')
-		text = text.replace(/\)/g, '_')
-		//text = "75%20(1979)"
+		text = customEscape(text)
 		//alert("adjusting header for " + headerId + "; text = " + text)
 		span.style.backgroundImage = "url(/font?text=" + text + ")"
 	}
