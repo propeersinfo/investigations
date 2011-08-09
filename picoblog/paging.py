@@ -155,10 +155,11 @@ class PagedQuery(object):
 		if query.__dict__.has_key('_query'): query_to_check = query._query
 		else: query_to_check  = query
 								
-		if isinstance(query_to_check, db.Query): self._query_type = 'Query'
-		elif isinstance(query_to_check, db.GqlQuery): self._query_type = 'GqlQuery'
-		else: raise TypeError('Query type not supported: '\
-			 + type(query).__name__)
+		if isinstance(query_to_check, db.Query) or type(query_to_check) == db.Query:
+			self._query_type = 'Query'
+		elif isinstance(query_to_check, db.GqlQuery):
+			self._query_type = 'GqlQuery'
+		else: raise TypeError('Query type not supported: %s' % type(query))
 		
 		self._check_page_size(page_size)
 			

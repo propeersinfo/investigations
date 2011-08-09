@@ -2,11 +2,10 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
-- introduce Tag model
-- introcude tag counters
 - distinguish draft articles visually
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
++ introduce tag counters
 + cache images in DB
 + reimplement youtube JS code
 + special chars like double quote in article title breaks layout
@@ -32,6 +31,7 @@ Middle priority:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
+- introduce Tag model?
 + typograhy
 
 Low priority:

@@ -129,17 +129,19 @@ class EditArticleHandler(request.BlogRequestHandler):
                                                      template_vars))
 
 class DeleteArticleHandler(request.BlogRequestHandler):
+    # TODO: rewrite it to method GET
     def get(self):
         id = int(self.request.get('id'))
         article = Article.get(id)
         if article:
             article.delete()
 
-        url_from = self.request.get("from")
-        if url_from:
-            self.redirect(url_from)
-        else:
-            self.redirect('/')
+        #url_from = self.request.get("from")
+        #if url_from:
+        #    self.redirect(url_from)
+        #else:
+        #    self.redirect('/')
+        self.redirect('/')
 
 class DeleteCommentHandler(request.BlogRequestHandler):
     def get(self, comment_id):

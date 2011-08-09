@@ -296,6 +296,7 @@ class FrontPageHandler(AbstractPageHandler):
         #    articles = articles[:defs.MAX_ARTICLES_PER_PAGE]
 
         q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
+        #raise Exception(type(q) == db.Query)
         page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE),
                              page_num,
                              "/page%d",
