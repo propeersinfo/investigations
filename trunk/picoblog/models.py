@@ -4,7 +4,38 @@ import sys
 from google.appengine.ext import db
 
 FETCH_THEM_ALL_COMMENTS = 100
-MAX_ARTICLES_PER_DAY = 10
+MAX_ARTICLES_PER_DAY = 20
+
+class TagCounter(db.Model):
+    name = db.StringProperty(required=True, indexed=True)
+    counter = db.IntegerProperty(default=0, indexed=False)
+
+    @classmethod
+    def tags_updated_for_article(cls, tags_was, tags_now):
+        tags_was = set(tags_was)
+        tags_now = set(tags_now)
+        cls.__modify_tags_counters(tags_was - tags_now, lambda cnt: cnt - 1)
+        cls.__modify_tags_counters(tags_now - tags_was, lambda cnt: cnt + 1)
+
+    @classmethod
+    def article_removed(cls, tags_was):
+        cls.__modify_tags_counters(set(tags_was), lambda cnt: 0)
+
+    @classmethod
+    def __modify_tags_counters(cls, tag_names, modifying_function):
+        for tag_name in tag_names:
+            tag = TagCounter.get_by_name(tag_name, create_on_demand=True)
+            tag.counter = modifying_function(tag.counter)
+            tag.save()
+
+    @classmethod
+    def get_by_name(cls, tag_name, create_on_demand = False):
+        tag_counter = db.Query(TagCounter).filter('name', tag_name).get()
+        if not tag_counter and create_on_demand:
+            tag_counter = TagCounter(name=tag_name, counter=0)
+            tag_counter.save()
+        return tag_counter
+
 
 class Article(db.Model):
 
@@ -25,7 +56,7 @@ class Article(db.Model):
         q.filter('id = ', id)
         return q.get()
 
-#    @classmethod
+    #    @classmethod
 #    def published_query(cls):
 #        q = db.Query(Article)
 #        q.filter('draft = ', False)
@@ -101,7 +132,7 @@ class Article(db.Model):
     @classmethod
     def query_for_tag(cls, tag):
         return Article.query_published() \
-                      .filter('tags = ', tag)
+                      .filter('tags', tag)
 
     @classmethod
     def convert_string_tags(cls, tags):
@@ -133,14 +164,18 @@ class Article(db.Model):
                 return id
         raise Exception("Cannot create an article id for date %s after %d tries" % (self.published_date, MAX_ARTICLES_PER_DAY))
 
+    def delete(self, **kwargs):
+        prev_tags = self.tags
+        super(Article, self).delete(**kwargs)
+        TagCounter.article_removed(prev_tags)
+
     def save(self):
         previous_version = Article.get(self.id)
-        try:
-            draft = previous_version.draft
-        except AttributeError:
-            draft = False
+        previous_tags = previous_version.tags if previous_version else []
 
-        if draft and (not self.draft):
+        TagCounter.tags_updated_for_article(previous_tags, self.tags)
+
+        if previous_version and previous_version.draft and (not self.draft):
             # Going from draft to published. Update the timestamp.
             self.published_date = datetime.datetime.now()
 

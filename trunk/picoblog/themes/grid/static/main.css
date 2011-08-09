@@ -26,9 +26,11 @@ a:hover { color: #e22; }
 .top h1 {
 	margin: 0 0 0 0;
 	padding: 0px;
+	/*
 	position: relative;
 	height: 20px;
 	overflow: hidden;
+	*/
 	/*
 	text-indent: -9999px;
 	background: url("/static/h1.png") #6EC6FE no-repeat;

@@ -25,6 +25,14 @@ indexes:
 - kind: Article
   properties:
   - name: draft
+  - name: tag
+  - name: tags
+  - name: published_date
+    direction: desc
+
+- kind: Article
+  properties:
+  - name: draft
   - name: tags
   - name: published_date
     direction: desc
