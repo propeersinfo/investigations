@@ -14,10 +14,10 @@ a {
 }
 a:hover { color: #e22; }
 .top {
-	/*background-color: #6EC6FE;
+	background-color: #6EC6FE;
 	background-image: url(volna-top.png);
 	background-position: bottom;
-	background-repeat: repeat-x;*/
+	background-repeat: repeat-x;
 	padding-top: 10px;
 	margin-bottom: 0.7em;
 }

@@ -59,6 +59,10 @@ function adjustHeader(headerId) {
 		text = text.replace(/\s/g, '%20') // NB: escape() handles unicode in a way incompatible with GAE.
 		text = text.replace(/\"/g, '%22')
 		text = text.replace(/\'/g, '%27')
+		text = text.replace(/\(/g, '_')
+		text = text.replace(/\)/g, '_')
+		//text = "75%20(1979)"
+		//alert("adjusting header for " + headerId + "; text = " + text)
 		span.style.backgroundImage = "url(/font?text=" + text + ")"
 	}
 }

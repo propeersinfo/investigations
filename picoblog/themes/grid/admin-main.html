@@ -1,15 +1,45 @@
-<a href="/">home</a>
+<style>
+div { margin: 10px; }
+.row { float: left; }
+.new { clear: both; }
+</style>
+
+<a href="/">Home</a> | <a href="/_ah/admin/datastore">Data store</a>
 
 <h1>Admin's Nest</h1>
 
-<form method="POST" action="/admin/delete-all-tag-counters">
-<input type="submit" value="Delete all tag counters (safe)">
-</form>
+<div class="new row">
+	<a href="/admin/uncategorized-tags">Uncategorized tags</a>
+</div>
 
-<form method="POST" action="/admin/setup-basic-tags">
-<input type="submit" value="Setup basic tags (safe)">
-</form>
+<div class="new row">
+	<form method="POST" action="/admin/delete-all-tag-counters">
+	<input type="submit" value="Delete all tag counters (safe)">
+	</form>
+</div>
 
-<form method="POST" action="/admin/recalculate-tag-counters">
-<input type="submit" value="Recalculate tag counters (safe)">
-</form>
+<div class="row">
+	<form method="POST" action="/admin/setup-basic-tags">
+	<input type="submit" value="Setup basic tags (safe)">
+	</form>
+</div>
+
+<div class="row">
+	<form method="POST" action="/admin/recalculate-tag-counters">
+	<input type="submit" value="Recalculate tag counters (safe)">
+	</form>
+</div>
+
+<div class="row new">
+	<form method="GET" action="/importdata/">
+	<input type="submit" value="Import articles from Opera">
+	</form>
+</div>
+
+{% if dev_server %}
+<div class="row new">
+	<form method="POST" action="/admin/empty-db">
+	<input type="submit" value="Empty DB (danger!)" style="background:#f00;">
+	</form>
+</div>
+{% endif %}

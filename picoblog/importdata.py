@@ -11,6 +11,8 @@ import request
 
 from operablogimport.post_parser import parse_file
 
+IMPORT_LIMIT = None
+
 def import_post_object(post):
     def string2category(str): return db.Category(str)
 
@@ -40,7 +42,8 @@ def import_all_files(out):
     for file in glob.glob("operabloghtml/*"):
         post = parse_file(file)
         posts.append(post)
-        if cnt > 5: break
+        if IMPORT_LIMIT and cnt >= IMPORT_LIMIT:
+            break
         cnt += 1
     posts = sorted(posts, key=lambda post: post['date'])
     for post in posts:

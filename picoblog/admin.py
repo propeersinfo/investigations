@@ -12,6 +12,7 @@ import logging
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
+import defs
 
 from models import *
 import request
@@ -28,9 +29,33 @@ template.register_template_library('my_tags')
 
 class ShowAdminMainPageHandler(request.BlogRequestHandler):
     def get(self):
-        template_vars = {}
+        template_vars = {
+            'dev_server': defs.PRODUCTION == False
+        }
         self.response.out.write(self.render_template('admin-main.html',
                                                      template_vars))
+
+class UncategorizedTags(request.BlogRequestHandler):
+    def get(self):
+        # list tags
+        tags_uncategorized = db.Query(TagCounter).filter('category = ', '')\
+                               .order('name')\
+                               .fetch(10*1000)
+        #tags_uncategorized = db.GqlQuery("SELECT * FROM TagCounter WHERE category = :1", '').fetch(10*1000)
+        template_vars = {
+            'tags_uncategorized' : tags_uncategorized,
+        }
+        self.response.out.write(self.render_template('admin-uncategorized-tags.html', template_vars))
+    def post(self):
+        # update a tag
+        tag_name = self.request.get('tag')
+        category = self.request.get('category')
+        if tag_name and category:
+            tag = TagCounter.get_by_name(tag_name)
+            if tag:
+                tag.category = category
+                tag.save()
+        self.redirect('/admin/uncategorized-tags')
 
 class SetupBasicTags(request.BlogRequestHandler):
     def post(self):
@@ -39,8 +64,9 @@ class SetupBasicTags(request.BlogRequestHandler):
                        'armenia,azerbaijan,georgia,'
                        'estonia,latvia,lithuania,'
                        'kazakhstan,tajikistan,turkmenistan,uzbekistan,kyrgyzstan,',
-            'genre':  'funk,psychedelic,progressive,jazz,disco,electro,shake,',
-            'name':   'melodiya,garanian,alexander zatsepin,'
+            'genre': 'funk,psychedelic,progressive,jazz,disco,electro,shake,',
+            'artist': 'melodiya,garanian,alexander zatsepin,',
+            'time': '60s,70s,80s,',
         }
         for category in tags_categorized.keys():
             tag_names = tags_categorized[category].split(',')
@@ -55,6 +81,15 @@ class SetupBasicTags(request.BlogRequestHandler):
         #                                             template_vars))
         self.redirect('/admin/')
 
+def empty_table(table):
+    if defs.PRODUCTION:
+        raise Exception("This code cannot be run on production")
+    while True:
+        q = db.GqlQuery('SELECT __key__ FROM %s' % table)
+        if q.count() <= 0:
+            break
+        db.delete(q.fetch(200))
+
 class DeleteAllTagCounters(request.BlogRequestHandler):
     def post(self):
         while True:
@@ -62,6 +97,14 @@ class DeleteAllTagCounters(request.BlogRequestHandler):
             if q.count() <= 0:
                 break
             db.delete(q.fetch(200))
+        self.redirect('/admin/')
+
+class EmptyDB(request.BlogRequestHandler):
+    def post(self):
+        empty_table('Article')
+        empty_table('Comment')
+        empty_table('TagCounter')
+        empty_table('FontRenderCache')
         self.redirect('/admin/')
 
 class RecalculateTagCountersFromArticles(request.BlogRequestHandler):
@@ -216,6 +259,8 @@ application = webapp.WSGIApplication(
          ('/admin/setup-basic-tags', SetupBasicTags),
          ('/admin/recalculate-tag-counters', RecalculateTagCountersFromArticles),
          ('/admin/delete-all-tag-counters', DeleteAllTagCounters),
+         ('/admin/empty-db', EmptyDB),
+         ('/admin/uncategorized-tags', UncategorizedTags),
          ],
         debug=True)
 
