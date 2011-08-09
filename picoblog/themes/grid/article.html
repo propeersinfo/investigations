@@ -13,21 +13,6 @@
 		adjustHeader("article_header_{{article.id}}")
 		</script>
 
-	    <p class="article-tags">
-			{{ article.published_date|date:"F j, Y" }}
-			/
-			{% for tag in article.tags %}
-				<a href="/tag/{{tag}}">{{tag}}</a>,
-			{% endfor %}
-			
-{% if user_info.is_admin %}
-			/
-			<a href="/admin/article/edit/{{article.id}}?from={{current_path}}" title="Edit article">
-				[edit]
-			</a>
-{% endif %}
-	    </p>
-	    
 	    {% for p in article.complex_html.before %}
 		<p>{{ p|typographus }}</p>
 		{% endfor %}
@@ -91,6 +76,21 @@
     	</div>
     	-->
 
+	    <p class="article-tags">
+			{{ article.published_date|date:"F j, Y" }}
+		</p><p>Tags:
+			{% for tag in article.tags %}
+				<a href="/tag/{{tag}}">{{tag}}</a>,
+			{% endfor %}
+			
+{% if user_info.is_admin %}
+			/
+			<a href="/admin/article/edit/{{article.id}}?from={{current_path}}" title="Edit article">
+				<b>edit</b>
+			</a>
+{% endif %}
+	    </p>
+	    
 
 {% if single_article %}
     {% include "comments.html" %}
