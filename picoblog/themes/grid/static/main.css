@@ -6,7 +6,7 @@ p {
 	color: #000;
 	/*border: 1px solid lightgrey;*/
 	/*background: #eee;*/
-	margin: 0 0 20px 0;
+	margin: 0 0 0.5em 0;
 	line-height: 130%;
 }
 a {
@@ -110,9 +110,10 @@ h2 span {
 }
 .red  { background: red; }
 .blue { background: blue; }
-.article-tags {
+.article-meta {
 	margin: 0em;
 	font-size: 85%;
+	margin-left: 2em;
 }
 input.search { width:98%; font-style:italic; font-family: serif; }
 

@@ -76,9 +76,11 @@
     	</div>
     	-->
 
-	    <p class="article-tags">
+	    <p class="article-meta">
 			{{ article.published_date|date:"F j, Y" }}
-		</p><p>Tags:
+		</p>
+		<p class="article-meta">
+			Tags:
 			{% for tag in article.tags %}
 				<a href="/tag/{{tag}}">{{tag}}</a>,
 			{% endfor %}
@@ -95,11 +97,14 @@
 {% if single_article %}
     {% include "comments.html" %}
 {% else %}
+    <p class="article-meta">
+		<span id="e2-comments-count">
+			<a href="{{article.path}}">
+				{{article.comments_count}} comments
+			</a>
+		</span>
+    </p>
     <p>
-    <span id="e2-comments-count">
-    	<a href="{{article.path}}#comments">
-    		{{article.comments_count}} comments
-    	</a>
-    </span>
+    	&nbsp;
     </p>
 {% endif %}
