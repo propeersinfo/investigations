@@ -4,11 +4,12 @@ import sys
 from google.appengine.ext import db
 
 FETCH_THEM_ALL_COMMENTS = 100
+FETCH_ALL_TAGS = 1000
 MAX_ARTICLES_PER_DAY = 20
 
 class TagCounter(db.Model):
     name = db.StringProperty(required=True, indexed=True)
-    counter = db.IntegerProperty(default=0, indexed=False)
+    counter = db.IntegerProperty(default=0, indexed=True)
 
     @classmethod
     def tags_updated_for_article(cls, tags_was, tags_now):
@@ -26,6 +27,8 @@ class TagCounter(db.Model):
         for tag_name in tag_names:
             tag = TagCounter.get_by_name(tag_name, create_on_demand=True)
             tag.counter = modifying_function(tag.counter)
+            if tag.counter < 0:
+                tag.counter = 0
             tag.save()
 
     @classmethod
@@ -36,6 +39,13 @@ class TagCounter(db.Model):
             tag_counter.save()
         return tag_counter
 
+    @classmethod
+    def create_tag_cloud(cls):
+        tag_cloud = {}
+        tags = db.Query(TagCounter).filter("counter > ", 0).fetch(FETCH_ALL_TAGS)
+        for tag in tags:
+            tag_cloud[tag.name] = tag.counter
+        return tag_cloud
 
 class Article(db.Model):
 

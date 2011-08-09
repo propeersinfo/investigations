@@ -123,7 +123,8 @@ class EditArticleHandler(request.BlogRequestHandler):
         article.tag_string = ', '.join(article.tags)
         template_vars = {
             'article'  : article,
-            'from'     : cgi.escape(self.request.get('from'))
+            'from'     : cgi.escape(self.request.get('from')),
+            'tag_cloud' : TagCounter.create_tag_cloud()
         }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))

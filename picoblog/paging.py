@@ -1,7 +1,7 @@
 '''
 This module contains classes for managing paging. 
 '''
-import google.appengine.ext.db as db
+from google.appengine.ext import db
 import google.appengine.api.memcache as memcache
 import logging
 import pickle

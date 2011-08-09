@@ -21,8 +21,6 @@ a:hover { color: #e22; }
 	padding-top: 10px;
 	margin-bottom: 0.7em;
 }
-.top   { color: lightgrey !important; }
-.top a { color: lightgrey !important; }
 .top h1 {
 	margin: 0 0 0 0;
 	padding: 0px;
@@ -92,13 +90,15 @@ h2 span {
 .sidebar-tags ul li {
 	margin-bottom: 0.25em;
 }
+.sidebar-tags ul li span {
+	color: grey;
+}
 .sidebar-tags ul li.title {
 	font-style: normal;
 }
 .sidebar-tags .group {
 	margin-bottom: 10px;
 }
-.sidebar-tags a { color: lightgrey; }
 
 
 .tracks { font-size: 14px; }
