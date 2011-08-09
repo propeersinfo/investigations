@@ -6,6 +6,7 @@ blog.
 """
 
 import cgi
+from datetime import time
 import logging
 
 from google.appengine.api import users
@@ -49,9 +50,31 @@ class SetupBasicTags(request.BlogRequestHandler):
                     tag = TagCounter.get_by_name(tag_name, create_on_demand=True)
                     tag.category = category
                     tag.save()
-        template_vars = {}
-        self.response.out.write(self.render_template('admin-setup-basic-tags.html',
-                                                     template_vars))
+        #template_vars = {}
+        #self.response.out.write(self.render_template('admin-setup-basic-tags.html',
+        #                                             template_vars))
+        self.redirect('/admin/')
+
+class DeleteAllTagCounters(request.BlogRequestHandler):
+    def post(self):
+        while True:
+            q = db.GqlQuery('SELECT __key__ FROM TagCounter')
+            if q.count() <= 0:
+                break
+            db.delete(q.fetch(200))
+        self.redirect('/admin/')
+
+class RecalculateTagCountersFromArticles(request.BlogRequestHandler):
+    def post(self):
+        q = Article.query_all()
+        cnt = q.count()
+        for article in q.fetch(10*1000):
+            logging.debug('%d articles fetched' % cnt)
+            for tag_name in set(article.tags):
+                tag = TagCounter.get_by_name(tag_name, create_on_demand=True)
+                tag.counter += 1
+                tag.save()
+        self.redirect('/admin/')
 
 class NewArticleHandler(request.BlogRequestHandler):
     """
@@ -191,8 +214,9 @@ application = webapp.WSGIApplication(
          ('/admin/article/edit/(\d+)$', EditArticleHandler),
          ('/admin/comment/delete/(\d+)$', DeleteCommentHandler),
          ('/admin/setup-basic-tags', SetupBasicTags),
+         ('/admin/recalculate-tag-counters', RecalculateTagCountersFromArticles),
+         ('/admin/delete-all-tag-counters', DeleteAllTagCounters),
          ],
-
         debug=True)
 
 def main():

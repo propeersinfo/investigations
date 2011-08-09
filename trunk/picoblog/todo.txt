@@ -20,8 +20,9 @@ Top priority:
 + investigate is it ok to use RSS for admin comment tracking
 
 Middle priority:
+- add label 'NN blog posts for tag xxx'
 - admin page: uncategorized tags
-- admin page: add the most popular pre-categorized tags into DB
++ admin page: add the most popular pre-categorized tags into DB
 - copy Dropbox images to GAE DB
 - send mails periodically, in the cron way (a proposal)
 - fontgen: JS part forms bad request strings for chars like "#$%^"
