@@ -273,7 +273,8 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'blog_owner_name' : defs.BLOG_OWNER,
             'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
             'prev_page_url'   : page_info.prev_page_url,
-            'next_page_url'   : page_info.next_page_url
+            'next_page_url'   : page_info.next_page_url,
+            'tag_cloud'       : TagCounter.create_tag_cloud()
         }
 
         if additional_template_variables:
@@ -296,12 +297,10 @@ class FrontPageHandler(AbstractPageHandler):
         #    articles = articles[:defs.MAX_ARTICLES_PER_PAGE]
 
         q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
-        #raise Exception(type(q) == db.Query)
         page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE),
                              page_num,
                              "/page%d",
                              "/")
-        #raise Exception("page_info: %s" % type(page_info))
         self.response.out.write(self.render_articles(page_info,
                                                      self.request,
                                                      self.get_recent()))

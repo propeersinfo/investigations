@@ -16,6 +16,18 @@ def blog_tag(blog_tag_name, blog_tag_title = None):
   return '<a href="/tag/%s">%s</a>' % (blog_tag_name, blog_tag_title)
 register.simple_tag(blog_tag)
 
+def blog_tag_2(tag_cloud, blog_tag_name, blog_tag_title = None):
+  if not blog_tag_title:
+    blog_tag_title = blog_tag_name
+  count = tag_cloud.get(blog_tag_name, 0)
+  if count > 0:
+    return '<a href="/tag/%s">%s</a> <span>%s</span>' % (blog_tag_name, blog_tag_title, count)
+  else:
+    return '%s' % (blog_tag_title)
+register.simple_tag(blog_tag_2)
+
+###################
+
 def h2_render(text):
   return '<img src="/font?text=%s">' % cgi.escape(text)
 register.simple_tag(h2_render)
