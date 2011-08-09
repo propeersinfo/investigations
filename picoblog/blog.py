@@ -274,7 +274,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
             'prev_page_url'   : page_info.prev_page_url,
             'next_page_url'   : page_info.next_page_url,
-            'tag_cloud'       : TagCounter.create_tag_cloud()
+            'tag_cloud'       : TagCounter.create_region_tag_cloud()
         }
 
         if additional_template_variables:

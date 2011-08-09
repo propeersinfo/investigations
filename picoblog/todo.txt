@@ -2,9 +2,10 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
-- distinguish draft articles visually
+- let admin distinguish draft articles visually
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
++ show tag counters for countries
 + introduce tag counters
 + cache images in DB
 + reimplement youtube JS code
@@ -19,6 +20,9 @@ Top priority:
 + investigate is it ok to use RSS for admin comment tracking
 
 Middle priority:
+- admin page: uncategorized tags
+- admin page: add the most popular pre-categorized tags into DB
+- copy Dropbox images to GAE DB
 - send mails periodically, in the cron way (a proposal)
 - fontgen: JS part forms bad request strings for chars like "#$%^"
 - implement E-Tag

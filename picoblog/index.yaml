@@ -89,3 +89,8 @@ indexes:
   - name: article.id
   - name: published_date
     direction: desc
+
+- kind: TagCounter
+  properties:
+  - name: category
+  - name: counter
