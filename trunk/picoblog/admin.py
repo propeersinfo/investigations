@@ -25,16 +25,32 @@ template.register_template_library('my_tags')
 # Classes
 # -----------------------------------------------------------------------------
 
-class ShowArticlesHandler(request.BlogRequestHandler):
-    """
-    Handles the main admin page, which lists all articles in the blog,
-    with links to their corresponding edit pages.
-    """
+class ShowAdminMainPageHandler(request.BlogRequestHandler):
     def get(self):
-        #articles = Article.get_all()
-        #template_vars = {'articles' : articles}
         template_vars = {}
         self.response.out.write(self.render_template('admin-main.html',
+                                                     template_vars))
+
+class SetupBasicTags(request.BlogRequestHandler):
+    def post(self):
+        tags_categorized = {
+            'region': 'russia,ukraine,moldova,belarus,'
+                       'armenia,azerbaijan,georgia,'
+                       'estonia,latvia,lithuania,'
+                       'kazakhstan,tajikistan,turkmenistan,uzbekistan,kyrgyzstan,',
+            'genre':  'funk,psychedelic,progressive,jazz,disco,electro,shake,',
+            'name':   'melodiya,garanian,alexander zatsepin,'
+        }
+        for category in tags_categorized.keys():
+            tag_names = tags_categorized[category].split(',')
+            for tag_name in tag_names:
+                tag_name = tag_name.strip()
+                if len(tag_name) > 0:
+                    tag = TagCounter.get_by_name(tag_name, create_on_demand=True)
+                    tag.category = category
+                    tag.save()
+        template_vars = {}
+        self.response.out.write(self.render_template('admin-setup-basic-tags.html',
                                                      template_vars))
 
 class NewArticleHandler(request.BlogRequestHandler):
@@ -124,7 +140,7 @@ class EditArticleHandler(request.BlogRequestHandler):
         template_vars = {
             'article'  : article,
             'from'     : cgi.escape(self.request.get('from')),
-            'tag_cloud' : TagCounter.create_tag_cloud()
+            'tag_cloud' : TagCounter.create_region_tag_cloud()
         }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))
@@ -168,12 +184,13 @@ def alert_the_media():
 
 application = webapp.WSGIApplication(
         [
-         ('/admin/?', ShowArticlesHandler),
+         ('/admin/?', ShowAdminMainPageHandler),
          ('/admin/article/new/?', NewArticleHandler),
          ('/admin/article/delete/?', DeleteArticleHandler),
          ('/admin/article/save/?', SaveArticleHandler),
          ('/admin/article/edit/(\d+)$', EditArticleHandler),
          ('/admin/comment/delete/(\d+)$', DeleteCommentHandler),
+         ('/admin/setup-basic-tags', SetupBasicTags),
          ],
 
         debug=True)

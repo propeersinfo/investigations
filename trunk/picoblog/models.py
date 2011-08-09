@@ -5,11 +5,13 @@ from google.appengine.ext import db
 
 FETCH_THEM_ALL_COMMENTS = 100
 FETCH_ALL_TAGS = 1000
+FETCH_ALL_REGION_TAGS = 500 # real amount of regions should be around 15
 MAX_ARTICLES_PER_DAY = 20
 
 class TagCounter(db.Model):
     name = db.StringProperty(required=True, indexed=True)
     counter = db.IntegerProperty(default=0, indexed=True)
+    category = db.StringProperty(default='', indexed=True)
 
     @classmethod
     def tags_updated_for_article(cls, tags_was, tags_now):
@@ -40,9 +42,12 @@ class TagCounter(db.Model):
         return tag_counter
 
     @classmethod
-    def create_tag_cloud(cls):
+    def create_region_tag_cloud(cls):
         tag_cloud = {}
-        tags = db.Query(TagCounter).filter("counter > ", 0).fetch(FETCH_ALL_TAGS)
+        tags = db.Query(TagCounter)\
+                 .filter("category = ", "region")\
+                 .filter("counter > ", 0)\
+                 .fetch(FETCH_ALL_REGION_TAGS)
         for tag in tags:
             tag_cloud[tag.name] = tag.counter
         return tag_cloud
