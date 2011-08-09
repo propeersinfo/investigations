@@ -2,10 +2,10 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
-- bug: youtube-image hides from tha last entry: http://127.0.0.1:8080/tag/electro
 - let admin distinguish draft articles visually
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
++ bug: youtube-images gets hidden: http://127.0.0.1:8080/tag/xxx
 + show tag counters for countries
 + introduce tag counters
 + cache images in DB

@@ -16,7 +16,7 @@ function prepareYoutubeClips() {
   $("img.youtube").each(function(pos,img){
     var preview = img.src
     img.style.background = "black url(" + preview + ")"
-    img.src = "static/playvideo480.png"
+    img.src = "/static/playvideo480.png"
     var a = img.parentNode
     if(a) {
       a.style.background = "url(" + preview + ")"
