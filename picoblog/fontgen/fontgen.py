@@ -35,14 +35,15 @@ class RenderFontHandler(request.BlogRequestHandler):
         #return
         #raise Exception("text: %s" % text)
 
-        self.response.headers['Content-Type'] = "image/png"
         cached = FontRenderCache.find(font_name, font_size, text)
         if cached:
             image_data = cached.render
+            self.response.headers['Content-Type'] = "image/png"
             self.response.out.write(image_data)
         else:
             image = self.render(font_name, font_size, text)
             FontRenderCache.insert_new(font_name, font_size, text, image)
+            self.response.headers['Content-Type'] = "image/png"
             image.save(self.response.out)
 
     def render(self, font_name, font_size, text):
@@ -52,6 +53,7 @@ class RenderFontHandler(request.BlogRequestHandler):
             #[ "special_37pt.png", u"`~!@#№$\%^&*()-_=+[]{}:;'\"<>,./\\?__" ], # outdated
             [ "font-37pt-cyr.png", u"абвгдеёжзийклмнопрстуфхцчшщъыьэюя`_" ],
             [ "font-37pt-special.png", u"`~!@#№$%^&*()- _ = + []{}:;'\" >< ,./\\?" ],
+            [ 'font-37pt-typo.png', u'“”«»–—' ],
         ]
         for pair in font_files:
             file = pair[0]
