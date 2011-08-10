@@ -38,10 +38,10 @@ class ShowAdminMainPageHandler(request.BlogRequestHandler):
 class UncategorizedTags(request.BlogRequestHandler):
     def get(self):
         # list tags
-        tags_uncategorized = db.Query(TagCounter).filter('category = ', '')\
+        tags_uncategorized = db.Query(ArticleTag).filter('category = ', '')\
                                .order('name')\
                                .fetch(10*1000)
-        #tags_uncategorized = db.GqlQuery("SELECT * FROM TagCounter WHERE category = :1", '').fetch(10*1000)
+        #tags_uncategorized = db.GqlQuery("SELECT * FROM ArticleTag WHERE category = :1", '').fetch(10*1000)
         template_vars = {
             'tags_uncategorized' : tags_uncategorized,
         }
@@ -51,7 +51,7 @@ class UncategorizedTags(request.BlogRequestHandler):
         tag_name = self.request.get('tag')
         category = self.request.get('category')
         if tag_name and category:
-            tag = TagCounter.get_by_name(tag_name)
+            tag = ArticleTag.get_by_name(tag_name)
             if tag:
                 tag.category = category
                 tag.save()
@@ -73,7 +73,7 @@ class SetupBasicTags(request.BlogRequestHandler):
             for tag_name in tag_names:
                 tag_name = tag_name.strip()
                 if len(tag_name) > 0:
-                    tag = TagCounter.get_by_name(tag_name, create_on_demand=True)
+                    tag = ArticleTag.get_by_name(tag_name, create_on_demand=True)
                     tag.category = category
                     tag.save()
         #template_vars = {}
@@ -90,10 +90,10 @@ def empty_table(table):
             break
         db.delete(q.fetch(200))
 
-class DeleteAllTagCounters(request.BlogRequestHandler):
+class DeleteAllTags(request.BlogRequestHandler):
     def post(self):
         while True:
-            q = db.GqlQuery('SELECT __key__ FROM TagCounter')
+            q = db.GqlQuery('SELECT __key__ FROM ArticleTag')
             if q.count() <= 0:
                 break
             db.delete(q.fetch(200))
@@ -103,7 +103,7 @@ class EmptyDB(request.BlogRequestHandler):
     def post(self):
         empty_table('Article')
         empty_table('Comment')
-        empty_table('TagCounter')
+        empty_table('ArticleTag')
         empty_table('FontRenderCache')
         self.redirect('/admin/')
 
@@ -114,7 +114,7 @@ class RecalculateTagCountersFromArticles(request.BlogRequestHandler):
         for article in q.fetch(10*1000):
             logging.debug('%d articles fetched' % cnt)
             for tag_name in set(article.tags):
-                tag = TagCounter.get_by_name(tag_name, create_on_demand=True)
+                tag = ArticleTag.get_by_name(tag_name, create_on_demand=True)
                 tag.counter += 1
                 tag.save()
         self.redirect('/admin/')
@@ -207,7 +207,7 @@ class EditArticleHandler(request.BlogRequestHandler):
         template_vars = {
             'article'  : article,
             'from'     : cgi.escape(self.request.get('from')),
-            'tag_cloud' : TagCounter.create_region_tag_cloud()
+            'tag_cloud' : ArticleTag.create_region_tag_cloud()
         }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))
@@ -259,7 +259,7 @@ application = webapp.WSGIApplication(
          ('/admin/comment/delete/(\d+)$', DeleteCommentHandler),
          ('/admin/setup-basic-tags', SetupBasicTags),
          ('/admin/recalculate-tag-counters', RecalculateTagCountersFromArticles),
-         ('/admin/delete-all-tag-counters', DeleteAllTagCounters),
+         ('/admin/delete-all-tags', DeleteAllTags),
          ('/admin/empty-db', EmptyDB),
          ('/admin/uncategorized-tags', UncategorizedTags),
          ],
