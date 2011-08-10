@@ -38,7 +38,7 @@ div { margin: 10px; }
 
 {% if dev_server %}
 <div class="row new">
-	<form method="POST" action="/admin/empty-db">
+	<form method="POST" action="/admin/empty-db" onsubmit="javascript: return confirm('Really empty DB?')">
 	<input type="submit" value="Empty DB (danger!)" style="background:#f00;">
 	</form>
 </div>

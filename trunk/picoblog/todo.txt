@@ -2,6 +2,7 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
+- imaged h1's: make white space non clickable
 - try class Tag instead of strings
 - make dewplayer never expire! +ETag
 - let admin distinguish draft articles visually

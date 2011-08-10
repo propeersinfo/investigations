@@ -15,14 +15,16 @@ class TagCounter(db.Model):
 
     @classmethod
     def tags_updated_for_article(cls, tags_was, tags_now):
-        tags_was = set(tags_was)
-        tags_now = set(tags_now)
-        cls.__modify_tags_counters(tags_was - tags_now, lambda cnt: cnt - 1)
-        cls.__modify_tags_counters(tags_now - tags_was, lambda cnt: cnt + 1)
+        #tags_was = set(tags_was)
+        #tags_now = set(tags_now)
+        #cls.__modify_tags_counters(tags_was - tags_now, lambda cnt: cnt - 1)
+        #cls.__modify_tags_counters(tags_now - tags_was, lambda cnt: cnt + 1)
+        pass
 
     @classmethod
     def article_removed(cls, tags_was):
-        cls.__modify_tags_counters(set(tags_was), lambda cnt: 0)
+        #cls.__modify_tags_counters(set(tags_was), lambda cnt: 0)
+        pass
 
     @classmethod
     def __modify_tags_counters(cls, tag_names, modifying_function):
@@ -37,9 +39,13 @@ class TagCounter(db.Model):
     def get_by_name(cls, tag_name, create_on_demand = False):
         tag_counter = db.Query(TagCounter).filter('name', tag_name).get()
         if not tag_counter and create_on_demand:
-            tag_counter = TagCounter(name=tag_name, counter=0)
+            tag_counter = TagCounter(name=tag_name, counter=1)
             tag_counter.save()
         return tag_counter
+
+    @classmethod
+    def get_keys_by_names_creating(cls, tag_names):
+        return [ cls.get_by_name(tag_name, True).key() for tag_name in tag_names ]
 
     @classmethod
     def create_region_tag_cloud(cls):
@@ -51,7 +57,8 @@ class TagCounter(db.Model):
         for tag in tags:
             tag_cloud[tag.name] = tag.counter
         #raise Exception("returning %s" % tag_cloud)
-        return tag_cloud
+        #return tag_cloud
+        return { 'russia': 100500 }
 
 class Article(db.Model):
 
@@ -60,7 +67,8 @@ class Article(db.Model):
     #title_slug = db.StringProperty(required=True)
     body = db.TextProperty(indexed=False)
     published_date = db.DateTimeProperty(auto_now_add=True, indexed=True)
-    tags = db.ListProperty(db.Category)
+    #tags = db.ListProperty(db.Category)
+    tags = db.ListProperty(db.Key)
     draft = db.BooleanProperty(required=True, default=False)
 
     def get_comments(self):
@@ -146,19 +154,23 @@ class Article(db.Model):
                        .order('-published_date')
 
     @classmethod
-    def query_for_tag(cls, tag):
+    def query_for_tag_name(cls, tag_name):
+        tag = TagCounter.get_by_name(tag_name) # todo: optimization: select a key not object
+        key = tag.key() if tag else None
         return Article.query_published() \
-                      .filter('tags', tag)
+                      .filter('tags', key)
 
     @classmethod
-    def convert_string_tags(cls, tags):
+    def convert_string_tags(cls, tag_names):
         new_tags = []
-        for t in tags:
-            if type(t) == db.Category:
-                new_tags.append(t)
-            else:
-                new_tags.append(db.Category(unicode(t)))
-        return new_tags
+        if len(tag_names) > 0: assert type(tag_names[0]) == str or type(tag_names[0]) == unicode
+        return TagCounter.get_keys_by_names_creating(tag_names)
+#        for t in tag_names:
+#            if type(t) == db.Category:
+#                new_tags.append(t)
+#            else:
+#                new_tags.append(db.Category(unicode(t)))
+#        return new_tags
 
     def __unicode__(self):
         return self.__str__()
@@ -166,6 +178,12 @@ class Article(db.Model):
     def __str__(self):
         return '[%s] %s' %\
                (self.published_date.strftime('%Y/%m/%d %H:%M'), self.title)
+
+    def get_tag_objects(self):
+        return db.get(self.tags)
+
+    def get_tag_names(self):
+        return [ tag.name for tag in self.get_tag_objects() ]
 
     def create_uniq_id(self):
         # TODO this could be rewritten with max(id)+1 for current day's articles

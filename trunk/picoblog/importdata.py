@@ -14,7 +14,11 @@ from operablogimport.post_parser import parse_file
 IMPORT_LIMIT = None
 
 def import_post_object(post):
-    def string2category(str): return db.Category(str)
+    def string2category(tag_name):
+        tag_name = str(tag_name)
+        #return db.Category(tag_name)
+        assert type(tag_name) == str, "%s" % type(tag_name)
+        return TagCounter.get_by_name(tag_name, create_on_demand=True).key()
 
     article = Article(title = post['title'],
                       body = post['content'],
@@ -40,10 +44,9 @@ def import_all_files(out):
     posts = []
     cnt = 0
     for file in glob.glob("operabloghtml/*"):
-        post = parse_file(file)
-        posts.append(post)
         if IMPORT_LIMIT and cnt >= IMPORT_LIMIT:
             break
+        posts.append(parse_file(file))
         cnt += 1
     posts = sorted(posts, key=lambda post: post['date'])
     for post in posts:
@@ -54,10 +57,11 @@ class ImportSomeHandler(request.BlogRequestHandler):
     def get(self):
         #articles = Article.get_all()
         out = self.response.out
-        out.write("<xmp>\n")
-        out.write("importing some\n")
+        #out.write("<xmp>\n")
+        #out.write("importing some\n")
         import_all_files(out)
         #one_file("operabloghtml\\via-75-ep", out)
+        self.redirect('/admin/')
 
 application = webapp.WSGIApplication(
         [('/importdata/?', ImportSomeHandler)],
