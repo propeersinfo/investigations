@@ -202,7 +202,8 @@ class EditArticleHandler(request.BlogRequestHandler):
         if not article:
             raise ValueError, 'Article with ID %d does not exist.' % id
 
-        article.tag_string = ', '.join(article.tags)
+        #article.tag_string = ', '.join(article.tags)
+        article.tag_string = ', '.join(article.get_tag_names())
         template_vars = {
             'article'  : article,
             'from'     : cgi.escape(self.request.get('from')),

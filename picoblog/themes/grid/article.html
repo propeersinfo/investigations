@@ -81,8 +81,8 @@
 		</p>
 		<p class="article-meta">
 			Tags:
-			{% for tag in article.tags %}
-				<a href="/tag/{{tag}}">{{tag}}</a>,
+			{% for tag in article.tag_objects %}
+				<a href="/tag/{{tag.name}}">{{tag.name}}</a>,
 			{% endfor %}
 			
 {% if user_info.is_admin %}

@@ -14,6 +14,25 @@ def flatten_some_tags(root):
             repl = " %s " % a['href']
             a.replaceWith(NavigableString(repl))
 
+def fix_links_attrs(root):
+    # elminate rel=nofollow and target=_blank
+    for a in root.findAll("a"):
+        if hasattr(a, 'href'):
+            del(a['rel'])
+            del(a['target'])
+
+def replace_links_with_text_equal_to_href(root):
+    for a in root.findAll("a"):
+        if hasattr(a, 'href'):
+            href = a['href']
+            if re.search(r'rapidshare|narod|sendspace|ifolder', href, re.IGNORECASE):
+                replacement = "%s" % href
+                a.replaceWith(NavigableString(replacement))
+
+def replace_br(root):
+    for a in root.findAll("br"):
+        a.replaceWith(NavigableString("\n"))
+
 def fix_br(tag):
     if hasattr(tag, 'name') and tag.name == 'br':
         return '\n'
@@ -29,7 +48,7 @@ def read_file(path, charset = "utf-8"):
 def parse_title(soup):
   # Path: div#firstpost h2.title
   navString = select(soup, "div#firstpost h2.title")[0].contents[0]
-  return unicode(navString)
+  return unicode(navString).replace('&amp;', '&')
 
 def parse_date_string(sdate):
     # Example: Thursday, 21. July, 22:31
@@ -69,7 +88,38 @@ def get_content(soup):
   fix_image(div_content_node)
   fix_youtube(div_content_node)
   fix_mixcloud(div_content_node)
-  return fix_content(div_content_node.contents)
+  replace_links_with_text_equal_to_href(div_content_node)
+  replace_br(div_content_node)
+  fix_links_attrs(div_content_node)
+  text = node_to_string(div_content_node)
+  return text
+
+def node_to_string(root):
+    text = ''.join([e for e in root.recursiveChildGenerator() if isinstance(e,unicode)])
+    #text = "".join(map(to_string, root.contents))
+    return text
+
+#def fix_content(tags):
+#    def fix_link_attributes(tag):
+#        # elminate rel=nofollow and target=_blank
+#        if hasattr(tag, 'name') and tag.name == 'a':
+#            tag['rel'] = ''
+#            tag['target'] = ''
+#        return tag
+#    def tags_to_strings(tags):
+#        strings = []
+#        for tag in tags:
+#            if tag:
+#                strings.append(str(tag))
+#        return strings
+#    tags = map(fix_br, tags)
+#    tags = map(fix_link_attributes, tags)
+#    #for tag in tags:
+#    #    print "TYPE:", type(tag)
+#    string = "".join(map(to_string, tags))
+#    #string = string.replace(' rel=""', ' ')    # see fix_link_attributes()
+#    #string = string.replace(' target=""', ' ') # see fix_link_attributes()
+#    return string
 
 def get_comments(soup):
     def is_owner_comment(div_text):
@@ -163,28 +213,6 @@ def fix_mixcloud(root):
             if f:
                 tag.replaceWith("[%s]" % f.group(0))
 
-def fix_content(tags):
-    def fix_link_attributes(tag):
-        # elminate rel=nofollow and target=_blank
-        if hasattr(tag, 'name') and tag.name == 'a':
-            tag['rel'] = ''
-            tag['target'] = ''
-        return tag
-    def tags_to_strings(tags):
-        strings = []
-        for tag in tags:
-            if tag:
-                strings.append(str(tag))
-        return strings
-    tags = map(fix_br, tags)
-    tags = map(fix_link_attributes, tags)
-    #for tag in tags:
-    #    print "TYPE:", type(tag)
-    string = "".join(map(to_string, tags))
-    string = string.replace(' rel=""', ' ')    # see fix_link_attributes()
-    string = string.replace(' target=""', ' ') # see fix_link_attributes()
-    return string
-
 def parse_file(opera_blog_post_file):
   soup = BeautifulSoup(read_file(opera_blog_post_file))
   return {'title' : parse_title(soup),
@@ -192,3 +220,11 @@ def parse_file(opera_blog_post_file):
           'tags' : parse_tags(soup),
           'content' : get_content(soup),
           'comments' : get_comments(soup)}
+
+if __name__ == '__main__':
+    #file = '75'
+    #file = 'ludvikovsky-and-garanian-1971'
+    file = 'soviet-electro-mixtype'
+    parsed = parse_file('../operabloghtml/%s' % file)
+    print parsed['title'].encode('ascii', 'ignore')
+    print parsed['content'].encode('ascii', 'ignore')

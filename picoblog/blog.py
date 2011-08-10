@@ -166,6 +166,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
                     article.html = 'article.html is not available anymore'
                     article.complex_html = markup.markup2html(article.body, for_comment=False, article_id=article.id)
                 article.path = utils.get_article_path(article)
+                article.tag_objects = article.get_tag_objects()
                 article.url = url_prefix + article.path
                 article.guid = url_prefix + utils.get_article_guid(article)
                 article.comments_count = article.comment_set.count()
@@ -310,13 +311,13 @@ class ArticlesByTagHandler(AbstractPageHandler):
     Handles requests to display a set of articles that have a
     particular tag.
     """
-    def get(self, tag, page_num = 1):
+    def get(self, tag_name, page_num = 1):
         page_num = int(page_num)
-        q = Article.query_for_tag(tag)
+        q = Article.query_for_tag_name(tag_name)
         page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE),
                              page_num,
-                             '/tag/' + tag + '/page%d',
-                             '/tag/' + tag + '/')
+                             '/tag/' + tag_name + '/page%d',
+                             '/tag/' + tag_name + '/')
         self.response.out.write(self.render_articles(page_info,
                                                      self.request,
                                                      self.get_recent()))
