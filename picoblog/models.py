@@ -8,7 +8,7 @@ FETCH_ALL_TAGS = 1000
 FETCH_ALL_REGION_TAGS = 500 # real amount of regions should be around 15
 MAX_ARTICLES_PER_DAY = 20
 
-class TagCounter(db.Model):
+class ArticleTag(db.Model):
     name = db.StringProperty(required=True, indexed=True)
     counter = db.IntegerProperty(default=0, indexed=True)
     category = db.StringProperty(default='', indexed=True)
@@ -29,7 +29,7 @@ class TagCounter(db.Model):
     @classmethod
     def __modify_tags_counters(cls, tag_names, modifying_function):
         for tag_name in tag_names:
-            tag = TagCounter.get_by_name(tag_name, create_on_demand=True)
+            tag = ArticleTag.get_by_name(tag_name, create_on_demand=True)
             tag.counter = modifying_function(tag.counter)
             if tag.counter < 0:
                 tag.counter = 0
@@ -37,9 +37,9 @@ class TagCounter(db.Model):
 
     @classmethod
     def get_by_name(cls, tag_name, create_on_demand = False):
-        tag_counter = db.Query(TagCounter).filter('name', tag_name).get()
+        tag_counter = db.Query(ArticleTag).filter('name', tag_name).get()
         if not tag_counter and create_on_demand:
-            tag_counter = TagCounter(name=tag_name, counter=1)
+            tag_counter = ArticleTag(name=tag_name, counter=1)
             tag_counter.save()
         return tag_counter
 
@@ -50,7 +50,7 @@ class TagCounter(db.Model):
     @classmethod
     def create_region_tag_cloud(cls):
         tag_cloud = {}
-        tags = db.Query(TagCounter)\
+        tags = db.Query(ArticleTag)\
                  .filter("category = ", "region")\
                  .filter("counter > ", 0)\
                  .fetch(FETCH_ALL_REGION_TAGS)
@@ -155,7 +155,7 @@ class Article(db.Model):
 
     @classmethod
     def query_for_tag_name(cls, tag_name):
-        tag = TagCounter.get_by_name(tag_name) # todo: optimization: select a key not object
+        tag = ArticleTag.get_by_name(tag_name) # todo: optimization: select a key not object
         key = tag.key() if tag else None
         return Article.query_published() \
                       .filter('tags', key)
@@ -164,7 +164,7 @@ class Article(db.Model):
     def convert_string_tags(cls, tag_names):
         new_tags = []
         if len(tag_names) > 0: assert type(tag_names[0]) == str or type(tag_names[0]) == unicode
-        return TagCounter.get_keys_by_names_creating(tag_names)
+        return ArticleTag.get_keys_by_names_creating(tag_names)
 #        for t in tag_names:
 #            if type(t) == db.Category:
 #                new_tags.append(t)
@@ -201,13 +201,13 @@ class Article(db.Model):
     def delete(self, **kwargs):
         prev_tags = self.tags
         super(Article, self).delete(**kwargs)
-        TagCounter.article_removed(prev_tags)
+        ArticleTag.article_removed(prev_tags)
 
     def save(self):
         previous_version = Article.get(self.id)
         previous_tags = previous_version.tags if previous_version else []
 
-        TagCounter.tags_updated_for_article(previous_tags, self.tags)
+        ArticleTag.tags_updated_for_article(previous_tags, self.tags)
 
         if previous_version and previous_version.draft and (not self.draft):
             # Going from draft to published. Update the timestamp.

@@ -49,6 +49,16 @@ indexes:
   - name: published_when
     direction: desc
 
+- kind: ArticleTag
+  properties:
+  - name: category
+  - name: counter
+
+- kind: ArticleTag
+  properties:
+  - name: category
+  - name: name
+
 - kind: Comment
   properties:
   - name: article
@@ -89,13 +99,3 @@ indexes:
   - name: article.id
   - name: published_date
     direction: desc
-
-- kind: TagCounter
-  properties:
-  - name: category
-  - name: counter
-
-- kind: TagCounter
-  properties:
-  - name: category
-  - name: name

@@ -18,7 +18,7 @@ def import_post_object(post):
         tag_name = str(tag_name)
         #return db.Category(tag_name)
         assert type(tag_name) == str, "%s" % type(tag_name)
-        return TagCounter.get_by_name(tag_name, create_on_demand=True).key()
+        return ArticleTag.get_by_name(tag_name, create_on_demand=True).key()
 
     article = Article(title = post['title'],
                       body = post['content'],
