@@ -2,10 +2,12 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
-- list player fails: http://127.0.0.1:8080/20110109-project-recognition.html
 - let admin distinguish draft articles visually
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
+- copy dewplayer multi onto GAE
++ list player fails to play music
++ copy dewplayer onto GAE
 + bug: youtube-images gets hidden: http://127.0.0.1:8080/tag/xxx
 + show tag counters for countries
 + introduce tag counters

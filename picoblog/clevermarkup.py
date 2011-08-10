@@ -66,7 +66,8 @@ def handle_custom_tag_youtube(input):
 def handle_custom_tag_mp3(input):
     regex = "\[([^\]]+mp3)\]"
     repl_link  = "http://dl.dropbox.com/u/%s/sg/\\1" % defs.DROPBOX_USER
-    repl_swf   = "http://dl.dropbox.com/u/%s/dewplayer-mini.swf" % defs.DROPBOX_USER
+    #repl_swf   = "http://dl.dropbox.com/u/%s/dewplayer-mini.swf" % defs.DROPBOX_USER
+    repl_swf   = "/static/dewplayer-mini.swf"
     repl_flash = "<object width='160' height='18'><embed src='" + repl_swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + repl_link + "' quality='high'></embed></object>"
     repl_dload = "<a href=\"%s\">\\1</a>" % repl_link
     repl = "%s %s" % (repl_flash, repl_dload)
@@ -82,7 +83,7 @@ def handle_custom_tag_mixcloud(input):
 
 # [3x3.playlist]
 def handle_custom_tag_playlist(input):
-    regex = '\[([^\]]+playlist)\]'
+    regex = '\[dewplaylist\s+([^\]]+playlist)\]'
     replace = '<object width="240" height="200">'\
               '<embed src="http://dl.dropbox.com/u/%s/dewplayer-playlist.swf" '\
               'width="240" height="200" '\
