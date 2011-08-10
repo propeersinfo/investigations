@@ -2,6 +2,7 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
+- list player fails: http://127.0.0.1:8080/20110109-project-recognition.html
 - let admin distinguish draft articles visually
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
@@ -21,6 +22,7 @@ Top priority:
 + investigate is it ok to use RSS for admin comment tracking
 
 Middle priority:
+- navigation with Ctrl+arrows
 - custom mp3 tag: eliminate dirs like "other/gradsky-71−74-sampler.mp3"
 - add label 'NN blog posts for tag xxx'
 - admin page: uncategorized tags
