@@ -275,7 +275,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
             'prev_page_url'   : page_info.prev_page_url,
             'next_page_url'   : page_info.next_page_url,
-            'tag_cloud'       : ArticleTag.create_region_tag_cloud()
+            'tag_cloud'       : ArticleTag.create_region_tag_cloud(),
         }
 
         if additional_template_variables:
@@ -314,13 +314,18 @@ class ArticlesByTagHandler(AbstractPageHandler):
     def get(self, tag_name, page_num = 1):
         page_num = int(page_num)
         q = Article.query_for_tag_name(tag_name)
-        page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE),
+        paged_query = PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE)
+        page_info = PageInfo(paged_query,
                              page_num,
                              '/tag/' + tag_name + '/page%d',
                              '/tag/' + tag_name + '/')
+        tpl_vars = {
+            'paging_title' : '%s blog posts tagged &ldquo;%s&rdquo;' % (paged_query.count(), tag_name)
+        }
         self.response.out.write(self.render_articles(page_info,
                                                      self.request,
-                                                     self.get_recent()))
+                                                     self.get_recent(),
+                                                     additional_template_variables=tpl_vars))
 
 class ArticlesForMonthHandler(AbstractPageHandler):
     """
