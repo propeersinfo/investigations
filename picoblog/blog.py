@@ -266,7 +266,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
             'prev_page_url'   : page_info.prev_page_url,
             'next_page_url'   : page_info.next_page_url,
-            'tag_cloud'       : ArticleTag.create_region_tag_cloud(),
+            'tag_cloud'       : TagCloud.get(),
         }
 
         if additional_template_variables:
@@ -311,7 +311,7 @@ class ArticlesByTagHandler(AbstractPageHandler):
                              '/tag/' + tag_name + '/page%d',
                              '/tag/' + tag_name + '/')
         tpl_vars = {
-            'paging_title' : '%s blog posts tagged &ldquo;%s&rdquo;' % (paged_query.count(), tag_name)
+            'paging_title' : 'There are %s blog posts tagged &ldquo;%s&rdquo;' % (paged_query.count(), tag_name)
         }
         self.response.out.write(self.render_articles(page_info,
                                                      self.request,

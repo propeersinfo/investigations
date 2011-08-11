@@ -23,6 +23,8 @@ from userinfo import UserInfo
 from google.appengine.ext.webapp import template
 template.register_template_library('my_tags')
 
+ADMIN_FETCH_MAX = 10 * 1000
+
 # -----------------------------------------------------------------------------
 # Classes
 # -----------------------------------------------------------------------------
@@ -92,12 +94,13 @@ def empty_table(table):
 
 class DeleteAllTags(request.BlogRequestHandler):
     def post(self):
-        while True:
-            q = db.GqlQuery('SELECT __key__ FROM ArticleTag')
-            if q.count() <= 0:
-                break
-            db.delete(q.fetch(200))
-        self.redirect('/admin/')
+        raise Exception('dangerous code')
+#        while True:
+#            q = db.GqlQuery('SELECT __key__ FROM ArticleTag')
+#            if q.count() <= 0:
+#                break
+#            db.delete(q.fetch(200))
+#        self.redirect('/admin/')
 
 class EmptyDB(request.BlogRequestHandler):
     def post(self):
@@ -107,16 +110,25 @@ class EmptyDB(request.BlogRequestHandler):
         empty_table('FontRenderCache')
         self.redirect('/admin/')
 
+def reset_all_tag_counters():
+    q = ArticleTag.all()
+    for tag in q.fetch(ADMIN_FETCH_MAX):
+        tag.counter = 0
+        tag.save()
+
+def calculate_all_tag_counters():
+    q = Article.query_all()
+    for article in q.fetch(ADMIN_FETCH_MAX):
+        for tag_key in set(article.tags):
+            tag = ArticleTag.get_by_key(tag_key, create_on_demand=True)
+            tag.counter += 1
+            tag.save()
+
 class RecalculateTagCountersFromArticles(request.BlogRequestHandler):
     def post(self):
-        q = Article.query_all()
-        cnt = q.count()
-        for article in q.fetch(10*1000):
-            logging.debug('%d articles fetched' % cnt)
-            for tag_name in set(article.tags):
-                tag = ArticleTag.get_by_name(tag_name, create_on_demand=True)
-                tag.counter += 1
-                tag.save()
+        TagCloud.reset()
+        reset_all_tag_counters()
+        calculate_all_tag_counters()
         self.redirect('/admin/')
 
 class NewArticleHandler(request.BlogRequestHandler):
@@ -207,7 +219,7 @@ class EditArticleHandler(request.BlogRequestHandler):
         template_vars = {
             'article'  : article,
             'from'     : cgi.escape(self.request.get('from')),
-            'tag_cloud' : ArticleTag.create_region_tag_cloud()
+            'tag_cloud' : ArticleTag.get_region_tag_cloud()
         }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))

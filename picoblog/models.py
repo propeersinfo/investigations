@@ -1,7 +1,9 @@
 import datetime
 import sys
+from google.appengine.api import memcache
 
 from google.appengine.ext import db
+import utils
 
 FETCH_THEM_ALL_COMMENTS = 100
 FETCH_ALL_TAGS = 1000
@@ -37,28 +39,46 @@ class ArticleTag(db.Model):
 
     @classmethod
     def get_by_name(cls, tag_name, create_on_demand = False):
-        tag_counter = db.Query(ArticleTag).filter('name', tag_name).get()
-        if not tag_counter and create_on_demand:
-            tag_counter = ArticleTag(name=tag_name, counter=1)
-            tag_counter.save()
-        return tag_counter
+        tag_obj = db.Query(ArticleTag).filter('name', tag_name).get()
+        if not tag_obj and create_on_demand:
+            tag_obj = ArticleTag(name=tag_name, counter=0)
+            tag_obj.save()
+        return tag_obj
+
+    @classmethod
+    def get_by_key(cls, tag_key, create_on_demand = False):
+        tag_obj = db.get(tag_key)
+        if not tag_obj and create_on_demand:
+            raise Exception('Cannot find a tag by key %s' % tag_key)
+        return tag_obj
 
     @classmethod
     def get_keys_by_names_creating(cls, tag_names):
         return [ cls.get_by_name(tag_name, True).key() for tag_name in tag_names ]
 
+class TagCloud():
+    KEY = 'region-tag-cloud'
+    MEMCACHE_TIME = utils.hours(1).seconds()
     @classmethod
-    def create_region_tag_cloud(cls):
+    def get(cls):
+        value = memcache.get(cls.KEY)
+        if value is None:
+            value = cls.__generate()
+            memcache.set(cls.KEY, cls.__generate(), cls.MEMCACHE_TIME)
+        return value
+    @classmethod
+    def reset(cls):
+        memcache.delete(cls.KEY)
+    @classmethod
+    def __generate(cls):
         tag_cloud = {}
         tags = db.Query(ArticleTag)\
-                 .filter("category = ", "region")\
-                 .filter("counter > ", 0)\
+                 .filter('category =', 'region')\
+                 .filter('counter >', 0)\
                  .fetch(FETCH_ALL_REGION_TAGS)
         for tag in tags:
             tag_cloud[tag.name] = tag.counter
-        #raise Exception("returning %s" % tag_cloud)
-        #return tag_cloud
-        return { 'russia': 100500 }
+        return tag_cloud
 
 class Article(db.Model):
 
@@ -157,8 +177,9 @@ class Article(db.Model):
     def query_for_tag_name(cls, tag_name):
         tag = ArticleTag.get_by_name(tag_name) # todo: optimization: select a key not object
         key = tag.key() if tag else None
-        return Article.query_published() \
-                      .filter('tags', key)
+        q = Article.query_published().filter('tags', key)
+        #raise Exception(q._get_query())
+        return q
 
     @classmethod
     def convert_string_tags(cls, tag_names):

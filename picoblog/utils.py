@@ -50,3 +50,13 @@ Text: %s
 
 Address: %s
 ''' % (comment.author, comment.text, get_article_path(comment.article)))
+
+class TimePeriod():
+    def __init__(self, seconds):
+        self.__seconds = seconds
+    def seconds(self):
+        return self.__seconds
+
+def hours(hours):
+    tp = TimePeriod(hours * 60 * 60)
+    return tp

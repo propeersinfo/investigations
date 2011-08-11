@@ -12,7 +12,9 @@ p {
 a {
 	color: #00a;
 }
-a:hover { color: #e22; }
+a:hover {
+	color: #f33 !important;
+}
 .top {
 	background-color: #6EC6FE;
 	background-image: url(volna-top.png);
@@ -24,6 +26,9 @@ a:hover { color: #e22; }
 .top h1 {
 	margin: 0 0 0 0;
 	padding: 0px;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 130%;
+	font-weight: normal;
 	/*
 	position: relative;
 	height: 20px;
@@ -139,21 +144,29 @@ div.comment p {
 
 
 
-
-.below-top h1 {
+/* css for headers replaced with images */
+/*.below-top h1 {
 	width: 100%;
 	height: 35px;
 	position: relative;
 	margin: 0 0 0.2em 0;
 	vertical-align: bottom;
-	font-size: 25px;
+	font-size: 140%;
 }
 .below-top h1 span {
 	background-repeat: no-repeat, repeat;
 	position: absolute;
 	width: 100%;
 	height: 100%;
+}*/
+
+.below-top h1 {
+	margin: 0 0 0.2em 0;
+	vertical-align: bottom;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 140%;
 }
+.below-top h1 a { color: black; }
 
 .sidebar-links { color: lightgrey; font-size: 14px; }
 .sidebar-links p { color: lightgrey; }
