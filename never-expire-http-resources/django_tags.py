@@ -1,14 +1,10 @@
-import cgi
 from google.appengine.ext import webapp
 
-from django import template as django_template
-from django.template import resolve_variable, Node, TemplateSyntaxError, VariableDoesNotExist
+from static_files import StaticFilesInfo
 
 register = webapp.template.create_template_register()
 
-###################
+def static(path):
+    return StaticFilesInfo.get_resource_path(path)
 
-def static(static_files_info, path):
-  file_version = static_files_info.get(path, 0)
-  return '/%s/%s/%s' % ('pseudo-static', file_version, path)
 register.simple_tag(static)
