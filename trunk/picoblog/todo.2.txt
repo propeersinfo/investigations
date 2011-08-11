@@ -2,18 +2,34 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
-- make sure comments are fetched and augmented for a concrete article's page only
+- make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
++ use class Tag instead of strings
++ list player fails to play music
++ copy dewplayer onto GAE
++ bug: youtube-images gets hidden: http://127.0.0.1:8080/tag/xxx
++ show tag counters for countries
++ introduce tag counters
++ cache images in DB
++ reimplement youtube JS code
++ special chars like double quote in article title breaks layout
++ fontgen: '/' maps to '.' incorrectly
++ theme 'grid': layout is broken when nothing found by a tag
++ reimplement pagination
++ bad <a> handling: http://rapidshare.com/xxxxx.zip<br>
++ image tag broken
++ correct HTTP response codes for 403/404
++ handling of a 404 article is broken
++ investigate is it ok to use RSS for admin comment tracking
 
 Middle priority:
-- update memcached tag cloud on article change
 - make dewplayer never expire! +ETag
 - let admin distinguish draft articles visually
 - imaged h1's: make white space non clickable
 - copy dewplayer multi onto GAE
 - bug with youtube images: shot-image is repeated many times: http://127.0.0.1:8080/20090929-k-orbelian-and-armenian-state-orchestra-1974.html
 - navigation with Ctrl+arrows
-- custom mp3 tag: eliminate dirs like "other/gradsky-71âˆ’74-sampler.mp3"
+- custom mp3 tag: eliminate dirs like "other/gradsky-71−74-sampler.mp3"
 - admin page: uncategorized tags
 - copy Dropbox images to GAE DB
 - send mails periodically, in the cron way (a proposal)
@@ -28,6 +44,9 @@ Middle priority:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
++ add label 'NN blog posts for tag xxx'
++ admin page: add the most popular pre-categorized tags into DB
++ typograhy
 
 Low priority:
 - let users to edit their comments for some time (using cookies)
