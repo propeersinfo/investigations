@@ -11,18 +11,6 @@ from static_files import WHERE_STATIC_FILES_ARE_STORED
 # Register custom django template tags
 template.register_template_library('django_tags')
 
-def transmit_file(file, out):
-    f = open(file, 'rb')
-    try:
-        out.write(f.read())
-    finally:
-        if f: f.close()
-
-class FrontPageHandler(webapp.RequestHandler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.out.write(template.render('index.html', {}))
-
 CONTENT_TYPES = {
     'jpeg': 'image/jpeg',
     'jpg':  'image/jpeg',
@@ -36,11 +24,21 @@ NEVER_AS_SECONDS = 180 * 24 * 60 * 60 # 180 days
 NEVER_AS_DATE = 'Fri, 30 Oct 2050 14:19:41 GMT'
 ANY_DATE_IN_THE_PAST = 'Fri, 01 Jan 1990 00:00:00 GMT'
 
+def transmit_file(file, out):
+    f = open(file, 'rb')
+    try:
+        out.write(f.read())
+    finally:
+        if f: f.close()
+
+class FrontPageHandler(webapp.RequestHandler):
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.out.write(template.render('index.html', {}))
+
 class NeverExpireResourceHandler(webapp.RequestHandler):
     def get(self, file_version, file_base, file_ext):
         resource = '%s.%s' % (file_base, file_ext)
-        content_type = CONTENT_TYPES.get(file_ext, DEFAULT_CONTENT_TYPE)
-        abs_file = os.path.join(os.path.split(__file__)[0], WHERE_STATIC_FILES_ARE_STORED, resource)
 
         # Some previous version of resource requested - redirect to the right version
         correct_path = StaticFilesInfo.get_resource_path(resource)
@@ -48,20 +46,21 @@ class NeverExpireResourceHandler(webapp.RequestHandler):
             self.redirect(correct_path)
             return
 
-        self.response.headers['Content-Type'] = content_type
-        # Handle non-forced page reload
+        self.response.headers['Content-Type'] = CONTENT_TYPES.get(file_ext, DEFAULT_CONTENT_TYPE)
+        # Handle future non-forced page reloads
         self.response.headers['Expires'] = NEVER_AS_DATE
         self.response.headers['Cache-Control'] = "max-age=%s, public" % NEVER_AS_SECONDS
-        # Handle forced page reload with Ctrl+R, F5
+        # Handle future forced page reloads (Ctrl+R, F5)
         self.response.headers['Last-Modified'] = ANY_DATE_IN_THE_PAST
 
         if 'If-Modified-Since' in self.request.headers:
             # This flag means the client has its own copy of the resource
-            # and we may not return it; we won't.
+            # and we may not return it. We won't.
             # Just set the response code to Not Changed.
             self.response.set_status(304)
         else:
             time.sleep(1) # todo: just making resource loading process noticeable
+            abs_file = os.path.join(os.path.split(__file__)[0], WHERE_STATIC_FILES_ARE_STORED, resource)
             transmit_file(abs_file, self.response.out)
 
 application = webapp.WSGIApplication(
