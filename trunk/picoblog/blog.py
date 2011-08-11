@@ -11,16 +11,7 @@ __docformat__ = 'restructuredtext'
 # Imports
 # -----------------------------------------------------------------------------
 
-from docutils import core, nodes, parsers
-
-import logging
-import os
 import cgi
-import sys
-import math
-import random
-import datetime
-import re
 
 # Google AppEngine imports
 from google.appengine.api import users
@@ -28,7 +19,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
 from models import *
-from rst import rst2html
+#from rst import rst2html
 import defs
 import request
 import utils

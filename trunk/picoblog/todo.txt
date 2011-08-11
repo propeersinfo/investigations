@@ -2,9 +2,6 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
-- imaged h1's: make white space non clickable
-- make dewplayer never expire! +ETag
-- let admin distinguish draft articles visually
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
 + use class Tag instead of strings
@@ -26,6 +23,9 @@ Top priority:
 + investigate is it ok to use RSS for admin comment tracking
 
 Middle priority:
+- make dewplayer never expire! +ETag
+- let admin distinguish draft articles visually
+- imaged h1's: make white space non clickable
 - copy dewplayer multi onto GAE
 - bug with youtube images: shot-image is repeated many times: http://127.0.0.1:8080/20090929-k-orbelian-and-armenian-state-orchestra-1974.html
 - navigation with Ctrl+arrows
@@ -44,7 +44,6 @@ Middle priority:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
-- introduce Tag model?
 + add label 'NN blog posts for tag xxx'
 + admin page: add the most popular pre-categorized tags into DB
 + typograhy
