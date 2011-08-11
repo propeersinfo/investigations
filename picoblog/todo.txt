@@ -7,7 +7,6 @@ Top priority:
 - let admin distinguish draft articles visually
 - make sure comments are fetched full for a concrete article's page only
 - notify admin about new comments (email)
-- copy dewplayer multi onto GAE
 + use class Tag instead of strings
 + list player fails to play music
 + copy dewplayer onto GAE
@@ -27,12 +26,11 @@ Top priority:
 + investigate is it ok to use RSS for admin comment tracking
 
 Middle priority:
+- copy dewplayer multi onto GAE
 - bug with youtube images: shot-image is repeated many times: http://127.0.0.1:8080/20090929-k-orbelian-and-armenian-state-orchestra-1974.html
 - navigation with Ctrl+arrows
 - custom mp3 tag: eliminate dirs like "other/gradsky-71−74-sampler.mp3"
-- add label 'NN blog posts for tag xxx'
 - admin page: uncategorized tags
-+ admin page: add the most popular pre-categorized tags into DB
 - copy Dropbox images to GAE DB
 - send mails periodically, in the cron way (a proposal)
 - fontgen: JS part forms bad request strings for chars like "#$%^"
@@ -47,6 +45,8 @@ Middle priority:
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
 - introduce Tag model?
++ add label 'NN blog posts for tag xxx'
++ admin page: add the most popular pre-categorized tags into DB
 + typograhy
 
 Low priority:

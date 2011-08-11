@@ -11,6 +11,8 @@
 
 {% block main %}
 
+	<p>{{ paging_title }}</p>
+
 	{% for article in articles %}
 		{% include "article.html" %}
 	{% endfor %}
