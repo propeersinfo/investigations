@@ -219,7 +219,7 @@ class EditArticleHandler(request.BlogRequestHandler):
         template_vars = {
             'article'  : article,
             'from'     : cgi.escape(self.request.get('from')),
-            'tag_cloud' : ArticleTag.get_region_tag_cloud()
+            'tag_cloud' : TagCloud.get(),
         }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))

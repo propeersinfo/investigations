@@ -1,7 +1,6 @@
 import os
 import re
 import unicodedata
-import urllib
 import Cookie
 from google.appengine.api import mail
 
@@ -57,6 +56,7 @@ class TimePeriod():
     def seconds(self):
         return self.__seconds
 
+# Usage: utils.hours(1).seconds()
 def hours(hours):
     tp = TimePeriod(hours * 60 * 60)
     return tp

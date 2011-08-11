@@ -131,25 +131,6 @@ class AbstractPageHandler(request.BlogRequestHandler):
         return [DateCount(date, date_count[date]) for date in dates]
 
     def augment_articles(self, articles, url_prefix, produce_html=True):
-        """
-        Augment the ``Article`` objects in a list with the expanded
-        HTML, the path to the article, and the full URL of the article.
-        The augmented fields are:
-
-        - ``html``: the optionally expanded HTML
-        - ``path``: the article's path
-        - ``url``: the full URL to the article
-        
-        :Parameters:
-            articles : list
-                list of ``Article`` objects to be augmented
-
-            url_prefix : str
-                URL prefix to use when constructing full URL from path
-                
-            html : bool
-                ``True`` to generate HTML from each article's RST
-        """
         for article in articles:
             if article:
                 if produce_html:
@@ -163,7 +144,8 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 article.comments_count = article.comment_set.count()
                 article.published_class = 'draft' if article.draft else 'published'
                 #article.title = cgi.escape(article.title)
-                self.augment_comments_for(article)
+                if len(articles) == 1: # only for a concrete blog post page
+                    self.augment_comments_for(article)
 
     def augment_comments_for(self, article):
         comments = []
@@ -228,7 +210,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             url_prefix += ':%s' % port
 
         self.augment_articles(articles, url_prefix)
-        self.augment_articles(recent, url_prefix, produce_html=False)
+        #self.augment_articles(recent, url_prefix, produce_html=False)
 
         #last_updated = last_updated = (articles[0].published_date) if (articles) else (datetime.datetime.now())
 
