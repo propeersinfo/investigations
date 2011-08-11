@@ -1,10 +1,11 @@
 import os
 from google.appengine.api import memcache
 
-WHERE_STATIC_FILES_ARE_STORED = 'pseudo-static'
-# store cached info for five seconds to allow altering 'static' files
+WHERE_STATIC_FILES_ARE_STORED = 'never-expire'
+# Store cached info for a minimum amount of time to allow altering 'static' files.
 MEMCACHE_TIME_DEV_SERVER = 5
-# read info once because there is no chance 'static' files would be changed until next deploy
+# Max time for memcache on production so the files could be inspected even once.
+# Because there is no chances 'static' files could be changed until next deploy.
 MEMCACHE_TIME_PRODUCTION = 0
 
 def is_production():
