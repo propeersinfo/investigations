@@ -9,17 +9,16 @@ p {
 	margin: 0 0 0.6em 0;
 	line-height: 130%;
 }
-a {
-	color: #00a;
-}
-a:hover {
-	color: #f33 !important;
-}
+
+a         { color: #00a !important; }
+a:visited { color: #838 !important; }
+a:hover   { color: #f33 !important; }
+
 .top {
-	background-color: #6EC6FE;
+	/*background-color: #6EC6FE;
 	background-image: url(volna-top.png);
 	background-position: bottom;
-	background-repeat: repeat-x;
+	background-repeat: repeat-x;*/
 	padding-top: 10px;
 	margin-bottom: 0.7em;
 }
@@ -48,6 +47,9 @@ a:hover {
 	background-repeat: no-repeat;
 	width: 250px;
 	height: 100%;
+}
+.top h1 a {
+	color: black !important;
 }
 /*h2 {
 	margin-top:0;
@@ -120,7 +122,7 @@ h2 span {
 	font-size: 85%;
 	/*margin-left: 2em;*/
 }
-input.search { width:98%; font-style:italic; font-family: serif; }
+input.search { width:97%; font-style:italic; font-family: serif; }
 
 div.comment {
 	margin-bottom: 1em !important;
@@ -168,13 +170,16 @@ div.comment p {
 }
 .below-top h1 a { color: black; }
 
-.sidebar-links { color: lightgrey; font-size: 14px; }
-.sidebar-links p { color: lightgrey; }
-.sidebar-links a { color: lightgrey; text-decoration: none;}
-.sidebar-links:hover { color: black; }
-.sidebar-links:hover p { color: black; }
-.sidebar-links:hover a { color: blue; text-decoration: underline; }
-.sidebar-links:hover a:hover { color: red; }
+.sidebar-links { font-size: 14px; }
+/*
+.sidebar-links { color: lightgrey !important; }
+.sidebar-links p { color: lightgrey !important; }
+.sidebar-links a { color: lightgrey !important; text-decoration: none;}
+.sidebar-links:hover { color: black !important; }
+.sidebar-links:hover p { color: black !important; }
+.sidebar-links:hover a { color: blue !important; text-decoration: underline; }
+.sidebar-links:hover a:hover { }
+*/
 
 .bottom {
 	margin-top: 3em;
