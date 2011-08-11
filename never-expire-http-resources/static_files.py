@@ -13,7 +13,7 @@ def is_production():
 
 class StaticFilesInfo():
     @classmethod
-    def get_resource_path(cls, resource):
+    def get_versioned_resource_path(cls, resource):
         resource_current_version = cls.__get_static_files_info().get(resource, 0)
         return '/%s/%s/%s' % (WHERE_STATIC_FILES_ARE_STORED, resource_current_version, resource)
 
