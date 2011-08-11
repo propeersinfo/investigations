@@ -36,34 +36,34 @@ template.register_template_library('my_tags')
 # Classes
 # -----------------------------------------------------------------------------
 
-class DateCount(object):
-    """
-    Convenience class for storing and sorting year/month counts.
-    """
-    def __init__(self, date, count):
-        self.date = date
-        self.count = count
-
-    def __cmp__(self, other):
-        return cmp(self.date, other.date)
-
-    def __hash__(self):
-        return self.date.__hash__()
-
-    def __str__(self):
-        return '%s(%d)' % (self.date, self.count)
-
-    def __repr__(self):
-        return '<%s: %s>' % (self.__class__.__name__, str(self))
-
-class TagCount(object):
-    """
-    Convenience class for storing and sorting tags and counts.
-    """
-    def __init__(self, tag, count):
-        self.css_class = ""
-        self.count = count
-        self.tag = tag
+#class DateCount(object):
+#    """
+#    Convenience class for storing and sorting year/month counts.
+#    """
+#    def __init__(self, date, count):
+#        self.date = date
+#        self.count = count
+#
+#    def __cmp__(self, other):
+#        return cmp(self.date, other.date)
+#
+#    def __hash__(self):
+#        return self.date.__hash__()
+#
+#    def __str__(self):
+#        return '%s(%d)' % (self.date, self.count)
+#
+#    def __repr__(self):
+#        return '<%s: %s>' % (self.__class__.__name__, str(self))
+#
+#class TagCount(object):
+#    """
+#    Convenience class for storing and sorting tags and counts.
+#    """
+#    def __init__(self, tag, count):
+#        self.css_class = ""
+#        self.count = count
+#        self.tag = tag
 
 class AbstractPageHandler(request.BlogRequestHandler):
     """
@@ -149,7 +149,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
 
     def augment_comments_for(self, article):
         comments = []
-        for comment in Comment.get_for_article(article):
+        for comment in article.fetch_comments():
             comment.html = markup.markup2html(markup_text=comment.text,
                                               for_comment=True,
                                               rich_markup=False,
