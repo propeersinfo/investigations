@@ -1,18 +1,15 @@
 import time
 import os
 
-from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
-from google.appengine.api import memcache
 
 # register custom django template tags
-from google.appengine.ext.webapp import template
-template.register_template_library('django_tags')
+from static_files import StaticFilesInfo
+from static_files import WHERE_STATIC_FILES_ARE_STORED
 
-def dev_server():
-    return os.environ.get('SERVER_SOFTWARE','').lower().find('development') >= 0
+template.register_template_library('django_tags')
 
 def transmit_file(file, out):
     f = open(file, 'rb')
@@ -21,32 +18,13 @@ def transmit_file(file, out):
     finally:
         if f: f.close()
 
-class StaticFilesInfo():
-    @classmethod
-    def get(cls):
-        info = memcache.get(cls.__name__)
-        if info is None:
-            info = cls.__grab_info()
-            time = 5 if dev_server() else 0
-            memcache.set(cls.__name__, info, time) # store it as long as possible
-        return info
-    @classmethod
-    def __grab_info(cls):
-        dir = os.path.join(os.path.split(__file__)[0], 'pseudo-static')
-        hash = {}
-        for file in os.listdir(dir):
-            abs_file = os.path.join(dir, file)
-            hash[file] = int(os.path.getmtime(abs_file))
-        return hash
-
 class FrontPageHandler(webapp.RequestHandler):
     def get(self):
         template_vars = {
-            'static_files_info' : StaticFilesInfo.get()
         }
         self.response.headers['Content-Type'] = 'text/html'
         #self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write(template.render('blog.html', template_vars))
+        self.response.out.write(template.render('index.html', template_vars))
 
 CONTENT_TYPES = {
     'jpeg': 'image/jpeg',
@@ -61,57 +39,35 @@ NEVER_AS_SECONDS = 180 * 24 * 60 * 60 # 180 days
 NEVER_AS_DATE = 'Fri, 30 Oct 2050 14:19:41 GMT'
 ANY_DATE_IN_THE_PAST = 'Fri, 01 Jan 1990 00:00:00 GMT'
 
-def headers2str(headers):
-    s = ''
-    for key in headers.keys():
-        s += "%s: %s\n" % (key, headers[key])
-    return s
-
-class PseudoStaticHandler(webapp.RequestHandler):
-    def get(self, file_version, base, ext):
+class NeverExpireResourceHandler(webapp.RequestHandler):
+    def get(self, file_version, file_base, file_ext):
         file_version = int(file_version)
-        sub_path = '%s.%s' % (base, ext)
-        content_type = CONTENT_TYPES.get(ext, DEFAULT_CONTENT_TYPE)
+        resource = '%s.%s' % (file_base, file_ext)
+        content_type = CONTENT_TYPES.get(file_ext, DEFAULT_CONTENT_TYPE)
+        abs_file = os.path.join(os.path.split(__file__)[0], 'pseudo-static', resource)
+
+        correct_path = StaticFilesInfo.get_resource_path(resource)
+        if self.request.path != correct_path:
+            self.redirect(correct_path)
+            return
+
         self.response.headers['Content-Type'] = content_type
-        #del self.response.headers['Expires']
         self.response.headers['Expires'] = NEVER_AS_DATE
         self.response.headers['Cache-Control'] = "max-age=%s, public" % NEVER_AS_SECONDS
         self.response.headers['Last-Modified'] = ANY_DATE_IN_THE_PAST
-        #etag = '"%s%s"' % (sub_path,file_version)
-        #etag = hashlib.sha1(etag).hexdigest()
-        #self.response.headers['ETag'] = etag
-        abs_file = os.path.join(os.path.split(__file__)[0], 'pseudo-static', sub_path)
-        #self.response.out.write('sub_path: %s' % abs_file)
 
-#        self.response.headers['Content-Type'] = "text/plain"
-#        self.response.out.write("Request headers:\n%s\n" % headers2str(self.request.headers))
-#        self.response.out.write("Response headers:\n%s\n" % headers2str(self.response.headers))
-#        return
-
-        serve = True
         if 'If-Modified-Since' in self.request.headers:
-            serve = False
-
-#        if 'If-None-Match' in self.request.headers:
-#            etags = [x.strip('" ') for x in self.request.headers['If-None-Match'].split(',')]
-#            if etag in etags:
-#                serve = False
-
-        if serve:
-            time.sleep(1)
-            transmit_file(abs_file, self.response.out)
+            self.response.set_status(304) # the resource not changed
         else:
-            self.response.set_status(304)
+            time.sleep(1) # todo: just making resource loading process noticeable
+            transmit_file(abs_file, self.response.out)
 
 application = webapp.WSGIApplication(
     [('^/$', FrontPageHandler),
-     ('/pseudo-static/(\d+)/(.+)\.(.+)', PseudoStaticHandler),
-     ],
-
+     # Example /static/123456/image.jpg
+     ('/'+WHERE_STATIC_FILES_ARE_STORED+'/(\d+)/(.+)\.(.+)', NeverExpireResourceHandler),
+    ],
     debug=True)
 
-def main():
-    util.run_wsgi_app(application)
-
 if __name__ == '__main__':
-    main()
+    util.run_wsgi_app(application)
