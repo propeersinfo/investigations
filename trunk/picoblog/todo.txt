@@ -2,8 +2,9 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Top priority:
-- make sure comments are fetched and augmented for a concrete article's page only
+- add href values to the links side bar
 - notify admin about new comments (email)
++ make sure comments are fetched and augmented for a concrete article's page only
 
 Middle priority:
 - update memcached tag cloud on article change

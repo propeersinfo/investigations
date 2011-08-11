@@ -91,8 +91,8 @@ class Article(db.Model):
     tags = db.ListProperty(db.Key)
     draft = db.BooleanProperty(required=True, default=False)
 
-    def get_comments(self):
-        return self.comment_set.fetch(FETCH_THEM_ALL_COMMENTS)
+    def fetch_comments(self):
+        return Comment.get_for_article(self)
 
     @classmethod
     def get(cls, id):
