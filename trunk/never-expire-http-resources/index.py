@@ -43,7 +43,7 @@ class NeverExpireResourceHandler(webapp.RequestHandler):
         # Some previous version of resource requested - redirect to the right version
         correct_path = StaticFilesInfo.get_resource_path(resource)
         if self.request.path != correct_path:
-            self.redirect(correct_path)
+            self.redirect(correct_path) # todo: response 'moved permanently'?
             return
 
         self.response.headers['Content-Type'] = CONTENT_TYPES.get(file_ext, DEFAULT_CONTENT_TYPE)
