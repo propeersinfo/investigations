@@ -395,7 +395,9 @@ class AddCommentHandler(AbstractPageHandler):
                           replied_comment_id = self.get_replied_comment_id())
         comment.save()
         utils.set_unicode_cookie(self.response, "comment_author", author)
-        utils.send_mail_to_admin_about_new_comment(comment)
+        if defs.PRODUCTION:
+            # e-mail sending is not set up on the dev server yet
+            utils.send_mail_to_admin_about_new_comment(comment)
         self.redirect(utils.get_article_path(article))
 
 class NotFoundPageHandler(AbstractPageHandler):

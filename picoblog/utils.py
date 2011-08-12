@@ -3,6 +3,7 @@ import re
 import unicodedata
 import Cookie
 from google.appengine.api import mail
+import defs
 
 def slugify(s):
   s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').lower()
@@ -12,7 +13,10 @@ def slugify(s):
 
 def get_article_path(article):
   return '/%s-%s.html' % (article.id, slugify(article.title))
-    
+
+def get_article_url(article):
+  return defs.CANONICAL_BLOG_URL + get_article_path(article)
+
 def get_article_guid(article):
   return '/%s.html' % (article.id)
     
@@ -43,12 +47,12 @@ def send_mail_to_admin_about_new_comment(comment):
                    to='zeencd@gmail.com',
                    subject='New comment in "%s"' % comment.article.title,
                    body='''
-Author: %s
+Comment author: %s
 
-Text: %s
+Coment text: %s
 
-Address: %s
-''' % (comment.author, comment.text, get_article_path(comment.article)))
+Blog post: %s
+''' % (comment.author, comment.text, get_article_url(comment.article)))
 
 class TimePeriod():
     def __init__(self, seconds):
