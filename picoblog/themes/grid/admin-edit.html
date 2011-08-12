@@ -83,7 +83,7 @@ function cancel_edit()
     <textarea name="content" cols="98%" rows="15" style="width:98%">{{ article.body|escape }}</textarea>
 
     <p>
-        Tags: <input type="text" cols="80" name="tags" value="{{ article.tag_string}}"/>
+        Tags: <input type="text" size="60" name="tags" value="{{ article.tag_string}}"/>
 
         {% if article.draft %}
         Draft: <input type="checkbox" name="draft" checked/>
