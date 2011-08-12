@@ -66,6 +66,7 @@ class TagCloud():
         value = memcache.get(cls.KEY)
         if value is None:
             value = cls.__generate()
+            # todo: keep it forever but reset memcache when a tag changed in datastore
             memcache.set(cls.KEY, cls.__generate(), utils.hours(1).seconds())
         return value
     @classmethod

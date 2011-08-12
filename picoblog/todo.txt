@@ -13,6 +13,7 @@ Major:
 - implement never-expire resources
 
 Normal:
+- keep TagCloud in memcache forever but reset it when a tag changed in datastore
 - asynch e-mail sending?
 - tag rss
 - update memcached tag cloud on article change
