@@ -7,7 +7,7 @@ import utils
 
 FETCH_THEM_ALL_COMMENTS = 100
 FETCH_ALL_TAGS = 1000
-FETCH_ALL_REGION_TAGS = 500 # real amount of regions should be around 15
+FETCH_ALL_TAGS_FOR_TAG_CLOUD = 2000 # there are about 150 tags in Opera
 MAX_ARTICLES_PER_DAY = 20
 
 class ArticleTag(db.Model):
@@ -77,7 +77,7 @@ class TagCloud():
         tag_cloud = {}
         tags = db.Query(ArticleTag)\
                  .filter('counter >', 0)\
-                 .fetch(FETCH_ALL_REGION_TAGS)
+                 .fetch(FETCH_ALL_TAGS_FOR_TAG_CLOUD)
         for tag in tags:
             tag_cloud[tag.name] = tag.counter
         return tag_cloud
