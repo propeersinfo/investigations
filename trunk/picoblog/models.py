@@ -57,14 +57,16 @@ class ArticleTag(db.Model):
         return [ cls.get_by_name(tag_name, True).key() for tag_name in tag_names ]
 
 class TagCloud():
+    """
+    All tags in memory, 2-3 KB
+    """
     KEY = 'region-tag-cloud'
-    MEMCACHE_TIME = utils.hours(1).seconds()
     @classmethod
     def get(cls):
         value = memcache.get(cls.KEY)
         if value is None:
             value = cls.__generate()
-            memcache.set(cls.KEY, cls.__generate(), cls.MEMCACHE_TIME)
+            memcache.set(cls.KEY, cls.__generate(), utils.hours(1).seconds())
         return value
     @classmethod
     def reset(cls):
@@ -75,7 +77,6 @@ class TagCloud():
         tags = db.Query(ArticleTag)\
                  .filter('counter >', 0)\
                  .fetch(FETCH_ALL_REGION_TAGS)
-                 #.filter('category =', 'region')\
         for tag in tags:
             tag_cloud[tag.name] = tag.counter
         return tag_cloud
