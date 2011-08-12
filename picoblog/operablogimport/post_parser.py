@@ -92,6 +92,7 @@ def get_content(soup):
   replace_br(div_content_node)
   fix_links_attrs(div_content_node)
   text = node_to_string(div_content_node)
+  text = text.replace('&amp;', '&')
   return text
 
 def node_to_string(root):
@@ -201,7 +202,7 @@ def fix_image(root):
 
 def fix_youtube(root):
     for tag in root.findAll("object"):
-        m = re.search(r'http://www.youtube.com/v/[^\"]+', str(tag))
+        m = re.search(r'http://www.youtube.com/v/[^&\"]+', str(tag))
         if m:
             tag.replaceWith("[%s]" % m.group(0))
 
@@ -224,7 +225,8 @@ def parse_file(opera_blog_post_file):
 if __name__ == '__main__':
     #file = '75'
     #file = 'ludvikovsky-and-garanian-1971'
-    file = 'soviet-electro-mixtype'
+    #file = 'soviet-electro-mixtype'
+    file = 'raw-funk-from-armenia-1979'
     parsed = parse_file('../operabloghtml/%s' % file)
     print parsed['title'].encode('ascii', 'ignore')
     print parsed['content'].encode('ascii', 'ignore')
