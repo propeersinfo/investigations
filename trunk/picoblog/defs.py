@@ -24,7 +24,7 @@ TOTAL_RECENT = 10
 
 if os.environ.get('SERVER_SOFTWARE','').lower().find('development') >= 0:
   PRODUCTION = False
-  CANONICAL_BLOG_URL = 'http://localhost:8080/'
+  CANONICAL_BLOG_URL = 'http://localhost:8080'
 else:
   PRODUCTION = True
-  CANONICAL_BLOG_URL = 'http://sovietraregroove.appspot.com/'
+  CANONICAL_BLOG_URL = 'http://sovietraregroove.appspot.com'
