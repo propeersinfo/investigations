@@ -86,6 +86,10 @@ h2 span {
 .below_top { margin-top: 1em; }
 
 
+/* sidebars */
+.sidebar-panel {
+	margin-top: 0.28em; /* w/out that sidebars looks above the main content because of smaller font */
+}
 .sidebar-tags {
 	font-size: 14px;
 }
