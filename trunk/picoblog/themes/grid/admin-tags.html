@@ -1,0 +1,43 @@
+{% extends "admin-base.html" %}
+
+{% block main %}
+
+<script>
+function selected(select) {
+	var value = select.value
+	var form = select.parentNode
+	if(value) {
+		//alert(value + '/' + form)
+		form.submit()
+	}
+}
+</script>
+
+<h1>Manage tags</h1>
+
+<p>Tags categorized as "{{ current_category }}"
+
+<p>Categories:
+{% for cat in categories %}
+	<a href="tags?category={{ cat }}">'{{ cat }}'</a>,
+{% endfor %}
+
+<p>
+
+{% for tag in tags %}
+	<form method="POST" action="{{ current_path }}">
+		<select name="new_category" onchange="selected(this)">
+			<option></option>
+			<option>artist</option>
+			<option>genre</option>
+			<option>region</option>
+			<option>time</option>
+			<option>misc</option>
+		</select>
+		<input type="hidden" name="tag" value="{{ tag.name }}">
+		<input type="hidden" name="return_path" value="{{ current_path }}">
+		<a href="/tag/{{ tag.name }}" target="_blank">{{ tag.name }}</a> {{ tag.counter }}
+	</form>
+{% endfor%}
+
+{% endblock %}

@@ -23,7 +23,7 @@ from userinfo import UserInfo
 from google.appengine.ext.webapp import template
 template.register_template_library('my_tags')
 
-ADMIN_FETCH_MAX = 10 * 1000
+ADMIN_FETCH_MAXIMUM = 10 * 1000
 
 # -----------------------------------------------------------------------------
 # Classes
@@ -37,27 +37,36 @@ class ShowAdminMainPageHandler(request.BlogRequestHandler):
         self.response.out.write(self.render_template('admin-main.html',
                                                      template_vars))
 
-class UncategorizedTags(request.BlogRequestHandler):
+class ManageTags(request.BlogRequestHandler):
     def get(self):
-        # list tags
-        tags_uncategorized = db.Query(ArticleTag).filter('category = ', '')\
-                               .order('name')\
-                               .fetch(10*1000)
-        #tags_uncategorized = db.GqlQuery("SELECT * FROM ArticleTag WHERE category = :1", '').fetch(10*1000)
+        category_selected = self.request.get('category')
+
+        tags_subset = []
+        categories = {}
+        for tag in db.Query(ArticleTag).order('name').fetch(ADMIN_FETCH_MAXIMUM):
+            categories[tag.category] = categories.get(tag.category, 0) + 1
+            if tag.category == category_selected:
+                tags_subset.append(tag)
+
         template_vars = {
-            'tags_uncategorized' : tags_uncategorized,
+            'tags' : tags_subset,
+            'current_category': category_selected,
+            'categories': categories,
+            'current_path': '%s?category=%s' % (self.request.path, category_selected),
         }
-        self.response.out.write(self.render_template('admin-uncategorized-tags.html', template_vars))
+        self.response.out.write(self.render_template('admin-tags.html', template_vars))
     def post(self):
         # update a tag
         tag_name = self.request.get('tag')
-        category = self.request.get('category')
-        if tag_name and category:
+        new_category = self.request.get('new_category')
+        return_path = self.request.get('return_path')
+        assert return_path is not None
+        if tag_name and new_category:
             tag = ArticleTag.get_by_name(tag_name)
             if tag:
-                tag.category = category
+                tag.category = new_category
                 tag.save()
-        self.redirect('/admin/uncategorized-tags')
+        self.redirect(return_path)
 
 class SetupBasicTags(request.BlogRequestHandler):
     def post(self):
@@ -112,13 +121,13 @@ class EmptyDB(request.BlogRequestHandler):
 
 def reset_all_tag_counters():
     q = ArticleTag.all()
-    for tag in q.fetch(ADMIN_FETCH_MAX):
+    for tag in q.fetch(ADMIN_FETCH_MAXIMUM):
         tag.counter = 0
         tag.save()
 
 def calculate_all_tag_counters():
     q = Article.query_all()
-    for article in q.fetch(ADMIN_FETCH_MAX):
+    for article in q.fetch(ADMIN_FETCH_MAXIMUM):
         for tag_key in set(article.tags):
             tag = ArticleTag.get_by_key(tag_key, create_on_demand=True)
             tag.counter += 1
@@ -273,7 +282,7 @@ application = webapp.WSGIApplication(
          ('/admin/recalculate-tag-counters', RecalculateTagCountersFromArticles),
          ('/admin/delete-all-tags', DeleteAllTags),
          ('/admin/empty-db', EmptyDB),
-         ('/admin/uncategorized-tags', UncategorizedTags),
+         ('/admin/tags', ManageTags),
          ],
         debug=True)
 
