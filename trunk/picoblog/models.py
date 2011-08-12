@@ -84,10 +84,8 @@ class Article(db.Model):
 
     id = db.IntegerProperty()
     title = db.StringProperty(required=True, indexed=False)
-    #title_slug = db.StringProperty(required=True)
     body = db.TextProperty(indexed=False)
     published_date = db.DateTimeProperty(auto_now_add=True, indexed=True)
-    #tags = db.ListProperty(db.Category)
     tags = db.ListProperty(db.Key)
     draft = db.BooleanProperty(required=True, default=False)
 
