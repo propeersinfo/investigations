@@ -73,9 +73,9 @@ class TagCloud():
     def __generate(cls):
         tag_cloud = {}
         tags = db.Query(ArticleTag)\
-                 .filter('category =', 'region')\
                  .filter('counter >', 0)\
                  .fetch(FETCH_ALL_REGION_TAGS)
+                 #.filter('category =', 'region')\
         for tag in tags:
             tag_cloud[tag.name] = tag.counter
         return tag_cloud

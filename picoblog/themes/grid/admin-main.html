@@ -13,8 +13,20 @@ div { margin: 10px; }
 </div>
 
 <div class="new row">
-	<form method="POST" action="/admin/delete-all-tags">
-	<input type="submit" value="Delete all tags" disabled>
+	<form method="POST" action="/admin/reset-tag-counters">
+	<input type="submit" value="Reset tag counters">
+	</form>
+</div>
+
+<div class="row">
+	<form method="POST" action="/admin/recalculate-tag-counters">
+	<input type="submit" value="Recalculate tag counters from articles">
+	</form>
+</div>
+
+<div class="row new">
+	<form method="GET" action="/importdata/">
+	<input type="submit" value="Import articles from Opera">
 	</form>
 </div>
 
@@ -24,17 +36,13 @@ div { margin: 10px; }
 	</form>
 </div>
 
+<!--
 <div class="row">
-	<form method="POST" action="/admin/recalculate-tag-counters">
-	<input type="submit" value="Recalculate tag counters (safe)">
+	<form method="POST" action="/importdata/pre-categorize-tags">
+	<input type="submit" value="Pre categorize tags">
 	</form>
 </div>
-
-<div class="row new">
-	<form method="GET" action="/importdata/">
-	<input type="submit" value="Import articles from Opera">
-	</form>
-</div>
+-->
 
 {% if dev_server %}
 <div class="row new">

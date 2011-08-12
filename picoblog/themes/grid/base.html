@@ -46,6 +46,7 @@
 				-->
 				<h1>
 					<a href="/">Soviet Rare Groove</a>
+					<sup><a href="/rss">RSS</a></sup>
 {% if user_info.is_admin %}
 					<small>
 						/ <a href="/admin/article/new">add article</a>,
@@ -58,7 +59,8 @@
 				<input class="search" type="text" value="search"/>
 			</div>
 		</div>
-		<div class="about">
+		<div class="row about">
+			<div class="width_6">
 			<!--
 			A blog about groovy, funky, soulful, beat, twist and psych sides of music produced
 			in&nbsp;USSR during the&nbsp;period of 1965—85.
@@ -66,7 +68,7 @@
 			-->
 	    	{% blog_tag "funk" "Funk" %},
 	    	{% blog_tag "jazz" %},
-	    	{% blog_tag "psyche" %},
+	    	{% blog_tag "psychedelic" %},
 	    	{% blog_tag "progressive" %},
 	    	{% blog_tag "disco" %},
 	    	{% blog_tag "electro" %},
@@ -75,6 +77,7 @@
 	    	{% blog_tag "60s" "60's" %},
 	    	{% blog_tag "70s" "70's" %} and
 	    	{% blog_tag "80s" "80's" %}.
+	    	</div>
 		</div>
 	</div>
 </div>

@@ -227,6 +227,7 @@ if __name__ == '__main__':
     #file = 'ludvikovsky-and-garanian-1971'
     #file = 'soviet-electro-mixtype'
     file = 'raw-funk-from-armenia-1979'
+    #file = 'aura-urziceanu-1974.htm'
     parsed = parse_file('../operabloghtml/%s' % file)
     print parsed['title'].encode('ascii', 'ignore')
     print parsed['content'].encode('ascii', 'ignore')

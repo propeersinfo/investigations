@@ -51,6 +51,9 @@ a:hover   { color: #f33 !important; }
 .top h1 a {
 	color: black !important;
 }
+.top h1 sup {
+	font-size: 60%;
+}
 /*h2 {
 	margin-top:0;
 	text-indent: -9999px;

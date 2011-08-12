@@ -47,6 +47,7 @@ class ManageTags(request.BlogRequestHandler):
             categories[tag.category] = categories.get(tag.category, 0) + 1
             if tag.category == category_selected:
                 tags_subset.append(tag)
+            #self.response.out.write('"%s": "%s",<br>\n' % (tag.name, tag.category))
 
         template_vars = {
             'tags' : tags_subset,
@@ -70,6 +71,7 @@ class ManageTags(request.BlogRequestHandler):
 
 class SetupBasicTags(request.BlogRequestHandler):
     def post(self):
+        """
         tags_categorized = {
             'region': 'russia,ukraine,moldova,belarus,'
                        'armenia,azerbaijan,georgia,'
@@ -79,17 +81,23 @@ class SetupBasicTags(request.BlogRequestHandler):
             'artist': 'melodiya,garanian,alexander zatsepin,',
             'time': '60s,70s,80s,',
         }
-        for category in tags_categorized.keys():
-            tag_names = tags_categorized[category].split(',')
-            for tag_name in tag_names:
-                tag_name = tag_name.strip()
-                if len(tag_name) > 0:
-                    tag = ArticleTag.get_by_name(tag_name, create_on_demand=True)
-                    tag.category = category
-                    tag.save()
-        #template_vars = {}
-        #self.response.out.write(self.render_template('admin-setup-basic-tags.html',
-        #                                             template_vars))
+        """
+        from operablogimport.tags_categorized import tags_categorized
+        for tag_name in tags_categorized.keys():
+            category = tags_categorized[tag_name]
+            tag = ArticleTag.get_by_name(tag_name, create_on_demand=True)
+            tag.category = category
+            tag.save()
+
+        """
+        from operablogimport.tags_categorized import tags_categorized
+        for tag in ArticleTag.all().fetch(ADMIN_FETCH_MAXIMUM):
+            self.response.out.write("%s: %s\n" % (tag.name, tag.category))
+            if tags_categorized.has_key(tag.name):
+                tag.category = tags_categorized[tag.name]
+                tag.save()
+        """
+
         self.redirect('/admin/')
 
 def empty_table(table):
@@ -101,15 +109,10 @@ def empty_table(table):
             break
         db.delete(q.fetch(200))
 
-class DeleteAllTags(request.BlogRequestHandler):
+class ResetTagCounters(request.BlogRequestHandler):
     def post(self):
-        raise Exception('dangerous code')
-#        while True:
-#            q = db.GqlQuery('SELECT __key__ FROM ArticleTag')
-#            if q.count() <= 0:
-#                break
-#            db.delete(q.fetch(200))
-#        self.redirect('/admin/')
+        reset_all_tag_counters()
+        self.redirect('/admin/')
 
 class EmptyDB(request.BlogRequestHandler):
     def post(self):
@@ -120,7 +123,7 @@ class EmptyDB(request.BlogRequestHandler):
         self.redirect('/admin/')
 
 def reset_all_tag_counters():
-    q = ArticleTag.all()
+    q = ArticleTag.all().filter('counter !=', 0)
     for tag in q.fetch(ADMIN_FETCH_MAXIMUM):
         tag.counter = 0
         tag.save()
@@ -280,7 +283,7 @@ application = webapp.WSGIApplication(
          ('/admin/comment/delete/(\d+)$', DeleteCommentHandler),
          ('/admin/setup-basic-tags', SetupBasicTags),
          ('/admin/recalculate-tag-counters', RecalculateTagCountersFromArticles),
-         ('/admin/delete-all-tags', DeleteAllTags),
+         ('/admin/reset-tag-counters', ResetTagCounters),
          ('/admin/empty-db', EmptyDB),
          ('/admin/tags', ManageTags),
          ],
