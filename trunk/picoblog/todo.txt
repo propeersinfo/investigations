@@ -2,14 +2,16 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Critical:
-- add href values to the links side bar
-- notify admin about new comments (email)
+- find how to copy dev db onto production completely
++ add href values to the links side bar
++ notify admin about new comments (email)
 + make sure comments are fetched and augmented for a concrete article's page only
 
 Major:
 - implement never-expire resources
 
 Normal:
+- asynch e-mail sending?
 - tag rss
 - update memcached tag cloud on article change
 - make dewplayer never expire! +ETag
