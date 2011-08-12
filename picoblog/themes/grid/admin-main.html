@@ -1,15 +1,17 @@
+{% extends "admin-base.html" %}
+
+{% block main %}
+
 <style>
 div { margin: 10px; }
 .row { float: left; }
 .new { clear: both; }
 </style>
 
-<a href="/">Home</a> | <a href="/_ah/admin/datastore">Data store</a>
-
 <h1>Admin's Nest</h1>
 
 <div class="new row">
-	<a href="/admin/uncategorized-tags">Uncategorized tags</a>
+	<a href="/admin/tags">Manage tags</a>
 </div>
 
 <div class="new row">
@@ -43,3 +45,5 @@ div { margin: 10px; }
 	</form>
 </div>
 {% endif %}
+
+{% endblock %}

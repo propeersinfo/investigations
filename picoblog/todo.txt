@@ -1,12 +1,16 @@
 Check list:
 * make sure admin links are viewable and accessible for admin only
 
-Top priority:
+Critical:
 - add href values to the links side bar
 - notify admin about new comments (email)
 + make sure comments are fetched and augmented for a concrete article's page only
 
-Middle priority:
+Major:
+- implement never-expire resources
+
+Normal:
+- tag rss
 - update memcached tag cloud on article change
 - make dewplayer never expire! +ETag
 - let admin distinguish draft articles visually

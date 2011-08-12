@@ -28,7 +28,7 @@ Custom []-styled tags are supported:
 #        return modified != markup_text
 
 def handle_custom_tag_image(text):
-    regex = re.compile("\[([^\]]+jpg)\]", re.IGNORECASE)
+    regex = re.compile("\[([^\]]+(jpg|jpeg|png|gif))\]", re.IGNORECASE)
     #replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\\1" width="140" alt="\\1">' % defs.DROPBOX_USER
     replacement = '<img src="/static/cover.jpg" width="140" alt="\\1">'
     return regex.sub(replacement, text)

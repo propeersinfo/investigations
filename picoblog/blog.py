@@ -4,6 +4,7 @@
 Google App Engine Script that handles display of the published
 items in the blog.
 """
+import urllib
 
 __docformat__ = 'restructuredtext'
 
@@ -107,28 +108,28 @@ class AbstractPageHandler(request.BlogRequestHandler):
 #
 #        random.shuffle(result)
 #        return result
-
-    def get_month_counts(self):
-        """
-        Get date counts, sorted in reverse chronological order.
-        
-        :rtype: list
-        :return: list of ``DateCount`` objects
-        """
-        hash = Article.get_all_datetimes()
-        datetimes = hash.keys()
-        date_count = {}
-        for dt in datetimes:
-            just_date = datetime.date(dt.year, dt.month, 1)
-            try:
-                date_count[just_date] += hash[dt]
-            except KeyError:
-                date_count[just_date] = hash[dt]
-
-        dates = date_count.keys()
-        dates.sort()
-        dates.reverse()
-        return [DateCount(date, date_count[date]) for date in dates]
+#
+#    def get_month_counts(self):
+#        """
+#        Get date counts, sorted in reverse chronological order.
+#
+#        :rtype: list
+#        :return: list of ``DateCount`` objects
+#        """
+#        hash = Article.get_all_datetimes()
+#        datetimes = hash.keys()
+#        date_count = {}
+#        for dt in datetimes:
+#            just_date = datetime.date(dt.year, dt.month, 1)
+#            try:
+#                date_count[just_date] += hash[dt]
+#            except KeyError:
+#                date_count[just_date] = hash[dt]
+#
+#        dates = date_count.keys()
+#        dates.sort()
+#        dates.reverse()
+#        return [DateCount(date, date_count[date]) for date in dates]
 
     def augment_articles(self, articles, url_prefix, produce_html=True):
         for article in articles:
@@ -286,6 +287,7 @@ class ArticlesByTagHandler(AbstractPageHandler):
     """
     def get(self, tag_name, page_num = 1):
         page_num = int(page_num)
+        tag_name = urllib.unquote(tag_name) # replace %20 with actual characters
         q = Article.query_for_tag_name(tag_name)
         paged_query = PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE)
         page_info = PageInfo(paged_query,
