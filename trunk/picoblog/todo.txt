@@ -2,6 +2,8 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Critical:
+- finish rss handling
+- html'ed rss fails for safari
 - find how to copy dev db onto production completely
 + add href values to the links side bar
 + notify admin about new comments (email)

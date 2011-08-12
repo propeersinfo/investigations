@@ -12,7 +12,13 @@
       <guid>{{ article.guid }}</guid>
       <pubDate>{{ article.published_date|date:"D, d M Y H:i:s T" }}</pubDate>
       <description>
-        {{ article.html|escape }}
+	    {% for p in article.complex_html.before %}
+		  {{ p }}
+		{% endfor %}
+		...
+	    {% for p in article.complex_html.after %}
+		  {{ p }}
+		{% endfor %}
       </description>
       <author>{{ blog_owner }}</author>
     </item>

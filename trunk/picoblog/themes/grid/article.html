@@ -5,9 +5,13 @@
 			{% else %}
 				<a href="{{article.path}}">
 					<span></span>
-					{{ article.title|escape }}
-				</a>
+					{{ article.title|escape }}</a>
 			{% endif %}
+{% if user_info.is_admin %}
+			<a href="/admin/article/edit/{{article.id}}?from={{current_path}}">
+				<img src="/static/edit16.png" alt="[edit]" border="0">
+			</a>
+{% endif %}
 		</h1>
 		<script>
 		//adjustHeader("article_header_{{article.id}}")
@@ -84,13 +88,6 @@
 			{% for tag in article.tag_objects %}
 				<a href="/tag/{{tag.name}}">{{tag.name}}</a>,
 			{% endfor %}
-			
-{% if user_info.is_admin %}
-			/
-			<a href="/admin/article/edit/{{article.id}}?from={{current_path}}" title="Edit article">
-				<b>edit</b>
-			</a>
-{% endif %}
 	    </p>
 	    
 
