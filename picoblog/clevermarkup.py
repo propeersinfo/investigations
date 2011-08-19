@@ -29,8 +29,8 @@ Custom []-styled tags are supported:
 
 def handle_custom_tag_image(text):
     regex = re.compile("\[([^\]]+(jpe?g|png|gif))\]", re.IGNORECASE)
-    #replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\\1" width="140" alt="\\1">' % defs.DROPBOX_USER
-    replacement = '<img src="/static/cover.jpg" width="140" alt="\\1">'
+    replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\\1" alt="\\1">' % defs.DROPBOX_USER
+    #replacement = '<img src="/static/cover.jpg" width="140" alt="\\1">'
     return regex.sub(replacement, text)
 
 # [http://ya.ru/]

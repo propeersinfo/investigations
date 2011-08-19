@@ -13,6 +13,24 @@ function selected(select) {
 }
 </script>
 
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("visualization", "1", {packages:["corechart"]});
+	google.setOnLoadCallback(drawChart);
+	function drawChart() {
+		var data = new google.visualization.DataTable();
+		data.addColumn('string', 'Task');
+		data.addColumn('number', 'Hours per Day');
+		data.addRows({{ tags|length }});
+		{% for tag in tags %}
+			data.setValue({{ forloop.counter0 }}, 0, "{{ tag.name }}");
+			data.setValue({{ forloop.counter0 }}, 1, {{ tag.counter }});
+		{% endfor %}
+		var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+		chart.draw(data, {width: 450, height: 300, title: "Distribution by {{current_category}}"});
+	}
+</script>
+
 <h1>Manage tags</h1>
 
 <p>Tags categorized as "{{ current_category }}"
@@ -21,6 +39,8 @@ function selected(select) {
 {% for cat in categories %}
 	<a href="tags?category={{ cat }}">'{{ cat }}'</a>,
 {% endfor %}
+
+<div id="chart_div" style="position:absolute; left:500px; top:93px;"></div>
 
 <p>
 

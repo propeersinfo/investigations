@@ -78,7 +78,7 @@ h2 span {
 
 .about {
 	font-size: 82%;
-	margin-bottom: 1.7em;
+	margin-top: 0.5em !important;
 }
 .about a {
 	color: black;
@@ -86,12 +86,20 @@ h2 span {
 .about a:hover {
 	color: #e22;
 }
-.below_top { margin-top: 1em; }
+
+/* contains panes: main and both sidebars */
+.below-top { margin-top: 1.5em; }
+
+
+div.article {
+	margin-bottom: 3em;
+}
 
 
 /* sidebars */
 .sidebar-panel {
-	margin-top: 0.28em; /* w/out that sidebars looks above the main content because of smaller font */
+	font-size: 14px;
+	margin-top: 0.29em; /* w/out that sidebars looks above the main content because of smaller font */
 }
 .sidebar-tags {
 	font-size: 14px;
@@ -105,7 +113,8 @@ h2 span {
 	margin-bottom: 0.25em;
 }
 .sidebar-tags ul li span {
-	color: grey;
+	font-size: 75%;
+	color: #333;
 }
 .sidebar-tags ul li.title {
 	font-style: normal;
@@ -113,6 +122,17 @@ h2 span {
 .sidebar-tags .group {
 	margin-bottom: 10px;
 }
+
+.sidebar-links { }
+/*
+.sidebar-links { color: lightgrey !important; }
+.sidebar-links p { color: lightgrey !important; }
+.sidebar-links a { color: lightgrey !important; text-decoration: none;}
+.sidebar-links:hover { color: black !important; }
+.sidebar-links:hover p { color: black !important; }
+.sidebar-links:hover a { color: blue !important; text-decoration: underline; }
+.sidebar-links:hover a:hover { }
+*/
 
 
 .tracks { font-size: 14px; }
@@ -176,17 +196,6 @@ div.comment p {
 	font-size: 140%;
 }
 .below-top h1 a { color: black; }
-
-.sidebar-links { font-size: 14px; }
-/*
-.sidebar-links { color: lightgrey !important; }
-.sidebar-links p { color: lightgrey !important; }
-.sidebar-links a { color: lightgrey !important; text-decoration: none;}
-.sidebar-links:hover { color: black !important; }
-.sidebar-links:hover p { color: black !important; }
-.sidebar-links:hover a { color: blue !important; text-decoration: underline; }
-.sidebar-links:hover a:hover { }
-*/
 
 .bottom {
 	margin-top: 3em;
