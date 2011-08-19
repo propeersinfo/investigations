@@ -2,6 +2,8 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Critical:
+- unintented line breaks: http://127.0.0.1:8080/20110404-jaan-kuman-tantsurutme-eps.html
+- article 'visitors' breaks layout
 - finish rss handling
 - html'ed rss fails for safari
 - find how to copy dev db onto production completely
