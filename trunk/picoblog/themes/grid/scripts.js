@@ -93,3 +93,19 @@ function adjustHeader(headerId) {
 		span.style.backgroundImage = "url(/font?text=" + text + ")"
 	}
 }
+
+// ctrl+arrows navigation
+$(document).ready(function() {
+    document.addEventListener('keydown', function(event) {
+        switch (event.keyCode ? event.keyCode : event.which ? event.which : null) {
+            case 0x25:
+                link = document.getElementById ('prev-link');
+                break;
+            case 0x27:
+                link = document.getElementById ('next-link');
+                break;
+        }
+        if (link && link.href)
+            document.location = link.href;
+    }, false)
+});
