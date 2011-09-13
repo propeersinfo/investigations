@@ -1,0 +1,3 @@
+mktorrent.exe -a udp://tracker.openbittorrent.com:80/announce -o 1.torrent <full-dir-path>
+
+@see http://wiki.vuze.com/w/Torrent_Piece_Size
