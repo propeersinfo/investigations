@@ -37,12 +37,25 @@ def get_root_image():
 def command_upload_images():
     print "command_upload..."
 
+class UniqueOutputPiece(object):
+    def __init__(self, text):
+        self.text = text
+        self.printed = False
+    def print_itself(self):
+        if self.printed:
+            #print "SKIPPING"
+            pass
+        #elif re.search(r'.*album.*', self.text, re.IGNORECASE):
+        else:
+            print self.text#, self.__hash__()
+            self.printed = True
+
 def command_generate_bbcode():
     print "command_generate_bbcode..."
 
     total_length = 0
 
-    def one_dir(root_long, root_short, offset):
+    def one_dir(root_long, root_short, offset, old_before):
         sub_files = os.listdir(root_long)
         sub_dirs = only_dirs(root_long, sub_files)
         audio_files = only_audio_files(root_long, sub_files)
@@ -53,16 +66,22 @@ def command_generate_bbcode():
         s_offset_2 = " " * (offset+1) * 2
         s_bitrate = " (%s kbps)" % dir_bitrate if dir_bitrate else ""
 
-        print '%s[spoiler="%s%s"]' % (s_offset, root_short, s_bitrate)
+        text1 = UniqueOutputPiece('%s[spoiler="%s%s"]' % (s_offset, root_short, s_bitrate))
+        def new_before():
+            if old_before: old_before()
+            text1.print_itself()
+
+        if len(audio_files) > 0: new_before()
         for dir in sub_dirs:
-            one_dir(os.path.join(root_long, dir), dir, offset+1)
+            one_dir(os.path.join(root_long, dir), dir, offset+1, new_before)
         for audio in audio_files:
             print "%s%s" % (s_offset_2, cut_file_extension(audio))
-        print '%s[/spoiler]' % s_offset
+        if text1.printed: print '%s[/spoiler]' % (s_offset)
 
     root = "."
-    one_dir(root, root, 0)
+    one_dir(root, root, 0, lambda: None)
     print "total length: %s" % hms(total_length)
+    UniqueOutputPiece("hello").print_itself()
 
 def command_make_torrent():
     pass
