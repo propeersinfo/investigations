@@ -12,6 +12,6 @@ def get_dir_media_info(root, files):
 		total_bitrate += audio.info.bitrate
 		total_bitrate_count += 1
 	if total_bitrate_count > 0:
-		return (total_length, total_bitrate / total_bitrate_count)
+		return (total_length, total_bitrate / total_bitrate_count / 1000)
 	else:
 		return (None, None)

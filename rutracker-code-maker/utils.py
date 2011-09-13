@@ -8,7 +8,7 @@ def only_dirs(root, short_file_names):
 #def only_files(short_file_names):
 #    return filter(lambda f: os.path.isfile(f), short_file_names)
 
-def only_media_files(root, short_file_names):
+def only_audio_files(root, short_file_names):
     def ok(short_file_name):
         long_file_name = os.path.join(root, short_file_name)
         return os.path.isfile(long_file_name) and re.search(r'.*\.(mp3|ogg|flac|ape)$', long_file_name, re.I)
