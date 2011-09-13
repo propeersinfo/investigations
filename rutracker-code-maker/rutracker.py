@@ -40,16 +40,19 @@ def command_upload_images():
 def command_generate_bbcode():
     print "command_generate_bbcode..."
 
+    total_length = 0
+
     def one_dir(root_long, root_short, offset):
         sub_files = os.listdir(root_long)
         sub_dirs = only_dirs(root_long, sub_files)
         audio_files = only_audio_files(root_long, sub_files)
-
         (dir_length, dir_bitrate) = media_info.get_dir_media_info(root_long, audio_files)
+        #total_length += dir_length
 
         s_offset = " " * offset * 2
         s_offset_2 = " " * (offset+1) * 2
         s_bitrate = " (%s kbps)" % dir_bitrate if dir_bitrate else ""
+
         print '%s[spoiler="%s%s"]' % (s_offset, root_short, s_bitrate)
         for dir in sub_dirs:
             one_dir(os.path.join(root_long, dir), dir, offset+1)
@@ -59,6 +62,7 @@ def command_generate_bbcode():
 
     root = "."
     one_dir(root, root, 0)
+    print "total length: %s" % hms(total_length)
 
 def command_make_torrent():
     pass

@@ -25,9 +25,9 @@ def hms(seconds):
     mm = int(seconds / 60) % 60
     ss = int(seconds) % 60
     if hh > 0:
-        return "%d:%2d:%2d" % (hh, mm, ss)
+        return "%d:%02d:%02d" % (hh, mm, ss)
     else:
-        return "%2d:%2d" % (mm, ss)
+        return "%d:%02d" % (mm, ss)
 
 
 def ms(seconds):
