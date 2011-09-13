@@ -58,8 +58,25 @@ def get_dir_info(root, dirs, files):
 def command_upload_images():
     print "command_upload..."
 
-#upload_image(get_root_image())
+def command_generate_bbcode():
+    print "command_generate_bbcode..."
 
+    def one_dir(root_long, root_short, offset):
+        s_offset = " " * offset * 2
+        s_offset_2 = " " * (offset+1) * 2
+        print '%s[spoiler="%s"]' % (s_offset, root_short)
+        sub_files = os.listdir(root_long)
+        sub_dirs = only_dirs(root_long, sub_files)
+        for dir in sub_dirs:
+            one_dir(os.path.join(root_long, dir), dir, offset+1)
+        for mf in only_media_files(root_long, sub_files):
+            print "%s%s" % (s_offset_2, mf)
+        print '%s[/spoiler]' % s_offset
+
+    root = "."
+    one_dir(root, root, 0)
+
+"""
 def command_generate_bbcode():
     print "command_generate_bbcode..."
     total_length = 0
@@ -74,6 +91,7 @@ def command_generate_bbcode():
             print '[/spoiler]'
             print ''
     print "total length: %s" % hms(total_length)
+"""
 
 def command_make_torrent():
     pass
