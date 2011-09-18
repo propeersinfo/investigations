@@ -37,21 +37,10 @@ def get_root_image():
 def command_upload_images():
     print "command_upload..."
 
-class UniqueOutputPiece(object):
-    def __init__(self, text):
-        self.text = text
-        self.printed = False
-    def print_itself(self):
-        if self.printed:
-            #print "SKIPPING"
-            pass
-        #elif re.search(r'.*album.*', self.text, re.IGNORECASE):
-        else:
-            print self.text#, self.__hash__()
-            self.printed = True
 
 def short_names_to_long(base, short_names):
     return map(lambda n: os.path.join(base, n), short_names)
+
 
 def command_generate_bbcode():
     print "command_generate_bbcode..."
@@ -98,24 +87,36 @@ def command_generate_bbcode():
                 if dir.contains_audio_recursively():
                     return True
             return False
-        def get_audio_length(self):
-            total_length, _ = media_info.get_audio_info(get_local_audio_files(self))
+        def collect_audio_info(self, collector = None):
+            class Collector():
+                def __init__(self):
+                    self.bitrate_sum = 0
+                    self.bitrate_cnt = 0
+                    self.length = 0
+                def collect(self, track):
+                    len, brt = media_info.get_single_audio_info(track)
+                    if len and brt:
+                        self.bitrate_cnt += 1
+                        self.bitrate_sum += brt
+                        self.length += len
+                def get_length(self):
+                    return self.length
+                def get_average_bitrate(self):
+                    return (self.bitrate_sum / 1000 / self.bitrate_cnt) if (self.bitrate_cnt > 0) else 0
+            if collector is None:
+                collector = Collector()
+            for track in self.reg_files:
+                collector.collect(track)
             for dir in self.dirs:
-                total_length += dir.get_audio_length()
-            return total_length
-        def get_bitrate_value(self):
-            _, local_bitrate = media_info.get_audio_info(get_local_audio_files(self))
-            bitrate_sum = 0
-            bitrate_cnt = 0
-            for dir in self.dirs:
-                bitrate_sum += dir.get_bitrate_value()
-                bitrate_cnt += 1
-            subdir_bitrate = (bitrate_sum / bitrate_cnt) if bitrate_cnt > 0 else 0
-            return local_bitrate + subdir_bitrate
+                dir.collect_audio_info(collector)
+            return collector
 
     root = Dir('.').collect_sub_files()
     print 'Size: %s bytes' % root.get_size()
-    print 'Length: %s' % hms(root.get_audio_length())
+    #print 'Length: %s' % hms(root.get_audio_length())
+    audio_info = root.collect_audio_info()
+    print 'total length: %s' % hms(audio_info.get_length())
+    print 'average bitrate: %s' % audio_info.get_average_bitrate()
 
     def on_dir(dir, deepness):
         offset = "  " * (deepness + 1)
@@ -128,51 +129,17 @@ def command_generate_bbcode():
         if root_dir.contains_audio_recursively():
             offset = "  " * deepness
             title = root_dir.get_last_name()
-            len = hms(root_dir.get_audio_length())
-            btr = root.get_bitrate_value()
-            print '%s[spoiler="%s, %s, %s kbps"]' % (offset, title, len, btr)
+            audio_info = root_dir.collect_audio_info()
+            len = hms(audio_info.get_length())
+            btr = audio_info.get_average_bitrate()
+            #len = hms(root_dir.get_audio_length())
+            #btr = root.get_bitrate_value()
+            print '%s[spoiler="%s / %s kbps / %s"]' % (offset, title, btr, len)
             for dir in root_dir.dirs:
                 walk_deep_down(dir, dir_handler, deepness+1)
             dir_handler(root_dir, deepness)
             print '%s[/spoiler]' % offset
     walk_deep_down(root, on_dir)
-
-"""
-def command_generate_bbcode():
-    print "command_generate_bbcode..."
-
-    total_length = 0
-
-    def one_dir(root_long, root_short, offset, print_text_before_old = None):
-        sub_files = os.listdir(root_long)
-        sub_dirs = only_dirs(root_long, sub_files)
-        audio_files = only_audio_files(root_long, sub_files)
-        (dir_length, dir_bitrate) = media_info.get_dir_media_info(root_long, audio_files)
-        #total_length += dir_length
-
-        s_offset = " " * offset * 2
-        s_offset_2 = " " * (offset+1) * 2
-        s_bitrate = " (%s kbps)" % dir_bitrate if dir_bitrate else ""
-
-        text_before = UniqueOutputPiece('%s[spoiler="%s%s"]' % (s_offset, root_short, s_bitrate))
-        def print_text_before_new():
-            if print_text_before_old:
-                print_text_before_old()
-            text_before.print_itself()
-
-        if len(audio_files) > 0:
-            print_text_before_new()
-        for dir in sub_dirs:
-            one_dir(os.path.join(root_long, dir), dir, offset+1, print_text_before_new)
-        for audio in audio_files:
-            print "%s%s" % (s_offset_2, cut_file_extension(audio))
-        if text_before.printed:
-            print '%s[/spoiler]' % (s_offset)
-
-    root = "."
-    one_dir(root, root, 0)
-    print "total length: %s" % hms(total_length)
-"""
 
 def command_make_torrent():
     pass
