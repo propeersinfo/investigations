@@ -54,6 +54,8 @@ def command_generate_bbcode():
             return "File(%s)" % self.path
         def get_last_name(self):
             return os.path.split(self.path)[1]
+        def get_extension(self):
+            return os.path.splitext(self.path)[1][1:]
 
     class Dir():
         def __init__(self, path):
