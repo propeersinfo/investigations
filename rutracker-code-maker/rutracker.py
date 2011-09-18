@@ -50,6 +50,75 @@ class UniqueOutputPiece(object):
             print self.text#, self.__hash__()
             self.printed = True
 
+def short_names_to_long(base, short_names):
+    return map(lambda n: os.path.join(base, n), short_names)
+
+def command_generate_bbcode():
+    print "command_generate_bbcode..."
+
+    class RegFile():
+        def __init__(self, path):
+            self.path = path
+        def get_size(self):
+            return os.path.getsize(self.path)
+        def __str__(self):
+            return "File(%s)" % self.path
+        def get_last_name(self):
+            return os.path.split(self.path)[1]
+
+    class Dir():
+        def __init__(self, path):
+            self.path = path
+            self.dirs = []
+            self.reg_files = []
+        def collect_sub_files(self):
+            for file in short_names_to_long(self.path, os.listdir(self.path)):
+                if os.path.isdir(file):
+                    sub_dir = Dir(file)
+                    self.dirs.append(sub_dir)
+                    sub_dir.collect_sub_files()
+                else:
+                    reg_file = RegFile(file)
+                    self.reg_files.append(reg_file)
+            return self
+        def get_size(self):
+            size = 0
+            for f in self.reg_files: size += f.get_size()
+            for f in self.dirs: size += f.get_size()
+            return size
+#        def walk_deep_down(self, dir_handler, deepness=0):
+#            dir_handler(self, deepness)
+#            for dir in self.dirs:
+#                dir.walk_deep_down(dir_handler, deepness+1)
+        def __str__(self):
+            return "Dir(%s)" % self.path
+        def get_last_name(self):
+            return os.path.split(self.path)[1]
+
+    root = Dir('.').collect_sub_files()
+    print 'root: %s' % root
+    print 'root: %s bytes' % root.get_size()
+
+    def get_local_audio_files(dir):
+        return filter(lambda f: is_supported_audio_file(f.path), dir.reg_files)
+
+    def on_dir(dir, deepness):
+        offset = "  " * (deepness + 1)
+        mm = get_local_audio_files(dir)
+        if len(mm) > 0:
+            for m in mm:
+                print "%s%s" % (offset, cut_file_extension(m.get_last_name()))
+    #root.walk_deep_down(on_dir)
+    def walk_deep_down(root_dir, dir_handler, deepness=0):
+        offset = "  " * deepness
+        print '%s[spoiler="%s"]' % (offset, root_dir.get_last_name())
+        for dir in root_dir.dirs:
+            walk_deep_down(dir, dir_handler, deepness+1)
+        dir_handler(root_dir, deepness)
+        print '%s[/spoiler]' % offset
+    walk_deep_down(root, on_dir)
+
+"""
 def command_generate_bbcode():
     print "command_generate_bbcode..."
 
@@ -84,6 +153,7 @@ def command_generate_bbcode():
     root = "."
     one_dir(root, root, 0)
     print "total length: %s" % hms(total_length)
+"""
 
 def command_make_torrent():
     pass
