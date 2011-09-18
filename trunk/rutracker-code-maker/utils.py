@@ -2,6 +2,9 @@ import re
 import sys
 import os
 
+def get_local_audio_files(dir):
+    return filter(lambda f: is_supported_audio_file(f.path), dir.reg_files)
+
 def only_dirs(root, short_file_names):
     return filter(lambda f: os.path.isdir(os.path.join(root,f)), short_file_names)
 
