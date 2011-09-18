@@ -86,21 +86,36 @@ def command_generate_bbcode():
             for f in self.reg_files: size += f.get_size()
             for f in self.dirs: size += f.get_size()
             return size
-#        def walk_deep_down(self, dir_handler, deepness=0):
-#            dir_handler(self, deepness)
-#            for dir in self.dirs:
-#                dir.walk_deep_down(dir_handler, deepness+1)
         def __str__(self):
             return "Dir(%s)" % self.path
         def get_last_name(self):
             return os.path.split(self.path)[1]
+        def contains_audio_recursively(self):
+            for f in self.reg_files:
+                if is_supported_audio_file(f.path):
+                    return True
+            for dir in self.dirs:
+                if dir.contains_audio_recursively():
+                    return True
+            return False
+        def get_audio_length(self):
+            total_length, _ = media_info.get_audio_info(get_local_audio_files(self))
+            for dir in self.dirs:
+                total_length += dir.get_audio_length()
+            return total_length
+        def get_bitrate_value(self):
+            _, local_bitrate = media_info.get_audio_info(get_local_audio_files(self))
+            bitrate_sum = 0
+            bitrate_cnt = 0
+            for dir in self.dirs:
+                bitrate_sum += dir.get_bitrate_value()
+                bitrate_cnt += 1
+            subdir_bitrate = (bitrate_sum / bitrate_cnt) if bitrate_cnt > 0 else 0
+            return local_bitrate + subdir_bitrate
 
     root = Dir('.').collect_sub_files()
-    print 'root: %s' % root
-    print 'root: %s bytes' % root.get_size()
-
-    def get_local_audio_files(dir):
-        return filter(lambda f: is_supported_audio_file(f.path), dir.reg_files)
+    print 'Size: %s bytes' % root.get_size()
+    print 'Length: %s' % hms(root.get_audio_length())
 
     def on_dir(dir, deepness):
         offset = "  " * (deepness + 1)
@@ -108,14 +123,18 @@ def command_generate_bbcode():
         if len(mm) > 0:
             for m in mm:
                 print "%s%s" % (offset, cut_file_extension(m.get_last_name()))
-    #root.walk_deep_down(on_dir)
+
     def walk_deep_down(root_dir, dir_handler, deepness=0):
-        offset = "  " * deepness
-        print '%s[spoiler="%s"]' % (offset, root_dir.get_last_name())
-        for dir in root_dir.dirs:
-            walk_deep_down(dir, dir_handler, deepness+1)
-        dir_handler(root_dir, deepness)
-        print '%s[/spoiler]' % offset
+        if root_dir.contains_audio_recursively():
+            offset = "  " * deepness
+            title = root_dir.get_last_name()
+            len = hms(root_dir.get_audio_length())
+            btr = root.get_bitrate_value()
+            print '%s[spoiler="%s, %s, %s kbps"]' % (offset, title, len, btr)
+            for dir in root_dir.dirs:
+                walk_deep_down(dir, dir_handler, deepness+1)
+            dir_handler(root_dir, deepness)
+            print '%s[/spoiler]' % offset
     walk_deep_down(root, on_dir)
 
 """
