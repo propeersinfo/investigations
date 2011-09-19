@@ -1,6 +1,8 @@
+import sys
+import urllib2
+
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
-import urllib2
 
 register_openers()
 
@@ -20,3 +22,6 @@ def upload_image_fastpic(file_name, open_binary = True):
     response_body = response.read()
     #print "response's info: %s" % response.info()
     return response_body
+
+if __name__ == '__main__':
+    upload_image_fastpic(sys.argv[1])
