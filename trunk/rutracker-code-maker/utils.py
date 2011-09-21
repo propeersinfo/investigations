@@ -58,3 +58,7 @@ def rewrite_file(fname, content):
         print >> f, content
     finally:
         if f: f.close()
+
+def short_names_to_long(base, short_names):
+    return map(lambda n: os.path.join(base, n), short_names)
+
