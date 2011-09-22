@@ -3,30 +3,11 @@ import glob
 import os
 import sys
 import subprocess
-from fs import Dir
+import tempfile
 
+from fs import Dir
 from utils import *
 import media_info
-
-# objective related functions
-
-#def upload_image(image_file):
-#    image_file = os.path.abspath(image_file)
-#    link_file = '%s.imagelink' % image_file
-#    cwd = os.getcwd()
-#    uploader_dir = "C:\\Portable\\zenden-image-uploader"
-#    upload_cmd = ['imgupload.exe', '--server', 'fastpic.ru', '--codelang', 'bbcode', '--codetype', 'Images', image_file]
-#    try:
-#        print "uploading image '%s'" % image_file
-#        os.chdir(uploader_dir)
-#        #p = subprocess.Popen(upload_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#        #(bbcode, err) = p.communicate()
-#        #print "out: %s" % out
-#        #print 'err: %s' % err
-#        bbcode = "http://faspic.ru/qwertyuiop"
-#        rewrite_file(link_file, bbcode)
-#    finally:
-#        os.chdir(cwd)
 
 
 def get_root_image():
@@ -37,7 +18,7 @@ def get_root_image():
 
 def command_upload_images():
     print "command_upload..."
-
+    db = tempfile.mktemp()
 
 
 def command_generate_bbcode():
@@ -48,14 +29,18 @@ def command_generate_bbcode():
     #print 'Length: %s' % hms(root.get_audio_length())
     audio_info = root.collect_audio_info()
     print 'total length: %s' % hms(audio_info.get_length())
-    print 'average bitrate: %s' % audio_info.get_average_bitrate()
+    print 'average bitrate: %s kbps' % audio_info.get_average_bitrate()
 
     def on_dir(dir, deepness):
-        offset = "  " * (deepness + 1)
-        mm = get_local_audio_files(dir)
-        if len(mm) > 0:
-            for m in mm:
-                print "%s%s" % (offset, cut_file_extension(m.get_last_name()))
+        str_offset = "  " * (deepness + 1)
+        aa = get_local_audio_files(dir)
+        for img in dir.get_associated_images():
+            print "%s[img=right]%s[/img]" % (str_offset, img.get_thumbnail_image_url())
+        for a in aa:
+            str_name = cut_file_extension(a.get_last_name())
+            length = a.get_audio_length()
+            str_length = " [color=grey]%s[/color]" % hms(length) if length else ""
+            print "%s%s%s" % (str_offset, str_name, str_length)
 
     def walk_deep_down(root_dir, dir_handler, deepness=0):
         if root_dir.contains_audio_recursively():
@@ -72,6 +57,7 @@ def command_generate_bbcode():
             dir_handler(root_dir, deepness)
             print '%s[/spoiler]' % offset
     walk_deep_down(root, on_dir)
+
 
 def command_make_torrent():
     pass
