@@ -24,14 +24,7 @@ def command_upload_images():
 def command_generate_bbcode():
     print "command_generate_bbcode..."
 
-    root = Dir('.').collect_sub_files()
-    print 'Size: %s bytes' % root.get_size()
-    #print 'Length: %s' % hms(root.get_audio_length())
-    audio_info = root.collect_audio_info()
-    print 'total length: %s' % hms(audio_info.get_length())
-    print 'average bitrate: %s kbps' % audio_info.get_average_bitrate()
-
-    def on_dir(dir, deepness):
+    def print_dir(dir, deepness):
         str_offset = "  " * (deepness + 1)
         aa = get_local_audio_files(dir)
         for img in dir.get_associated_images():
@@ -44,19 +37,26 @@ def command_generate_bbcode():
 
     def walk_deep_down(root_dir, dir_handler, deepness=0):
         if root_dir.contains_audio_recursively():
-            offset = "  " * deepness
-            title = root_dir.get_last_name()
+            str_offset = "  " * deepness
+            str_title = root_dir.get_last_name()
             audio_info = root_dir.collect_audio_info()
             len = hms(audio_info.get_length())
-            btr = audio_info.get_average_bitrate()
+            str_btr = "%s kbps" % audio_info.get_average_bitrate()
             #len = hms(root_dir.get_audio_length())
             #btr = root.get_bitrate_value()
-            print '%s[spoiler="%s / %s kbps"]' % (offset, title, btr)
+            print '%s[spoiler="%s / %s"]' % (str_offset, str_title, str_btr)
             for dir in root_dir.dirs:
                 walk_deep_down(dir, dir_handler, deepness+1)
             dir_handler(root_dir, deepness)
-            print '%s[/spoiler]' % offset
-    walk_deep_down(root, on_dir)
+            print '%s[/spoiler]' % str_offset
+
+    root = Dir('.').collect_sub_files()
+    print 'Size: %s bytes' % root.get_size()
+    #print 'Length: %s' % hms(root.get_audio_length())
+    audio_info = root.collect_audio_info()
+    print 'total length: %s' % hms(audio_info.get_length())
+    print 'average bitrate: %s kbps' % audio_info.get_average_bitrate()
+    walk_deep_down(root, print_dir)
 
 
 def command_make_torrent():

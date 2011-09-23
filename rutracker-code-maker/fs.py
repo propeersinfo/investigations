@@ -1,7 +1,23 @@
 import os
+import pickle
+import re
+from fastpic import OnlineImageInfo, upload_image_fastpic
 
 from utils import short_names_to_long, is_supported_audio_file
 import media_info
+
+class ImageCache():
+    def __init__(self):
+        self.images = {}
+    def get_image(self, file_abs_path):
+        return self.images.get(file_abs_path)
+    def add_image(self, file_abs_path, image):
+        self.images[file_abs_path] = image
+    @classmethod
+    def load(cls, file_name):
+        return pickle.load(open(file_name, "r"))
+    def dump(self, file_name):
+        pickle.dump(self, open(file_name, "w"))
 
 class RegFile():
     def __init__(self, path):
@@ -12,6 +28,9 @@ class RegFile():
 
     def __str__(self):
         return "File(%s)" % self.path
+
+    def get_absolute_path(self):
+        return os.path.abspath(self.path)
 
     def get_last_name(self):
         return os.path.split(self.path)[1]
@@ -50,7 +69,8 @@ class Dir():
         return "Dir(%s)" % self.path
 
     def get_last_name(self):
-        return os.path.split(self.path)[1]
+        abs = os.path.abspath(self.path)
+        return os.path.split(abs)[1]
 
     def contains_audio_recursively(self):
         """
@@ -89,4 +109,27 @@ class Dir():
         return collector
 
     def get_associated_images(self):
-        return []
+        def get_image_for_file(file_obj):
+            IMAGE_CACHE_FILE = "image.cache"
+            try:
+                #image_cache = pickle.load(open(IMAGE_CACHE_FILE, "r"))
+                image_cache = ImageCache.load(IMAGE_CACHE_FILE)
+            except IOError:
+                image_cache = ImageCache()
+            abs_path = file_obj.get_absolute_path()
+            img = image_cache.get_image(abs_path)
+            if not img:
+                img = upload_image_fastpic(abs_path)
+                image_cache.add_image(abs_path, img)
+                image_cache.dump(IMAGE_CACHE_FILE)
+            return img
+        image_filter = re.compile('.*\.(jpe?g|png|gif)$', re.I)
+        priorities = [ re.compile(regex, re.I) for regex in [ '.*', 'folder', 'cover', 'front' ] ]
+        #print "priority = %s" % priority
+        local_files = [ f for f in self.reg_files if re.search(image_filter, f.get_last_name()) ]
+        found = None
+        for filter in priorities:
+            for f in local_files:
+                if re.search(filter, f.get_last_name()):
+                    found = f
+        return [get_image_for_file(found)] if found else []
