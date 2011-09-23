@@ -18,6 +18,8 @@ class OnlineImageInfo():
         return self.full_image
     def get_full_page_url(self):
         return self.full_page
+    def __str__(self):
+        return "OnlineImageInfo(%s)" % self.full_image
 
 def upload_image_fastpic(file_name, open_binary = True):
     fd = open(file_name, "rb" if open_binary else "r")
