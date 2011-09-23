@@ -16,19 +16,12 @@ def get_root_image():
     return root_image
 
 
-def command_upload_images():
-    print "command_upload..."
-    db = tempfile.mktemp()
-
-
 def command_generate_bbcode():
     print "command_generate_bbcode..."
 
     def print_dir(dir, deepness):
         str_offset = "  " * (deepness + 1)
         aa = get_local_audio_files(dir)
-        for img in dir.get_associated_images():
-            print "%s[img=right]%s[/img]" % (str_offset, img.get_thumbnail_image_url())
         for a in aa:
             str_name = cut_file_extension(a.get_last_name())
             length = a.get_audio_length()
@@ -38,6 +31,7 @@ def command_generate_bbcode():
     def walk_deep_down(root_dir, dir_handler, deepness=0):
         if root_dir.contains_audio_recursively():
             str_offset = "  " * deepness
+            str_offset_2 = "  " * (deepness+1)
             str_title = root_dir.get_last_name()
             audio_info = root_dir.collect_audio_info()
             len = hms(audio_info.get_length())
@@ -45,17 +39,18 @@ def command_generate_bbcode():
             #len = hms(root_dir.get_audio_length())
             #btr = root.get_bitrate_value()
             print '%s[spoiler="%s / %s"]' % (str_offset, str_title, str_btr)
+            for img in root_dir.get_associated_images():
+                print "%s[img=right]%s[/img]" % (str_offset_2, img.get_thumbnail_image_url())
             for dir in root_dir.dirs:
                 walk_deep_down(dir, dir_handler, deepness+1)
             dir_handler(root_dir, deepness)
             print '%s[/spoiler]' % str_offset
 
     root = Dir('.').collect_sub_files()
-    print 'Size: %s bytes' % root.get_size()
-    #print 'Length: %s' % hms(root.get_audio_length())
     audio_info = root.collect_audio_info()
-    print 'total length: %s' % hms(audio_info.get_length())
-    print 'average bitrate: %s kbps' % audio_info.get_average_bitrate()
+    print 'Size: %s bytes' % root.get_size()
+    print 'Total length: %s' % hms(audio_info.get_length())
+    print 'Average bitrate: %s kbps' % audio_info.get_average_bitrate()
     walk_deep_down(root, print_dir)
 
 
@@ -64,7 +59,6 @@ def command_make_torrent():
 
 if __name__ == '__main__':
     commands = {
-        'upload-images': command_upload_images,
         'code': command_generate_bbcode,
         'mktorrent': command_make_torrent
     }
