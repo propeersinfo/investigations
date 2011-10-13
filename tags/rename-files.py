@@ -10,6 +10,9 @@ from mutagen.easyid3 import EasyID3
 
 # TODO: make sure track numbers are continuous
 
+def filter_tag_text(s):
+    return s.strip()
+
 def ascii_only(s):
     return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
 
@@ -63,10 +66,12 @@ def do_rename(actual_rename, force_no_artist=False):
         file = files[i]
         audio = audios[i]
         tr_no = int(audio['tracknumber'][0])
+        title = filter_tag_text(audio['title'][0])
+        artist = filter_tag_text(audio['artist'][0])
         if force_no_artist:
-            new_name = u'%02d. %s.mp3' % (tr_no, audio['title'][0])
+            new_name = u'%02d. %s.mp3' % (tr_no, title)
         else:
-            new_name = u'%02d. %s - %s.mp3' % (tr_no, audio['artist'][0], audio['title'][0])
+            new_name = u'%02d. %s - %s.mp3' % (tr_no, artist, title)
         if file != new_name:
             files_to_rename += 1
         if actual_rename:
