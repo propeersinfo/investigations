@@ -14,29 +14,42 @@ from mutagen.easyid3 import EasyID3
 
 import discogs_client as discogs
 
-def get_discogs_track_artist_string(track):
-	aa = []
-	for a in track['artists']:
+def get_discogs_track_artist_string(track, release):
+	#print 'release: %s' % release.artists
+	src = []
+	if len(src) == 0:
+		src = track['artists']
+	if len(src) == 0:
+		src = release.artists
+	if len(src) == 0:
+		src = []
+	dst = []
+	for a in src:
 		if type(a) == unicode:
 			pass
 		else:
-			aa.append(a.name)
-	if len(aa) > 0:
-		return ', '.join(aa)
+			dst.append(a.name)
+	if len(dst) > 0:
+		return ', '.join(dst)
 	else:
 		return 'Unknown Artist'
 
 def get_discogs_track_length(track):
-	if track.has_key('duration'):
-		m = re.match(r'(\d+):(\d+)', track['duration'])
-		if m:
-			min = int(m.group(1))
-			sec = int(m.group(2))
-			return min * 60 + sec
-		else:
-			raise Exception('cannot parse duration: %s' % track['duration'])
+    if not track.has_key('duration'):
+        return None
+
+    value = track['duration']
+
+    if value == '':
+        return None
+
+	m = re.match(r'(\d+):(\d+)', value)
+	if m:
+		min = int(m.group(1))
+		sec = int(m.group(2))
+		return min * 60 + sec
 	else:
-		return None
+		raise Exception('cannot parse duration: %s' % value)
 
 def get_duration_difference(dur1, dur2):
 	dur1 = float(dur1)
@@ -58,17 +71,16 @@ def compare_discogs_vs_files(release, discogs_tracks, hdd_files):
         track_len = get_discogs_track_length(track)
         file = hdd_files[i]
         mp3 = MP3(file)
-        diff = get_duration_difference(track_len, mp3.info.length)
-        if diff > DUR_DIFF_GATE:
-            raise Exception('tracks durations differs too much: %s vs %s'\
-            % (mp3.info.length, track_len))
-        # update tags according to Discogs
+        if track_len:
+            diff = get_duration_difference(track_len, mp3.info.length)
+            if diff > DUR_DIFF_GATE:
+                raise Exception('tracks durations differs too much: %s vs %s' % (mp3.info.length, track_len))
 
     def do_pass(really_do):
         for i in xrange(len(hdd_files)):
             track = discogs_tracks[i]
             mp3 = EasyID3(hdd_files[i])
-            artist = get_discogs_track_artist_string(track)
+            artist = get_discogs_track_artist_string(track, release)
             title = track['title']
             mp3['artist'] = artist
             mp3['album'] = release.title
@@ -82,6 +94,7 @@ def compare_discogs_vs_files(release, discogs_tracks, hdd_files):
                 print '%s. %s / %s' % (track['position'], artist, title)
                 print ''
     do_pass(False)
+    #raise Exception('exiting')
     sys.stdout.write('correct? [y/n] ')
     answer = sys.stdin.readline()
     if answer.lower().strip() == 'y':
