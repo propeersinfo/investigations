@@ -10,6 +10,7 @@ import unicodedata
 
 import mutagen
 from mutagen.mp3 import MP3
+from mutagen.flac import FLAC
 from mutagen.easyid3 import EasyID3
 
 import discogs_client as discogs
@@ -79,23 +80,34 @@ def compare_discogs_vs_files(release, discogs_tracks, hdd_files):
     def do_pass(really_do):
         for i in xrange(len(hdd_files)):
             track = discogs_tracks[i]
-            mp3 = EasyID3(hdd_files[i])
+            hdd_file = hdd_files[i]
             artist = get_discogs_track_artist_string(track, release)
             title = track['title']
+            _, ext = os.path.splitext(hdd_file)
+            ext = ext.lower()
+            #print 'ext: %s' % ext
+            if ext == '.mp3':
+                mp3 = EasyID3(hdd_file)
+            elif ext == '.flac':
+                mp3 = FLAC(hdd_file)
+            else:
+                raise Exception('inacceptable file extension for file %s' % hdd_file)
+
             mp3['artist'] = artist
             mp3['album'] = release.title
             mp3['title'] = title
             mp3['tracknumber'] = track['position']
             mp3['date'] = str(release.data['year']) if release.data.has_key('year') else ''
+
             if really_do:
                 mp3.save()
             else:
                 print '%s' % hdd_files[i]
-                print '%s. %s / %s' % (track['position'], artist, title)
+                print '%s. %s / %s' % (track['position'], title, artist)
                 print ''
     do_pass(False)
     #raise Exception('exiting')
-    sys.stdout.write('correct? [y/n] ')
+    sys.stdout.write('correct? [y/N] ')
     answer = sys.stdin.readline()
     if answer.lower().strip() == 'y':
         do_pass(True)
@@ -112,5 +124,8 @@ discogs.user_agent = 'PavelsClient/1.0 +http://sovietgroove.com'
 release_id = parse_discogs_id(sys.argv[1])
 #print 'release_id: %d' % release_id
 release = discogs.Release(release_id)
-audios = sorted(glob.glob("*.mp3"))
+audios = glob.glob("*.mp3")
+if not len(audios):
+    audios = glob.glob("*.flac")
+audios = sorted(audios)
 compare_discogs_vs_files(release, release.tracklist, audios)
