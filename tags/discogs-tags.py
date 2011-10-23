@@ -11,9 +11,28 @@ import unicodedata
 import mutagen
 from mutagen.mp3 import MP3
 from mutagen.flac import FLAC
+from mutagen.apev2 import APEv2
 from mutagen.easyid3 import EasyID3
 
 import discogs_client as discogs
+
+def load_easy_id3_tags(file):
+	try:
+		return EasyID3(file)
+	except mutagen.id3.ID3NoHeaderError:
+		return EasyID3()
+
+def load_ape_tags(file):
+	try:
+		return APEv2(file)
+	except mutagen.apev2.APENoHeaderError:
+		return APEv2()
+
+def load_flac_tags(file):
+	try:
+		return FLAC(file)
+	except mutagen.flac.FLACNoHeaderError:
+		return FLAC()
 
 def get_discogs_track_artist_string(track, release):
 	#print 'release: %s' % release.artists
@@ -86,21 +105,31 @@ def compare_discogs_vs_files(release, discogs_tracks, hdd_files):
             _, ext = os.path.splitext(hdd_file)
             ext = ext.lower()
             #print 'ext: %s' % ext
+            mp3s = []
             if ext == '.mp3':
-                mp3 = EasyID3(hdd_file)
+                mp3s.append(load_easy_id3_tags(hdd_file))
+                mp3s.append(load_ape_tags(hdd_file))
             elif ext == '.flac':
-                mp3 = FLAC(hdd_file)
+                mp3s.append(load_flac_tags(hdd_file))
             else:
                 raise Exception('inacceptable file extension for file %s' % hdd_file)
+            assert len(mp3s) > 0
 
-            mp3['artist'] = artist
-            mp3['album'] = release.title
-            mp3['title'] = title
-            mp3['tracknumber'] = track['position']
-            mp3['date'] = str(release.data['year']) if release.data.has_key('year') else ''
+            for mp3 in mp3s:
+                mp3['artist'] = artist
+                mp3['album'] = release.title
+                mp3['title'] = title
+                mp3['tracknumber'] = track['position']
+                year_str = str(release.data['year']) if release.data.has_key('year') else ''
+                if type(mp3) == EasyID3:
+                    mp3['date'] = year_str
+                else:
+                    mp3['track'] = track['position']
+                    mp3['year'] = year_str
 
             if really_do:
-                mp3.save()
+                for mp3 in mp3s:
+                    mp3.save(hdd_file)
             else:
                 print '%s' % hdd_files[i]
                 print '%s. %s / %s' % (track['position'], title, artist)
