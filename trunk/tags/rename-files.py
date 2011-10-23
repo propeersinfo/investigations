@@ -7,11 +7,28 @@ import os
 import sys
 
 from mutagen.easyid3 import EasyID3
+from mutagen.flac import FLAC
 
 # TODO: make sure track numbers are continuous
 
 def filter_tag_text(s):
-    return s.strip()
+    #print 's: %s' % s
+    regexps = {
+        # characters inacceptable for certain FS's
+        r'[/\\]': '#',
+        r':': ' - ',
+        r';': ', ',
+        r'[\?\*<>]': '',
+        # to be applied last
+        r'\.+$': '',   # any trailing dots
+        r'\s\s+': ' ', # two spaces to one
+    }
+    for regex in regexps:
+        replace = regexps[regex]
+        #print '%s --> <%s>' % (regex, replace)
+        s = re.sub(regex, replace, s)
+    s = s.strip()
+    return s
 
 def ascii_only(s):
     return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
@@ -47,7 +64,11 @@ def check_tags(audio):
             raise Exception('tracknumber not valid: %s' % trn)
 
 files = sorted(glob.glob(u'*.mp3'))
-audios = [EasyID3(file) for file in files]
+if not len(files):
+    files = sorted(glob.glob(u'*.flac'))
+    audios = [ FLAC(file) for file in files ]
+else:
+    audios = [ EasyID3(file) for file in files ]
 map(check_tags, audios)
 common_artist = get_common_artist(audios)
 print 'common_artist: %s' % common_artist
@@ -61,17 +82,35 @@ class ValueSet:
         return self.values.keys()
 
 def do_rename(actual_rename, force_no_artist=False):
+    def get_track_number_string(tr_no):
+        try:
+            tr_no_str = '%02d' % int(tr_no)
+        except ValueError:
+            tr_no_str = str(tr_no)
+            m = re.match('[a-dA-D]\d\d?', tr_no_str)
+            if m:
+                pass
+            else:
+                m = re.match('(\d\d?)/\d\d?', tr_no_str)
+                if m:
+                    tr_no_str = '%02d' % int(m.group(1))
+                else:
+                    raise Exception('cannot parse track no: %s' % tr_no)
+        assert tr_no_str
+        return tr_no_str
+
     files_to_rename = 0
     for i in xrange(len(files)):
         file = files[i]
         audio = audios[i]
-        tr_no = int(audio['tracknumber'][0])
+        tr_no_str = get_track_number_string(audio['tracknumber'][0])
         title = filter_tag_text(audio['title'][0])
         artist = filter_tag_text(audio['artist'][0])
+        _, ext = os.path.splitext(file)
         if force_no_artist:
-            new_name = u'%02d. %s.mp3' % (tr_no, title)
+            new_name = u'%s. %s%s' % (tr_no_str, title, ext)
         else:
-            new_name = u'%02d. %s - %s.mp3' % (tr_no, artist, title)
+            new_name = u'%s. %s - %s%s' % (tr_no_str, artist, title, ext)
         if file != new_name:
             files_to_rename += 1
         if actual_rename:
@@ -85,7 +124,7 @@ def do_rename(actual_rename, force_no_artist=False):
 force_no_artist = False or common_artist
 files_to_rename = do_rename(False, force_no_artist=force_no_artist)
 if files_to_rename > 0:
-    sys.stdout.write('correct? [y/n] ')
+    sys.stdout.write('correct? [y/N] ')
     answer = sys.stdin.readline()
     if answer.lower().strip() == 'y':
         do_rename(True, force_no_artist=force_no_artist)
