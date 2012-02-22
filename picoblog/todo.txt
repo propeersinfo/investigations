@@ -2,11 +2,10 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Critical:
-- unintented line breaks: http://127.0.0.1:8080/20110404-jaan-kuman-tantsurutme-eps.html
-- article 'visitors' breaks layout
-- finish rss handling
+- finish rss handling (usage of html tags there)
 - html'ed rss fails for safari
 - find how to copy dev db onto production completely
++ article 'visitors' breaks layout
 + add href values to the links side bar
 + notify admin about new comments (email)
 + make sure comments are fetched and augmented for a concrete article's page only
@@ -15,6 +14,8 @@ Major:
 - implement never-expire resources
 
 Normal:
+- typographer: unnecessary nbsp after dash: "AA - BB" => "AA&nbsp;-&nbsp;BB"
+- typographer: unnecessary nbsp's: "п/у Яана Кумана. Музыка" -> "п/у&nbsp;Яана&nbsp;Кумана.&nbsp;Музыка"
 - keep TagCloud in memcache forever but reset it when a tag changed in datastore
 - asynch e-mail sending?
 - tag rss
@@ -24,7 +25,6 @@ Normal:
 - imaged h1's: make white space non clickable
 - copy dewplayer multi onto GAE
 - bug with youtube images: shot-image is repeated many times: http://127.0.0.1:8080/20090929-k-orbelian-and-armenian-state-orchestra-1974.html
-- navigation with Ctrl+arrows
 - custom mp3 tag: eliminate dirs like "other/gradsky-71âˆ’74-sampler.mp3"
 - admin page: uncategorized tags
 - copy Dropbox images to GAE DB
@@ -40,6 +40,7 @@ Normal:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
++ navigation with Ctrl+arrows
 
 Low priority:
 - let users to edit their comments for some time (using cookies)

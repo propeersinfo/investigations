@@ -28,6 +28,10 @@ a:hover   { color: #f33 !important; }
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 130%;
 	font-weight: normal;
+	
+	font-family: 'Segoe UI', 'Segoe UI Light', 'Segoe Light', sans-serif !important;
+	font-weight: 100;
+	
 	/*
 	position: relative;
 	height: 20px;
@@ -194,8 +198,21 @@ div.comment p {
 	vertical-align: bottom;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 140%;
+	
+	font-family: 'Segoe UI', 'Segoe UI Light', 'Segoe Light', sans-serif !important;
+	font-weight: 100;
+	font-size: 140%;
+	letter-spacing: 0px;
+	text-transform: uppercase;
 }
-.below-top h1 a { color: black; }
+.below-top h1 a {
+	color: black !important;
+	text-decoration: none !important;
+}
+.below-top h1 a:hover {
+	color: red !important;
+	text-decoration: none !important;
+}
 
 .bottom {
 	margin-top: 3em;

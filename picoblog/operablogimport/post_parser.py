@@ -82,6 +82,9 @@ def parse_tags(soup):
 def get_content(soup):
   # Path: div#main div.content
   div_content_node = select(soup, "div#main div.content")[0]
+
+  #print "".join(map(to_string, div_content_node.contents)).encode('ascii', 'ignore')
+
   fix_single_mp3_player(div_content_node)
   fix_playlist_mp3_player(div_content_node)
   remove_single_mp3_link(div_content_node)
@@ -227,7 +230,8 @@ if __name__ == '__main__':
     #file = 'ludvikovsky-and-garanian-1971'
     #file = 'soviet-electro-mixtype'
     #file = 'raw-funk-from-armenia-1979'
-    file = 'visitors'
+    file = 'valter-ojakaar-197x'
     parsed = parse_file('../operabloghtml/%s' % file)
-    print parsed['title'].encode('ascii', 'ignore')
-    print parsed['content'].encode('ascii', 'ignore')
+    print parsed['title'].encode('ascii', 'replace')
+    #print parsed['content']
+    print parsed['content'].encode('ascii', 'replace')
