@@ -408,6 +408,12 @@ class NotFoundPageHandler(AbstractPageHandler):
                                                      [],
                                                      '404.html'))
 
+class ShowHeaders(request.BlogRequestHandler):
+    def get(self):
+        for key in self.request.headers:
+            self.response.out.write('%s: %s\n<br>' % (key, self.request.headers[key]))
+        self.response.out.write('\n<br>%s' % self.request.body)
+
 # -----------------------------------------------------------------------------
 # Main program
 # -----------------------------------------------------------------------------
@@ -427,6 +433,7 @@ application = webapp.WSGIApplication(
      ('/archive/(\d+)?$', ArchivePageHandler),
      ('/rss/?$', RssArticlesHandler),
      ('/comment/add/(\d+)$', AddCommentHandler),
+     ('/headers', ShowHeaders),
      ('/.*$', NotFoundPageHandler),
      ],
 
