@@ -86,6 +86,7 @@ class Article(db.Model):
 
     id = db.IntegerProperty()
     title = db.StringProperty(required=True, indexed=False)
+    slug = db.StringProperty(required=True, indexed=True)
     body = db.TextProperty(indexed=False)
     published_date = db.DateTimeProperty(auto_now_add=True, indexed=True)
     tags = db.ListProperty(db.Key)
@@ -229,9 +230,10 @@ class Article(db.Model):
         previous_tags = previous_version.tags if previous_version else []
 
         ArticleTag.tags_updated_for_article(previous_tags, self.tags)
-
+        
         if previous_version and previous_version.draft and (not self.draft):
-            # Going from draft to published. Update the timestamp.
+            # Event: switching from draft to published.
+            # Action: update the timestamp.
             self.published_date = datetime.datetime.now()
 
         if self.is_saved():

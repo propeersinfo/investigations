@@ -1,14 +1,17 @@
+# -*- coding: utf-8 -*-
+
 import os
 import re
 import unicodedata
 import Cookie
-from google.appengine.api import mail
 import defs
 
 def slugify(s):
   s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').lower()
   s = re.sub("[']", '', s)                        # remove some chars
-  s = re.sub('[^a-zA-Z0-9-]+', '-', s).strip('-') # replace the rest with '-'
+  s = re.sub('[^a-zA-Z0-9-]+', '-', s)            # replace the rest with '-'
+  s = re.sub('--+', '-', s)                       # eliminate '--'
+  s = s.strip('-')
   return s
 
 def get_article_path(article):
@@ -43,6 +46,7 @@ def read_file(file):
     return open(full).read()
 
 def send_mail_to_admin_about_new_comment(comment):
+    from google.appengine.api import mail
     mail.send_mail(sender='zeencd@gmail.com',
                    to='zeencd@gmail.com',
                    subject='New comment in "%s"' % comment.article.title,
@@ -64,3 +68,8 @@ class TimePeriod():
 def hours(hours):
     tp = TimePeriod(hours * 60 * 60)
     return tp
+    
+if __name__ == '__main__':
+    titles = [ u'About the cat / Про кота (1985)', u'A dear boy (1974) - Part 1', u'Theme from Rocky\'s cover', u'75 / ВИА 75 (1979)' ]
+    for t in titles:
+        print slugify(t)

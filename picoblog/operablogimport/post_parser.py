@@ -220,6 +220,7 @@ def fix_mixcloud(root):
 def parse_file(opera_blog_post_file):
   soup = BeautifulSoup(read_file(opera_blog_post_file))
   return {'title' : parse_title(soup),
+          'slug' : re.sub('.*[/\\\]', '', opera_blog_post_file),
           'date' : parse_date(soup),
           'tags' : parse_tags(soup),
           'content' : get_content(soup),
@@ -230,8 +231,10 @@ if __name__ == '__main__':
     #file = 'ludvikovsky-and-garanian-1971'
     #file = 'soviet-electro-mixtype'
     #file = 'raw-funk-from-armenia-1979'
-    file = 'valter-ojakaar-197x'
+    #file = 'valter-ojakaar-197x'
+    file = 'zodiac-mysterious-galaxy-how-beezar-edit-2009'
     parsed = parse_file('../operabloghtml/%s' % file)
-    print parsed['title'].encode('ascii', 'replace')
+    print 'title:', parsed['title'].encode('ascii', 'replace')
+    print 'slug:', parsed['slug'].encode('ascii', 'replace')
     #print parsed['content']
     print parsed['content'].encode('ascii', 'replace')
