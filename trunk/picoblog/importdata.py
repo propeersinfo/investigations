@@ -7,6 +7,7 @@ from google.appengine.ext.webapp import util
 from google.appengine.ext import db
 
 from models import *
+from utils import slugify
 import request
 
 from operablogimport.post_parser import parse_file
@@ -21,6 +22,7 @@ def import_post_object(post):
         return ArticleTag.get_by_name(tag_name, create_on_demand=True).key()
 
     article = Article(title = post['title'],
+                      slug = post['slug'],
                       body = post['content'],
                       published_date = post['date'],
                       draft = False,
@@ -50,8 +52,11 @@ def import_all_files(out):
         cnt += 1
     posts = sorted(posts, key=lambda post: post['date'])
     for post in posts:
-        #out.write("%s %s\n" % (post['date'], post['title']))
-        import_post_object(post)
+        try:
+            #out.write("%s %s\n" % (post['date'], post['title']))
+            import_post_object(post)
+        except db.BadValueError:
+            raise Exception('BadValueError for file %s' % (file))
 
 class ImportSomeHandler(request.BlogRequestHandler):
     def get(self):

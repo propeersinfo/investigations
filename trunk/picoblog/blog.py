@@ -295,7 +295,7 @@ class ArticlesByTagHandler(AbstractPageHandler):
                              '/tag/' + tag_name + '/page%d',
                              '/tag/' + tag_name + '/')
         tpl_vars = {
-            'paging_title' : 'There are %s blog posts tagged &ldquo;%s&rdquo;.' % (paged_query.count(), tag_name)
+            'paging_title' : 'There are %s articles tagged &ldquo;%s&rdquo;.' % (paged_query.count(), tag_name)
         }
         self.response.out.write(self.render_articles(page_info,
                                                      self.request,

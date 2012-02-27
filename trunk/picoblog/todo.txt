@@ -14,6 +14,10 @@ Major:
 - implement never-expire resources
 
 Normal:
+- 'new comment' form leads to stack trace if not filled properly
+- [dewplaylist] not handled: http://localhost/20100330-the-last-portion-of-qaya.html
+- extra stuff in comments at http://localhost/20110804-aura-urziceanu-1974.html
+- wrong title imported for http://localhost/20100331-a-href-sovietgroove-blog-show-dml-8737781-syabry-1986-a.html
 - typographer: unnecessary nbsp after dash: "AA - BB" => "AA&nbsp;-&nbsp;BB"
 - typographer: unnecessary nbsp's: "п/у Яана Кумана. Музыка" -> "п/у&nbsp;Яана&nbsp;Кумана.&nbsp;Музыка"
 - keep TagCloud in memcache forever but reset it when a tag changed in datastore
@@ -40,6 +44,7 @@ Normal:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
++ not handled: [http://www.youtube.com/v/vkUecXJ4Muw?fs=1]
 + navigation with Ctrl+arrows
 
 Low priority:
