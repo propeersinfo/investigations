@@ -321,28 +321,41 @@ class SingleArticleHandler(AbstractPageHandler):
     def get(self, id):
         id = int(id)
         article = Article.get(id)
+        self.__class__.do_the_job(self, article)
 
-        if article:
+    @classmethod
+    def do_the_job(cls, handler, article, do_redirect=True):
+        if article and do_redirect:
             true_path = utils.get_article_path(article)
-            if self.request.path != true_path:
-                self.redirect(true_path, permanent=True)
+            if handler.request.path != true_path:
+                handler.redirect(true_path, permanent=True)
                 return
 
-        response_code, template = self.get_code_and_template(article)
-        self.response.set_status(response_code)
+        response_code, template = cls.get_code_and_template(article)
+        handler.response.set_status(response_code)
         additional_template_variables = {'single_article': article}
-        self.response.out.write(self.render_articles(SinglePageInfo(article),
-                                                     self.request,
-                                                     self.get_recent(),
+        handler.response.out.write(handler.render_articles(SinglePageInfo(article),
+                                                     handler.request,
+                                                     handler.get_recent(),
                                                      template,
                                                      additional_template_variables))
-    def get_code_and_template(self, article):
+
+    @classmethod
+    def get_code_and_template(cls, article):
         if not article:
             return 404, '404.html'
         elif article.draft and not users.is_current_user_admin():
             return 403, '403.html'
         else:
             return 200, 'articles.html'
+
+class ArticleBySlugHandler(AbstractPageHandler):
+    def get(self, slug):
+        slug_obj = Slug.find_article_by_slug(slug_string = slug)
+        if slug_obj:
+            SingleArticleHandler.do_the_job(self, slug_obj.article, do_redirect=False)
+        else:
+            raise Exception('no article by address %s' % slug)
 
 class ArchivePageHandler(AbstractPageHandler):
     """
@@ -434,7 +447,8 @@ application = webapp.WSGIApplication(
      ('/rss/?$', RssArticlesHandler),
      ('/comment/add/(\d+)$', AddCommentHandler),
      ('/headers', ShowHeaders),
-     ('/.*$', NotFoundPageHandler),
+     #('/.*$', NotFoundPageHandler),
+     ('/(.*)$', ArticleBySlugHandler),
      ],
 
     debug=True)

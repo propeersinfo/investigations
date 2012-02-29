@@ -14,28 +14,24 @@ Major:
 - implement never-expire resources
 
 Normal:
-- 'new comment' form leads to stack trace if not filled properly
+- disallow slugs like "tag", "admin", "pageXXX", "rss"
+- soundcloud widgets not imported - http://localhost/a-light-groovy-disco-compilation-by-schmoltz
+- implement 404 instead "Exception: no article by address soviet-psychedelic-mastaz"
+- "[http://i068.radikal.ru/1001/79/73237238bee2.jpg]" leads to "http://dl.dropbox.com/u/1883230/sg/http://i068.radikal.ru/1001/79/73237238bee2.jpg"
+- "Blog posts ← later ... later →" when one page is available
+- 'new comment' form, if not filled properly, leads to inappropriate stack trace
 - [dewplaylist] not handled: http://localhost/20100330-the-last-portion-of-qaya.html
-- extra stuff in comments at http://localhost/20110804-aura-urziceanu-1974.html
+- extra stuff in imported comments at http://localhost/20110804-aura-urziceanu-1974.html
 - wrong title imported for http://localhost/20100331-a-href-sovietgroove-blog-show-dml-8737781-syabry-1986-a.html
-- typographer: unnecessary nbsp after dash: "AA - BB" => "AA&nbsp;-&nbsp;BB"
-- typographer: unnecessary nbsp's: "п/у Яана Кумана. Музыка" -> "п/у&nbsp;Яана&nbsp;Кумана.&nbsp;Музыка"
 - keep TagCloud in memcache forever but reset it when a tag changed in datastore
-- asynch e-mail sending?
+- async e-mail sending
 - tag rss
 - update memcached tag cloud on article change
 - make dewplayer never expire! +ETag
 - let admin distinguish draft articles visually
-- imaged h1's: make white space non clickable
 - copy dewplayer multi onto GAE
-- bug with youtube images: shot-image is repeated many times: http://127.0.0.1:8080/20090929-k-orbelian-and-armenian-state-orchestra-1974.html
 - custom mp3 tag: eliminate dirs like "other/gradsky-71âˆ’74-sampler.mp3"
-- admin page: uncategorized tags
 - copy Dropbox images to GAE DB
-- send mails periodically, in the cron way (a proposal)
-- fontgen: JS part forms bad request strings for chars like "#$%^"
-- implement E-Tag
-- implement no-expiration technique for resources?
 - new player
 - friendly links at the right
 - RSS icon
@@ -44,12 +40,20 @@ Normal:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
++ make sure links "<a href>text</a>" are imported correctly; rewrite them to "/slug"
++ admin page: uncategorized tags
 + not handled: [http://www.youtube.com/v/vkUecXJ4Muw?fs=1]
 + navigation with Ctrl+arrows
 
 Low priority:
+- typographer: unnecessary nbsp after dash: "AA - BB" => "AA&nbsp;-&nbsp;BB"
+- typographer: unnecessary nbsp's: "п/у Яана Кумана. Музыка" -> "п/у&nbsp;Яана&nbsp;Кумана.&nbsp;Музыка"
+- [discogs] tag, easily expanding to some HTML
+- bug with youtube images: shot-image is repeated many times: http://127.0.0.1:8080/20090929-k-orbelian-and-armenian-state-orchestra-1974.html
 - let users to edit their comments for some time (using cookies)
 - all comments RSS
 - implement archive listing
 - ajax comments
 - caching of each post and the front page
+- fontgen: JS part forms bad request strings for chars like "#$%^"
+- fontgen: imaged h1's: make white space non clickable

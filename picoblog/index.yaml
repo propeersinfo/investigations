@@ -53,3 +53,9 @@ indexes:
   - name: article
   - name: replied_comment_id
   - name: published_date
+
+- kind: Slug
+  properties:
+  - name: article
+  - name: added_date
+    direction: desc

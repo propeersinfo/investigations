@@ -8,6 +8,7 @@ blog.
 import cgi
 from datetime import time
 import logging
+import urllib
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -117,6 +118,7 @@ class ResetTagCounters(request.BlogRequestHandler):
 class EmptyDB(request.BlogRequestHandler):
     def post(self):
         empty_table('Article')
+        empty_table('Slug')
         empty_table('Comment')
         empty_table('ArticleTag')
         empty_table('FontRenderCache')
@@ -149,12 +151,37 @@ class NewArticleHandler(request.BlogRequestHandler):
     """
     def get(self):
         article = Article(title='-',
+                          slug = 'x',
                           body=utils.read_file('new-article.txt'),
                           draft=False)
         user_info = UserInfo(self.request)
         template_vars = {
             'article'   : article,
-            'user_info' : user_info
+            'user_info' : user_info,
+            'new_article' : True
+        }
+        self.response.out.write(self.render_template('admin-edit.html',
+                                                     template_vars))
+
+class EditArticleHandler(request.BlogRequestHandler):
+    """
+    Handles requests to edit an article.
+    """
+    def get(self, id):
+        id = int(id)
+        article = Article.get(id)
+        if not article:
+            raise ValueError, 'Article with ID %d does not exist.' % id
+
+        slugs = Slug.get_slugs_for_article(article)
+        
+        #article.tag_string = ', '.join(article.tags)
+        article.tag_string = ', '.join(article.get_tag_names())
+        template_vars = {
+            'article'  : article,
+            'from'     : cgi.escape(self.request.get('from')),
+            'tag_cloud' : TagCloud.get(),
+            'slugs'    : slugs
         }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))
@@ -167,6 +194,8 @@ class SaveArticleHandler(request.BlogRequestHandler):
         #url_from = cgi.escape(self.request.get('from'))
         url_from = self.request.get('from')
         title = self.request.get('title')
+        slug = self.request.get('slug')
+        #raise Exception('Slug is %s.' % slug)
         body = self.request.get('content')
         s_id = cgi.escape(self.request.get('id'))
         id = int(s_id) if s_id else None
@@ -185,6 +214,7 @@ class SaveArticleHandler(request.BlogRequestHandler):
             draft = (draft.lower() == 'on')
 
         article = Article.get(id) if id else None
+        new_article = False
         if article:
             # It's an edit of an existing item.
             just_published = article.draft and (not draft)
@@ -199,42 +229,26 @@ class SaveArticleHandler(request.BlogRequestHandler):
                               tags=tags,
                               draft=draft)
             just_published = not draft
-
+            new_article = True
         article.save()
+
+        if new_article:
+            Slug.insert_new(slug, article)
 
         if just_published:
             logging.debug('Article %d just went from draft to published. '
                           'Alerting the media.' % article.id)
             alert_the_media()
 
-        edit_again = cgi.escape(self.request.get('edit_again'))
-        edit_again = edit_again and (edit_again.lower() == 'true')
-        if edit_again:
-            self.redirect('/admin/article/edit/?id=%s' % article.id)
-        elif url_from:
+        #edit_again = cgi.escape(self.request.get('edit_again'))
+        #edit_again = edit_again and (edit_again.lower() == 'true')
+        #if edit_again:
+        #    self.redirect('/admin/article/edit/?id=%s' % article.id)
+        #elif url_from:
+        if url_from:
             self.redirect(url_from)
         else:
             self.redirect(utils.get_article_path(article))
-
-class EditArticleHandler(request.BlogRequestHandler):
-    """
-    Handles requests to edit an article.
-    """
-    def get(self, id):
-        id = int(id)
-        article = Article.get(id)
-        if not article:
-            raise ValueError, 'Article with ID %d does not exist.' % id
-
-        #article.tag_string = ', '.join(article.tags)
-        article.tag_string = ', '.join(article.get_tag_names())
-        template_vars = {
-            'article'  : article,
-            'from'     : cgi.escape(self.request.get('from')),
-            'tag_cloud' : TagCloud.get(),
-        }
-        self.response.out.write(self.render_template('admin-edit.html',
-                                                     template_vars))
 
 class DeleteArticleHandler(request.BlogRequestHandler):
     # TODO: rewrite it to method GET
@@ -262,6 +276,13 @@ class DeleteCommentHandler(request.BlogRequestHandler):
         else:
             self.redirect('/')
 
+class Slugify(request.BlogRequestHandler):
+    def get(self, text):
+        text = urllib.unquote(text)
+        #raise Exception(type(text))
+        text = unicode(text, encoding='utf-8')
+        self.response.out.write(utils.slugify(text))
+
 # -----------------------------------------------------------------------------
 # Functions
 # -----------------------------------------------------------------------------
@@ -286,6 +307,7 @@ application = webapp.WSGIApplication(
          ('/admin/reset-tag-counters', ResetTagCounters),
          ('/admin/empty-db', EmptyDB),
          ('/admin/tags', ManageTags),
+         ('/admin/slugify/(.*)$', Slugify),
          ],
         debug=True)
 
