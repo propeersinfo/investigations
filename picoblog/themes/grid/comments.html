@@ -1,4 +1,10 @@
-﻿        <p><b>{{article.comments_count}} comments:</b></p>
+﻿        <p>
+          {% if article.comments_count %}
+            <b>{{article.comments_count}} comments:</b>
+          {% else %}
+            <b>No comments yet.</b>
+          {% endif %}
+        </p>
 {% for comment in article.comments %}
         <div class="row comment">
     		<div class="width_2"><p>
