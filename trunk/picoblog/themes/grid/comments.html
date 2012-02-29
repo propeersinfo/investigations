@@ -1,8 +1,11 @@
-﻿      {% if article.comments_count %}
+﻿<!-- comments count -->
+      {% if article.comments_count %}
         <p>
             <b>{{article.comments_count}} comments:</b>
         </p>
       {% endif %}
+
+<!-- comments listing -->
 {% for comment in article.comments %}
         <div class="row comment">
     		<div class="width_2"><p>
@@ -10,11 +13,13 @@
 					<span title="#{{comment.id}} {{comment.published_date|date:"r"}}">{{blog_owner_name}}</span>
 				{% else %}
 					{% if not comment.author %}
-						<span title="#{{comment.id}} {{comment.published_date|date:"r"}}">Anonymous</span>
+						<span title='#{{comment.id}} {{comment.published_date|date:"r"}}'>Anonymous</span>
 					{% else %}
-						<span title="#{{comment.id}} {{comment.published_date|date:"r"}}">{{comment.author}}</span>
+						<span title='#{{comment.id}} {{comment.published_date|date:"r"}}'>{{comment.author}}</span>
 					{% endif %}
 				{% endif %}
+				<br>
+				<span class='comment-date' title='{{comment.published_date|date:"r"}}'>{{comment.published_date|date:"M d, Y"}}</span>
 			</p></div>
     		<div class="width_6">
     			<!-- a eries of <p>'s is expected here -->
@@ -30,6 +35,8 @@
 			</div>
         </div>
 {% endfor %}
+
+<!-- new comment form -->
         <p><br/><b>Your comment:</b></p>
         <form action="/comment/add/{{article.id}}" method="post" accept-charset="UTF-8">
         <div class="row">
