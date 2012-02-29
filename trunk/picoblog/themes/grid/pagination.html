@@ -1,16 +1,16 @@
 	<div class="pagination">
-	    Blog posts
+	    Articles:
 		{% if prev_page_url %}
-		  &larr; <a href="{{prev_page_url}}">earlier</a>
+		  <a href="{{prev_page_url}}">fresher</a> &larr;
 		  <link rel="prev" href="{{prev_page_url}}" id="prev-link" />
 		{% else %}
-		  &larr; later
+		  fresher &larr;
 		{% endif %}
-		...
+		Ctrl
 		{% if next_page_url %}
-		  <a href="{{next_page_url}}">earlier</a> &rarr;
+		  &rarr; <a href="{{next_page_url}}">older</a>
 		  <link rel="next" href="{{next_page_url}}" id="next-link" />
 		{% else %}
-		  later &rarr;
+		  &rarr; older
 		{% endif %}
 	</div>
