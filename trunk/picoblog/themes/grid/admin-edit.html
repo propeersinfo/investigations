@@ -7,6 +7,9 @@
 
 {% block main %}
 
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
 <script type="text/javascript">
 
 String.prototype.trim = function() 
@@ -65,6 +68,35 @@ function cancel_edit()
         document.location = '/admin/'
 }
 
+/*function title_changed(title_elem) {
+	slug_elem = document.getElementById('slug')
+	slug_elem.value = title_elem.value
+
+    $.ajax({
+        url: "/admin/slugify",
+        context: document.body,
+        success: function() {
+            //$(this).addClass("done");
+            alert('slugified')
+        }
+    });
+}*/
+
+{% if new_article %}
+$(document).ready(function() {
+    var title = $('#title')
+    title.bind('propertychange keyup input paste', function() {
+        $.ajax({
+            url: "/admin/slugify/" + title.val(),
+            //context: document.body,
+            success: function(response) {
+                $('#slug').val(response)
+            }
+        });
+    })
+})
+{% endif %}
+
 </script>
 
 <body>
@@ -76,20 +108,27 @@ function cancel_edit()
 
 <form action="" method="post" name="article">
 
-    <input type="text" align="left" width="80" style="width:98%" name="title" value="{{ article.title|escape }}"/>
+    <p><input type="text" align="left" width="80" style="width:98%" name="title" id="title" value="{{ article.title|escape }}" />
 
-    <br/><br/>
-    
-    <textarea name="content" cols="98%" rows="15" style="width:98%">{{ article.body|escape }}</textarea>
+    {% if new_article %}
+    <p><input type="text" align="left" width="80" style="width:98%" name="slug" id="slug" value="{{ article.slug|escape }}" />
+    {% else %}
+    <p>Slugs:
+    {% for slug in slugs %}
+    	<a href="/{{slug.slug|escape}}">{{slug.slug|escape}}</a>
+    {% endfor%}
+    {% endif %}
+
+    <p><textarea name="content" cols="98%" rows="15" style="width:98%">{{ article.body|escape }}</textarea>
 
     <p>
         Tags: <input type="text" size="60" name="tags" value="{{ article.tag_string}}"/>
 
-        {% if article.draft %}
+{% if article.draft %}
         Draft: <input type="checkbox" name="draft" checked/>
-        {% else %}
+{% else %}
         Draft: <input type="checkbox" name="draft"/>
-        {% endif %}
+{% endif %}
     </p>
 
     <p>

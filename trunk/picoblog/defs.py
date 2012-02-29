@@ -17,11 +17,12 @@ ATOM_URL_PATH = 'atom'
 RSS2_URL_PATH = 'rss'
 ARCHIVE_URL_PATH = 'archive'
 
-MAX_ARTICLES_PER_PAGE = 10
+MAX_ARTICLES_PER_PAGE = 5
 MAX_ARTICLES_PER_PAGE_ARCHIVE = 50
 MAX_ARTICLES_RSS = 2
 TOTAL_RECENT = 10
 
+# todo: need to be reviewed
 if os.environ.get('SERVER_SOFTWARE','').lower().find('development') >= 0:
   PRODUCTION = False
   CANONICAL_BLOG_URL = 'http://localhost:8080'

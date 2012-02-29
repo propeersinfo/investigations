@@ -8,7 +8,10 @@ import utils
 FETCH_THEM_ALL_COMMENTS = 100
 FETCH_ALL_TAGS = 1000
 FETCH_ALL_TAGS_FOR_TAG_CLOUD = 2000 # there are about 150 tags in Opera
+FETCH_ALL_SLUGS = 500
 MAX_ARTICLES_PER_DAY = 20
+
+########################################################
 
 class ArticleTag(db.Model):
     name = db.StringProperty(required=True, indexed=True)
@@ -56,6 +59,8 @@ class ArticleTag(db.Model):
     def get_keys_by_names_creating(cls, tag_names):
         return [ cls.get_by_name(tag_name, True).key() for tag_name in tag_names ]
 
+########################################################
+
 class TagCloud():
     """
     All tags in memory, 2-3 KB
@@ -82,11 +87,12 @@ class TagCloud():
             tag_cloud[tag.name] = tag.counter
         return tag_cloud
 
+########################################################
+
 class Article(db.Model):
 
     id = db.IntegerProperty()
     title = db.StringProperty(required=True, indexed=False)
-    slug = db.StringProperty(required=True, indexed=True)
     body = db.TextProperty(indexed=False)
     published_date = db.DateTimeProperty(auto_now_add=True, indexed=True)
     tags = db.ListProperty(db.Key)
@@ -101,18 +107,6 @@ class Article(db.Model):
         q.filter('id = ', id)
         return q.get()
 
-    #    @classmethod
-#    def published_query(cls):
-#        q = db.Query(Article)
-#        q.filter('draft = ', False)
-#        return q
-#
-#    @classmethod
-#    def published(cls):
-#        return Article.published_query()\
-#                      .order('-published_date')\
-#                      .fetch(FETCH_THEM_ALL)
-
     @classmethod
     def query_all(cls):
         return db.Query(Article).order('-published_date')
@@ -122,41 +116,6 @@ class Article(db.Model):
         return cls.query_all()\
                   .filter('draft = ', False)\
                   .order('-published_date')
-
-#    @classmethod
-#    def published_query(cls):
-#        return Article.published_query()\
-#                      .filter('draft = ', False)\
-#                      .order('-published_date')
-#
-#    @classmethod
-#    def get_all_tags(cls):
-#        """
-#        Return all tags, as TagCount objects, optionally sorted by frequency
-#        (highest to lowest).
-#        """
-#        tag_counts = {}
-#        for article in Article.published():
-#            for tag in article.tags:
-#                tag = unicode(tag)
-#                try:
-#                    tag_counts[tag] += 1
-#                except KeyError:
-#                    tag_counts[tag] = 1
-#        return tag_counts
-#
-#    @classmethod
-#    def get_all_datetimes(cls):
-#        dates = {}
-#        for article in Article.published():
-#            date = datetime.datetime(article.published_date.year,
-#                                     article.published_date.month,
-#                                     article.published_date.day)
-#            try:
-#                dates[date] += 1
-#            except KeyError:
-#                dates[date] = 1
-#        return dates
 
     @classmethod
     def all_for_month_query(cls, year, month):
@@ -242,8 +201,11 @@ class Article(db.Model):
             id = self.create_uniq_id()
             self.put()
             self.id = id
+            #Slug.insert_new(self.slug, self)
             self.put()
 
+
+########################################################
 
 class Comment(db.Model):
 
@@ -280,6 +242,8 @@ class Comment(db.Model):
                 self.replied_comment_id = self.id
             self.put()
 
+########################################################
+
 # generated images cache
 # such entries could be cleaned out without any problems
 class FontRenderCache(db.Model):
@@ -302,5 +266,47 @@ class FontRenderCache(db.Model):
                               height = image.get_height(),
                               render = image.get_data_as_string())
         obj.save()
+    def save(self):
+        self.put()
+
+########################################################
+
+class Slug(db.Model):
+    slug = db.StringProperty(required=True, indexed=True)
+    article = db.ReferenceProperty(Article, required=True)
+    added_date = db.DateTimeProperty(auto_now_add=True, indexed=True)
+    
+    @classmethod
+    def find_article_by_slug(cls, slug_string):
+        q = db.Query(Slug)
+        q.filter('slug = ', slug_string)
+        return q.get()
+
+    @classmethod
+    def get_slugs_for_article(cls, article):
+        q = db.Query(Slug)
+        q.filter('article = ', article)
+        q.order('-added_date') # recent entries first
+        return q.fetch(FETCH_ALL_SLUGS)
+        
+    @classmethod
+    def get_default_slug_for_article(cls, article):
+        slugs = cls.get_slugs_for_article(article)
+        if len(slugs) == 0:
+            raise Exception('cannot find any slug for article %s' % article)
+        return slugs[0]
+    
+    @classmethod
+    def insert_new(cls, slug, article):
+        if type(slug) != unicode and type(slug) != str:
+            raise Exception('param slug is of bad type: %s' % type(slug))
+        existing = cls.find_article_by_slug(slug_string=slug)
+        if existing:
+            raise Exception('article with slug "%s" already exists' % (slug))
+        else:
+            obj = Slug(slug=slug, article=article)
+            obj.save()
+            return obj
+
     def save(self):
         self.put()

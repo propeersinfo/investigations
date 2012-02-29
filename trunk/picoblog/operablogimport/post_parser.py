@@ -32,6 +32,7 @@ def replace_links_with_text_equal_to_href(root):
     for a in root.findAll("a"):
         if hasattr(a, 'href'):
             href = a['href']
+            #print 'found an <a>'
             if re.search(r'rapidshare|narod|sendspace|ifolder', href, re.IGNORECASE):
                 replacement = "%s" % href
                 a.replaceWith(NavigableString(replacement))
@@ -237,7 +238,8 @@ if __name__ == '__main__':
     #file = 'valter-ojakaar-197x'
     #file = 'zodiac-mysterious-galaxy-how-beezar-edit-2009'
     #file = 'psychedelic-dos-mukasan'
-    file = 'a-soviet-musical-review'
+    #file = 'a-soviet-musical-review'
+    file = 'aura-urziceanu-1974.htm'
     parsed = parse_file('../operabloghtml/%s' % file)
     print 'title:', (parsed['title']).encode('ascii', 'replace')
     print 'slug:', parsed['slug'].encode('ascii', 'replace')

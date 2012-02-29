@@ -6,7 +6,11 @@ import unicodedata
 import Cookie
 import defs
 
+import models
+
 def slugify(s):
+  if type(s) == str:
+    s = unicode(s)
   s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').lower()
   s = re.sub("[']", '', s)                        # remove some chars
   s = re.sub('[^a-zA-Z0-9-]+', '-', s)            # replace the rest with '-'
@@ -15,7 +19,9 @@ def slugify(s):
   return s
 
 def get_article_path(article):
-  return '/%s-%s.html' % (article.id, slugify(article.title))
+  #return '/%s-%s.html' % (article.id, slugify(article.title))
+  slug = models.Slug.get_default_slug_for_article(article)
+  return '/%s' % (slug.slug)
 
 def get_article_url(article):
   return defs.CANONICAL_BLOG_URL + get_article_path(article)

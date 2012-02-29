@@ -22,12 +22,13 @@ def import_post_object(post):
         return ArticleTag.get_by_name(tag_name, create_on_demand=True).key()
 
     article = Article(title = post['title'],
-                      slug = post['slug'],
+                      #slug = post['slug'],
                       body = post['content'],
                       published_date = post['date'],
                       draft = False,
                       tags = map(string2category, post['tags']))
     article.save()
+    Slug.insert_new(post['slug'], article)
 
     for comment in post['comments']:
         db_comment = Comment(article = article,

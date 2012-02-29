@@ -105,7 +105,7 @@ $(document).ready(function() {
                 link = document.getElementById ('next-link');
                 break;
         }
-        if (link && link.href)
+        if (typeof(link) != 'undefined' && link && link.href)
             document.location = link.href;
     }, false)
 });
