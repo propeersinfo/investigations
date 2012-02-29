@@ -1,10 +1,8 @@
-﻿        <p>
-          {% if article.comments_count %}
+﻿      {% if article.comments_count %}
+        <p>
             <b>{{article.comments_count}} comments:</b>
-          {% else %}
-            <b>No comments yet.</b>
-          {% endif %}
         </p>
+      {% endif %}
 {% for comment in article.comments %}
         <div class="row comment">
     		<div class="width_2"><p>
@@ -59,7 +57,7 @@
     			&nbsp;
 			</p></div>
     		<div class="width_6"><p>
-    			<input type="submit" value='Send'/>
+    			<input type="submit" value='Add comment'/>
 			</p></div>
         </div>
 		</form>
