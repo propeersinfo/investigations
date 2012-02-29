@@ -5,6 +5,13 @@ import sys
 import datetime
 import codecs
 
+def strip_tags(soup, valid_tags):
+  # modify given BeautifulSoup instance
+  # leaving only nodes from valid_tags
+  for tag in soup.findAll(True):
+    if not tag.name in valid_tags: 
+      tag.replaceWithChildren()
+
 def to_string(obj):
     return unicode(obj)
 
@@ -28,6 +35,12 @@ def replace_links_with_text_equal_to_href(root):
             if re.search(r'rapidshare|narod|sendspace|ifolder', href, re.IGNORECASE):
                 replacement = "%s" % href
                 a.replaceWith(NavigableString(replacement))
+
+def fix_local_link_url(root):
+  for a in root.findAll("a"):
+    if hasattr(a, 'href'):
+      #href = a['href']
+      a['href'] = a['href'].replace('http://my.opera.com/sovietgroove/blog/', '/')
 
 def replace_br(root):
     for a in root.findAll("br"):
@@ -92,38 +105,28 @@ def get_content(soup):
   fix_youtube(div_content_node)
   fix_mixcloud(div_content_node)
   replace_links_with_text_equal_to_href(div_content_node)
+  fix_local_link_url(div_content_node)
   replace_br(div_content_node)
   fix_links_attrs(div_content_node)
+  strip_tags(div_content_node, valid_tags=['a', 'ul', 'ol', 'li'])
+
   text = node_to_string(div_content_node)
   text = text.replace('&amp;', '&')
+
+  text = re.sub('\n\n\n\n', '\n\n', text)
+  text = re.sub('\n\n\n', '\n\n', text)
+  
   return text
 
 def node_to_string(root):
-    text = ''.join([e for e in root.recursiveChildGenerator() if isinstance(e,unicode)])
-    #text = "".join(map(to_string, root.contents))
-    return text
+    # convert node to HTML string
 
-#def fix_content(tags):
-#    def fix_link_attributes(tag):
-#        # elminate rel=nofollow and target=_blank
-#        if hasattr(tag, 'name') and tag.name == 'a':
-#            tag['rel'] = ''
-#            tag['target'] = ''
-#        return tag
-#    def tags_to_strings(tags):
-#        strings = []
-#        for tag in tags:
-#            if tag:
-#                strings.append(str(tag))
-#        return strings
-#    tags = map(fix_br, tags)
-#    tags = map(fix_link_attributes, tags)
-#    #for tag in tags:
-#    #    print "TYPE:", type(tag)
-#    string = "".join(map(to_string, tags))
-#    #string = string.replace(' rel=""', ' ')    # see fix_link_attributes()
-#    #string = string.replace(' target=""', ' ') # see fix_link_attributes()
-#    return string
+    #text = ''.join([e for e in root.recursiveChildGenerator() if isinstance(e,unicode)])
+    #for e in root.recursiveChildGenerator():
+    #    print type(e), isinstance(e,unicode)
+    #raise Exception('exitt')
+    text = "".join(map(to_string, root.contents))
+    return text
 
 def get_comments(soup):
     def is_owner_comment(div_text):
@@ -232,9 +235,11 @@ if __name__ == '__main__':
     #file = 'soviet-electro-mixtype'
     #file = 'raw-funk-from-armenia-1979'
     #file = 'valter-ojakaar-197x'
-    file = 'zodiac-mysterious-galaxy-how-beezar-edit-2009'
+    #file = 'zodiac-mysterious-galaxy-how-beezar-edit-2009'
+    #file = 'psychedelic-dos-mukasan'
+    file = 'a-soviet-musical-review'
     parsed = parse_file('../operabloghtml/%s' % file)
-    print 'title:', parsed['title'].encode('ascii', 'replace')
+    print 'title:', (parsed['title']).encode('ascii', 'replace')
     print 'slug:', parsed['slug'].encode('ascii', 'replace')
     #print parsed['content']
     print parsed['content'].encode('ascii', 'replace')
