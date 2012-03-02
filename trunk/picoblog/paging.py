@@ -13,25 +13,28 @@ class PageInfoBase:
 
 class PageInfo(PageInfoBase):
   def __init__(self, paged_query, page_num = 1, page_link_format = "%d", first_page_url = None):
+    self.current_page = page_num
+    self.pages_total = paged_query.page_count()
     self.articles = paged_query.fetch_page(page_num)
-    
     if page_num == 2 and first_page_url != None:
       self.prev_page_url = first_page_url
     else:
       self.prev_page_url = (page_link_format % (page_num-1)) if paged_query.has_page(page_num-1) else None
-      
     self.next_page_url = (page_link_format % (page_num+1)) if paged_query.has_page(page_num+1) else None
 
 class EmptyPageInfo(PageInfoBase):
-    articles = []
-    prev_page_url = None
-    next_page_url = None
+  def __init__(self):
+    self.articles = []
+    self.prev_page_url = None
+    self.next_page_url = None
 
 class SinglePageInfo(PageInfoBase):
   def __init__(self, article):
     self.articles = [ article ]
     self.prev_page_url = None
     self.next_page_url = None
+    self.current_page = 1
+    self.pages_total = 1
 
 class NoPagingPageInfo(PageInfoBase):
   def __init__(self, paged_query):

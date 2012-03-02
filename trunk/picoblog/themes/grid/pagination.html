@@ -1,5 +1,5 @@
 	<div class="pagination">
-	    Articles:
+	    Articles: &nbsp;&nbsp;
 		{% if prev_page_url %}
 		  <a href="{{prev_page_url}}">fresher</a> &larr;
 		  <link rel="prev" href="{{prev_page_url}}" id="prev-link" />
@@ -13,4 +13,6 @@
 		{% else %}
 		  &rarr; older
 		{% endif %}
+		
+		&nbsp;&nbsp; (Page {{current_page_1}}/{{pages_total}})
 	</div>

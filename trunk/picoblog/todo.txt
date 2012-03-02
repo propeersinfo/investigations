@@ -14,9 +14,9 @@ Major:
 - implement never-expire resources
 
 Normal:
-- disallow slugs like "tag", "admin", "pageXXX", "rss"
+- disallow slugs like "tag", "admin", "page2", "rss"
 - soundcloud widgets not imported - http://localhost/a-light-groovy-disco-compilation-by-schmoltz
-- implement 404 instead "Exception: no article by address soviet-psychedelic-mastaz"
++ implement 404 instead "Exception: no article by address soviet-psychedelic-mastaz"
 - "[http://i068.radikal.ru/1001/79/73237238bee2.jpg]" leads to "http://dl.dropbox.com/u/1883230/sg/http://i068.radikal.ru/1001/79/73237238bee2.jpg"
 - "Blog posts ← later ... later →" when one page is available
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace

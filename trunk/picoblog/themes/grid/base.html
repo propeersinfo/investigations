@@ -14,6 +14,8 @@
 <link href="/static/grid-compiled.css" type="text/css" rel="stylesheet"/>
 <link href="/static/main.css" type="text/css" rel="stylesheet"/>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
  
 <style type="text/css" media="screen">
 </style>
@@ -25,11 +27,15 @@
 </head>
 <body>
 
+<div style="position:absolute; left:122px; top:-13px;">
+	<h1 id="logo"><a href="/">&#x2606; Soviet Groove</a></h1>
+</div>
+
 <div class="row top">
 	<div class="width_2">
-		<p>&nbsp;</p>
+		&nbsp;
 	</div>
-	<div class="width_10">
+	<div class="width_8">
 		<div class="row">
 			<!--
 			<div class="width_7">
@@ -44,6 +50,7 @@
 				<!--
 				<h1><a href="/"><span></span>Soviet Rare Groove</a></h1>
 				-->
+{% comment %}
 				<h1>
 					<a href="/">Soviet Rare Groove</a>
 					<sup><a href="/rss">RSS</a></sup>
@@ -54,10 +61,13 @@
 					</small>
 {% endif %}
 				</h1>
+{% endcomment %}
 			</div>
+{% comment %}
 			<div class="width_3">
 				<input class="search" type="text" value="search"/>
 			</div>
+{% endcomment %}
 		</div>
 		<div class="row about">
 			<div class="width_6">
@@ -80,12 +90,29 @@
 	    	</div>
 		</div>
 	</div>
+	<div class="width_2">
+		<input style="width:96%;" class="search" type="text" value="search"/>
+	</div>
 </div>
 
 <div class="row below-top">
 
 	<div class="width_2">
 		{% include "tags.html" %}
+
+{% if user_info.is_admin %}		
+		<div class='sidebar-panel sidebar-tags'>
+		<ul>
+			<li><b>Admin:</b></li>
+		</ul>
+		<ul>
+			<li><a href="/admin/article/new">add article</a></li>
+			<li><a href="/admin/">admin</a></li>
+			<li><a href="{{user_info.logout_url}}">logout</a></li>
+		</ul>
+		</div>
+{% endif %}		
+
 	</div>
 	
 	<div class="width_8">
@@ -105,9 +132,12 @@
 			<a href="{{user_info.login_url}}">login</a>
 		{% endif %}
 	</p></div>
-	<div class="width_10"><p>
+	<div class="width_4"><p>
 		2009&mdash;2012 copyleft<br/>
 		<a href="mailto:mail@sovietgroove.com">mail@sovietgroove.com</a>
+	</p></div>
+	<div class="width_6"><p>
+		<a href="/archive/">archive</a>
 	</p></div>
 </div>
 

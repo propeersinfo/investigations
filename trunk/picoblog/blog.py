@@ -249,6 +249,8 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
             'prev_page_url'   : page_info.prev_page_url,
             'next_page_url'   : page_info.next_page_url,
+            'current_page_1'  : page_info.current_page,
+            'pages_total'     : page_info.pages_total,
             'tag_cloud'       : TagCloud.get(),
         }
 
@@ -355,7 +357,16 @@ class ArticleBySlugHandler(AbstractPageHandler):
         if slug_obj:
             SingleArticleHandler.do_the_job(self, slug_obj.article, do_redirect=False)
         else:
-            raise Exception('no article by address %s' % slug)
+            #raise Exception('no article by address %s' % slug)
+            article = None
+            template = '404.html'
+            self.response.set_status(404)
+            additional_template_variables = {'single_article': article}
+            self.response.out.write(self.render_articles(SinglePageInfo(article),
+                                                         self.request,
+                                                         self.get_recent(),
+                                                         template,
+                                                         additional_template_variables))
 
 class ArchivePageHandler(AbstractPageHandler):
     """

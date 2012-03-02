@@ -8,10 +8,6 @@ div { margin: 10px; }
 .new { clear: both; }
 </style>
 
-<div class="new row">
-	<a href="/admin/tags">Manage tags</a>
-</div>
-
 <div class="row new">
 	<form method="GET" action="/importdata/">
 	<input type="submit" value="Import articles from Opera">
@@ -30,10 +26,14 @@ div { margin: 10px; }
 	</form>
 </div>
 
-<div class="row">
+<div class="row new">
 	<form method="POST" action="/admin/setup-basic-tags">
 	<input type="submit" value="Categorize tags (auto)">
 	</form>
+</div>
+
+<div class="row">
+	<a href="/admin/tags">Manage tags</a>
 </div>
 
 <!--
