@@ -7,6 +7,7 @@ handlers:
 - url: /static
   #static_dir: themes/birman/static
   static_dir: themes/grid/static
+  login: admin
 
 - url: /favicon.ico
   static_files: static/favicon.ico
@@ -24,9 +25,9 @@ handlers:
   script: importdata.py
   login: admin
 
-- url: /font.*
-  script: fontgen/fontgen.py
+#- url: /font.*
+#  script: fontgen/fontgen.py
 
 - url: /.*
   script: blog.py
-  #login: admin
+  login: admin
