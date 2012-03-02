@@ -1,7 +1,7 @@
 body {
 	background: white;
 	margin: 0 0 0 0;
-	font-family: Helvetica, Arial, sans-serif;
+	/*font-family: Helvetica, Arial, sans-serif;*/
 }
 p {
 	color: #000;
@@ -9,12 +9,17 @@ p {
 	/*background: #eee;*/
 	margin: 0 0 0.6em 0;
 	line-height: 130%;
-	font-family: DinPro, 'MetaPro', Courier;
+	font-family: DinPro, Helvetica, Arial, sans-serif;
 }
 
 a         { color: #00a !important; }
 a:visited { color: #838 !important; }
 a:hover   { color: #f33 !important; }
+/*
+a:hover   {
+	color: white !important; background: #f33 !important; text-decoration:none;
+	padding: 0px 2px; margin-left: -4px;
+}*/
 
 .top {
 	/*background-color: #6EC6FE;
@@ -24,6 +29,7 @@ a:hover   { color: #f33 !important; }
 	padding-top: 10px;
 	margin-bottom: 0.7em;
 	font-family: 'Segoe UI', 'Segoe UI Light', 'Segoe Light', sans-serif !important;
+	font-family: 'Helvetica', 'Arial', sans-serif !important;
 }
 .top h1 {
 	margin: 0 0 0 0;
@@ -61,6 +67,32 @@ a:hover   { color: #f33 !important; }
 .top h1 sup {
 	font-size: 60%;
 }
+
+/* site logo (temp) */
+h1#logo {
+	font-family: DinPro;
+	font-size: 20px;
+	font-weight: 100;
+	font-style: normal;
+	text-transform: uppercase;
+	padding: 10px 10px;
+}
+h1:hover {
+	color: #f33 !important;
+}
+h1#logo a {
+	color: #f33 !important;
+	text-decoration: none;
+}
+h1#logo a:hover {
+	color: white !important;
+}
+h1#logo:hover {
+	color: white !important;
+	background: #f33 !important;
+}
+*/
+
 /*h2 {
 	margin-top:0;
 	text-indent: -9999px;
@@ -107,6 +139,10 @@ div.article {
 .sidebar-panel {
 	font-size: 14px;
 	margin-top: 0.29em; /* w/out that sidebars looks above the main content because of smaller font */
+	font-family: 'Helvetica', 'Arial', sans-serif !important;
+}
+.sidebar-panel a, .sidebar-panel p {
+	font-family: 'Helvetica', 'Arial', sans-serif !important;
 }
 .sidebar-tags {
 	font-size: 14px;
@@ -165,7 +201,10 @@ div.comment p {
 	line-height: 1.4em;
 	margin-bottom: 0.6em;
 }
-
+.comment-date {
+	color: grey;
+	font-size: 80%;
+}
 .comment-administration {
   font-size: 80%;
   margin-bottom: 0.4em;
@@ -216,9 +255,21 @@ div.comment p {
 }
 .below-top h1 a:hover {
 	color: #f33 !important;
+	background: white !important;
 	text-decoration: none !important;
 }
 
 .bottom {
 	margin-top: 3em;
 }
+
+.hilite { background:#fee; }
+
+/*
+h1 a {
+	font-family: 'PT Sans', 'Courier' !important;
+	font-weight: 400;
+}
+p {
+	font-family: 'PT Serif', 'Courier' !important;
+}*/
