@@ -224,6 +224,8 @@ class AbstractPageHandler(request.BlogRequestHandler):
         media_url = url_prefix + media_path
 
         user_info = UserInfo(request)
+        
+        #raise Exception('tc: %s' % TagCloud.get())
 
         template_variables = {
             'blog_name'    : defs.BLOG_NAME,
@@ -252,6 +254,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'current_page_1'  : page_info.current_page,
             'pages_total'     : page_info.pages_total,
             'tag_cloud'       : TagCloud.get(),
+            'dev_server': not defs.PRODUCTION
         }
 
         if additional_template_variables:
@@ -315,7 +318,7 @@ class ArticlesForMonthHandler(AbstractPageHandler):
                                                      self.request,
                                                      self.get_recent()))
 
-class SingleArticleHandler(AbstractPageHandler):
+class ArticleByIdHandler(AbstractPageHandler):
     """
     Handles requests to display a single article, given its unique ID.
     Handles nonexistent IDs.
@@ -355,7 +358,7 @@ class ArticleBySlugHandler(AbstractPageHandler):
     def get(self, slug):
         slug_obj = Slug.find_article_by_slug(slug_string = slug)
         if slug_obj:
-            SingleArticleHandler.do_the_job(self, slug_obj.article, do_redirect=False)
+            ArticleByIdHandler.do_the_job(self, slug_obj.article, do_redirect=False)
         else:
             #raise Exception('no article by address %s' % slug)
             article = None
@@ -432,12 +435,6 @@ class NotFoundPageHandler(AbstractPageHandler):
                                                      [],
                                                      '404.html'))
 
-class ShowHeaders(request.BlogRequestHandler):
-    def get(self):
-        for key in self.request.headers:
-            self.response.out.write('%s: %s\n<br>' % (key, self.request.headers[key]))
-        self.response.out.write('\n<br>%s' % self.request.body)
-
 # -----------------------------------------------------------------------------
 # Main program
 # -----------------------------------------------------------------------------
@@ -453,11 +450,10 @@ application = webapp.WSGIApplication(
      ('/tag/([^/]+)/?$', ArticlesByTagHandler),
      ('/tag/([^/]+)/page(\d+)/?$', ArticlesByTagHandler),
      ('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),
-     ('/(\d+).*$', SingleArticleHandler),
+     ('/(\d+).*$', ArticleByIdHandler),
      ('/archive/(\d+)?$', ArchivePageHandler),
      ('/rss/?$', RssArticlesHandler),
      ('/comment/add/(\d+)$', AddCommentHandler),
-     ('/headers', ShowHeaders),
      #('/.*$', NotFoundPageHandler),
      ('/(.*)$', ArticleBySlugHandler),
      ],

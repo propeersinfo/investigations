@@ -1,3 +1,4 @@
+import os
 import cgi
 import logging
 
@@ -49,8 +50,9 @@ def import_all_files(out):
     for file in glob.glob("operabloghtml/*"):
         if IMPORT_LIMIT and cnt >= IMPORT_LIMIT:
             break
-        posts.append(parse_file(file))
-        cnt += 1
+        if os.path.isfile(file):
+            posts.append(parse_file(file))
+            cnt += 1
     posts = sorted(posts, key=lambda post: post['date'])
     for post in posts:
         try:

@@ -3,6 +3,7 @@ import sys
 from google.appengine.api import memcache
 
 from google.appengine.ext import db
+
 import utils
 
 FETCH_THEM_ALL_COMMENTS = 100
@@ -20,28 +21,31 @@ class ArticleTag(db.Model):
 
     @classmethod
     def tags_updated_for_article(cls, tags_was, tags_now):
-        #tags_was = set(tags_was)
-        #tags_now = set(tags_now)
-        #cls.__modify_tags_counters(tags_was - tags_now, lambda cnt: cnt - 1)
-        #cls.__modify_tags_counters(tags_now - tags_was, lambda cnt: cnt + 1)
+        tags_was = set(tags_was)
+        tags_now = set(tags_now)
+
+        cls.__modify_tags_counters(tags_was - tags_now, lambda cnt: cnt - 1)
+        cls.__modify_tags_counters(tags_now - tags_was, lambda cnt: cnt + 1)
         pass
 
     @classmethod
     def article_removed(cls, tags_was):
-        #cls.__modify_tags_counters(set(tags_was), lambda cnt: 0)
+        cls.__modify_tags_counters(set(tags_was), lambda cnt: cnt - 1)
         pass
 
     @classmethod
-    def __modify_tags_counters(cls, tag_names, modifying_function):
-        for tag_name in tag_names:
-            tag = ArticleTag.get_by_name(tag_name, create_on_demand=True)
-            tag.counter = modifying_function(tag.counter)
-            if tag.counter < 0:
-                tag.counter = 0
-            tag.save()
+    def __modify_tags_counters(cls, tags, modifying_function):
+        for tag in tags:
+            tag_obj = db.get(tag) if type(tag) == db.Key else ArticleTag.get_by_name(tag, create_on_demand=True)
+            new_value = modifying_function(tag_obj.counter)
+            new_value = new_value if new_value >= 0 else 0
+            if new_value != tag_obj.counter:
+                tag_obj.counter = new_value
+                tag_obj.save()
 
     @classmethod
     def get_by_name(cls, tag_name, create_on_demand = False):
+        utils.assert_type(tag_name, unicode)
         tag_obj = db.Query(ArticleTag).filter('name', tag_name).get()
         if not tag_obj and create_on_demand:
             tag_obj = ArticleTag(name=tag_name, counter=0)
@@ -59,6 +63,12 @@ class ArticleTag(db.Model):
     def get_keys_by_names_creating(cls, tag_names):
         return [ cls.get_by_name(tag_name, True).key() for tag_name in tag_names ]
 
+    @classmethod
+    def fetch_all(cls):
+        return db.Query(cls)\
+                 .filter('counter > ', 0)\
+                 .fetch(FETCH_ALL_TAGS_FOR_TAG_CLOUD)
+
 ########################################################
 
 class TagCloud():
@@ -69,21 +79,19 @@ class TagCloud():
     @classmethod
     def get(cls):
         value = memcache.get(cls.KEY)
-        if value is None:
-            value = cls.__generate()
-            # todo: keep it forever but reset memcache when a tag changed in datastore
-            memcache.set(cls.KEY, cls.__generate(), utils.hours(1).seconds())
+        if not value or len(value) == 0:
+            value = cls.__make_cloud()
+            # todo: keep it forever but don't forget to reset (patch) memcache when a tag changed in datastore
+            memcache.set(cls.KEY, value, utils.hours(1).seconds())
         return value
     @classmethod
     def reset(cls):
         memcache.delete(cls.KEY)
     @classmethod
-    def __generate(cls):
+    def __make_cloud(cls):
+        #raise Exception('__make_cloud')
         tag_cloud = {}
-        tags = db.Query(ArticleTag)\
-                 .filter('counter >', 0)\
-                 .fetch(FETCH_ALL_TAGS_FOR_TAG_CLOUD)
-        for tag in tags:
+        for tag in ArticleTag.fetch_all():
             tag_cloud[tag.name] = tag.counter
         return tag_cloud
 
@@ -201,7 +209,6 @@ class Article(db.Model):
             id = self.create_uniq_id()
             self.put()
             self.id = id
-            #Slug.insert_new(self.slug, self)
             self.put()
 
 

@@ -79,3 +79,7 @@ if __name__ == '__main__':
     titles = [ u'About the cat / Про кота (1985)', u'A dear boy (1974) - Part 1', u'Theme from Rocky\'s cover', u'75 / ВИА 75 (1979)' ]
     for t in titles:
         print slugify(t)
+
+def assert_type(object, expected_type):
+    if not isinstance(object, expected_type):
+        raise Exception('Expected type: %s. Actual: %s' % (expected_type, type(object)))

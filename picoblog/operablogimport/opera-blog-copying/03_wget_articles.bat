@@ -1,0 +1,1 @@
+wget -i wget-list -P .. --limit-rate 20k

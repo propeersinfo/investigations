@@ -12,11 +12,15 @@ Critical:
 
 Major:
 - implement never-expire resources
+- slugs starting with digits interfere with the article-by-id handler
 
 Normal:
+- import: mixcloud not recognized for http://localhost/ukrainian-groove-part-1
+- use transactions (e.g. saving an article)
+- when a tag is used in new article, the tag cloud is not incremented
+- typography: 7" expanded to 7>>
 - disallow slugs like "tag", "admin", "page2", "rss"
 - soundcloud widgets not imported - http://localhost/a-light-groovy-disco-compilation-by-schmoltz
-+ implement 404 instead "Exception: no article by address soviet-psychedelic-mastaz"
 - "[http://i068.radikal.ru/1001/79/73237238bee2.jpg]" leads to "http://dl.dropbox.com/u/1883230/sg/http://i068.radikal.ru/1001/79/73237238bee2.jpg"
 - "Blog posts ← later ... later →" when one page is available
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
@@ -40,6 +44,12 @@ Normal:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
++ import: keep these tags for soundcloud widgets at least (<object> <param> <embed>)
++ import: yt: convert '<iframe>' to '[youtube]'
++ image not displayed - [http://i29.fastpic.ru/big/2011/1028/11/96e8a16398add73997e1ee8fef4c4f11.jpg]
++ import: fix '<a href="/index.dml?tag=tukhmanov">' to '/tag/tukhmanov'
++ import: re-implement replace_links_with_text_equal_to_href()
++ implement 404 instead "Exception: no article by address soviet-psychedelic-mastaz"
 + make sure links "<a href>text</a>" are imported correctly; rewrite them to "/slug"
 + admin page: uncategorized tags
 + not handled: [http://www.youtube.com/v/vkUecXJ4Muw?fs=1]

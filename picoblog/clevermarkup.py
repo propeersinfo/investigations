@@ -30,9 +30,16 @@ Custom []-styled tags are supported:
 
 def handle_custom_tag_image(text):
     regex = re.compile("\[([^\]]+(jpe?g|png|gif))\]", re.IGNORECASE)
-    replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\\1" alt="\\1">' % defs.DROPBOX_USER
+    #replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\\1" alt="\\1">' % defs.DROPBOX_USER
     #replacement = '<img src="/static/cover.jpg" width="140" alt="\\1">'
-    return regex.sub(replacement, text)
+    #return regex.sub(replacement, text)
+    def replacer(m):
+      addr = m.group(1)
+      if addr.startswith('http'):
+        return '<img src="%s">' % addr
+      else:
+        return '<img src="http://dl.dropbox.com/u/%s/sg/%s" alt="%s">' % (defs.DROPBOX_USER, addr, addr)
+    return re.sub(regex, replacer, text)
 
 # [http://ya.ru/]
 def handle_custom_tag_http_link(input):
@@ -51,13 +58,13 @@ def handle_custom_tag_youtube(input):
         regex = "\[\s*(http://)?(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9-_]+)\s*\]"
         replace = '<a href="http://www.youtube.com/watch?v=\\3">'\
                   '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'\
-                  '</a>'
+                  '</a>\n<a href="http://www.youtube.com/watch?v=\\3">http://www.youtube.com/watch?v=\\3</a>'
         return re.sub(regex, replace, input)
     def form2(input):
         regex = "\[\s*(http://)?(www\.)?youtube\.com/v/([a-zA-Z0-9-_]+)(\?.*)?\s*\]"
         replace = '<a href="http://www.youtube.com/watch?v=\\3">'\
                   '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'\
-                  '</a>'
+                  '</a>\n<a href="http://www.youtube.com/watch?v=\\3">http://www.youtube.com/watch?v=\\3</a>'
         return re.sub(regex, replace, input)
     input = form1(input)
     input = form2(input)
