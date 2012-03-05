@@ -45,6 +45,8 @@ class ArticleTag(db.Model):
 
     @classmethod
     def get_by_name(cls, tag_name, create_on_demand = False):
+        if type(tag_name) == str:
+            tag_name = unicode(tag_name)
         utils.assert_type(tag_name, unicode)
         tag_obj = db.Query(ArticleTag).filter('name', tag_name).get()
         if not tag_obj and create_on_demand:
@@ -75,7 +77,7 @@ class TagCloud():
     """
     All tags in memory, 2-3 KB
     """
-    KEY = 'region-tag-cloud'
+    KEY = 'cached-tag-cloud'
     @classmethod
     def get(cls):
         value = memcache.get(cls.KEY)

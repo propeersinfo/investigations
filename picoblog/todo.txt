@@ -44,6 +44,7 @@ Normal:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
++ lowercase tags
 + import: keep these tags for soundcloud widgets at least (<object> <param> <embed>)
 + import: yt: convert '<iframe>' to '[youtube]'
 + image not displayed - [http://i29.fastpic.ru/big/2011/1028/11/96e8a16398add73997e1ee8fef4c4f11.jpg]

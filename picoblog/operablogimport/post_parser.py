@@ -63,12 +63,11 @@ def replace_links_with_text_equal_to_href(root):
 def fix_local_link_url(root):
   for a in root.findAll('a'):
     if hasattr(a, 'href'):
-      old_href = a['href']
       # fix local links: appropriate for single articles
-      a['href'] = new_href = old_href.replace('http://my.opera.com/sovietgroove/blog/', '/')
-      if new_href != old_href:
-        # fix local links: appropriate for tags
-        a['href'] = new_href = re.sub('^/index.dml\?tag=(.+)', '/tag/\\1', new_href)
+      a['href'] = a['href'].strip()
+      a['href'] = re.sub('^http://my\.opera\.com/sovietgroove/blog/', '/', a['href'])
+      a['href'] = re.sub('^/index.dml\?tag=(.+)', '/tag/\\1', a['href'])
+      a['href'] = re.sub('^/index.dml/tag/(.+)', '/tag/\\1', a['href'])
 
 def replace_br(root):
     for a in root.findAll("br"):
@@ -333,7 +332,8 @@ if __name__ == '__main__':
     #file = 'new-old-short-videos'
     #file = 'a-light-groovy-disco-compilation-by-schmoltz'
     #file = 'a-dear-boy-ost-1974'
-    file = 'ukrainian-groove-part-1'
+    #file = 'ukrainian-groove-part-1'
+    file = 'gintarine-pora-75'
     parsed = parse_file('../operabloghtml/%s' % file)
     print 'title:', (parsed['title']).encode('ascii', 'replace')
     print 'slug:', parsed['slug'].encode('ascii', 'replace')
