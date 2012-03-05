@@ -199,14 +199,14 @@ class SaveArticleHandler(request.BlogRequestHandler):
         body = self.request.get('content')
         s_id = cgi.escape(self.request.get('id'))
         id = int(s_id) if s_id else None
-        tags = cgi.escape(self.request.get('tags'))
+        tag_names_new = cgi.escape(self.request.get('tags'))
         published_date = cgi.escape(self.request.get('published_date'))
         draft = cgi.escape(self.request.get('draft'))
-        if tags:
-            tags = [t.strip() for t in tags.split(',')]
+        if tag_names_new:
+            tag_names_new = [t.strip() for t in tag_names_new.split(',')]
         else:
-            tags = []
-        tags = Article.convert_string_tags(tags)
+            tag_names_new = []
+        tag_objects_new = Article.convert_string_tags(tag_names_new)
 
         if not draft:
             draft = False
@@ -218,18 +218,20 @@ class SaveArticleHandler(request.BlogRequestHandler):
         if article:
             # It's an edit of an existing item.
             just_published = article.draft and (not draft)
+            # update the object
             article.title = title
             article.body = body
-            article.tags = tags
+            article.tags = tag_objects_new
             article.draft = draft
         else:
             # It's new.
             article = Article(title=title,
                               body=body,
-                              tags=tags,
+                              tags=tag_objects_new,
                               draft=draft)
             just_published = not draft
             new_article = True
+
         article.save()
 
         if new_article:
@@ -240,11 +242,8 @@ class SaveArticleHandler(request.BlogRequestHandler):
                           'Alerting the media.' % article.id)
             alert_the_media()
 
-        #edit_again = cgi.escape(self.request.get('edit_again'))
-        #edit_again = edit_again and (edit_again.lower() == 'true')
-        #if edit_again:
-        #    self.redirect('/admin/article/edit/?id=%s' % article.id)
-        #elif url_from:
+        TagCloud.reset()
+        
         if url_from:
             self.redirect(url_from)
         else:
@@ -257,6 +256,7 @@ class DeleteArticleHandler(request.BlogRequestHandler):
         article = Article.get(id)
         if article:
             article.delete()
+            TagCloud.reset()
 
         #url_from = self.request.get("from")
         #if url_from:
@@ -283,6 +283,21 @@ class Slugify(request.BlogRequestHandler):
         text = unicode(text, encoding='utf-8')
         self.response.out.write(utils.slugify(text))
 
+class ListSlugs(request.BlogRequestHandler):
+    def get(self):
+        for slug in Slug.all():
+            self.response.out.write('<li>%s -> %s' % (slug.slug, slug.article.id))
+
+class ShowHeaders(request.BlogRequestHandler):
+    def get(self):
+        self.response.out.write('url: %s\n<br>' % self.request.url)
+        self.response.out.write('path: %s\n<br>' % self.request.path)
+        self.response.out.write('remote_addr: %s\n<br>' % self.request.remote_addr)
+        self.response.out.write('\n<br>')
+        for key in self.request.headers:
+            self.response.out.write('%s: %s\n<br>' % (key, self.request.headers[key]))
+        self.response.out.write('\n<br>%s' % self.request.body)
+
 # -----------------------------------------------------------------------------
 # Functions
 # -----------------------------------------------------------------------------
@@ -308,6 +323,8 @@ application = webapp.WSGIApplication(
          ('/admin/empty-db', EmptyDB),
          ('/admin/tags', ManageTags),
          ('/admin/slugify/(.*)$', Slugify),
+         ('/admin/slugs/?$', ListSlugs),
+         ('/admin/headers', ShowHeaders),
          ],
         debug=True)
 

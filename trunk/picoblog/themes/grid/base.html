@@ -13,12 +13,13 @@
 -->
 <link href="/static/grid-compiled.css" type="text/css" rel="stylesheet"/>
 <link href="/static/main.css" type="text/css" rel="stylesheet"/>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <link href='http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
 <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
  
 <style type="text/css" media="screen">
 </style>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 
 <script>
 {% include "scripts.js" %}
@@ -100,7 +101,7 @@
 	<div class="width_2">
 		{% include "tags.html" %}
 
-{% if user_info.is_admin %}		
+{% if user_info.is_admin %}
 		<div class='sidebar-panel sidebar-tags'>
 		<ul>
 			<li><b>Admin:</b></li>
@@ -109,6 +110,11 @@
 			<li><a href="/admin/article/new">add article</a></li>
 			<li><a href="/admin/">admin</a></li>
 			<li><a href="{{user_info.logout_url}}">logout</a></li>
+			{% if dev_server %}
+			<li><a href="http://www.sovietgroove.com/">production</a></li>
+			{% else %}
+			<li><a href="http://localhost/">dev server</a></li>
+			{% endif %}
 		</ul>
 		</div>
 {% endif %}		

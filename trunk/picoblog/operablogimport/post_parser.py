@@ -4,13 +4,24 @@ from soupselect import select
 import sys
 import datetime
 import codecs
+import HTMLParser
+import urllib
 
-def strip_tags(soup, valid_tags):
+def last_file_name(f):
+  return re.sub('.*[/\\\]', '', f)
+
+def unescape_html(s):
+  return HTMLParser.HTMLParser().unescape(s)
+
+def strip_tags(soup, valid_tags = []):
   # modify given BeautifulSoup instance
   # leaving only nodes from valid_tags
   for tag in soup.findAll(True):
     if not tag.name in valid_tags: 
       tag.replaceWithChildren()
+
+def strip_all_tags(html):
+  return ''.join(BeautifulSoup(html).findAll(text=True))
 
 def to_string(obj):
     return unicode(obj)
@@ -24,24 +35,40 @@ def flatten_some_tags(root):
 def fix_links_attrs(root):
     # elminate rel=nofollow and target=_blank
     for a in root.findAll("a"):
-        if hasattr(a, 'href'):
-            del(a['rel'])
-            del(a['target'])
+        del(a['rel'])
+        del(a['target'])
+        del(a['style'])
 
 def replace_links_with_text_equal_to_href(root):
     for a in root.findAll("a"):
         if hasattr(a, 'href'):
-            href = a['href']
-            #print 'found an <a>'
-            if re.search(r'rapidshare|narod|sendspace|ifolder', href, re.IGNORECASE):
+            href = a['href'].strip()
+            text = (''.join(a.findAll(text=True))).strip()
+            if href == text:
                 replacement = "%s" % href
                 a.replaceWith(NavigableString(replacement))
+            #elif re.search(r'rapidshare|narod|sendspace|ifolder', href, re.IGNORECASE):
+            #    # todo: temporary!
+            #    raise Exception('non-replaced link to rapidshare|narod|sendspace|ifolder')
+
+# def replace_links_with_text_equal_to_href(root):
+#     for a in root.findAll("a"):
+#         if hasattr(a, 'href'):
+#             href = a['href']
+#             #print 'found an <a>'
+#             if re.search(r'rapidshare|narod|sendspace|ifolder', href, re.IGNORECASE):
+#                 replacement = "%s" % href
+#                 a.replaceWith(NavigableString(replacement))
 
 def fix_local_link_url(root):
-  for a in root.findAll("a"):
+  for a in root.findAll('a'):
     if hasattr(a, 'href'):
-      #href = a['href']
-      a['href'] = a['href'].replace('http://my.opera.com/sovietgroove/blog/', '/')
+      old_href = a['href']
+      # fix local links: appropriate for single articles
+      a['href'] = new_href = old_href.replace('http://my.opera.com/sovietgroove/blog/', '/')
+      if new_href != old_href:
+        # fix local links: appropriate for tags
+        a['href'] = new_href = re.sub('^/index.dml\?tag=(.+)', '/tag/\\1', new_href)
 
 def replace_br(root):
     for a in root.findAll("br"):
@@ -62,13 +89,19 @@ def read_file(path, charset = "utf-8"):
 def parse_title(soup):
   # Path: div#firstpost h2.title
   navString = select(soup, "div#firstpost h2.title")[0].contents[0]
-  return unicode(navString).replace('&amp;', '&')
+  #return unicode(navString).replace('&amp;', '&')
+  s = unicode(navString)
+  s = strip_all_tags(s)
+  s = unescape_html(s)
+  return s
 
 def parse_date_string(sdate):
     # Example: Thursday, 21. July, 22:31
     # Example: Friday, 28. August 2009, 22:30
     # Example: 28. August 2009, 22:30
-    for fmt in ("%A, %d. %B, %H:%M", "%A, %d. %B %Y, %H:%M", "%d. %B %Y, %H:%M"):
+    # Example: Wednesday, January 13, 2010 12:00:00 PM
+    # @see variables: http://pubs.opengroup.org/onlinepubs/007904975/functions/strptime.html
+    for fmt in ("%A, %d. %B, %H:%M", "%A, %d. %B %Y, %H:%M", "%d. %B %Y, %H:%M", "%A, %B %d, %Y %H:%M:%S %p"):
       try:
         parsed = datetime.datetime.strptime(sdate, fmt)
         if parsed.year == 1900: parsed = parsed.replace(year = 2011)
@@ -107,15 +140,18 @@ def get_content(soup):
   fix_mixcloud(div_content_node)
   replace_links_with_text_equal_to_href(div_content_node)
   fix_local_link_url(div_content_node)
-  replace_br(div_content_node)
   fix_links_attrs(div_content_node)
-  strip_tags(div_content_node, valid_tags=['a', 'ul', 'ol', 'li'])
+  replace_br(div_content_node)
+  strip_tags(div_content_node, valid_tags=['a', 'ul', 'ol', 'li', 'object', 'param', 'embed'])
 
   text = node_to_string(div_content_node)
   text = text.replace('&amp;', '&')
 
+  # two line breaks - no more
   text = re.sub('\n\n\n\n', '\n\n', text)
   text = re.sub('\n\n\n', '\n\n', text)
+
+  text = text.strip()
   
   return text
 
@@ -135,22 +171,39 @@ def get_comments(soup):
             if div_text.parent['class'].find("owner") >= 0:
                 return True
         return False
-    def get_text(div_text):
+    def get_text(div_text, try_to_find_user_name = True):
         if div_text:
             tags = div_text.contents
             tags = map(fix_br, tags)
             text = "".join(map(to_string, tags)).strip()
+
+            if try_to_find_user_name:
+              # handle the case when the 1st line is a string like "Blitz writes" and the 2nd one is just empty
+              lines = text.split('\n')
+              if len(lines) >= 3:
+                m = re.match('(.+) writes:', lines[0].strip())
+                if m and lines[1].strip() == '':
+                  text = '\n'.join(lines[1:])
+                  text = text.strip()
+
             return text
         else:
             return None
     def get_date(comment_div):
         sdate = select(comment_div, 'span.comment-date')[0].contents[1].strip()
         return parse_date_string(sdate)
-    def get_username(comment):
-        userlink = select(comment, 'a.userlink')
+    def get_username(comment_div, div_text):
+        userlink = select(comment_div, 'a.userlink')
         if userlink:
-            return to_string(userlink[0].contents[0])
+            return unescape_html(to_string(userlink[0].contents[0]))
         else:
+            # try to extract username from comment's text like "Blitz writes:"
+            text = get_text(div_text, try_to_find_user_name = False)
+            if text:
+              user_writes = text.split('\n')[0].strip()
+              m = re.match('(.+) writes:', user_writes)
+              if m:
+                return unescape_html(m.group(1))
             return None
     comments = []
     for comment_div in soup.findAll("div", {'class': re.compile(r'comment[0-9]')}):
@@ -160,7 +213,7 @@ def get_comments(soup):
             text = get_text(div_text)
             owner_comment = is_owner_comment(div_text)
             date = get_date(comment_div)
-            username = get_username(comment_div)
+            username = get_username(comment_div, div_text)
             comments.append({'username': username,
                              'owner_comment': owner_comment,
                              'date': date,
@@ -208,24 +261,58 @@ def fix_image(root):
         tag.replaceWith(NavigableString("[%s]" % src))
 
 def fix_youtube(root):
+    # form 1: <object>
     for tag in root.findAll("object"):
         m = re.search(r'http://www.youtube.com/v/[^&\"]+', str(tag))
         if m:
             tag.replaceWith("[%s]" % m.group(0))
+    # form 2: <iframe>
+    # <iframe allowfullscreen="allowfullscreen" src="http://embed.myopera.com/video/?url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DjN4BDPZq8ww&amp;height=344&amp;width=425" frameborder="0" height="350" scrolling="no" width="431">
+    # ...watch%3Fv%3DjN4BDPZq8ww&...
+    for tag in root.findAll("iframe"):
+      if hasattr(tag, 'src'):
+        src = tag['src']
+        m = re.search('youtube.*watch%3Fv%3D([^&]+)', src)
+        if m:
+          #print m.group(1)
+          #print src
+          tag.replaceWith('[http://youtube.com/v/%s]' % m.group(1))
 
 def fix_mixcloud(root):
-    for tag in root.findAll("div"):
-        if tag.object:
-            s = str(tag)
-            f = re.search(r'http://www.mixcloud.com/zencd/[^/]+/', s)
-            if f:
-                tag.replaceWith("[%s]" % f.group(0))
+    # form 1: http://www.mixcloud.com/user/title
+    for object in root.findAll("object"):
+        if object:
+            m = re.search(r'http://www.mixcloud.com/zencd/[^/]+/', str(object))
+            if m:
+                object.replaceWith("[%s]" % m.group(0))
+    # form 2: www.mixcloud.com/api/1/cloudcast/zencd/ukrainian-gro
+    for object in root.findAll("object"):
+        if object:
+            m = re.search(r'mixcloud.com/api/1/cloudcast/([^/]+)/([^/\.]+)', str(object))
+            if m:
+                object.replaceWith("[http://mixcloud.com/%s/%s/]" % (m.group(1), m.group(2)))
+    pass
+
+# def fix_mixcloud(root):
+#     for tag in root.findAll("div"):
+#         if tag.object:
+#             s = str(tag)
+#             f = re.search(r'http://www.mixcloud.com/zencd/[^/]+/', s)
+#             if f:
+#                 tag.replaceWith("[%s]" % f.group(0))
+
+def get_slug(file, date):
+  if file.find('@') >= 0:
+    return "entry-%04d-%02d-%02d" % (int(date.year), int(date.month), int(date.day))
+  else:
+    return last_file_name(file)
 
 def parse_file(opera_blog_post_file):
   soup = BeautifulSoup(read_file(opera_blog_post_file))
+  date = parse_date(soup)
   return {'title' : parse_title(soup),
-          'slug' : re.sub('.*[/\\\]', '', opera_blog_post_file),
-          'date' : parse_date(soup),
+          'slug' : get_slug(opera_blog_post_file, date),
+          'date' : date,
           'tags' : parse_tags(soup),
           'content' : get_content(soup),
           'comments' : get_comments(soup)}
@@ -239,9 +326,18 @@ if __name__ == '__main__':
     #file = 'zodiac-mysterious-galaxy-how-beezar-edit-2009'
     #file = 'psychedelic-dos-mukasan'
     #file = 'a-soviet-musical-review'
-    file = 'aura-urziceanu-1974.htm'
+    #file = 'aura-urziceanu-1974.htm'
+    #file = 'index.html@id=39759592'
+    #file = 'ariel-1975'
+    #file = 'a-dear-boy-ost-1974'
+    #file = 'new-old-short-videos'
+    #file = 'a-light-groovy-disco-compilation-by-schmoltz'
+    #file = 'a-dear-boy-ost-1974'
+    file = 'ukrainian-groove-part-1'
     parsed = parse_file('../operabloghtml/%s' % file)
     print 'title:', (parsed['title']).encode('ascii', 'replace')
     print 'slug:', parsed['slug'].encode('ascii', 'replace')
-    #print parsed['content']
     print parsed['content'].encode('ascii', 'replace')
+    # for c in parsed['comments']:
+    #   print ''
+    #   print 'comment: %s -> %s' % (c['username'], c['text'])
