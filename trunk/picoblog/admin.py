@@ -199,7 +199,7 @@ class SaveArticleHandler(request.BlogRequestHandler):
         body = self.request.get('content')
         s_id = cgi.escape(self.request.get('id'))
         id = int(s_id) if s_id else None
-        tag_names_new = cgi.escape(self.request.get('tags'))
+        tag_names_new = cgi.escape(self.request.get('tags')).lower()
         published_date = cgi.escape(self.request.get('published_date'))
         draft = cgi.escape(self.request.get('draft'))
         if tag_names_new:

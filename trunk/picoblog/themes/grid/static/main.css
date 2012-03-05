@@ -1,14 +1,13 @@
 body {
 	background: white;
 	margin: 0 0 0 0;
-	/*font-family: Helvetica, Arial, sans-serif;*/
 }
 p {
 	color: #000;
-	/*border: 1px solid lightgrey;*/
-	/*background: #eee;*/
 	margin: 0 0 0.6em 0;
 	line-height: 130%;
+}
+p, h1, h2, h3, h4, h5, h6 {
 	font-family: DinPro, Helvetica, Arial, sans-serif;
 }
 
@@ -22,44 +21,17 @@ a:hover   {
 }*/
 
 .top {
-	/*background-color: #6EC6FE;
-	background-image: url(volna-top.png);
-	background-position: bottom;
-	background-repeat: repeat-x;*/
 	padding-top: 10px;
 	margin-bottom: 0.7em;
-	font-family: 'Segoe UI', 'Segoe UI Light', 'Segoe Light', sans-serif !important;
 	font-family: 'Helvetica', 'Arial', sans-serif !important;
+	font-size: 14px;
 }
 .top h1 {
 	margin: 0 0 0 0;
 	padding: 0px;
-	font-family: Helvetica, Arial, sans-serif;
 	font-size: 130%;
-	font-weight: normal;
-	
-	font-family: DinPro, 'Segoe UI', 'Segoe UI Light', 'Segoe Light', sans-serif !important;
+	font-family: DinPro, Helvetica, Arial, sans-serif !important;
 	font-weight: 100;
-	
-	/*
-	position: relative;
-	height: 20px;
-	overflow: hidden;
-	*/
-	/*
-	text-indent: -9999px;
-	background: url("/static/h1.png") #6EC6FE no-repeat;
-	background: url("/static/856ce8af31a517b3bb37206b95bedd.png") #6EC6FE no-repeat;
-	background-position: bottom left;
-	background-repeat: no-repeat;
-	*/
-}
-.top h1 span {
-	position: absolute;
-	background: url("/static/856ce8af31a517b3bb37206b95bedd.png");
-	background-repeat: no-repeat;
-	width: 250px;
-	height: 100%;
 }
 .top h1 a {
 	color: black !important;
@@ -77,9 +49,9 @@ h1#logo {
 	text-transform: uppercase;
 	padding: 10px 10px;
 }
-h1:hover {
+/*h1:hover {
 	color: #f33 !important;
-}
+}*/
 h1#logo a {
 	color: #f33 !important;
 	text-decoration: none;
@@ -91,39 +63,12 @@ h1#logo:hover {
 	color: white !important;
 	background: #f33 !important;
 }
-*/
-
-/*h2 {
-	margin-top:0;
-	text-indent: -9999px;
-	background: url("h2.png") white no-repeat;
-	background-position: bottom left;
-	background-repeat: no-repeat;
-}*/
-
-/*h2 {
-	width: 100%;
-	height: 35px;
-	position: relative;
-	margin: 0 0 0.2em 0;
-	vertical-align: bottom;
-}
-h2 span {
-	background: url(/font?text=Raimonds+Pauls+/+Раймонд+Паулс+1972) no-repeat, url(white.png) repeat;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-}*/
 
 .about {
-	font-size: 82%;
-	margin-top: 0.5em !important;
 }
 .about a {
-	color: black;
 }
 .about a:hover {
-	color: #e22;
 }
 
 /* contains panes: main and both sidebars */
@@ -167,16 +112,6 @@ div.article {
 }
 
 .sidebar-links { }
-/*
-.sidebar-links { color: lightgrey !important; }
-.sidebar-links p { color: lightgrey !important; }
-.sidebar-links a { color: lightgrey !important; text-decoration: none;}
-.sidebar-links:hover { color: black !important; }
-.sidebar-links:hover p { color: black !important; }
-.sidebar-links:hover a { color: blue !important; text-decoration: underline; }
-.sidebar-links:hover a:hover { }
-*/
-
 
 .tracks { font-size: 14px; }
 .info { font-size: 14px; font-style: italic; }
@@ -217,24 +152,6 @@ div.comment p {
 }
 .comment-administration a:hover { color: red; }
 
-
-
-/* css for headers replaced with images */
-/*.below-top h1 {
-	width: 100%;
-	height: 35px;
-	position: relative;
-	margin: 0 0 0.2em 0;
-	vertical-align: bottom;
-	font-size: 140%;
-}
-.below-top h1 span {
-	background-repeat: no-repeat, repeat;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-}*/
-
 .below-top h1 {
 	margin: 0 0 0.2em 0;
 	vertical-align: bottom;
@@ -264,12 +181,3 @@ div.comment p {
 }
 
 .hilite { background:#fee; }
-
-/*
-h1 a {
-	font-family: 'PT Sans', 'Courier' !important;
-	font-weight: 400;
-}
-p {
-	font-family: 'PT Serif', 'Courier' !important;
-}*/
