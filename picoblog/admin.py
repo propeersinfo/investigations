@@ -1,9 +1,6 @@
-# $Id: f06befd2bc4b552d08c2d93836b674baa0dc417e $
+# -*- coding: utf-8 -*-
 
-"""
-Google App Engine Script that handles administration screens for the
-blog.
-"""
+# $Id: f06befd2bc4b552d08c2d93836b674baa0dc417e $
 
 import cgi
 from datetime import time
@@ -70,6 +67,35 @@ class ManageTags(request.BlogRequestHandler):
                 tag.save()
         self.redirect(return_path)
 
+class GenPyCode(request.BlogRequestHandler):
+    def get(self):
+        import translit
+
+        self.response.out.write('<pre>')
+        self.response.out.write('tag_table = \\\n')
+        self.response.out.write('[\n')
+        for tag in ArticleTag.all().fetch(ADMIN_FETCH_MAXIMUM):
+            title = tag.title
+#            if not title and tag.category not in ['misc','time','genre','']:
+#                title = tag.name.title()
+#            elif not title:
+#                title = ''
+#            else:
+#                title = tag.title
+            if title == tag.name: title = ''
+
+            title_ru = ''
+            if tag.category not in ['misc','time','genre','region','modern','']:
+                title_ru = translit.my_detrans(title)
+
+            self.response.out.write('[%-22s, %-12s, %-22s, %-22s],\n' % (
+                'u"%s"' % tag.name,
+                'u"%s"' % tag.category,
+                'u"%s"' % title,
+                'u"%s"' % title_ru
+                ))
+        self.response.out.write(']\n')
+
 class SetupBasicTags(request.BlogRequestHandler):
     def post(self):
         """
@@ -83,11 +109,13 @@ class SetupBasicTags(request.BlogRequestHandler):
             'time': '60s,70s,80s,',
         }
         """
-        from operablogimport.tags_categorized import tags_categorized
-        for tag_name in tags_categorized.keys():
-            category = tags_categorized[tag_name]
+        from operablogimport.tags_categorized import tag_hash
+        for tag_name in tag_hash.keys():
+            obj = tag_hash[tag_name]
             tag = ArticleTag.get_by_name(tag_name, create_on_demand=True)
-            tag.category = category
+            tag.category = obj['category']
+            tag.title = obj['title']
+            tag.title_ru = obj['title_ru']
             tag.save()
 
         """
@@ -318,6 +346,7 @@ application = webapp.WSGIApplication(
          ('/admin/article/edit/(\d+)$', EditArticleHandler),
          ('/admin/comment/delete/(\d+)$', DeleteCommentHandler),
          ('/admin/setup-basic-tags', SetupBasicTags),
+         ('/admin/tags/generate-python-code', GenPyCode),
          ('/admin/recalculate-tag-counters', RecalculateTagCountersFromArticles),
          ('/admin/reset-tag-counters', ResetTagCounters),
          ('/admin/empty-db', EmptyDB),

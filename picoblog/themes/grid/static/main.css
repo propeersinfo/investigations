@@ -11,9 +11,14 @@ p {
 	font-family: DinPro, Helvetica, Arial, sans-serif;
 }
 
-a         { color: #00a !important; }
+/*a         { color: #00a !important; }
 a:visited { color: #838 !important; }
 a:hover   { color: #f33 !important; }
+*/
+a         { color: #00a; }
+a:visited { color: #838; }
+a:hover   { color: #f33; }
+
 /*
 a:hover   {
 	color: white !important; background: #f33 !important; text-decoration:none;
@@ -191,3 +196,15 @@ div.comment p {
 	background: white;
 	background-color:rgba(200,200,200, 1.0);
 }
+
+.all-tags p { line-height: 200%; }
+.all-tags p a {
+	color: #00a;
+	white-space: nowrap;
+	margin-right: 10px;
+}
+.all-tags p a:hover { color: #f33; }
+.all-tags b { color: #333; }
+.all-tags .weight_3 { color: #00f; }
+.all-tags .weight_2 { color: #77f; }
+.all-tags .weight_1 { color: #ccf; }

@@ -254,7 +254,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'current_page_1'  : page_info.current_page,
             'pages_total'     : page_info.pages_total,
             'tag_cloud'       : TagCloud.get(),
-            'dev_server': not defs.PRODUCTION
+            'dev_server'      : not defs.PRODUCTION
         }
 
         if additional_template_variables:
@@ -287,7 +287,25 @@ class FrontPageHandler(AbstractPageHandler):
 
 class AllTagsTagHandler(AbstractPageHandler):
     def get(self):
-        tpl_vars = { 'tag_cloud': TagCloud.get() }
+        tag_cloud = TagCloud.get()
+
+        # augment tag objects with info about their popularity weights
+        counts_and_weights = [
+            [ 4, 3 ],
+            [ 2, 2 ],
+            [ 0, 1 ],
+        ]
+        for tag in tag_cloud.all_tags:
+            cnt = tag.counter
+            for cnw in counts_and_weights:
+                if cnt >= cnw[0]:
+                    tag.weight = cnw[1]
+                    break
+
+        tpl_vars = {
+            'tag_cloud' : tag_cloud,
+            'user_info' : UserInfo(self.request),
+        }
         self.response.out.write(self.render_template('tag-listing.html', tpl_vars))
 	
 
