@@ -40,7 +40,7 @@ function selected(select) {
 	<a href="tags?category={{ cat }}">'{{ cat }}'</a>,
 {% endfor %}
 
-<div id="chart_div" style="position:absolute; left:500px; top:93px;"></div>
+<div id="chart_div" style="position:absolute; left:500px; top:193px;"></div>
 
 <p>
 
@@ -53,6 +53,10 @@ function selected(select) {
 			<option>genre</option>
 			<option>region</option>
 			<option>time</option>
+			<option>ensemble</option>
+			<option>vocalist</option>
+			<option>jazz</option>
+			<option>modern</option>
 			<option>misc</option>
 		</select>
 		<input type="hidden" name="tag" value="{{ tag.name }}">

@@ -16,22 +16,21 @@ MAX_ARTICLES_PER_DAY = 20
 
 class ArticleTag(db.Model):
     name = db.StringProperty(required=True, indexed=True)
+    title = db.StringProperty(required=False, indexed=False)
+    title_ru = db.StringProperty(required=False, indexed=False)
     counter = db.IntegerProperty(default=0, indexed=True)
-    category = db.StringProperty(default='', indexed=True)
+    category = db.StringProperty(default='', indexed=False)
 
     @classmethod
     def tags_updated_for_article(cls, tags_was, tags_now):
         tags_was = set(tags_was)
         tags_now = set(tags_now)
-
         cls.__modify_tags_counters(tags_was - tags_now, lambda cnt: cnt - 1)
         cls.__modify_tags_counters(tags_now - tags_was, lambda cnt: cnt + 1)
-        pass
 
     @classmethod
     def article_removed(cls, tags_was):
         cls.__modify_tags_counters(set(tags_was), lambda cnt: cnt - 1)
-        pass
 
     @classmethod
     def __modify_tags_counters(cls, tags, modifying_function):
@@ -92,7 +91,8 @@ class TagCloud():
         if not value:
             value = cls.__make_cloud()
             # todo: keep it forever but don't forget to reset (patch) memcache when a tag changed in datastore
-            memcache.set(cls.MEMCACHE_KEY, value, utils.hours(24).seconds())
+            #memcache.set(cls.MEMCACHE_KEY, value, utils.hours(24).seconds())
+            memcache.set(cls.MEMCACHE_KEY, value, 5) # todo: not for production!
         return value
 
     @classmethod
@@ -102,8 +102,9 @@ class TagCloud():
     @classmethod
     def __make_cloud(cls):
         cloud = TagCloud()
-        tags = ArticleTag.fetch_all()
-        for tag in tags:
+        cloud.all_tags = []
+        for tag in ArticleTag.fetch_all():
+            cloud.all_tags.append(tag)
             cloud.tag_count[tag.name] = tag.counter
             if cloud.categorized.has_key(tag.category):
                 cloud.categorized[tag.category].append(tag)
