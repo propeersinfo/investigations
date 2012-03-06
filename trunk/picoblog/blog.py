@@ -285,6 +285,12 @@ class FrontPageHandler(AbstractPageHandler):
                                                      self.request,
                                                      self.get_recent()))
 
+class AllTagsTagHandler(AbstractPageHandler):
+    def get(self):
+        tpl_vars = { 'tag_cloud': TagCloud.get() }
+        self.response.out.write(self.render_template('tag-listing.html', tpl_vars))
+	
+
 class ArticlesByTagHandler(AbstractPageHandler):
     """
     Handles requests to display a set of articles that have a
@@ -447,6 +453,7 @@ webapp.template.register_template_library('my_tags')
 application = webapp.WSGIApplication(
     [('/', FrontPageHandler),
      ('/page(\d+)/?', FrontPageHandler),
+     ('/tag/?$', AllTagsTagHandler),
      ('/tag/([^/]+)/?$', ArticlesByTagHandler),
      ('/tag/([^/]+)/page(\d+)/?$', ArticlesByTagHandler),
      ('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),

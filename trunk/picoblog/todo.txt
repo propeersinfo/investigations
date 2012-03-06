@@ -15,6 +15,8 @@ Major:
 - slugs starting with digits interfere with the article-by-id handler
 
 Normal:
+- introduce tag titles
+- introduce 'modern artists' (eln, jankie)
 - import: mixcloud not recognized for http://localhost/ukrainian-groove-part-1
 - use transactions (e.g. saving an article)
 - when a tag is used in new article, the tag cloud is not incremented

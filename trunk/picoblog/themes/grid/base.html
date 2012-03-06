@@ -24,6 +24,28 @@
 <script>
 {% include "scripts.js" %}
 </script>
+
+<script>
+/*$(document).ready(function() {
+	var smp = $('#super-menu-parent')
+	var sm = $('#super-menu')
+	var fin = function() {
+		var smp_pos = smp.offset()
+		var t = smp_pos.top
+		var l = smp_pos.left
+		//sm.position({top:t, left:l})
+		sm.css('left', l)
+		sm.css('top', t)
+		sm.show()
+		smp.css('visibility', 'hidden')
+	}
+	var fout = function() {
+		sm.hide()
+		smp.css('visibility', 'visible')
+	}
+	smp.hover(fin, fout)
+})*/
+</script>
  
 </head>
 <body>
@@ -71,23 +93,20 @@
 {% endcomment %}
 		</div>
 		<div class="row about">
-			<div class="width_6">
-			<!--
-			A blog about groovy, funky, soulful, beat, twist and psych sides of music produced
-			in&nbsp;USSR during the&nbsp;period of 1965—85.
-			Feel free to comment, ask and supply rare stuff / <a href="#">mail@sovietgroove</a>
-			-->
-	    	{% blog_tag "funk" "Funk" %},
-	    	{% blog_tag "jazz" %},
-	    	{% blog_tag "psychedelic" %},
-	    	{% blog_tag "progressive" %},
-	    	{% blog_tag "disco" %},
-	    	{% blog_tag "electro" %},
-	    	{% blog_tag "shake" %} and the
-	    	{% blog_tag "rest" %} cool music from USSR of the
-	    	{% blog_tag "60s" "60's" %},
-	    	{% blog_tag "70s" "70's" %} and
-	    	{% blog_tag "80s" "80's" %}.
+			<div class="width_6" id="super-menu-parent">
+
+{% blog_tag "funk" "Funk" %},
+{% blog_tag "jazz" %},
+{% blog_tag "psychedelic" %},
+{% blog_tag "progressive" %},
+{% blog_tag "disco" %},
+{% blog_tag "electro" %},
+{% blog_tag "shake" %} and the
+{% blog_tag "rest" %} cool music from USSR of the
+{% blog_tag "60s" "60's" %},
+{% blog_tag "70s" "70's" %} and
+{% blog_tag "80s" "80's" %}. <a href="/tag">(Everything)</a>
+				
 	    	</div>
 		</div>
 	</div>
@@ -146,6 +165,7 @@
 		<a href="/archive/">archive</a>
 	</p></div>
 </div>
+
 
 </body>
 </html>

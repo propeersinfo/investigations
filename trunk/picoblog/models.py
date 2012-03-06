@@ -77,25 +77,41 @@ class TagCloud():
     """
     All tags in memory, 2-3 KB
     """
-    KEY = 'cached-tag-cloud'
+    MEMCACHE_KEY = 'cached-tag-cloud'
+
+    def __init__(self):
+        self.tag_count = {}
+        self.categorized = {}
+
+    def get_tag_usage_count(self, tag_name):
+        return self.tag_count.get(tag_name, 0)
+
     @classmethod
     def get(cls):
-        value = memcache.get(cls.KEY)
-        if not value or len(value) == 0:
+        value = memcache.get(cls.MEMCACHE_KEY)
+        if not value:
             value = cls.__make_cloud()
             # todo: keep it forever but don't forget to reset (patch) memcache when a tag changed in datastore
-            memcache.set(cls.KEY, value, utils.hours(1).seconds())
+            memcache.set(cls.MEMCACHE_KEY, value, utils.hours(24).seconds())
         return value
+
     @classmethod
     def reset(cls):
-        memcache.delete(cls.KEY)
+        memcache.delete(cls.MEMCACHE_KEY)
+
     @classmethod
     def __make_cloud(cls):
-        #raise Exception('__make_cloud')
-        tag_cloud = {}
-        for tag in ArticleTag.fetch_all():
-            tag_cloud[tag.name] = tag.counter
-        return tag_cloud
+        cloud = TagCloud()
+        tags = ArticleTag.fetch_all()
+        for tag in tags:
+            cloud.tag_count[tag.name] = tag.counter
+            if cloud.categorized.has_key(tag.category):
+                cloud.categorized[tag.category].append(tag)
+            else:
+                cloud.categorized[tag.category] = [ tag ]
+        for cat in cloud.categorized:
+            cloud.categorized[cat] = sorted(cloud.categorized[cat], key=lambda tag: tag.name)
+        return cloud
 
 ########################################################
 

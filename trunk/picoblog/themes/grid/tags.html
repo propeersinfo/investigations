@@ -2,8 +2,8 @@
 {% if tag_cloud %}		
 		<!--img src="/font?text=Regions"><br-->
 		<ul>
-		<li>{% blog_tag_2 tag_cloud "best" "Favourites" %}</li>
-		<li>{% blog_tag_2 tag_cloud "mix" "Mixes &amp; comps" %}</li>
+		<li>{% blog_tag_cnt tag_cloud "best" "Favourites" %}</li>
+		<li>{% blog_tag_cnt tag_cloud "mix" "Mixes &amp; comps" %}</li>
 		</ul>
 		
 		<ul>
@@ -11,30 +11,30 @@
 		</ul>
 		
 	    <ul>
-		<li>{% blog_tag_2 tag_cloud "russia" "Russian Fed." %}</li>
-	    <li>{% blog_tag_2 tag_cloud "ukraine" "Ukraine" %}</li>
-	    <li>{% blog_tag_2 tag_cloud "moldova" "Moldova" %}</li>
-	    <li>{% blog_tag_2 tag_cloud "belarus" "Belarus" %}</li>
+		<li>{% blog_tag_cnt tag_cloud "russia" "Russian Fed." %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "ukraine" "Ukraine" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "moldova" "Moldova" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "belarus" "Belarus" %}</li>
 	    </ul>
 	    
 	    <ul>
-	    <li>{% blog_tag_2 tag_cloud "armenia" "Armenia"%}</li>
-	    <li>{% blog_tag_2 tag_cloud "azerbaijan" "Azerbaijan"%}</li>
-	    <li>{% blog_tag_2 tag_cloud "georgia" "Georgia" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "armenia" "Armenia"%}</li>
+	    <li>{% blog_tag_cnt tag_cloud "azerbaijan" "Azerbaijan"%}</li>
+	    <li>{% blog_tag_cnt tag_cloud "georgia" "Georgia" %}</li>
 	    </ul>
 	    
 	    <ul>
-	    <li>{% blog_tag_2 tag_cloud "estonia" "Estonia" %}</li>
-	    <li>{% blog_tag_2 tag_cloud "latvia" "Latvia" %}</li>
-	    <li>{% blog_tag_2 tag_cloud "lithuania" "Lithuania" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "estonia" "Estonia" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "latvia" "Latvia" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "lithuania" "Lithuania" %}</li>
 	    </ul>
 	    
 	    <ul>
-	    <li>{% blog_tag_2 tag_cloud "kazakhstan" "Kazakhstan" %}</li>
-	    <li>{% blog_tag_2 tag_cloud "tajikistan" "Tajikistan" %}</li>
-	    <li>{% blog_tag_2 tag_cloud "turkmenistan" "Turkmenistan"%}</li>
-	    <li>{% blog_tag_2 tag_cloud "uzbekistan" "Uzbekistan" %}</li>
-	    <li>{% blog_tag_2 tag_cloud "kyrgyzstan" "Kyrgyzstan" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "kazakhstan" "Kazakhstan" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "tajikistan" "Tajikistan" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "turkmenistan" "Turkmenistan"%}</li>
+	    <li>{% blog_tag_cnt tag_cloud "uzbekistan" "Uzbekistan" %}</li>
+	    <li>{% blog_tag_cnt tag_cloud "kyrgyzstan" "Kyrgyzstan" %}</li>
 	    </ul>
 {% else %}
 		No tag cloud provided.
