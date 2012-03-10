@@ -74,7 +74,7 @@ def handle_custom_tag_youtube(input):
 # [dir/cool track.mp3]
 def handle_custom_tag_mp3(input):
     def replacer(m):
-        mp3_name = m.group(1)
+        mp3_name = re.sub(r'^.*/', '', m.group(1))
         mp3_link = "http://dl.dropbox.com/u/%s/sg/%s" % (defs.DROPBOX_USER, urllib2.quote(m.group(1), safe='/'))
         swf = "/static/dewplayer-mini.swf"
         flash = "<object width='160' height='18'><embed src='" + swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + mp3_link + "' quality='high'></embed></object>"
