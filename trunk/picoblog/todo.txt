@@ -67,6 +67,7 @@ Normal:
 + navigation with Ctrl+arrows
 
 Low priority:
+- markup: do not introduce <br> tags within <object>
 - rss streams for tags
 - typographer: unnecessary nbsp after dash: "AA - BB" => "AA&nbsp;-&nbsp;BB"
 - typographer: unnecessary nbsp's: "п/у Яана Кумана. Музыка" -> "п/у&nbsp;Яана&nbsp;Кумана.&nbsp;Музыка"

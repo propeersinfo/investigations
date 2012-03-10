@@ -1,7 +1,5 @@
 # importing - files to check later:
 # attention-soviet-grooves          @todo too many blank lines
-# dielo-with-dobi-chabrich-1972     @todo unescape dropbox urls
-# francoise-hardys-a-harder-cover   @todo none player imported
 
 import glob
 import os
@@ -78,7 +76,7 @@ def fix_local_link_url(root):
       a['href'] = re.sub('^/index.dml\?tag=(.+)', '/tag/\\1', a['href'])
       a['href'] = re.sub('^/index.dml/tag/(.+)', '/tag/\\1', a['href'])
 
-def replace_br(root):
+def replace_brs(root):
     for a in root.findAll("br"):
         a.replaceWith(NavigableString("\n"))
 
@@ -152,7 +150,9 @@ def get_content(soup):
   fix_links_attrs(div_content_node)
   strip_tags(div_content_node, valid_tags=['br', 'a', 'ul', 'ol', 'li', 'object', 'param', 'embed'])
 
-  replace_br(div_content_node)
+  replace_brs(div_content_node)
+
+  no_new_lines_within_objects(div_content_node)
 
   text = node_to_string(div_content_node)
   text = text.replace('&amp;', '&')
@@ -234,9 +234,14 @@ def get_comments(soup):
             #print >>sys.stderr, "------------"
     return comments
 
+# remove new line characters within every OBJECT
+def no_new_lines_within_objects(root):
+    for object in root.findAll("object"):
+        for e in object.findAll(text=True):
+            e.replaceWith(NavigableString(unicode(e).strip()))
+
 def fix_single_mp3_player(root):
     for object_tag in root.findAll("object"):
-        #print str(object_tag)
         m = re.search(r'http://dl.(get)?dropbox.com/u/1883230/(sg|my)/(.*mp3)', str(object_tag))
         if m:
             mp3 = urllib2.unquote(m.group(3))
