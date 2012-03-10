@@ -3,7 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title>{% block title %}{% endblock %}</title>
+<title>{% block title %}{% endblock %} - Soviet Groove</title>
+
+<!--
+<link rel="alternate" type="application/rss+xml" title="Subscribe to new articles" href="/rss"/>
+-->
 
 <!--
 <link rel="stylesheet/less" href="/static/style.less.css" type="text/css" />
@@ -13,8 +17,10 @@
 -->
 <link href="/static/grid-compiled.css" type="text/css" rel="stylesheet"/>
 <link href="/static/main.css" type="text/css" rel="stylesheet"/>
+<!--
 <link href='http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
 <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
+-->
  
 <style type="text/css" media="screen">
 </style>
@@ -50,13 +56,14 @@
 </head>
 <body>
 
+<!--
 <div style="position:absolute; left:122px; top:-13px;">
 	<h1 id="logo"><a href="/">&#x2606; Soviet Groove</a></h1>
-</div>
+-->
 
 <div class="row top">
 	<div class="width_2">
-		&nbsp;
+		<a href="/"><img class="logo" src="/static/logo-din.png" alt="Soviet Groove" border="0"/></a>
 	</div>
 	<div class="width_7">
 		<div class="row">
@@ -88,7 +95,7 @@
 			</div>
 {% comment %}
 			<div class="width_4">
-				<input class="search" type="text" value="search"/>
+				<input class="search" type="text"/>
 			</div>
 {% endcomment %}
 		</div>
@@ -111,7 +118,7 @@
 		</div>
 	</div>
 	<div class="width_3">
-		<input style="width:96%;" class="search" type="text" value="search"/>
+		<input style="width:96%;" class="search" type="text" placeholder="search"/>
 	</div>
 </div>
 
@@ -127,13 +134,14 @@
 		</ul>
 		<ul>
 			<li><a href="/admin/article/new">add article</a></li>
+			<li><a href="/rss">rss</a> (<a href="/rss?format=plain">plaiin</a>)</li>
 			<li><a href="/admin/">admin</a></li>
-			<li><a href="{{user_info.logout_url}}">logout</a></li>
 			{% if dev_server %}
 			<li><a href="http://www.sovietgroove.com/">production</a></li>
 			{% else %}
 			<li><a href="http://localhost/">dev server</a></li>
 			{% endif %}
+			<li><a href="{{user_info.logout_url}}"><s>logout</s></a></li>
 		</ul>
 		</div>
 {% endif %}		

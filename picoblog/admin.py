@@ -5,6 +5,7 @@
 import cgi
 from datetime import time
 import logging
+import os
 import urllib
 
 from google.appengine.api import users
@@ -180,7 +181,7 @@ class NewArticleHandler(request.BlogRequestHandler):
     def get(self):
         article = Article(title='-',
                           slug = 'x',
-                          body=utils.read_file('new-article.txt'),
+                          body=utils.read_file('themes/new-article.txt'),
                           draft=False)
         user_info = UserInfo(self.request)
         template_vars = {
@@ -326,6 +327,13 @@ class ShowHeaders(request.BlogRequestHandler):
             self.response.out.write('%s: %s\n<br>' % (key, self.request.headers[key]))
         self.response.out.write('\n<br>%s' % self.request.body)
 
+#class ShowMtime(request.BlogRequestHandler):
+#    def get(self):
+#        for f in [ 'admin.py', 'blog.py' ]:
+#            path = os.path.join(os.getcwd(), f)
+#            mtime = os.stat(path).st_mtime
+#            self.println('%s %s' % (path, mtime))
+
 # -----------------------------------------------------------------------------
 # Functions
 # -----------------------------------------------------------------------------
@@ -354,6 +362,7 @@ application = webapp.WSGIApplication(
          ('/admin/slugify/(.*)$', Slugify),
          ('/admin/slugs/?$', ListSlugs),
          ('/admin/headers', ShowHeaders),
+         #('/admin/show-mtime', ShowMtime)
          ],
         debug=True)
 

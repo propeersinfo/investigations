@@ -49,7 +49,7 @@ class ArticleTag(db.Model):
         utils.assert_type(tag_name, unicode)
         tag_obj = db.Query(ArticleTag).filter('name', tag_name).get()
         if not tag_obj and create_on_demand:
-            tag_obj = ArticleTag(name=tag_name, counter=0)
+            tag_obj = ArticleTag(name=tag_name, title=tag_name, counter=0)
             tag_obj.save()
         return tag_obj
 

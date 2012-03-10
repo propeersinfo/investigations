@@ -41,6 +41,8 @@ class NoPagingPageInfo(PageInfoBase):
     self.articles = paged_query.fetch_page(1) # 1-based index is used by PagedQuery
     self.prev_page_url = None
     self.next_page_url = None
+    self.current_page = 1
+    self.pages_total = 1
 
 class PagedQuery(object):
 	'''
