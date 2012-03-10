@@ -417,7 +417,8 @@ class RssArticlesHandler(AbstractPageHandler):
     """
     def get(self):
         pager = NoPagingPageInfo(PagedQuery(Article.query_published(), defs.MAX_ARTICLES_RSS))
-        self.response.headers['Content-Type'] = 'text/xml'
+        ct = 'text/plain' if self.request.get('format') == 'plain' else 'text/xml'
+        self.response.headers['Content-Type'] = ct
         self.response.out.write(self.render_articles(pager,
                                                      self.request,
                                                      [],

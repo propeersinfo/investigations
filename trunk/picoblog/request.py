@@ -52,3 +52,6 @@ class BlogRequestHandler(webapp.RequestHandler):
         """
         template_path = self.get_template(template_name)
         return template.render(template_path, template_vars)
+
+    def println(self, s):
+        self.response.out.write('%s<br>\n' % s)

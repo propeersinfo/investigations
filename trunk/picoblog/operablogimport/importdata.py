@@ -43,11 +43,11 @@ def import_file(fname, out):
     post = parse_file(fname)
     import_object(post)
 
-def import_all_files(out):
+def import_all_files():
     import glob
     posts = []
     cnt = 0
-    for file in glob.glob("operabloghtml/*"):
+    for file in glob.glob("../operabloghtml/*"):
         if IMPORT_LIMIT and cnt >= IMPORT_LIMIT:
             break
         if os.path.isfile(file):
@@ -63,11 +63,7 @@ def import_all_files(out):
 
 class ImportSomeHandler(request.BlogRequestHandler):
     def get(self):
-        #articles = Article.get_all()
-        out = self.response.out
-        #out.write("<xmp>\n")
-        #out.write("importing some\n")
-        import_all_files(out)
+        import_all_files()
         #one_file("operabloghtml\\via-75-ep", out)
         self.redirect('/admin/')
 

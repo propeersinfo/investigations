@@ -2,24 +2,26 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Critical:
-- finish rss handling (usage of html tags there)
-- html'ed rss fails for safari
-- find how to copy dev db onto production completely
++ html'ed rss fails for safari
++ finish rss handling (usage of html tags there)
 + article 'visitors' breaks layout
 + add href values to the links side bar
 + notify admin about new comments (email)
 + make sure comments are fetched and augmented for a concrete article's page only
 
 Major:
+- '/rss' is incompatible with greader (but it's ok with feedburner)
+- find how to copy dev db onto production completely
 - implement never-expire resources
 - slugs starting with digits interfere with the article-by-id handler
 
 Normal:
-- introduce tag titles
-- introduce 'modern artists' (eln, jankie)
+- introduce a delay accessing the slug maker url
+- commenting: add optional e-mail field
+- tune up Din support (add variations, particularly)
+- markup: [mp3] bug 'orera — summertime %28dj eln re-edit%29.mp3'
 - import: mixcloud not recognized for http://localhost/ukrainian-groove-part-1
 - use transactions (e.g. saving an article)
-- when a tag is used in new article, the tag cloud is not incremented
 - typography: 7" expanded to 7>>
 - disallow slugs like "tag", "admin", "page2", "rss"
 - soundcloud widgets not imported - http://localhost/a-light-groovy-disco-compilation-by-schmoltz
@@ -31,7 +33,6 @@ Normal:
 - wrong title imported for http://localhost/20100331-a-href-sovietgroove-blog-show-dml-8737781-syabry-1986-a.html
 - keep TagCloud in memcache forever but reset it when a tag changed in datastore
 - async e-mail sending
-- tag rss
 - update memcached tag cloud on article change
 - make dewplayer never expire! +ETag
 - let admin distinguish draft articles visually
@@ -46,6 +47,13 @@ Normal:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
++ markup: [soundcloud 1234]
++ soundcloud objects not imported
++ add 'DinPro' web font support
++ new tags are shown as "None" becasue of new 'title' attribute
++ when a tag is used in new article, the tag cloud is not incremented
++ introduce tag titles
++ introduce 'modern artists' (eln, jankie)
 + lowercase tags
 + import: keep these tags for soundcloud widgets at least (<object> <param> <embed>)
 + import: yt: convert '<iframe>' to '[youtube]'
@@ -59,6 +67,7 @@ Normal:
 + navigation with Ctrl+arrows
 
 Low priority:
+- rss streams for tags
 - typographer: unnecessary nbsp after dash: "AA - BB" => "AA&nbsp;-&nbsp;BB"
 - typographer: unnecessary nbsp's: "п/у Яана Кумана. Музыка" -> "п/у&nbsp;Яана&nbsp;Кумана.&nbsp;Музыка"
 - [discogs] tag, easily expanding to some HTML

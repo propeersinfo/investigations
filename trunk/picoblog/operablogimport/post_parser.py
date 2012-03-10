@@ -1,4 +1,12 @@
+# importing - files to check later:
+# attention-soviet-grooves          @todo too many blank lines
+# dielo-with-dobi-chabrich-1972     @todo unescape dropbox urls
+# francoise-hardys-a-harder-cover   @todo none player imported
+
+import glob
+import os
 import re
+import urllib2
 from BeautifulSoup import BeautifulSoup, NavigableString
 from soupselect import select
 import sys
@@ -11,6 +19,7 @@ def last_file_name(f):
   return re.sub('.*[/\\\]', '', f)
 
 def unescape_html(s):
+  # replace html entities
   return HTMLParser.HTMLParser().unescape(s)
 
 def strip_tags(soup, valid_tags = []):
@@ -137,16 +146,18 @@ def get_content(soup):
   fix_image(div_content_node)
   fix_youtube(div_content_node)
   fix_mixcloud(div_content_node)
+  fix_soundcloud(div_content_node)
   replace_links_with_text_equal_to_href(div_content_node)
   fix_local_link_url(div_content_node)
   fix_links_attrs(div_content_node)
+  strip_tags(div_content_node, valid_tags=['br', 'a', 'ul', 'ol', 'li', 'object', 'param', 'embed'])
+
   replace_br(div_content_node)
-  strip_tags(div_content_node, valid_tags=['a', 'ul', 'ol', 'li', 'object', 'param', 'embed'])
 
   text = node_to_string(div_content_node)
   text = text.replace('&amp;', '&')
 
-  # two line breaks - no more
+  # not more than two line breaks
   text = re.sub('\n\n\n\n', '\n\n', text)
   text = re.sub('\n\n\n', '\n\n', text)
 
@@ -157,10 +168,9 @@ def get_content(soup):
 def node_to_string(root):
     # convert node to HTML string
 
+    # it will leave only text, no tags
     #text = ''.join([e for e in root.recursiveChildGenerator() if isinstance(e,unicode)])
-    #for e in root.recursiveChildGenerator():
-    #    print type(e), isinstance(e,unicode)
-    #raise Exception('exitt')
+
     text = "".join(map(to_string, root.contents))
     return text
 
@@ -277,28 +287,39 @@ def fix_youtube(root):
           #print src
           tag.replaceWith('[http://youtube.com/v/%s]' % m.group(1))
 
+def fix_soundcloud(root):
+    # "...playlists%2F24488&..."
+    for object in root.findAll("object"):
+        if object:
+            s = str(object)
+            m = re.search(r'soundcloud\.com.*playlists%2F(\d+)&', s)
+            if m:
+                object.replaceWith("[soundcloud %s]" % m.group(1))
+
 def fix_mixcloud(root):
     # form 1: http://www.mixcloud.com/user/title
     for object in root.findAll("object"):
         if object:
-            m = re.search(r'http://www.mixcloud.com/zencd/[^/]+/', str(object))
+            s = str(object)
+            m = re.search(r'http://www.mixcloud.com/zencd/[^/]+/', s)
             if m:
                 object.replaceWith("[%s]" % m.group(0))
+
     # form 2: www.mixcloud.com/api/1/cloudcast/zencd/ukrainian-gro
     for object in root.findAll("object"):
         if object:
             m = re.search(r'mixcloud.com/api/1/cloudcast/([^/]+)/([^/\.]+)', str(object))
             if m:
                 object.replaceWith("[http://mixcloud.com/%s/%s/]" % (m.group(1), m.group(2)))
-    pass
 
-# def fix_mixcloud(root):
-#     for tag in root.findAll("div"):
-#         if tag.object:
-#             s = str(tag)
-#             f = re.search(r'http://www.mixcloud.com/zencd/[^/]+/', s)
-#             if f:
-#                 tag.replaceWith("[%s]" % f.group(0))
+    # form 3: feed=http://www.mixcloud.com/zencd/qaya-selection/&
+    for object in root.findAll("object"):
+        if object:
+            s = str(object)
+            s = urllib2.unquote(s)
+            m = re.search(r'feed=http://www\.mixcloud\.com/([^/]+)/([^/\.&]+)', s)
+            if m:
+                object.replaceWith("[http://mixcloud.com/%s/%s/]" % (m.group(1), m.group(2)))
 
 def get_slug(file, date):
   if file.find('@') >= 0:
@@ -317,27 +338,21 @@ def parse_file(opera_blog_post_file):
           'comments' : get_comments(soup)}
 
 if __name__ == '__main__':
-    #file = '75'
-    #file = 'ludvikovsky-and-garanian-1971'
-    #file = 'soviet-electro-mixtype'
-    #file = 'raw-funk-from-armenia-1979'
-    #file = 'valter-ojakaar-197x'
-    #file = 'zodiac-mysterious-galaxy-how-beezar-edit-2009'
-    #file = 'psychedelic-dos-mukasan'
-    #file = 'a-soviet-musical-review'
-    #file = 'aura-urziceanu-1974.htm'
-    #file = 'index.html@id=39759592'
-    #file = 'ariel-1975'
-    #file = 'a-dear-boy-ost-1974'
-    #file = 'new-old-short-videos'
-    #file = 'a-light-groovy-disco-compilation-by-schmoltz'
-    #file = 'a-dear-boy-ost-1974'
-    #file = 'ukrainian-groove-part-1'
     file = 'gintarine-pora-75'
-    parsed = parse_file('../operabloghtml/%s' % file)
-    print 'title:', (parsed['title']).encode('ascii', 'replace')
-    print 'slug:', parsed['slug'].encode('ascii', 'replace')
-    print parsed['content'].encode('ascii', 'replace')
-    # for c in parsed['comments']:
-    #   print ''
-    #   print 'comment: %s -> %s' % (c['username'], c['text'])
+    if len(sys.argv) >= 2:
+      file = sys.argv[1]
+    for file in glob.glob('../operabloghtml/%s' % file):
+        if not os.path.isfile(file): continue
+
+        print ''
+        print '-------------- %s --------------' % file
+        print ''
+
+        parsed = parse_file('../operabloghtml/%s' % file)
+        print 'title:', (parsed['title']).encode('ascii', 'replace')
+        print 'slug:', parsed['slug'].encode('ascii', 'replace')
+        print parsed['content'].encode('ascii', 'replace')
+
+#        for c in parsed['comments']:
+#           print ''
+#           print 'comment: %s -> %s' % (c['username'], c['text'])
