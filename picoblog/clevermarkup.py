@@ -2,6 +2,7 @@ import cgi
 import sys
 import re
 import unittest
+import urllib2
 
 import defs
 
@@ -72,16 +73,15 @@ def handle_custom_tag_youtube(input):
 
 # [dir/cool track.mp3]
 def handle_custom_tag_mp3(input):
+    def replacer(m):
+        mp3_name = m.group(1)
+        mp3_link = "http://dl.dropbox.com/u/%s/sg/%s" % (defs.DROPBOX_USER, urllib2.quote(m.group(1), safe='/'))
+        swf = "/static/dewplayer-mini.swf"
+        flash = "<object width='160' height='18'><embed src='" + swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + mp3_link + "' quality='high'></embed></object>"
+        dl = "<a href=\"%s\">%s</a>" % (mp3_link, mp3_name)
+        return "%s %s" % (flash, dl)
     regex = "\[([^\]]+mp3)\]"
-    repl_link  = "http://dl.dropbox.com/u/%s/sg/\\1" % defs.DROPBOX_USER
-    #repl_swf   = "http://dl.dropbox.com/u/%s/dewplayer-mini.swf" % defs.DROPBOX_USER
-    repl_swf   = "/static/dewplayer-mini.swf"
-    repl_flash = "<object width='160' height='18'><embed src='" + repl_swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + repl_link + "' quality='high'></embed></object>"
-    repl_dload = "<a href=\"%s\">\\1</a>" % repl_link
-    repl = "%s %s" % (repl_flash, repl_dload)
-    #repl = "%s %s" % ("playa-herrre!", repl_dload)
-
-    return re.sub(regex, repl, input)
+    return re.sub(regex, replacer, input)
 
 # [http://www.mixcloud.com/user/mixname/]
 def handle_custom_tag_mixcloud(input):

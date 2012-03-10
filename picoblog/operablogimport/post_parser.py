@@ -234,17 +234,13 @@ def get_comments(soup):
             #print >>sys.stderr, "------------"
     return comments
 
-# TODO: implement comments
-
 def fix_single_mp3_player(root):
     for object_tag in root.findAll("object"):
-        for dir in ('sg', 'my'):
-            m = re.search(r'http://dl.(get)?dropbox.com/u/1883230/%s/.*mp3' % dir, str(object_tag))
-            if m:
-                mp3 = m.group(0).replace("http://dl.getdropbox.com/u/1883230/%s/" % dir, "")\
-                                .replace("http://dl.dropbox.com/u/1883230/%s/" % dir, "")\
-                                .replace("%20", " ")
-                object_tag.replaceWith(NavigableString("[%s]" % mp3))
+        #print str(object_tag)
+        m = re.search(r'http://dl.(get)?dropbox.com/u/1883230/(sg|my)/(.*mp3)', str(object_tag))
+        if m:
+            mp3 = urllib2.unquote(m.group(3))
+            object_tag.replaceWith(NavigableString("[%s]" % mp3))
 
 def fix_playlist_mp3_player(root):
     for tag in root.findAll("object"):
