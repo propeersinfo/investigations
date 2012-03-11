@@ -58,7 +58,7 @@ register.simple_tag(h2_render)
 ###################
 
 def sidebar_link(title, description, url):
-	return '<li><a href="%s">%s</a><br>\n%s</li>\n' % (url, title, description)
+	return '<li><a href="%s">%s</a><br>\n<span class="description">%s</span></li>\n' % (url, title, description.lower())
 	#return '<li><a href="%s" alt="%s">%s</li>\n' % (url, description, title)
 register.simple_tag(sidebar_link)
 
