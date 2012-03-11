@@ -160,6 +160,7 @@ def get_content(soup):
   text = text.replace('&amp;', '&')
 
   # not more than two line breaks
+  text = re.sub('\n\n\n\n\n', '\n\n', text)
   text = re.sub('\n\n\n\n', '\n\n', text)
   text = re.sub('\n\n\n', '\n\n', text)
 
@@ -299,9 +300,9 @@ def fix_soundcloud(root):
             m1 = re.search(r'soundcloud\.com.*playlists%2F(\d+)', s)
             m2 = re.search(r'soundcloud\.com.*tracks%2F(\d+)', s)
             if m1:
-                object.replaceWith("[soundcloud-playlist %s]" % m1.group(1))
+                object.replaceWith("\n\n[soundcloud-playlist %s]\n\n" % m1.group(1))
             elif m2:
-                object.replaceWith("[soundcloud %s]" % m2.group(1))
+                object.replaceWith("\n\n[soundcloud %s]\n\n" % m2.group(1))
 
 def fix_mixcloud(root):
     # form 1: http://www.mixcloud.com/user/title
