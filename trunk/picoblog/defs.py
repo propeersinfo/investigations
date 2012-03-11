@@ -29,3 +29,5 @@ if os.environ.get('SERVER_SOFTWARE','').lower().find('development') >= 0:
 else:
   PRODUCTION = True
   CANONICAL_BLOG_URL = 'http://sovietraregroove.appspot.com'
+
+DEVSERVER = not PRODUCTION

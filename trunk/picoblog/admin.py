@@ -30,8 +30,13 @@ ADMIN_FETCH_MAXIMUM = 10 * 1000
 
 class ShowAdminMainPageHandler(request.BlogRequestHandler):
     def get(self):
+        appname = os.getenv('APPLICATION_ID')
+        ds_prod = 'https://appengine.google.com/datastore/explorer?&app_id=%s' % appname
+        ds_dev = '/_ah/admin/datastore'
+        ds = ds_prod if defs.PRODUCTION else ds_dev
         template_vars = {
-            'dev_server': defs.PRODUCTION == False
+            'dev_server': defs.DEVSERVER,
+            'datastore_url': ds
         }
         self.response.out.write(self.render_template('admin-main.html',
                                                      template_vars))
