@@ -2,12 +2,6 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 Critical:
-+ html'ed rss fails for safari
-+ finish rss handling (usage of html tags there)
-+ article 'visitors' breaks layout
-+ add href values to the links side bar
-+ notify admin about new comments (email)
-+ make sure comments are fetched and augmented for a concrete article's page only
 
 Major:
 - consider storing main slug in Article objects and additional slugs in a special table of redirects
@@ -22,12 +16,9 @@ Normal:
 - introduce a delay accessing the slug maker url
 - commenting: add optional e-mail field
 - tune up Din support (add variations, particularly)
-- import: mixcloud not recognized for http://localhost/ukrainian-groove-part-1
 - use transactions (e.g. saving an article)
 - typography: 7" expanded to 7>>
 - disallow slugs like "tag", "admin", "page2", "rss"
-- soundcloud widgets not imported - http://localhost/a-light-groovy-disco-compilation-by-schmoltz
-- "[http://i068.radikal.ru/1001/79/73237238bee2.jpg]" leads to "http://dl.dropbox.com/u/1883230/sg/http://i068.radikal.ru/1001/79/73237238bee2.jpg"
 - "Blog posts ← later ... later →" when one page is available
 - [dewplaylist] not handled: http://localhost/20100330-the-last-portion-of-qaya.html
 - extra stuff in imported comments at http://localhost/20110804-aura-urziceanu-1974.html
@@ -48,6 +39,10 @@ Normal:
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
++ import: eliminate "\r\n" in <ul> <ol> <li>
++ import: mixcloud not recognized for http://localhost/ukrainian-groove-part-1
++ soundcloud widgets not imported - http://localhost/a-light-groovy-disco-compilation-by-schmoltz
++ "[http://i068.radikal.ru/1001/79/73237238bee2.jpg]" leads to "http://dl.dropbox.com/u/1883230/sg/http://i068.radikal.ru/1001/79/73237238bee2.jpg"
 + markup: [soundcloud 1234]
 + soundcloud objects not imported
 + add 'DinPro' web font support
@@ -81,3 +76,11 @@ Low priority:
 - caching of each post and the front page
 - fontgen: JS part forms bad request strings for chars like "#$%^"
 - fontgen: imaged h1's: make white space non clickable
+
+Archive:
++ html'ed rss fails for safari
++ finish rss handling (usage of html tags there)
++ article 'visitors' breaks layout
++ add href values to the links side bar
++ notify admin about new comments (email)
++ make sure comments are fetched and augmented for a concrete article's page only
