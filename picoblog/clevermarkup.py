@@ -90,9 +90,15 @@ def handle_custom_tag_mixcloud(input):
     return re.sub(regex, replace, input)
 
 # [soundcloud 12345]
-def handle_custom_tag_soundcloud(input):
+def handle_custom_tag_soundcloud_track(input):
     regex = "\[\s*soundcloud\s+([0-9]+)\s*\]"
     replace  = '''<object height="81" width="100%"><param name="movie" value="https://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F\\1&amp;show_comments=true&amp;auto_play=false&amp;color=ff7755"></param><param name="allowscriptaccess" value="always"></param><embed allowscriptaccess="always" height="81" src="https://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F\\1&amp;show_comments=true&amp;auto_play=false&amp;color=ff7700" type="application/x-shockwave-flash" width="100%"></embed></object>'''
+    return re.sub(regex, replace, input)
+
+# [soundcloud-playlist 12345]
+def handle_custom_tag_soundcloud_playlist(input):
+    regex = "\[\s*soundcloud-playlist\s+([0-9]+)\s*\]"
+    replace  = '<object height="115" width="100%"><param name="movie" value="http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F\\1&amp;amp;show_comments=false&amp;amp;auto_play=false&amp;amp;show_playcount=false&amp;amp;show_artwork=false&amp;amp;color=ff7700"><param name="allowscriptaccess" value="never"><embed height="115" src="http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F\\1&amp;amp;show_comments=false&amp;amp;auto_play=false&amp;amp;show_playcount=false&amp;amp;show_artwork=false&amp;amp;color=ff7700" type="application/x-shockwave-flash" width="100%" allowscriptaccess="never"></embed></object>'
     return re.sub(regex, replace, input)
 
 # [3x3.playlist]
@@ -116,7 +122,8 @@ def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = Tru
         html = handle_custom_tag_playlist(html)
         html = handle_custom_tag_youtube(html)
         html = handle_custom_tag_mixcloud(html)
-        html = handle_custom_tag_soundcloud(html)
+        html = handle_custom_tag_soundcloud_track(html)
+        html = handle_custom_tag_soundcloud_playlist(html)
     html = html.replace('\n', '<br>\n') # NB: the last transformation
     return html
 

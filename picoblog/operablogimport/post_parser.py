@@ -148,11 +148,13 @@ def get_content(soup):
   replace_links_with_text_equal_to_href(div_content_node)
   fix_local_link_url(div_content_node)
   fix_links_attrs(div_content_node)
-  strip_tags(div_content_node, valid_tags=['br', 'a', 'ul', 'ol', 'li', 'object', 'param', 'embed'])
+
+  # invoke it *before* tags stripped
+  remove_new_lines_from_certain_tags(div_content_node)
+
+  strip_tags(div_content_node, valid_tags=['br', 'a', 'object', 'param', 'embed'])
 
   replace_brs(div_content_node)
-
-  no_new_lines_within_objects(div_content_node)
 
   text = node_to_string(div_content_node)
   text = text.replace('&amp;', '&')
@@ -235,9 +237,10 @@ def get_comments(soup):
     return comments
 
 # remove new line characters within every OBJECT
-def no_new_lines_within_objects(root):
-    for object in root.findAll("object"):
-        for e in object.findAll(text=True):
+def remove_new_lines_from_certain_tags(root):
+    sub_roots = root.findAll("object") + root.findAll("li")
+    for sub_root in sub_roots:
+        for e in sub_root.findAll(text=True):
             e.replaceWith(NavigableString(unicode(e).strip()))
 
 def fix_single_mp3_player(root):
@@ -293,9 +296,12 @@ def fix_soundcloud(root):
     for object in root.findAll("object"):
         if object:
             s = str(object)
-            m = re.search(r'soundcloud\.com.*playlists%2F(\d+)&', s)
-            if m:
-                object.replaceWith("[soundcloud %s]" % m.group(1))
+            m1 = re.search(r'soundcloud\.com.*playlists%2F(\d+)', s)
+            m2 = re.search(r'soundcloud\.com.*tracks%2F(\d+)', s)
+            if m1:
+                object.replaceWith("[soundcloud-playlist %s]" % m1.group(1))
+            elif m2:
+                object.replaceWith("[soundcloud %s]" % m2.group(1))
 
 def fix_mixcloud(root):
     # form 1: http://www.mixcloud.com/user/title
