@@ -10,16 +10,18 @@ Critical:
 + make sure comments are fetched and augmented for a concrete article's page only
 
 Major:
+- consider storing main slug in Article objects and additional slugs in a special table of redirects
+- cache pre-rendered pages + front page
 - '/rss' is incompatible with greader (but it's ok with feedburner)
 - find how to copy dev db onto production completely
 - implement never-expire resources
 - slugs starting with digits interfere with the article-by-id handler
+- 'new comment' form, if not filled properly, leads to inappropriate stack trace
 
 Normal:
 - introduce a delay accessing the slug maker url
 - commenting: add optional e-mail field
 - tune up Din support (add variations, particularly)
-- markup: [mp3] bug 'orera — summertime %28dj eln re-edit%29.mp3'
 - import: mixcloud not recognized for http://localhost/ukrainian-groove-part-1
 - use transactions (e.g. saving an article)
 - typography: 7" expanded to 7>>
@@ -27,7 +29,6 @@ Normal:
 - soundcloud widgets not imported - http://localhost/a-light-groovy-disco-compilation-by-schmoltz
 - "[http://i068.radikal.ru/1001/79/73237238bee2.jpg]" leads to "http://dl.dropbox.com/u/1883230/sg/http://i068.radikal.ru/1001/79/73237238bee2.jpg"
 - "Blog posts ← later ... later →" when one page is available
-- 'new comment' form, if not filled properly, leads to inappropriate stack trace
 - [dewplaylist] not handled: http://localhost/20100330-the-last-portion-of-qaya.html
 - extra stuff in imported comments at http://localhost/20110804-aura-urziceanu-1974.html
 - wrong title imported for http://localhost/20100331-a-href-sovietgroove-blog-show-dml-8737781-syabry-1986-a.html
