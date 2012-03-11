@@ -124,8 +124,8 @@ div.article {
 	margin-bottom: 0.25em;
 }
 .sidebar-tags ul li span {
-	font-size: 75%;
-	color: #333;
+	color: grey;
+	font-size: 85%;
 }
 .sidebar-tags ul li.title {
 	font-style: normal;
@@ -133,7 +133,16 @@ div.article {
 .sidebar-tags .group {
 	margin-bottom: 10px;
 }
-
+.sidebar-panel .title {
+	font-weight: bold;
+}
+.sidebar-panel ul {
+	margin-bottom: 20px;
+}
+.sidebar-panel ul .description {
+	color: grey;
+	font-size: 85%;
+}
 .sidebar-links { }
 
 .tracks { font-size: 14px; }

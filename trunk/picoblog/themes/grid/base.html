@@ -125,14 +125,12 @@
 <div class="row below-top">
 
 	<div class="width_2">
-		{% include "tags.html" %}
+		{% include "tag-sidebar.html" %}
 
 {% if user_info.is_admin %}
 		<div class='sidebar-panel sidebar-tags'>
 		<ul>
-			<li><b>Admin:</b></li>
-		</ul>
-		<ul>
+			<li class="title">Admin:</li>
 			<li><a href="/admin/article/new">add article</a></li>
 			<li><a href="/rss">rss</a> (<a href="/rss?format=plain">plaiin</a>)</li>
 			<li><a href="/admin/">admin</a></li>
