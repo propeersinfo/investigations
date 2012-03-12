@@ -136,8 +136,8 @@ class SetupBasicTags(request.BlogRequestHandler):
         self.redirect('/admin/')
 
 def empty_table(table):
-    if defs.PRODUCTION:
-        raise Exception("This code cannot be run on production")
+    #if defs.PRODUCTION:
+    #    raise Exception("This code cannot be run on production")
     while True:
         q = db.GqlQuery('SELECT __key__ FROM %s' % table)
         if q.count() <= 0:
@@ -151,11 +151,8 @@ class ResetTagCounters(request.BlogRequestHandler):
 
 class EmptyDB(request.BlogRequestHandler):
     def post(self):
-        empty_table('Article')
-        empty_table('Slug')
-        empty_table('Comment')
-        empty_table('ArticleTag')
-        empty_table('FontRenderCache')
+        for table in ['Article','Slug','Comment','ArticleTag','FontRenderCache']:
+            empty_table(table)
         self.redirect('/admin/')
 
 def reset_all_tag_counters():
