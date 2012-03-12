@@ -12,15 +12,19 @@ class PageInfoBase:
     pass
 
 class PageInfo(PageInfoBase):
-  def __init__(self, paged_query, page_num = 1, page_link_format = "%d", first_page_url = None):
-    self.current_page = page_num
+  def __init__(self, paged_query, page_num_1, page_link_format, first_page_url):
+    self.current_page = page_num_1
     self.pages_total = paged_query.page_count()
-    self.articles = paged_query.fetch_page(page_num)
-    if page_num == 2 and first_page_url != None:
+
+    if page_num_1 == 2:
       self.prev_page_url = first_page_url
     else:
-      self.prev_page_url = (page_link_format % (page_num-1)) if paged_query.has_page(page_num-1) else None
-    self.next_page_url = (page_link_format % (page_num+1)) if paged_query.has_page(page_num+1) else None
+      self.prev_page_url = (page_link_format % (page_num_1-1)) if paged_query.has_page(page_num_1-1) else None
+
+    self.next_page_url = (page_link_format % (page_num_1+1)) if paged_query.has_page(page_num_1+1) else None
+
+    # NB: fetch_page() alters response of the following has_page() somehow, so fetch_page() must be invoked the last
+    self.articles = paged_query.fetch_page(page_num_1)
 
 class EmptyPageInfo(PageInfoBase):
   def __init__(self):

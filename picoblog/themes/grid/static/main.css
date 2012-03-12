@@ -21,7 +21,7 @@ p {
 	margin: 0 0 0.6em 0;
 	line-height: 130%;
 }
-.below-top p, h1, h2, h3, h4, h5, h6 {
+.below-top p, div, h1, h2, h3, h4, h5, h6 {
 	font-family: DinPro, DinMy, Helvetica, Arial, sans-serif;
 }
 
@@ -42,6 +42,8 @@ a:hover   {
 .top {
 	padding-top: 10px;
 	margin-bottom: 0.7em;
+}
+.top div {
 	font-family: 'Helvetica', 'Arial', sans-serif !important;
 	font-size: 14px;
 }
@@ -127,14 +129,14 @@ div.article {
 	color: grey;
 	font-size: 85%;
 }
-.sidebar-tags ul li.title {
-	font-style: normal;
+.sidebar-tags  li.title {
+}
+.sidebar-panel li.title {
+	font-weight: bold;
+	padding-bottom: 4px;
 }
 .sidebar-tags .group {
 	margin-bottom: 10px;
-}
-.sidebar-panel .title {
-	font-weight: bold;
 }
 .sidebar-panel ul {
 	margin-bottom: 20px;
@@ -230,3 +232,9 @@ div.comment p {
 .all-tags .weight_3 { color: #00f; }
 .all-tags .weight_2 { color: #77f; }
 .all-tags .weight_1 { color: #ccf; }
+
+/* http://localhost/archive/ */
+ul.archive {
+	list-style-type: none;
+	padding-left: 0;
+}

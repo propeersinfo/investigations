@@ -4,13 +4,15 @@ Check list:
 Critical:
 
 Major:
+- fix "<guid>http://localhost:80/20120209.html</guid>" in RSS
+- http://localhost/1985 not found
 - consider storing main slug in Article objects and additional slugs in a special table of redirects
-- cache pre-rendered pages + front page
+- cache pre-rendered pages + front pages + archive
 - '/rss' is incompatible with greader (but it's ok with feedburner)
-- find how to copy dev db onto production completely
 - implement never-expire resources
 - slugs starting with digits interfere with the article-by-id handler
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
++ find how to copy dev db onto production completely
 
 Normal:
 - introduce a delay accessing the slug maker url
