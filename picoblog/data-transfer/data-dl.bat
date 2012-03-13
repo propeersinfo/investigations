@@ -13,5 +13,5 @@ echo.&goto:eof
 :: handle one DB kind
 :handle_kind
 rm -f %1.dat
-C:\Python26\python.exe -u C:\Python\gae\appcfg.py download_data --url=http://localhost/_ah/remote_api --kind=%1 --email=zeencd@gmail.com --filename=%1.dat
+echo "anypassword" | C:\Python26\python.exe -u C:\Python\gae\appcfg.py download_data --url=http://localhost/_ah/remote_api --kind=%1 --email=anyemail --filename=%1.dat --passin --bandwidth_limit=100000000
 goto:eof
