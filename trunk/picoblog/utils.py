@@ -27,7 +27,7 @@ def get_article_url(article):
   return defs.CANONICAL_BLOG_URL + get_article_path(article)
 
 def get_article_guid(article):
-  return '/%s.html' % (article.id)
+  return '/article/%s' % (article.id)
     
 def set_unicode_cookie(response, key, value):
   c = Cookie.SimpleCookie()

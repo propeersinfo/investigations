@@ -46,6 +46,11 @@ indexes:
 
 - kind: Slug
   properties:
+  - name: __key__
+    direction: desc
+
+- kind: Slug
+  properties:
   - name: article
   - name: added_date
     direction: desc

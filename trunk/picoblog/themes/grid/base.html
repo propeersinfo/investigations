@@ -14,9 +14,10 @@
 <script src="/static/less-1.0.21.min.js"></script>
 -->
 <!--
+
 -->
-<link href="/static/grid-compiled.css" type="text/css" rel="stylesheet"/>
-<link href="/static/main.css" type="text/css" rel="stylesheet"/>
+<link href="{% static_resource 'grid-compiled.css' %}" type="text/css" rel="stylesheet"/>
+<link href="{% static_resource 'main.css' %}" type="text/css" rel="stylesheet"/>
 <!--
 <link href='http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
 <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
@@ -63,7 +64,7 @@
 
 <div class="row top">
 	<div class="width_2">
-		<a href="/"><img class="logo" src="/static/logo-din.png" alt="Soviet Groove" border="0"/></a>
+		<a href="/"><img class="logo" src="{% static_resource 'logo-roboto.png' %}" alt="Soviet Groove" border="0"/></a>
 	</div>
 	<div class="width_7">
 		<div class="row">
@@ -158,9 +159,9 @@
 <div class="row bottom">
 	<div class="width_2"><p>
 		{% if user_info.user %}
-			admin:{{user_info.is_admin}} <a href="{{user_info.logout_url}}">logout</a>
+			<a href="{{user_info.logout_url}}">logout</a>
 		{% else %}
-			<a href="{{user_info.login_url}}">login</a>
+			<a href="{{user_info.login_url}}"><img src="{% static_resource 'login.png' %}"/></a>
 		{% endif %}
 	</p></div>
 	<div class="width_4"><p>
@@ -168,7 +169,8 @@
 		<a href="mailto:mail@sovietgroove.com">mail@sovietgroove.com</a>
 	</p></div>
 	<div class="width_6"><p>
-		<a href="/archive/">archive</a>
+		<a href="/archive/">all articles</a><br/>
+		<a href="/tag/">all tags</a>		
 	</p></div>
 </div>
 

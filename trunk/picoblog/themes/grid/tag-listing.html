@@ -7,47 +7,47 @@
 <div class='all-tags'>
 
 <p>
-<b>Styles</b>:
+<b>Styles:</b>
 {% for tag in tag_cloud.categorized.genre %}
 	<a href="/tag/{{tag.name}}" class="weight_{{tag.weight}}">{{tag.title}}</a>
 {% endfor %}
 </p>
 
 <p>
-<b>Time Periods</b>: {% blog_tag "60s" "60's" %} {% blog_tag "70s" "70's" %} {% blog_tag "80s" "80's" %}
+<b>Time Periods:</b> {% blog_tag "60s" "60's" %} {% blog_tag "70s" "70's" %} {% blog_tag "80s" "80's" %}
 </p>
 
-<p><b>Composers</b>:
+<p><b>Composers:</b>
 {% for tag in tag_cloud.categorized.composer %}
     <a href="/tag/{{tag.name}}" class="weight_{{tag.weight}}">{{tag.title}}</a>
 {% endfor %}
 </p>
 
-<p><b>Jazz &amp; Orchestra</b>:
+<p><b>Jazz &amp; Orchestra:</b>
 {% for tag in tag_cloud.categorized.jazz %}
     <a href="/tag/{{tag.name}}" class="weight_{{tag.weight}}">{{tag.title}}</a>
 {% endfor %}
 </p>
 
-<p><b>Ensembles</b>:
+<p><b>Ensembles:</b>
 {% for tag in tag_cloud.categorized.ensemble %}
     <a href="/tag/{{tag.name}}" class="weight_{{tag.weight}}">{{tag.title}}</a>
 {% endfor %}
 </p>
 
-<p><b>Vocalists</b>:
+<p><b>Vocalists:</b>
 {% for tag in tag_cloud.categorized.vocalist %}
     <a href="/tag/{{tag.name}}" class="weight_{{tag.weight}}">{{tag.title}}</a>
 {% endfor %}
 </p>
 
-<p><b>Modern Artists</b>:
+<p><b>Modern Artists:</b>
 {% for tag in tag_cloud.categorized.modern %}
     <a href="/tag/{{tag.name}}" class="weight_{{tag.weight}}">{{tag.title}}</a>
 {% endfor %}
 </p>
 
-<p><b>Miscellaneous</b>:
+<p><b>Miscellaneous:</b>
 {% for tag in tag_cloud.categorized.misc %}
     <a href="/tag/{{tag.name}}" class="weight_{{tag.weight}}">{{tag.title}}</a>
 {% endfor %}

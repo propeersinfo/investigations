@@ -151,8 +151,9 @@ class ResetTagCounters(request.BlogRequestHandler):
 
 class EmptyDB(request.BlogRequestHandler):
     def post(self):
-        for table in ['Article','Slug','Comment','ArticleTag','FontRenderCache']:
-            empty_table(table)
+        for cls in [ Article, Slug, Comment, ArticleTag, FontRenderCache ]:
+            empty_table(cls.__name__)
+        TagCloud.reset()
         self.redirect('/admin/')
 
 def reset_all_tag_counters():

@@ -9,8 +9,8 @@ builtins:
 handlers:
 
 - url: /static
-  #static_dir: themes/birman/static
   static_dir: themes/grid/static
+  expiration: 30d
   login: admin
 
 - url: /favicon.ico

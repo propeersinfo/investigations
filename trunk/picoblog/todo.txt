@@ -4,23 +4,24 @@ Check list:
 Critical:
 
 Major:
-- fix "<guid>http://localhost:80/20120209.html</guid>" in RSS
-- http://localhost/1985 not found
+- disallow slugs like "tag", "admin", "page2", "rss"
+- '/rss' is incompatible with greader (but it's ok with feedburner)
 - consider storing main slug in Article objects and additional slugs in a special table of redirects
 - cache pre-rendered pages + front pages + archive
-- '/rss' is incompatible with greader (but it's ok with feedburner)
-- implement never-expire resources
 - slugs starting with digits interfere with the article-by-id handler
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
++ fix "<guid>http://localhost:80/20120209.html</guid>" in RSS
++ http://localhost/1985 not found
++ implement never-expire static resources
 + find how to copy dev db onto production completely
 
 Normal:
+- playlist player not working http://localhost/strange-things
 - introduce a delay accessing the slug maker url
 - commenting: add optional e-mail field
 - tune up Din support (add variations, particularly)
 - use transactions (e.g. saving an article)
 - typography: 7" expanded to 7>>
-- disallow slugs like "tag", "admin", "page2", "rss"
 - "Blog posts ← later ... later →" when one page is available
 - [dewplaylist] not handled: http://localhost/20100330-the-last-portion-of-qaya.html
 - extra stuff in imported comments at http://localhost/20110804-aura-urziceanu-1974.html
