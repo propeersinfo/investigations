@@ -31,3 +31,5 @@ else:
   CANONICAL_BLOG_URL = 'http://sovietraregroove.appspot.com'
 
 DEVSERVER = not PRODUCTION
+
+APP_VERSION = os.getenv('CURRENT_VERSION_ID', None)

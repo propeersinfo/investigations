@@ -14,7 +14,11 @@
 
 body {
 	background: white;
+	background: #EEEEEE;
 	margin: 0 0 0 0;
+}
+input {
+	font-family: 'Helvetica', 'Arial', sans-serif;
 }
 p {
 	color: #000;
@@ -62,7 +66,7 @@ a:hover   {
 }
 
 img.logo {
-	padding-top: 8px;
+	padding-top: 11px;
 }
 
 /* site logo (temp) */
@@ -164,7 +168,7 @@ div.article {
 .article-meta .tag {
 	margin-left: 0.3em;
 }
-input.search { width:97%; font-style:italic; font-family: serif; }
+input.search { width:97%; }
 
 div.comment {
 	margin-bottom: 1em !important;
@@ -209,12 +213,13 @@ div.comment p {
 }
 .below-top h1 a:hover {
 	color: #f33 !important;
-	background: white !important;
 	text-decoration: none !important;
 }
 
 .bottom {
-	margin-top: 3em;
+	padding-top: 3em;
+	padding-bottom: 2em;
+	font-size: 85%;
 }
 
 .hilite { background:#fee; }
@@ -228,7 +233,7 @@ div.comment p {
 	margin-right: 10px;
 }
 .all-tags p a:hover { color: #f33; }
-.all-tags b { color: #333; }
+.all-tags b { color: #333; margin-right: 10px; }
 .all-tags .weight_3 { color: #00f; }
 .all-tags .weight_2 { color: #77f; }
 .all-tags .weight_1 { color: #ccf; }

@@ -5,6 +5,7 @@ import unittest
 import urllib2
 
 import defs
+import my_tags
 
 """
 Simple markup support.
@@ -40,7 +41,8 @@ def handle_custom_tag_image(text):
         return '<img src="%s">' % addr
       else:
         return '<img src="http://dl.dropbox.com/u/%s/sg/%s" alt="%s">' % (defs.DROPBOX_USER, addr, addr)
-    return re.sub(regex, replacer, text)
+    #return re.sub(regex, replacer, text)
+    return re.sub(regex, '<img src="/static/cover.jpg">', text)
 
 # [http://ya.ru/]
 def handle_custom_tag_http_link(input):
@@ -76,7 +78,7 @@ def handle_custom_tag_mp3(input):
     def replacer(m):
         mp3_name = re.sub(r'^.*/', '', m.group(1))
         mp3_link = "http://dl.dropbox.com/u/%s/sg/%s" % (defs.DROPBOX_USER, urllib2.quote(m.group(1), safe='/'))
-        swf = "/static/dewplayer-mini.swf"
+        swf = my_tags.static_resource('dewplayer-mini.swf')
         flash = "<object width='160' height='18'><embed src='" + swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + mp3_link + "' quality='high'></embed></object>"
         dl = "<a href=\"%s\">%s</a>" % (mp3_link, mp3_name)
         return "%s %s" % (flash, dl)
@@ -104,12 +106,8 @@ def handle_custom_tag_soundcloud_playlist(input):
 # [3x3.playlist]
 def handle_custom_tag_playlist(input):
     regex = '\[dewplaylist\s+([^\]]+playlist)\]'
-    replace = '<object width="240" height="200">'\
-              '<embed src="http://dl.dropbox.com/u/%s/dewplayer-playlist.swf" '\
-              'width="240" height="200" '\
-              'type="application/x-shockwave-flash" '\
-              'flashvars="&xml=http://dl.dropbox.com/u/%s/sg/\\1&autoreplay=1" quality="high">'\
-              '</embed></object>' % (defs.DROPBOX_USER, defs.DROPBOX_USER)
+    swf = my_tags.static_resource('dewplayer-playlist.swf')
+    replace = '<object width="240" height="200"><embed src="%s" width="240" height="200" type="application/x-shockwave-flash" flashvars="&xml=http://dl.dropbox.com/u/%s/sg/\\1&autoreplay=1" quality="high"></embed></object>' % (swf, defs.DROPBOX_USER)
     return re.sub(regex, replace, input)
 
 def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = True):

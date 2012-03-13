@@ -279,7 +279,7 @@ def fix_youtube(root):
     for tag in root.findAll("object"):
         m = re.search(r'http://www.youtube.com/v/[^&\"]+', str(tag))
         if m:
-            tag.replaceWith("[%s]" % m.group(0))
+            tag.replaceWith("\n[%s]" % m.group(0))
     # form 2: <iframe>
     # <iframe allowfullscreen="allowfullscreen" src="http://embed.myopera.com/video/?url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DjN4BDPZq8ww&amp;height=344&amp;width=425" frameborder="0" height="350" scrolling="no" width="431">
     # ...watch%3Fv%3DjN4BDPZq8ww&...
@@ -290,7 +290,7 @@ def fix_youtube(root):
         if m:
           #print m.group(1)
           #print src
-          tag.replaceWith('[http://youtube.com/v/%s]' % m.group(1))
+          tag.replaceWith('\n[http://youtube.com/v/%s]' % m.group(1))
 
 def fix_soundcloud(root):
     # "...playlists%2F24488&..."

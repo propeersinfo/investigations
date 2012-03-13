@@ -331,16 +331,17 @@ class ArticlesByTagHandler(AbstractPageHandler):
                                                      self.get_recent(),
                                                      additional_template_variables=tpl_vars))
 
-class ArticlesForMonthHandler(AbstractPageHandler):
-    """
-    Handles requests to display a set of articles that were published
-    in a given month.
-    """
-    def get(self, year, month):
-        articles = Article.all_for_month(int(year), int(month))
-        self.response.out.write(self.render_articles(articles,
-                                                     self.request,
-                                                     self.get_recent()))
+
+#class ArticlesForMonthHandler(AbstractPageHandler):
+#    """
+#    Handles requests to display a set of articles that were published
+#    in a given month.
+#    """
+#    def get(self, year, month):
+#        articles = Article.all_for_month(int(year), int(month))
+#        self.response.out.write(self.render_articles(articles,
+#                                                     self.request,
+#                                                     self.get_recent()))
 
 class ArticleByIdHandler(AbstractPageHandler):
     """
@@ -475,8 +476,8 @@ application = webapp.WSGIApplication(
      ('/tag/?$', AllTagsTagHandler),
      ('/tag/([^/]+)/?$', ArticlesByTagHandler),
      ('/tag/([^/]+)/page(\d+)/?$', ArticlesByTagHandler),
-     ('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),
-     ('/(\d+).*$', ArticleByIdHandler),
+     #('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),
+     ('/article/(\d+)$', ArticleByIdHandler),
      ('/archive/(\d+)?$', ArchivePageHandler),
      ('/rss/?$', RssArticlesHandler),
      ('/comment/add/(\d+)$', AddCommentHandler),
