@@ -22,6 +22,8 @@ class OnlineImageInfo():
         return "OnlineImageInfo(%s)" % self.full_image
 
 def upload_image_fastpic(file_name, open_binary = True):
+    print type(file_name)
+    print >>sys.stderr, repr(u'uploading image %s...' % file_name)
     fd = open(file_name, "rb" if open_binary else "r")
     post_data, headers = multipart_encode({
             "file1": fd,
@@ -41,7 +43,9 @@ def upload_image_fastpic(file_name, open_binary = True):
     status = xml.uploadsettings.status.string
     error = xml.uploadsettings.error.string
     if error:
-        raise RuntimeError("cannot upload image %s because: %s" % (file_name, error))
+        msg = "cannot upload image %s because: %s" % (file_name, error)
+        print >>sys.stderr, "error: %s" % msg
+        raise Exception(msg)
     #thumbpath = xml.uploadsettings.thumbpath.string
     #imagepath = xml.uploadsettings.imagepath.string
     viewurl = xml.uploadsettings.viewurl.string
