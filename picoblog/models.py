@@ -14,6 +14,33 @@ MAX_ARTICLES_PER_DAY = 20
 
 ########################################################
 
+class HtmlCache(db.Model):
+    path = db.StringProperty(required=True, indexed=True)
+    html = db.TextProperty()
+
+    @classmethod
+    def __find(cls, path):
+        q = db.Query(HtmlCache)
+        q.filter('path = ', path)
+        return q.get()
+
+    @classmethod
+    def __add(cls, path, html):
+        object = HtmlCache(path=path, html=db.Text(html, 'utf-8'))
+        object.save()
+
+    @classmethod
+    def get_cached_or_make_new(cls, path, renderer):
+        cache = cls.__find(path=path)
+        if cache:
+            html = cache.html
+        else:
+            html = renderer()
+            cls.__add(path, html)
+        return html
+
+########################################################
+
 class ArticleTag(db.Model):
     name = db.StringProperty(required=True, indexed=True)
     title = db.StringProperty(required=False, indexed=False)

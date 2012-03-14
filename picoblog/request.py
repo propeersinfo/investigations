@@ -51,7 +51,9 @@ class BlogRequestHandler(webapp.RequestHandler):
                 Can be empty.
         """
         template_path = self.get_template(template_name)
-        return template.render(template_path, template_vars)
+        text = template.render(template_path, template_vars)
+        #raise Exception('google template returns %s' % type(text))
+        return text
 
     def println(self, s):
         self.response.out.write('%s<br>\n' % s)

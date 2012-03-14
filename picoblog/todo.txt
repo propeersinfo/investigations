@@ -4,12 +4,13 @@ Check list:
 Critical:
 
 Major:
+- impl google search
 - disallow slugs like "tag", "admin", "page2", "rss"
 - '/rss' is incompatible with greader (but it's ok with feedburner)
 - consider storing main slug in Article objects and additional slugs in a special table of redirects
 - cache pre-rendered pages + front pages + archive
-- slugs starting with digits interfere with the article-by-id handler
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
++ slugs starting with digits interfere with the article-by-id handler
 + fix "<guid>http://localhost:80/20120209.html</guid>" in RSS
 + http://localhost/1985 not found
 + implement never-expire static resources
@@ -17,31 +18,30 @@ Major:
 
 Normal:
 - playlist player not working http://localhost/strange-things
+- [dewplaylist] not handled: http://localhost/20100330-the-last-portion-of-qaya.html
 - introduce a delay accessing the slug maker url
 - commenting: add optional e-mail field
 - tune up Din support (add variations, particularly)
 - use transactions (e.g. saving an article)
 - typography: 7" expanded to 7>>
 - "Blog posts ← later ... later →" when one page is available
-- [dewplaylist] not handled: http://localhost/20100330-the-last-portion-of-qaya.html
 - extra stuff in imported comments at http://localhost/20110804-aura-urziceanu-1974.html
 - wrong title imported for http://localhost/20100331-a-href-sovietgroove-blog-show-dml-8737781-syabry-1986-a.html
 - keep TagCloud in memcache forever but reset it when a tag changed in datastore
 - async e-mail sending
 - update memcached tag cloud on article change
-- make dewplayer never expire! +ETag
++ make dewplayer never expire! +ETag
 - let admin distinguish draft articles visually
 - copy dewplayer multi onto GAE
 - custom mp3 tag: eliminate dirs like "other/gradsky-71âˆ’74-sampler.mp3"
 - copy Dropbox images to GAE DB
 - new player
-- friendly links at the right
 - RSS icon
-- impl google search
 - pagination in comments?
 - attribute 'deleted' in Article/Comment
 - ajax adding/deleting comments
 - make typograhy wester style (tipogriphy?)
++ friendly links at the right
 + import: eliminate "\r\n" in <ul> <ol> <li>
 + import: mixcloud not recognized for http://localhost/ukrainian-groove-part-1
 + soundcloud widgets not imported - http://localhost/a-light-groovy-disco-compilation-by-schmoltz
@@ -66,6 +66,7 @@ Normal:
 + navigation with Ctrl+arrows
 
 Low priority:
+- consider Birman-style shortcuts: Ctrl+Up/Dn
 - markup: do not introduce <br> tags within <object>
 - rss streams for tags
 - typographer: unnecessary nbsp after dash: "AA - BB" => "AA&nbsp;-&nbsp;BB"
