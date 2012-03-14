@@ -4,18 +4,18 @@ Check list:
 Critical:
 
 Major:
-- do just a redirect in handler of "/article/1234"
 - disallow non-admins view draft articles by urls both "/slug" and "/article/1234"
-- cache: disable cache read/write for user=admin
-- cache: invalidate HtmlCache entries: if a) db was updated or b) app was re-deployed
-- cache: limit size of HtmlCache somehow
+- cache: invalidate HtmlCache entries if db was updated
+- cache: invalidate cache from deployment script
 - cache: handle If-Modified-Since
 - impl google search
 - disallow slugs like "tag", "admin", "page2", "rss"
 - '/rss' is incompatible with greader (but it's ok with feedburner)
 - consider storing main slug in Article objects and additional slugs in a special table of redirects
-+ cache pre-rendered pages + front pages + archive
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
++ cache pre-rendered pages + front pages + archive
++ do just a redirect in handler of "/article/1234"
++ cache: disable cache read/write for user=admin
 + slugs starting with digits interfere with the article-by-id handler
 + fix "<guid>http://localhost:80/20120209.html</guid>" in RSS
 + http://localhost/1985 not found
@@ -23,6 +23,7 @@ Major:
 + find how to copy dev db onto production completely
 
 Normal:
+- cache: limit size of HtmlCache somehow
 - playlist player not working http://localhost/strange-things
 - [dewplaylist] not handled: http://localhost/20100330-the-last-portion-of-qaya.html
 - introduce a delay accessing the slug maker url
