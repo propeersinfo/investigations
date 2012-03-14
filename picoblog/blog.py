@@ -32,6 +32,22 @@ from userinfo import UserInfo
 from google.appengine.ext.webapp import template
 template.register_template_library('my_tags')
 
+# decorators
+
+# Apply it to RequestHandler.get() methods
+def show_page_load_time(fun):
+    def decorator(self, *args, **kwargs):
+        plt = utils.PageLoadTime()
+        fun(self, *args, **kwargs)
+        plt.print_time(self.response.out)
+    return decorator
+
+# Apply it to methods like RequestHandler.produce_html()
+def cacheable(fun):
+    def decorator(self, *args, **kwargs):
+        return HtmlCache.get_cached_or_make_new(self.request.path, lambda: fun(self, *args, **kwargs))
+    return decorator
+
 
 # -----------------------------------------------------------------------------
 # Classes
@@ -268,23 +284,16 @@ class AbstractPageHandler(request.BlogRequestHandler):
         return []
 
 class FrontPageHandler(AbstractPageHandler):
-    """
-    Handles requests to display the front (or main) page of the blog.
-    """
-    def get(self, page_num = 1):
+    @show_page_load_time
+    def get(self, *args, **kwargs):
+        self.response.out.write(self.produce_html(*args, **kwargs))
+
+    @cacheable
+    def produce_html(self, page_num = 1):
         page_num = int(page_num)
-
-        plt = utils.PageLoadTime()
-        
-        def renderer():
-            q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
-            page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE), page_num, "/page%d", "/")
-            return self.render_articles(page_info, self.request, self.get_recent())
-
-        html = HtmlCache.get_cached_or_make_new(self.request.path, renderer)
-        self.response.out.write(html)
-
-        plt.print_time(self.response.out)
+        q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
+        page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE), page_num, "/page%d", "/")
+        return self.render_articles(page_info, self.request, self.get_recent())
 
 class AllTagsTagHandler(AbstractPageHandler):
     def get(self):
@@ -309,34 +318,27 @@ class AllTagsTagHandler(AbstractPageHandler):
         }
         self.response.out.write(self.render_template('tag-listing.html', tpl_vars))
 	
-
 class ArticlesByTagHandler(AbstractPageHandler):
-    """
-    Handles requests to display a set of articles that have a
-    particular tag.
-    """
-    def get(self, tag_name, page_num = 1):
+    @show_page_load_time
+    def get(self, *args, **kwargs):
+        self.response.out.write(self.produce_html(*args, **kwargs))
+
+    @cacheable
+    def produce_html(self, tag_name, page_num = 1):
         page_num = int(page_num)
         tag_name = urllib.unquote(tag_name) # replace %20 with actual characters
 
-        plt = utils.PageLoadTime()
-
-        def renderer():
-            q = Article.query_for_tag_name(tag_name)
-            paged_query = PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE)
-            page_info = PageInfo(paged_query,
-                                 page_num,
-                                 '/tag/' + tag_name + '/page%d',
-                                 '/tag/' + tag_name + '/')
-            tpl_vars = {
-                'paging_title' : 'There are %s articles tagged &ldquo;%s&rdquo;.' % (paged_query.count(), tag_name)
-            }
-            return self.render_articles(page_info, self.request, self.get_recent(),
-                                        additional_template_variables=tpl_vars)
-
-        self.response.out.write(HtmlCache.get_cached_or_make_new(self.request.path, renderer))
-
-        plt.print_time(self.response.out)
+        q = Article.query_for_tag_name(tag_name)
+        paged_query = PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE)
+        page_info = PageInfo(paged_query,
+                             page_num,
+                             '/tag/%s/page%%d' % tag_name,
+                             '/tag/%s/' % tag_name)
+        tpl_vars = {
+            'paging_title' : 'There are %s articles tagged &ldquo;%s&rdquo;.' % (paged_query.count(), tag_name)
+        }
+        return self.render_articles(page_info, self.request, self.get_recent(),
+                                    additional_template_variables=tpl_vars)
 
 
 #class ArticlesForMonthHandler(AbstractPageHandler):
@@ -351,61 +353,38 @@ class ArticlesByTagHandler(AbstractPageHandler):
 #                                                     self.get_recent()))
 
 class ArticleByIdHandler(AbstractPageHandler):
-    """
-    Handles requests to display a single article, given its unique ID.
-    Handles nonexistent IDs.
-    """
     def get(self, id):
-        id = int(id)
-        article = Article.get(id)
-        self.__class__.handle_article(self, article)
-
-    @classmethod
-    def handle_article(cls, handler, article, do_redirect=True):
-        plt = utils.PageLoadTime()
-
-        if article and do_redirect:
-            true_path = utils.get_article_path(article)
-            if handler.request.path != true_path:
-                handler.redirect(true_path, permanent=True)
-                return
-
-        response_code, template = cls.get_code_and_template(article)
-        handler.response.set_status(response_code)
-        def renderer():
-            additional_template_variables = {'single_article': article}
-            return handler.render_articles(SinglePageInfo(article), handler.request, handler.get_recent(), template,
-                                           additional_template_variables)
-        html = HtmlCache.get_cached_or_make_new(handler.request.path, renderer)
-        #html = renderer()
-        handler.response.out.write(html)
-
-        plt.print_time(handler.response.out)
-
-    @classmethod
-    def get_code_and_template(cls, article):
-        if not article:
-            return 404, '404.html'
-        elif article.draft and not users.is_current_user_admin():
-            return 403, '403.html'
+        article = Article.get(int(id))
+        if article:
+            self.redirect(utils.get_article_path(article), permanent=True)
         else:
-            return 200, 'articles.html'
+            self.do_404()
 
-class ArticleBySlugHandler(AbstractPageHandler):
+    def do_404(self):
+        article = None
+        template = '404.html'
+        self.response.set_status(404)
+        additional_template_variables = {'single_article': article}
+        self.response.out.write(self.render_articles(SinglePageInfo(article),
+                                self.request,
+                                self.get_recent(),
+                                template,
+                                additional_template_variables))
+
+class ArticleBySlugHandler(ArticleByIdHandler):
+    @show_page_load_time
     def get(self, slug):
         slug_obj = Slug.find_article_by_slug(slug_string = slug)
         if slug_obj:
-            ArticleByIdHandler.handle_article(self, slug_obj.article, do_redirect=False)
+            self.response.out.write(self.produce_html(slug_obj.article))
         else:
-            article = None
-            template = '404.html'
-            self.response.set_status(404)
-            additional_template_variables = {'single_article': article}
-            self.response.out.write(self.render_articles(SinglePageInfo(article),
-                                                         self.request,
-                                                         self.get_recent(),
-                                                         template,
-                                                         additional_template_variables))
+            self.do_404()
+
+    @cacheable
+    def produce_html(self, article):
+        additional_template_variables = {'single_article': article}
+        return self.render_articles(SinglePageInfo(article), self.request, self.get_recent(), 'articles.html',
+            additional_template_variables)
 
 class ArchivePageHandler(AbstractPageHandler):
     """
@@ -488,11 +467,11 @@ application = webapp.WSGIApplication(
      ('/tag/([^/]+)/?$', ArticlesByTagHandler),
      ('/tag/([^/]+)/page(\d+)/?$', ArticlesByTagHandler),
      #('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),
-     ('/article/(\d+)$', ArticleByIdHandler),
      ('/archive/(\d+)?$', ArchivePageHandler),
      ('/rss/?$', RssArticlesHandler),
      ('/comment/add/(\d+)$', AddCommentHandler),
      #('/.*$', NotFoundPageHandler),
+     ('/article/(\d+)$', ArticleByIdHandler),
      ('/(.*)$', ArticleBySlugHandler),
      ],
 

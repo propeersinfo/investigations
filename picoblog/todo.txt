@@ -4,11 +4,17 @@ Check list:
 Critical:
 
 Major:
+- do just a redirect in handler of "/article/1234"
+- disallow non-admins view draft articles by urls both "/slug" and "/article/1234"
+- cache: disable cache read/write for user=admin
+- cache: invalidate HtmlCache entries: if a) db was updated or b) app was re-deployed
+- cache: limit size of HtmlCache somehow
+- cache: handle If-Modified-Since
 - impl google search
 - disallow slugs like "tag", "admin", "page2", "rss"
 - '/rss' is incompatible with greader (but it's ok with feedburner)
 - consider storing main slug in Article objects and additional slugs in a special table of redirects
-- cache pre-rendered pages + front pages + archive
++ cache pre-rendered pages + front pages + archive
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
 + slugs starting with digits interfere with the article-by-id handler
 + fix "<guid>http://localhost:80/20120209.html</guid>" in RSS
