@@ -16,7 +16,6 @@ parser = DeclarativeParser.new
 parser.consume_all_input = true
 
 src = <<SOURCE
-def somefunk() {};
 x = y = 11;
 SOURCE
 root = parser.parse(src, :root => :source_unit)
