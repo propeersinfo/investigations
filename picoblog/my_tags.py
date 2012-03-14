@@ -1,4 +1,5 @@
 import cgi
+import random
 import urllib2
 from google.appengine.ext import webapp
 
@@ -36,18 +37,18 @@ register.simple_tag(h2_render)
 
 
 def sidebar_link(title, description, url):
-	return '<li><a href="%s">%s</a><br>\n<span class="description">%s</span></li>\n' % (url, title, description.lower())
-	#return '<li><a href="%s" alt="%s">%s</li>\n' % (url, description, title)
+    return '<li><a href="%s">%s</a><br>\n<span class="description">%s</span></li>\n' % (url, title, description.lower())
+    #return '<li><a href="%s" alt="%s">%s</li>\n' % (url, description, title)
 register.simple_tag(sidebar_link)
 
 
 def typographus(s):
-	return Typographus().process(s)
+    return Typographus().process(s)
 register.simple_tag(typographus)
 
 
 # return versioned url of a local GAE resource
 def static_resource(file):
-    # todo: version randomization could be used on the dev side
-    return '/static/%s?v=%s' % (file, urllib2.quote(defs.APP_VERSION, safe=''))
+    ver = defs.APP_VERSION if defs.PRODUCTION else str(random.random())
+    return '/static/%s?v=%s' % (file, urllib2.quote(ver, safe=''))
 register.simple_tag(static_resource)
