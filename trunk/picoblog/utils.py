@@ -4,9 +4,18 @@ import os
 import re
 import unicodedata
 import Cookie
+import datetime
 import defs
 
 import models
+
+class PageLoadTime():
+    def __init__(self):
+        self.start_time = datetime.datetime.now()
+    def print_time(self, out):
+        delta = datetime.datetime.now() - self.start_time
+        out.write('<center><p>Page generated for %d:%03d<p>&nbsp;</center>' % (delta.seconds, delta.microseconds/1000))
+
 
 def slugify(s):
   if type(s) == str:

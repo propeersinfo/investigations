@@ -203,6 +203,8 @@ class AbstractPageHandler(request.BlogRequestHandler):
         if not isinstance(page_info, PageInfoBase):
             raise Exception("Use 'page_info' instead of 'articles'; actual = %s" % type(page_info.articles))
 
+        #time_1 = datetime.datetime.now()
+
         articles = page_info.articles
 
         url_prefix = 'http://' + request.environ['SERVER_NAME']
@@ -271,19 +273,18 @@ class FrontPageHandler(AbstractPageHandler):
     """
     def get(self, page_num = 1):
         page_num = int(page_num)
-        
-        #articles = Article.published()
-        #if len(articles) > defs.MAX_ARTICLES_PER_PAGE:
-        #    articles = articles[:defs.MAX_ARTICLES_PER_PAGE]
 
-        q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
-        page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE),
-                             page_num,
-                             "/page%d",
-                             "/")
-        self.response.out.write(self.render_articles(page_info,
-                                                     self.request,
-                                                     self.get_recent()))
+        plt = utils.PageLoadTime()
+        
+        def renderer():
+            q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
+            page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE), page_num, "/page%d", "/")
+            return self.render_articles(page_info, self.request, self.get_recent())
+
+        html = HtmlCache.get_cached_or_make_new(self.request.path, renderer)
+        self.response.out.write(html)
+
+        plt.print_time(self.response.out)
 
 class AllTagsTagHandler(AbstractPageHandler):
     def get(self):
@@ -317,19 +318,25 @@ class ArticlesByTagHandler(AbstractPageHandler):
     def get(self, tag_name, page_num = 1):
         page_num = int(page_num)
         tag_name = urllib.unquote(tag_name) # replace %20 with actual characters
-        q = Article.query_for_tag_name(tag_name)
-        paged_query = PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE)
-        page_info = PageInfo(paged_query,
-                             page_num,
-                             '/tag/' + tag_name + '/page%d',
-                             '/tag/' + tag_name + '/')
-        tpl_vars = {
-            'paging_title' : 'There are %s articles tagged &ldquo;%s&rdquo;.' % (paged_query.count(), tag_name)
-        }
-        self.response.out.write(self.render_articles(page_info,
-                                                     self.request,
-                                                     self.get_recent(),
-                                                     additional_template_variables=tpl_vars))
+
+        plt = utils.PageLoadTime()
+
+        def renderer():
+            q = Article.query_for_tag_name(tag_name)
+            paged_query = PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE)
+            page_info = PageInfo(paged_query,
+                                 page_num,
+                                 '/tag/' + tag_name + '/page%d',
+                                 '/tag/' + tag_name + '/')
+            tpl_vars = {
+                'paging_title' : 'There are %s articles tagged &ldquo;%s&rdquo;.' % (paged_query.count(), tag_name)
+            }
+            return self.render_articles(page_info, self.request, self.get_recent(),
+                                        additional_template_variables=tpl_vars)
+
+        self.response.out.write(HtmlCache.get_cached_or_make_new(self.request.path, renderer))
+
+        plt.print_time(self.response.out)
 
 
 #class ArticlesForMonthHandler(AbstractPageHandler):
@@ -351,10 +358,12 @@ class ArticleByIdHandler(AbstractPageHandler):
     def get(self, id):
         id = int(id)
         article = Article.get(id)
-        self.__class__.do_the_job(self, article)
+        self.__class__.handle_article(self, article)
 
     @classmethod
-    def do_the_job(cls, handler, article, do_redirect=True):
+    def handle_article(cls, handler, article, do_redirect=True):
+        plt = utils.PageLoadTime()
+
         if article and do_redirect:
             true_path = utils.get_article_path(article)
             if handler.request.path != true_path:
@@ -363,12 +372,15 @@ class ArticleByIdHandler(AbstractPageHandler):
 
         response_code, template = cls.get_code_and_template(article)
         handler.response.set_status(response_code)
-        additional_template_variables = {'single_article': article}
-        handler.response.out.write(handler.render_articles(SinglePageInfo(article),
-                                                     handler.request,
-                                                     handler.get_recent(),
-                                                     template,
-                                                     additional_template_variables))
+        def renderer():
+            additional_template_variables = {'single_article': article}
+            return handler.render_articles(SinglePageInfo(article), handler.request, handler.get_recent(), template,
+                                           additional_template_variables)
+        html = HtmlCache.get_cached_or_make_new(handler.request.path, renderer)
+        #html = renderer()
+        handler.response.out.write(html)
+
+        plt.print_time(handler.response.out)
 
     @classmethod
     def get_code_and_template(cls, article):
@@ -383,9 +395,8 @@ class ArticleBySlugHandler(AbstractPageHandler):
     def get(self, slug):
         slug_obj = Slug.find_article_by_slug(slug_string = slug)
         if slug_obj:
-            ArticleByIdHandler.do_the_job(self, slug_obj.article, do_redirect=False)
+            ArticleByIdHandler.handle_article(self, slug_obj.article, do_redirect=False)
         else:
-            #raise Exception('no article by address %s' % slug)
             article = None
             template = '404.html'
             self.response.set_status(404)
