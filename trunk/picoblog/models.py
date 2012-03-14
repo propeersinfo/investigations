@@ -1,9 +1,10 @@
 import datetime
 import sys
-from google.appengine.api import memcache
+from google.appengine.api import memcache, users
 
 from google.appengine.ext import db
 
+import defs
 import utils
 
 FETCH_THEM_ALL_COMMENTS = 100
@@ -31,6 +32,9 @@ class HtmlCache(db.Model):
 
     @classmethod
     def get_cached_or_make_new(cls, path, renderer):
+      if defs.DEVSERVER or users.is_current_user_admin():
+        return renderer()
+      else:
         cache = cls.__find(path=path)
         if cache:
             html = cache.html
@@ -171,21 +175,21 @@ class Article(db.Model):
                   .filter('draft = ', False)\
                   .order('-published_date')
 
-    @classmethod
-    def all_for_month_query(cls, year, month):
-        start_date = datetime.date(year, month, 1)
-        if start_date.month == 12:
-            next_year = start_date.year + 1
-            next_month = 1
-        else:
-            next_year = start_date.year
-            next_month = start_date.month + 1
-
-        end_date = datetime.date(next_year, next_month, 1)
-        return Article.published_query()\
-                       .filter('published_date >=', start_date)\
-                       .filter('published_date <', end_date)\
-                       .order('-published_date')
+#    @classmethod
+#    def all_for_month_query(cls, year, month):
+#        start_date = datetime.date(year, month, 1)
+#        if start_date.month == 12:
+#            next_year = start_date.year + 1
+#            next_month = 1
+#        else:
+#            next_year = start_date.year
+#            next_month = start_date.month + 1
+#
+#        end_date = datetime.date(next_year, next_month, 1)
+#        return Article.published_query()\
+#                       .filter('published_date >=', start_date)\
+#                       .filter('published_date <', end_date)\
+#                       .order('-published_date')
 
     @classmethod
     def query_for_tag_name(cls, tag_name):
@@ -200,12 +204,6 @@ class Article(db.Model):
         new_tags = []
         if len(tag_names) > 0: assert type(tag_names[0]) == str or type(tag_names[0]) == unicode
         return ArticleTag.get_keys_by_names_creating(tag_names)
-#        for t in tag_names:
-#            if type(t) == db.Category:
-#                new_tags.append(t)
-#            else:
-#                new_tags.append(db.Category(unicode(t)))
-#        return new_tags
 
     def __unicode__(self):
         return self.__str__()
