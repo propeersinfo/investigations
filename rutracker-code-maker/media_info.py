@@ -10,7 +10,10 @@ def get_single_audio_info(file):
         audio.pprint()
         print "p p r i n t"
         print audio
-        return audio.info.length, audio.info.bitrate
+        length = audio.info.length
+        #bitrate = audio.info.bitrate
+        bitrate = 0
+        return length, bitrate
     def mp3(file_path):
         audio = MP3(file_path)
         return audio.info.length, audio.info.bitrate
