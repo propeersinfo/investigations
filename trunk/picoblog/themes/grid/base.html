@@ -7,64 +7,22 @@
 
 <!--
 <link rel="alternate" type="application/rss+xml" title="Subscribe to new articles" href="/rss"/>
--->
-
-<!--
 <link rel="stylesheet/less" href="/static/style.less.css" type="text/css" />
 <script src="/static/less-1.0.21.min.js"></script>
 -->
-<!--
-
--->
 <link href="{% static_resource 'grid-compiled.css' %}" type="text/css" rel="stylesheet"/>
 <link href="{% static_resource 'main.css' %}" type="text/css" rel="stylesheet"/>
-<!--
-<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
-<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'/>
--->
  
-<style type="text/css" media="screen">
-</style>
-
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="{% static_resource 'user.js' %}"></script>
+<script type="text/javascript" src="{% static_resource 'admin.js' %}"></script>
 
-<script>
-{% include "scripts.js" %}
-</script>
-
-<script>
-/*$(document).ready(function() {
-	var smp = $('#super-menu-parent')
-	var sm = $('#super-menu')
-	var fin = function() {
-		var smp_pos = smp.offset()
-		var t = smp_pos.top
-		var l = smp_pos.left
-		//sm.position({top:t, left:l})
-		sm.css('left', l)
-		sm.css('top', t)
-		sm.show()
-		smp.css('visibility', 'hidden')
-	}
-	var fout = function() {
-		sm.hide()
-		smp.css('visibility', 'visible')
-	}
-	smp.hover(fin, fout)
-})*/
-</script>
- 
 </head>
 <body>
 
-<!--
-<div style="position:absolute; left:122px; top:-13px;">
-	<h1 id="logo"><a href="/">&#x2606; Soviet Groove</a></h1>
--->
-
 <div class="row top">
 	<div class="width_2">
-		<a href="/"><img class="logo" src="{% static_resource 'logo-roboto.png' %}" alt="Soviet Groove" border="0"/></a>
+		<a href="/"><img class="logo" src="{% static_resource 'logo-transp.png' %}" alt="Soviet Groove" border="0"/></a>
 	</div>
 	<div class="width_7">
 		<div class="row">
