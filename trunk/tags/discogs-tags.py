@@ -16,6 +16,32 @@ from mutagen.easyid3 import EasyID3
 
 import discogs_client as discogs
 
+import win32clipboard
+
+def get_clipboard_text():
+    try:
+        win32clipboard.OpenClipboard()
+        return win32clipboard.GetClipboardData(win32clipboard.CF_TEXT)
+    finally:
+        win32clipboard.CloseClipboard()
+
+def read_file(file):
+    f = None
+    try:
+        f = open(file, 'r')
+        return f.read()
+    finally:
+        if f: f.close()
+
+def rewrite_file(file, content):
+    content = str(content)
+    f = None
+    try:
+        f = open(file, 'w')
+        f.write(content)
+    finally:
+        if f: f.close()
+
 def load_easy_id3_tags(file):
 	try:
 		return EasyID3(file)
@@ -82,19 +108,23 @@ def ascii_only(s):
 
 
 def compare_discogs_vs_files(release, discogs_tracks, hdd_files):
-    DUR_DIFF_GATE = 0.50
+    # for t in discogs_tracks:
+    #     print t
+    #     sys.exit(111)
+
+    DUR_DIFF_GATE = 0.20
     if len(discogs_tracks) != len(hdd_files):
         raise Exception('Amount of tracks differs: %d vs %d' % (len(discogs_tracks), len(hdd_files)))
     # make sure track lengths differs not so much
-    for i in xrange(len(hdd_files)):
-        track = discogs_tracks[i]
-        track_len = get_discogs_track_length(track)
-        file = hdd_files[i]
-        mp3 = MP3(file)
-        if track_len:
-            diff = get_duration_difference(track_len, mp3.info.length)
-            if diff > DUR_DIFF_GATE:
-                raise Exception('tracks durations differs too much: %s vs %s' % (mp3.info.length, track_len))
+    # for i in xrange(len(hdd_files)):
+    #     track = discogs_tracks[i]
+    #     track_len = get_discogs_track_length(track)
+    #     file = hdd_files[i]
+    #     mp3 = MP3(file)
+    #     if track_len:
+    #         diff = get_duration_difference(track_len, mp3.info.length)
+    #         if diff > DUR_DIFF_GATE:
+    #             raise Exception('tracks durations differs too much: %s vs %s' % (mp3.info.length, track_len))
 
     def do_pass(really_do):
         for i in xrange(len(hdd_files)):
@@ -131,7 +161,9 @@ def compare_discogs_vs_files(release, discogs_tracks, hdd_files):
                 for mp3 in mp3s:
                     mp3.save(hdd_file)
             else:
-                print '%s' % hdd_files[i]
+                print '%s' % ascii_only(hdd_files[i])
+                title = ascii_only(title)
+                artist = ascii_only(artist)
                 print '%s. %s / %s' % (track['position'], title, artist)
                 print ''
     do_pass(False)
@@ -146,15 +178,35 @@ def compare_discogs_vs_files(release, discogs_tracks, hdd_files):
 def parse_discogs_id(s):
     regex = re.compile('http://www.discogs.com/.*release/(\d+)', re.I)
     m = re.search(regex, s)
-    assert m
-    return int(m.group(1))
+    if m:
+        return int(m.group(1))
+    else:
+        return None
 
-discogs.user_agent = 'PavelsClient/1.0 +http://sovietgroove.com'
-release_id = parse_discogs_id(sys.argv[1])
+#print parse_discogs_id(get_clipboard_text())
+#sys.exit(111)
+
+discogs.user_agent = 'PavelClient/1.0 +http://sovietgroove.com'
+if len(sys.argv) == 1:
+    release_id = parse_discogs_id(get_clipboard_text())
+    if release_id:
+        print 'taking release_id from clipboard: %d' % release_id
+    else:
+        release_id = None
+        #release_id = read_file('discogs-id')
+        #print 'taking release_id from file'
+else:
+    release_id = parse_discogs_id(sys.argv[1])
+if not release_id:
+    raise Exception('no correct release_id specified')
+release_id = int(release_id)
 #print 'release_id: %d' % release_id
 release = discogs.Release(release_id)
-audios = glob.glob("*.mp3")
+audios = glob.glob(u"*.mp3")
 if not len(audios):
-    audios = glob.glob("*.flac")
-audios = sorted(audios)
-compare_discogs_vs_files(release, release.tracklist, audios)
+    audios = glob.glob(u"*.flac")
+audios = sorted(audios, key=unicode.lower)
+tracks = release.tracklist
+tracks = filter(lambda t: t['type'].lower() != 'index track', tracks)
+compare_discogs_vs_files(release, tracks, audios)
+rewrite_file('discogs-id', release_id)

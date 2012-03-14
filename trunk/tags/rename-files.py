@@ -17,11 +17,13 @@ def filter_tag_text(s):
         # characters inacceptable for certain FS's
         r'[/\\]': '#',
         r':': ' - ',
-        r';': ', ',
+        r';': ' # ',
+        #r';': ' # ',
         r'[\?\*<>]': '',
+        r'["]': '\'',
         # to be applied last
         r'\.+$': '',   # any trailing dots
-        r'\s\s+': ' ', # two spaces to one
+        r'[ \t]+': ' ', # two spaces to one
     }
     for regex in regexps:
         replace = regexps[regex]
@@ -121,7 +123,8 @@ def do_rename(actual_rename, force_no_artist=False):
     if not actual_rename:
         return files_to_rename
 
-force_no_artist = False or common_artist
+force_no_artist = True if (len(sys.argv) == 2 and sys.argv[1] == 't') else False
+force_no_artist = force_no_artist or common_artist
 files_to_rename = do_rename(False, force_no_artist=force_no_artist)
 if files_to_rename > 0:
     sys.stdout.write('correct? [y/N] ')
