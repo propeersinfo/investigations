@@ -45,7 +45,7 @@ def gain_func(value16):
     value16 *= gain_value
     if value16 > MAX: value16 = MAX
     elif value16 < -MAX: value16 = -MAX
-    return value16
+    return int(value16)
 
 inn = wave.open(input_fname, "rb")
 
