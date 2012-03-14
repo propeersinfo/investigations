@@ -4,7 +4,7 @@ Check list:
 Critical:
 
 Major:
-- disallow non-admins view draft articles by urls both "/slug" and "/article/1234"
+- disallow non-admins to view draft articles by urls both "/slug" and "/article/1234"
 - cache: invalidate HtmlCache entries if db was updated
 - cache: invalidate cache from deployment script
 - cache: handle If-Modified-Since
