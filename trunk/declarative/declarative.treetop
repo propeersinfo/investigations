@@ -89,12 +89,15 @@ grammar Declarative
         }
     end
 
+    # mandatory space
     rule _space_
         [ \t\r\n]+
     end
 
+    # optional space
     rule _
         [ \t\r\n]*
+        #[_a-z] [_a-z0-9]*
     end
 
 #
@@ -107,5 +110,14 @@ grammar Declarative
 #            end
 #        }
 #    end
+
+#rule c_comment
+#  '/*'
+#  (
+#    !'*/'
+#    (. / "\n")
+#  )*
+#  '*/'
+#end
 
 end

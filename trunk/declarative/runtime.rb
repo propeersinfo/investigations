@@ -1,13 +1,15 @@
 # Stuff related to runtime evaluation of code
 
-class Value
-  
-end
-
 class EvaluationContext
   def initialize(parent_context = nil)
     @parent_context = parent_context
     @locals = {}
+  end
+
+  def enter
+  end
+
+  def leave
   end
 
 #  # 'object' is a node referencing a variable or function in interpreted input
