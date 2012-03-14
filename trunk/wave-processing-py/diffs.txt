@@ -1,0 +1,10 @@
+
+C:\workspace\investigations\wave-processing-py>set diff=c:\python26\python diff.py 
+
+C:\workspace\investigations\wave-processing-py>c:\python26\python diff.py ken-nowarp.wav ken-beats.wav 
+volt_sum_1:  34514678541
+volt_sum_2:  34514678422
+abs difference: 3530077
+rel difference: 0.01023 %
+
+C:\workspace\investigations\wave-processing-py>c:\python26\python diff.py ken-nowarp.wav ken-complex.wav 
