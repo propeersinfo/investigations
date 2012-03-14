@@ -33,7 +33,7 @@ p {
 a:visited { color: #838 !important; }
 a:hover   { color: #f33 !important; }
 */
-a         { color: #00a; }
+a         { color: #0000cc; }
 a:visited { color: #838; }
 a:hover   { color: #f33; }
 
@@ -66,7 +66,7 @@ a:hover   {
 }
 
 img.logo {
-	margin-top: 14px;
+	/*margin-top: 14px;*/
 	background: #222;
 }
 img.logo:hover {
