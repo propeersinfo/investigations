@@ -15,10 +15,26 @@ MAX_ARTICLES_PER_DAY = 20
 
 ########################################################
 
+# annotation for HtmlCache.get_cached_or_make_new()
+# disables caching for admin - regular users should not see admin interface
+# disables caching for dev server also to see how changes are applied
+def skip_ds_caching_for_admin(wrapped):
+    def wrapper(cls, path, renderer):
+        admin = users.is_current_user_admin()
+        use_caching = not admin and defs.PRODUCTION
+        #use_caching = True # todo: do not commit this line! for testing purposes only!
+        if use_caching:
+            return wrapped(cls, path, renderer)
+        else:
+            return renderer(), None
+    return wrapper
+
 class HtmlCache(db.Model):
     path = db.StringProperty(required=True, indexed=True)
-    updated = db.DateTimeProperty(auto_now=True, auto_now_add=True)
+    #updated = db.DateTimeProperty(auto_now=True, auto_now_add=True)
     etag = db.StringProperty(required=True)
+    # app version used when generating this cache entry
+    app_version = db.StringProperty(required=True)
     html = db.TextProperty(required=True)
 
     @classmethod
@@ -29,24 +45,27 @@ class HtmlCache(db.Model):
 
     @classmethod
     def __add(cls, path, html):
-        #if path == '/page2': raise Exception('%s' % 'stacktracing')
         etag = hashlib.sha1(html).hexdigest()
-        object = HtmlCache(path=path, html=db.Text(html, defs.HTML_ENCODING), etag=etag)
+        object = HtmlCache(path=path,
+                           html=db.Text(html, defs.HTML_ENCODING),
+                           etag=etag,
+                           app_version=defs.APP_VERSION)
         object.save()
         return object
 
     @classmethod
+    @skip_ds_caching_for_admin
     def get_cached_or_make_new(cls, path, renderer):
-        if defs.PRODUCTION or defs.USE_HTML_DB_CACHE_ON_DEV_SERVER:
-            cache = cls.__find(path=path)
-            if cache:
-                html = cache.html
-            else:
-                html = renderer()
-                cache = cls.__add(path, html)
-            return html, cache.etag
+        # returns tuple: HTML and HTML's etag
+        # todo: important: invalidate cache entry if its app version not matched
+
+        cache = cls.__find(path=path)
+        if cache:
+            html = cache.html
         else:
-            return renderer(), None
+            html = renderer()
+            cache = cls.__add(path, html)
+        return html, cache.etag
 
 ########################################################
 

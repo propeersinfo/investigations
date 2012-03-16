@@ -30,7 +30,6 @@ else:
   CANONICAL_BLOG_URL = 'http://www.sovietgroove.com'
 
 DEVSERVER = not PRODUCTION
-USE_HTML_DB_CACHE_ON_DEV_SERVER = DEVSERVER and True
 
 APP_VERSION_FOR_UNIT_TESTS = '' # important because None value causes errors in library code further
 APP_VERSION = os.getenv('CURRENT_VERSION_ID', APP_VERSION_FOR_UNIT_TESTS)

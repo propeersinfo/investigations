@@ -8,8 +8,9 @@ Major:
 - disallow non-admins to view draft articles by urls both "/slug" and "/article/1234"
 - cache: invalidate HtmlCache entries if db was updated
 - cache: invalidate cache from deployment script
-- cache: handle If-Modified-Since
+- cache: handle If-Modified-Since?
 - impl google search
+- impl google analytics
 - disallow slugs like "tag", "admin", "page2", "rss"
 - '/rss' is incompatible with greader (but it's ok with feedburner)
 - consider storing main slug in Article objects and additional slugs in a special table of redirects

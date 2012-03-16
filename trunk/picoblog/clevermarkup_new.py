@@ -109,17 +109,23 @@ def handle_custom_tag_playlist(input):
     return re.sub(regex, replace, input)
 
 def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = True):
+    def handle_custom_tags(input):
+        def replacer(m):
+            funcs = [ handle_custom_tag_image, handle_custom_tag_mp3, handle_custom_tag_youtube, handle_custom_tag_mixcloud, handle_custom_tag_soundcloud_track, handle_custom_tag_soundcloud_playlist, handle_custom_tag_playlist,  ]
+            #funcs = []
+            html_orig = m.group(0)
+            for func in funcs:
+                html_new = func(html_orig)
+                if html_new != html_orig:
+                    return html_new
+            return html_orig
+        return re.sub(r'\[.*\]', replacer, input)
+
     html = markup_text
     if rich_markup and recognize_links:
         html = handle_custom_tag_http_link(html)
     if rich_markup:
-        html = handle_custom_tag_image(html)
-        html = handle_custom_tag_mp3(html)
-        html = handle_custom_tag_playlist(html)
-        html = handle_custom_tag_youtube(html)
-        html = handle_custom_tag_mixcloud(html)
-        html = handle_custom_tag_soundcloud_track(html)
-        html = handle_custom_tag_soundcloud_playlist(html)
+        html = handle_custom_tags(html)
     html = html.replace('\n', '<br>\n') # NB: the last transformation
     return html
 
