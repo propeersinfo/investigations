@@ -2,7 +2,7 @@
  
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset={{defs.HTML_ENCODING}}"/>
 <title>{% block title %}{% endblock %} - Soviet Groove</title>
 
 <!--
@@ -93,7 +93,7 @@
 			<li><a href="/admin/article/new">add article</a></li>
 			<li><a href="/admin/">admin</a></li>
 			<li><a href="/rss" style="font-variant:small-caps;">rss</a> (<a href="/rss?format=plain">plain</a>)</li>
-			{% if dev_server %}
+			{% if defs.DEVSERVER %}
 			<li><a href="http://www.sovietgroove.com/">production &uarr;</a></li>
 			{% else %}
 			<li><a href="http://localhost/">dev server</a></li>

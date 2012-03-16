@@ -2,7 +2,7 @@
 
 {% block main %}
 
-{% if dev_server %}
+{% if defs.DEVSERVER %}
     <script>
     function confirm_db_emptying() {
         return confirm('Really empty DB?')
@@ -47,7 +47,7 @@ div { margin: 10px; }
 	</form>
 </div>
 
-<div class="row new">
+<div class="row">
 	<form method="POST" action="/admin/setup-basic-tags">
 	<input type="submit" value="Categorize tags (auto)">
 	</form>
@@ -55,6 +55,12 @@ div { margin: 10px; }
 
 <div class="row">
 	<a href="/admin/tags">Manage tags</a>
+</div>
+
+<div class="row new">
+    <form method="POST" action="/admin/clear-cache">
+        <input type="submit" value="Clear DS caches">
+    </form>
 </div>
 
 <div class="row new">

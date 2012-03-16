@@ -10,7 +10,7 @@
         <div class="row comment">
     		<div class="width_2"><p>
 				{% if comment.blog_owner %}
-					<span title="#{{comment.id}} {{comment.published_date|date:"r"}}">{{blog_owner_name}}</span>
+					<span title="#{{comment.id}} {{comment.published_date|date:"r"}}">{{defs.BLOG_OWNER}}</span>
 				{% else %}
 					{% if not comment.author %}
 						<span title='#{{comment.id}} {{comment.published_date|date:"r"}}'>Anonymous</span>
@@ -45,7 +45,7 @@
 			</p></div>
     		<div class="width_6"><p>
 				{% if user_info.is_admin %}
-				<span class="input-label"><label>{{blog_owner}}</label></span>
+				<span class="input-label"><label>{{defs.BLOG_OWNER}}</label></span>
 				{% else %}
     			<input name="author" type="text" value="{{comment_author|escape}}" style="width: 98%;"></input>
 				{% endif %}

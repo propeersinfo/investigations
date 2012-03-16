@@ -1,5 +1,5 @@
 import datetime
-import sys
+import hashlib
 from google.appengine.api import memcache, users
 
 from google.appengine.ext import db
@@ -17,7 +17,9 @@ MAX_ARTICLES_PER_DAY = 20
 
 class HtmlCache(db.Model):
     path = db.StringProperty(required=True, indexed=True)
-    html = db.TextProperty()
+    updated = db.DateTimeProperty(auto_now=True, auto_now_add=True)
+    etag = db.StringProperty(required=True)
+    html = db.TextProperty(required=True)
 
     @classmethod
     def __find(cls, path):
@@ -27,21 +29,24 @@ class HtmlCache(db.Model):
 
     @classmethod
     def __add(cls, path, html):
-        object = HtmlCache(path=path, html=db.Text(html, 'utf-8'))
+        #if path == '/page2': raise Exception('%s' % 'stacktracing')
+        etag = hashlib.sha1(html).hexdigest()
+        object = HtmlCache(path=path, html=db.Text(html, defs.HTML_ENCODING), etag=etag)
         object.save()
+        return object
 
     @classmethod
     def get_cached_or_make_new(cls, path, renderer):
-      if defs.DEVSERVER or users.is_current_user_admin():
-        return renderer()
-      else:
-        cache = cls.__find(path=path)
-        if cache:
-            html = cache.html
+        if defs.PRODUCTION or defs.USE_HTML_DB_CACHE_ON_DEV_SERVER:
+            cache = cls.__find(path=path)
+            if cache:
+                html = cache.html
+            else:
+                html = renderer()
+                cache = cls.__add(path, html)
+            return html, cache.etag
         else:
-            html = renderer()
-            cls.__add(path, html)
-        return html
+            return renderer(), None
 
 ########################################################
 

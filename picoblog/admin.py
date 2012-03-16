@@ -35,7 +35,7 @@ class ShowAdminMainPageHandler(request.BlogRequestHandler):
         ds_dev = '/_ah/admin/datastore'
         ds = ds_prod if defs.PRODUCTION else ds_dev
         template_vars = {
-            'dev_server': defs.DEVSERVER,
+            'defs': defs,
             'datastore_url': ds
         }
         self.response.out.write(self.render_template('admin-main.html',
@@ -151,9 +151,15 @@ class ResetTagCounters(request.BlogRequestHandler):
 
 class EmptyDB(request.BlogRequestHandler):
     def post(self):
-        for cls in [ Article, Slug, Comment, ArticleTag, FontRenderCache ]:
+        for cls in [ Article, Slug, Comment, ArticleTag, FontRenderCache, HtmlCache ]:
             empty_table(cls.__name__)
         TagCloud.reset()
+        self.redirect('/admin/')
+
+class ClearCaches(request.BlogRequestHandler):
+    def post(self):
+        for cls in [ FontRenderCache, HtmlCache ]:
+            empty_table(cls.__name__)
         self.redirect('/admin/')
 
 def reset_all_tag_counters():
@@ -365,6 +371,7 @@ application = webapp.WSGIApplication(
          ('/admin/slugify/(.*)$', Slugify),
          ('/admin/slugs/?$', ListSlugs),
          ('/admin/headers', ShowHeaders),
+         ('/admin/clear-cache', ClearCaches),
          #('/admin/show-mtime', ShowMtime)
          ],
         debug=True)

@@ -311,14 +311,14 @@ def fix_mixcloud(root):
             s = str(object)
             m = re.search(r'http://www.mixcloud.com/zencd/[^/]+/', s)
             if m:
-                object.replaceWith("[%s]" % m.group(0))
+                object.replaceWith("\n[%s]\n" % m.group(0))
 
     # form 2: www.mixcloud.com/api/1/cloudcast/zencd/ukrainian-gro
     for object in root.findAll("object"):
         if object:
             m = re.search(r'mixcloud.com/api/1/cloudcast/([^/]+)/([^/\.]+)', str(object))
             if m:
-                object.replaceWith("[http://mixcloud.com/%s/%s/]" % (m.group(1), m.group(2)))
+                object.replaceWith("\n[http://mixcloud.com/%s/%s/]\n" % (m.group(1), m.group(2)))
 
     # form 3: feed=http://www.mixcloud.com/zencd/qaya-selection/&
     for object in root.findAll("object"):
@@ -327,7 +327,7 @@ def fix_mixcloud(root):
             s = urllib2.unquote(s)
             m = re.search(r'feed=http://www\.mixcloud\.com/([^/]+)/([^/\.&]+)', s)
             if m:
-                object.replaceWith("[http://mixcloud.com/%s/%s/]" % (m.group(1), m.group(2)))
+                object.replaceWith("\n[http://mixcloud.com/%s/%s/]\n" % (m.group(1), m.group(2)))
 
 def get_slug(file, date):
   if file.find('@') >= 0:

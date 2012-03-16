@@ -1,13 +1,13 @@
 import cgi
 import random
 import urllib2
-from google.appengine.ext import webapp
-
-import defs
+import google.appengine.ext.webapp.template as tpl
 
 from typographus import Typographus
 
-register = webapp.template.create_template_register()
+import defs
+
+register = tpl.create_template_register()
 
 
 # print a tag
@@ -52,3 +52,18 @@ def static_resource(file):
     ver = defs.APP_VERSION if defs.PRODUCTION else str(random.random())
     return '/static/%s?v=%s' % (file, urllib2.quote(ver, safe=''))
 register.simple_tag(static_resource)
+
+
+@register.filter(name='wld')
+def wld(result):
+  if result == 1 : return "win"
+  if result == 0 : return "loss"
+  if result == 0.5 : return "draw"
+  return "unknown"
+
+
+@register.filter(name='typographus')
+def typographus(s):
+  if not isinstance(s, unicode):
+    s = unicode(s)
+  return Typographus().process(s)
