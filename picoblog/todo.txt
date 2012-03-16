@@ -23,6 +23,7 @@ Major:
 + find how to copy dev db onto production completely
 
 Normal:
+- cache: try not to fetch heavy HtmlCache.html property if etag is matched (find how)
 - cache: limit size of HtmlCache somehow
 - playlist player not working http://localhost/strange-things
 - [dewplaylist] not handled: http://localhost/20100330-the-last-portion-of-qaya.html
