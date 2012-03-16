@@ -4,6 +4,7 @@ Check list:
 Critical:
 
 Major:
+- markup: rewrite [tag] handling to regex callbacks
 - disallow non-admins to view draft articles by urls both "/slug" and "/article/1234"
 - cache: invalidate HtmlCache entries if db was updated
 - cache: invalidate cache from deployment script
@@ -36,7 +37,7 @@ Normal:
 - extra stuff in imported comments at http://localhost/20110804-aura-urziceanu-1974.html
 - wrong title imported for http://localhost/20100331-a-href-sovietgroove-blog-show-dml-8737781-syabry-1986-a.html
 - keep TagCloud in memcache forever but reset it when a tag changed in datastore
-- async e-mail sending
+- async e-mail sending (or it is asynch already?)
 - update memcached tag cloud on article change
 + make dewplayer never expire! +ETag
 - let admin distinguish draft articles visually
