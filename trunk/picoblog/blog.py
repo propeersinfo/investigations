@@ -1,39 +1,22 @@
-# $Id$
-
-"""
-Google App Engine Script that handles display of the published
-items in the blog.
-"""
 import urllib
-
-__docformat__ = 'restructuredtext'
-
-# -----------------------------------------------------------------------------
-# Imports
-# -----------------------------------------------------------------------------
-
 import cgi
 
-# Google AppEngine imports
-from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
 from models import *
-#from rst import rst2html
 import defs
 import request
 import utils
-#import simplemarkup as markup
 import clevermarkup as markup
 from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo, NoPagingPageInfo
 from userinfo import UserInfo
 
-from google.appengine.ext.webapp import template
-template.register_template_library('my_tags')
+HTTP_NOT_MODIFIED = 304
 
 # decorators
 
+# HTML generation time will be printed in the bottom
 # Apply it to RequestHandler.get() methods
 def show_page_load_time(fun):
     def decorator(self, *args, **kwargs):
@@ -42,110 +25,33 @@ def show_page_load_time(fun):
         plt.print_time(self.response.out)
     return decorator
 
+# HTML cache will be asked before to generate content
+# ETag and 304 are implemented here
 # Apply it to methods like RequestHandler.produce_html()
 def cacheable(fun):
     def decorator(self, *args, **kwargs):
-        return HtmlCache.get_cached_or_make_new(self.request.path, lambda: fun(self, *args, **kwargs))
+        html, etag = HtmlCache.get_cached_or_make_new(self.request.path, lambda: fun(self, *args, **kwargs))
+        serve = True
+        if etag and 'If-None-Match' in self.request.headers:
+            # etags are being sent via If-None-Match
+            etags = [x.strip('" ') for x in self.request.headers['If-None-Match'].split(',')]
+            if etag in etags:
+                serve = False
+        if etag: self.response.headers['ETag'] = '"%s"' % (etag,)
+        if serve:
+            self.response.set_status(200)
+            return html
+        else:
+            self.response.set_status(HTTP_NOT_MODIFIED)
+            return ''
     return decorator
 
-
-# -----------------------------------------------------------------------------
-# Classes
-# -----------------------------------------------------------------------------
-
-#class DateCount(object):
-#    """
-#    Convenience class for storing and sorting year/month counts.
-#    """
-#    def __init__(self, date, count):
-#        self.date = date
-#        self.count = count
-#
-#    def __cmp__(self, other):
-#        return cmp(self.date, other.date)
-#
-#    def __hash__(self):
-#        return self.date.__hash__()
-#
-#    def __str__(self):
-#        return '%s(%d)' % (self.date, self.count)
-#
-#    def __repr__(self):
-#        return '<%s: %s>' % (self.__class__.__name__, str(self))
-#
-#class TagCount(object):
-#    """
-#    Convenience class for storing and sorting tags and counts.
-#    """
-#    def __init__(self, tag, count):
-#        self.css_class = ""
-#        self.count = count
-#        self.tag = tag
 
 class AbstractPageHandler(request.BlogRequestHandler):
     """
     Abstract base class for all handlers in this module. Basically,
     this class exists to consolidate common logic.
     """
-
-#    def get_tag_counts(self):
-#        """
-#        Get tag counts and calculate tag cloud frequencies.
-#
-#        :rtype: list
-#        :return: list of ``TagCount`` objects, in random order
-#        """
-#        tag_counts = Article.get_all_tags()
-#        result = []
-#        if tag_counts:
-#            maximum = max(tag_counts.values())
-#
-#            for tag, count in tag_counts.items():
-#                tc = TagCount(tag, count)
-#
-#                # Determine the popularity of this term as a percentage.
-#
-#                percent = math.floor((tc.count * 100) / maximum)
-#
-#                # determine the CSS class for this term based on the percentage
-#
-#                if percent <= 20:
-#                    tc.css_class = 'tag-cloud-tiny'
-#                elif 20 < percent <= 40:
-#                    tc.css_class = 'tag-cloud-small'
-#                elif 40 < percent <= 60:
-#                    tc.css_class = 'tag-cloud-medium'
-#                elif 60 < percent <= 80:
-#                    tc.css_class = 'tag-cloud-large'
-#                else:
-#                    tc.css_class = 'tag-cloud-huge'
-#
-#                result.append(tc)
-#
-#        random.shuffle(result)
-#        return result
-#
-#    def get_month_counts(self):
-#        """
-#        Get date counts, sorted in reverse chronological order.
-#
-#        :rtype: list
-#        :return: list of ``DateCount`` objects
-#        """
-#        hash = Article.get_all_datetimes()
-#        datetimes = hash.keys()
-#        date_count = {}
-#        for dt in datetimes:
-#            just_date = datetime.date(dt.year, dt.month, 1)
-#            try:
-#                date_count[just_date] += hash[dt]
-#            except KeyError:
-#                date_count[just_date] = hash[dt]
-#
-#        dates = date_count.keys()
-#        dates.sort()
-#        dates.reverse()
-#        return [DateCount(date, date_count[date]) for date in dates]
 
     def augment_articles(self, articles, url_prefix, produce_html=True):
         for article in articles:
@@ -174,41 +80,6 @@ class AbstractPageHandler(request.BlogRequestHandler):
             comment.repliable = (comment.id == comment.replied_comment_id)
             comments.append(comment)
         article.comments = comments
-    
-#    def augment_comments_for(self, article):
-#        comments = []
-#        for comment in article.comment_set:
-#            comment.html = markup.markup2html(markup_text=comment.text,
-#                                                    rich_markup=False,
-#                                                    recognize_links=comment.blog_owner)
-#            comments.append(comment)
-#        article.comments = comments
-
-#    def _augment_comments_for(self, article):
-#        class Group(list):
-#            def __init__(self, comment):
-#                super(list, self).__init__()
-#                self.id = comment.id
-#                self.append(comment)
-#            def __hash__(self):
-#                return self.id
-#        hash = {}
-#        groups = []
-#        for comment in article.comment_set:
-#            comment.html = markup.markup2html(markup_text=comment.text,
-#                                                    rich_markup=False,
-#                                                    recognize_links=comment.blog_owner)
-#            if comment.replied_comment and hash.has_key(comment.replied_comment.id):
-#                #raise Exception("adding to hash")
-#                hash[comment.replied_comment.id].append(comment)
-#            else:
-#                gr = Group(comment)
-#                hash[comment.id] = gr
-#                groups.append(gr)
-#        article.comments = [] # article.comment_set cannot be adjusted
-#        for gr in groups:
-#            article.comments.extend(gr)
-#        #raise Exception(len(article.comments))
 
     def render_articles(self,
                         page_info,
@@ -219,8 +90,6 @@ class AbstractPageHandler(request.BlogRequestHandler):
         if not isinstance(page_info, PageInfoBase):
             raise Exception("Use 'page_info' instead of 'articles'; actual = %s" % type(page_info.articles))
 
-        #time_1 = datetime.datetime.now()
-
         articles = page_info.articles
 
         url_prefix = 'http://' + request.environ['SERVER_NAME']
@@ -229,50 +98,19 @@ class AbstractPageHandler(request.BlogRequestHandler):
             url_prefix += ':%s' % port
 
         self.augment_articles(articles, url_prefix)
-        #self.augment_articles(recent, url_prefix, produce_html=False)
-
-        #last_updated = last_updated = (articles[0].published_date) if (articles) else (datetime.datetime.now())
-
-        blog_url = url_prefix
-        tag_path = '/' + defs.TAG_URL_PATH
-        tag_url = url_prefix + tag_path
-        date_path = '/' + defs.DATE_URL_PATH
-        date_url = url_prefix + date_path
-        media_path = '/' + defs.MEDIA_URL_PATH
-        media_url = url_prefix + media_path
-
         user_info = UserInfo(request)
-        
-        #raise Exception('tc: %s' % TagCloud.get())
 
         template_variables = {
-            'blog_name'    : defs.BLOG_NAME,
-            'canonical_blog_url' : defs.CANONICAL_BLOG_URL,
-            'blog_owner'   : defs.BLOG_OWNER,
+            'defs'         : defs,
             'current_path' : cgi.escape(request.path),
             'articles'     : articles,
-            'tag_list'     : None, #self.get_tag_counts(),
-            'date_list'    : None, #self.get_month_counts(),
-            'version'      : '0.3',
-            #'last_updated' : last_updated,
-            'blog_path'    : '/',
-            'blog_url'     : blog_url,
-            'archive_path' : '/' + defs.ARCHIVE_URL_PATH,
-            'tag_path'     : tag_path,
-            'tag_url'      : tag_url,
-            'date_path'    : date_path,
-            'date_url'     : date_url,
-            'rss2_path'    : '/' + defs.RSS2_URL_PATH,
-            'recent'       : recent,
             'user_info'    : user_info,
-            'blog_owner_name' : defs.BLOG_OWNER,
             'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
             'prev_page_url'   : page_info.prev_page_url,
             'next_page_url'   : page_info.next_page_url,
             'current_page_1'  : page_info.current_page,
             'pages_total'     : page_info.pages_total,
             'tag_cloud'       : TagCloud.get(),
-            'dev_server'      : not defs.PRODUCTION
         }
 
         if additional_template_variables:
@@ -455,9 +293,6 @@ class NotFoundPageHandler(AbstractPageHandler):
 # Main program
 # -----------------------------------------------------------------------------
 
-from google.appengine.ext.webapp import template
-template.register_template_library('tags.mytags')
-
 webapp.template.register_template_library('my_tags')
 
 application = webapp.WSGIApplication(
@@ -466,15 +301,12 @@ application = webapp.WSGIApplication(
      ('/tag/?$', AllTagsTagHandler),
      ('/tag/([^/]+)/?$', ArticlesByTagHandler),
      ('/tag/([^/]+)/page(\d+)/?$', ArticlesByTagHandler),
-     #('/date/(\d\d\d\d)-(\d\d)/?$', ArticlesForMonthHandler),
      ('/archive/(\d+)?$', ArchivePageHandler),
      ('/rss/?$', RssArticlesHandler),
      ('/comment/add/(\d+)$', AddCommentHandler),
-     #('/.*$', NotFoundPageHandler),
      ('/article/(\d+)$', ArticleByIdHandler),
      ('/(.*)$', ArticleBySlugHandler),
      ],
-
     debug=True)
 
 def main():

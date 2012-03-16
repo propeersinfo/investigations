@@ -1,5 +1,3 @@
-import cgi
-import sys
 import re
 import unittest
 import urllib2
@@ -283,6 +281,17 @@ class TestMarkupTagImage(unittest.TestCase):
         self.assertTrue(MarkupTagImage.is_presented_in_markup("[111.png]"))
         self.assertTrue(MarkupTagImage.is_presented_in_markup("[111.gif]"))
         self.assertFalse(MarkupTagImage.is_presented_in_markup("[111jpg]"))
+
+class TestSpacesAfterBR(unittest.TestCase):
+    def test_some(self):
+        markup = '''
+01. track 01
+02. track 02
+03. track 03
+
+xxx
+'''
+        print SimpleMarkup(False).generate_html(markup)
 
 if __name__ == '__main__':
     unittest.main()
