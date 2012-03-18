@@ -1,3 +1,26 @@
+//function comment_form_submit(form) {
+//    //alert($(form.text))
+//    try {
+//        alert($(form)[0].effect)
+//        jQuery(form.text).effect("highlight", {}, 3000);
+//    } catch(e) {
+//        //alert(e)
+//        return false;
+//    }
+//    return false;
+//}
+
+//$(document).ready(function() {
+//    var form = $('#comment-form');
+//    form.submit(function() {
+//        q = form.find('#comment-text');
+//        if(q.length == 1) {
+//            q.effect("highlight", {}, 3000);
+//        }
+//        return false;
+//    })
+//})
+
 ////////////////////////////////////////////////////
 // replace youtube images with video clips
 ////////////////////////////////////////////////////

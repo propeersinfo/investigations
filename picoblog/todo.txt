@@ -4,10 +4,11 @@ Check list:
 Critical:
 
 Major:
-- markup: rewrite [tag] handling to regex callbacks
-- disallow non-admins to view draft articles by urls both "/slug" and "/article/1234"
+- install uservoice.com widget
+- make 'beta' notification
+- import: implement "add article from myopera"
 - cache: invalidate HtmlCache entries if db was updated
-- cache: invalidate cache from deployment script
+- cache: invalidate cache entries created by previous version of the app
 - cache: handle If-Modified-Since?
 - impl google search
 - impl google analytics
@@ -15,6 +16,8 @@ Major:
 - '/rss' is incompatible with greader (but it's ok with feedburner)
 - consider storing main slug in Article objects and additional slugs in a special table of redirects
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
+? markup: rewrite [tag] handling to regex callbacks - ineffective it seems
++ disallow non-admins to view draft articles by urls both "/slug" and "/article/1234"
 + cache pre-rendered pages + front pages + archive
 + do just a redirect in handler of "/article/1234"
 + cache: disable cache read/write for user=admin
@@ -25,6 +28,7 @@ Major:
 + find how to copy dev db onto production completely
 
 Normal:
+- impl subscription by email
 - cache: try not to fetch heavy HtmlCache.html property if etag is matched (find how)
 - cache: limit size of HtmlCache somehow
 - playlist player not working http://localhost/strange-things

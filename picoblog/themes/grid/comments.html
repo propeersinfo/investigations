@@ -10,12 +10,12 @@
         <div class="row comment">
     		<div class="width_2"><p>
 				{% if comment.blog_owner %}
-					<span title="#{{comment.id}} {{comment.published_date|date:"r"}}">{{defs.BLOG_OWNER}}</span>
+					<span>{{defs.BLOG_OWNER}}</span>
 				{% else %}
 					{% if not comment.author %}
-						<span title='#{{comment.id}} {{comment.published_date|date:"r"}}'>Anonymous</span>
+						<span>Anonymous</span>
 					{% else %}
-						<span title='#{{comment.id}} {{comment.published_date|date:"r"}}'>{{comment.author}}</span>
+						<span>{{comment.author}}</span>
 					{% endif %}
 				{% endif %}
 				<br>
@@ -38,7 +38,7 @@
 
 <!-- new comment form -->
         <p><br/><b>Your comment:</b></p>
-        <form action="/comment/add/{{article.id}}" method="post" accept-charset="UTF-8">
+        <form id="comment-form" action="/comment/add/{{article.id}}" method="post" accept-charset="{{defs.HTML_ENCODING}}">
         <div class="row">
     		<div class="width_2"><p>
     			Name
@@ -47,7 +47,7 @@
 				{% if user_info.is_admin %}
 				<span class="input-label"><label>{{defs.BLOG_OWNER}}</label></span>
 				{% else %}
-    			<input name="author" type="text" value="{{comment_author|escape}}" style="width: 98%;"></input>
+    			<input name="author" type="text" value="{{comment_author|escape}}" style="width: 98%;"/>
 				{% endif %}
 			</p></div>
         </div>
@@ -56,7 +56,7 @@
     			&nbsp;
 			</p></div>
     		<div class="width_6"><p>
-    			<textarea name="text" rows="8" style="width: 98%;"></textarea>
+    			<textarea id="comment-text" name="text" rows="8" style="width: 98%;"></textarea>
 			</p></div>
         </div>
         <div class="row">

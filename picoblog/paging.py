@@ -31,6 +31,8 @@ class EmptyPageInfo(PageInfoBase):
     self.articles = []
     self.prev_page_url = None
     self.next_page_url = None
+    self.current_page = 1
+    self.pages_total = 1
 
 class SinglePageInfo(PageInfoBase):
   def __init__(self, article):

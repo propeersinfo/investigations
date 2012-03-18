@@ -12,10 +12,9 @@ import clevermarkup as markup
 from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo, NoPagingPageInfo
 from userinfo import UserInfo
 
-HTTP_NOT_MODIFIED = 304
+HTTP_304_NOT_MODIFIED = 304
 
-# decorators
-
+# decorator
 # HTML generation time will be printed in the bottom
 # Apply it to RequestHandler.get() methods
 def show_page_load_time(fun):
@@ -25,8 +24,10 @@ def show_page_load_time(fun):
         plt.print_time(self.response.out)
     return decorator
 
+# decorator
 # HTML cache will be asked before to generate content
 # ETag and 304 are implemented here
+# HTTP response code is set here
 # Apply it to methods like RequestHandler.produce_html()
 def cacheable(fun):
     def decorator(self, *args, **kwargs):
@@ -42,22 +43,16 @@ def cacheable(fun):
             self.response.set_status(200)
             return html
         else:
-            self.response.set_status(HTTP_NOT_MODIFIED)
+            self.response.set_status(HTTP_304_NOT_MODIFIED)
             return ''
     return decorator
 
 
 class AbstractPageHandler(request.BlogRequestHandler):
-    """
-    Abstract base class for all handlers in this module. Basically,
-    this class exists to consolidate common logic.
-    """
-
     def augment_articles(self, articles, url_prefix, produce_html=True):
         for article in articles:
             if article:
                 if produce_html:
-                    #article.html = rst2html(article.body)
                     article.html = 'article.html is not available anymore'
                     article.complex_html = markup.markup2html(article.body, for_comment=False, article_id=article.id)
                 article.path = utils.get_article_path(article)
@@ -98,6 +93,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             url_prefix += ':%s' % port
 
         self.augment_articles(articles, url_prefix)
+
         user_info = UserInfo(request)
 
         template_variables = {
@@ -121,6 +117,11 @@ class AbstractPageHandler(request.BlogRequestHandler):
     def get_recent(self):
         return []
 
+    def do_alternate_response_code(self, http_response_code):
+        self.response.set_status(http_response_code)
+        template = '%d.html' % http_response_code
+        self.response.out.write(self.render_articles(EmptyPageInfo(), self.request, [], template))
+
 class FrontPageHandler(AbstractPageHandler):
     @show_page_load_time
     def get(self, *args, **kwargs):
@@ -134,27 +135,37 @@ class FrontPageHandler(AbstractPageHandler):
         return self.render_articles(page_info, self.request, self.get_recent())
 
 class AllTagsTagHandler(AbstractPageHandler):
-    def get(self):
-        tag_cloud = TagCloud.get()
-
+    @classmethod
+    def augment_tag_objects_for_weights(cls, tags):
         # augment tag objects with info about their popularity weights
         counts_and_weights = [
-            [ 4, 3 ],
-            [ 2, 2 ],
-            [ 0, 1 ],
+            { 'count': 4, 'weight': 3 },
+            { 'count': 2, 'weight': 2 },
+            { 'count': 0, 'weight': 1 },
         ]
-        for tag in tag_cloud.all_tags:
+        for tag in tags:
             cnt = tag.counter
             for cnw in counts_and_weights:
-                if cnt >= cnw[0]:
-                    tag.weight = cnw[1]
+                if cnt >= cnw['count']:
+                    tag.weight = cnw['weight']
                     break
+
+    @cacheable
+    def render_html(self):
+        tag_cloud = TagCloud.get()
+
+        # todo: try to avoid this augmentation each time
+        self.__class__.augment_tag_objects_for_weights(tag_cloud.all_tags)
 
         tpl_vars = {
             'tag_cloud' : tag_cloud,
             'user_info' : UserInfo(self.request),
-        }
-        self.response.out.write(self.render_template('tag-listing.html', tpl_vars))
+            }
+        return self.render_template('tag-listing.html', tpl_vars)
+
+    @show_page_load_time
+    def get(self):
+        self.response.out.write(self.render_html())
 	
 class ArticlesByTagHandler(AbstractPageHandler):
     @show_page_load_time
@@ -179,44 +190,27 @@ class ArticlesByTagHandler(AbstractPageHandler):
                                     additional_template_variables=tpl_vars)
 
 
-#class ArticlesForMonthHandler(AbstractPageHandler):
-#    """
-#    Handles requests to display a set of articles that were published
-#    in a given month.
-#    """
-#    def get(self, year, month):
-#        articles = Article.all_for_month(int(year), int(month))
-#        self.response.out.write(self.render_articles(articles,
-#                                                     self.request,
-#                                                     self.get_recent()))
-
 class ArticleByIdHandler(AbstractPageHandler):
     def get(self, id):
         article = Article.get(int(id))
         if article:
             self.redirect(utils.get_article_path(article), permanent=True)
         else:
-            self.do_404()
-
-    def do_404(self):
-        article = None
-        template = '404.html'
-        self.response.set_status(404)
-        additional_template_variables = {'single_article': article}
-        self.response.out.write(self.render_articles(SinglePageInfo(article),
-                                self.request,
-                                self.get_recent(),
-                                template,
-                                additional_template_variables))
+            self.do_alternate_response_code()
 
 class ArticleBySlugHandler(ArticleByIdHandler):
     @show_page_load_time
     def get(self, slug):
         slug_obj = Slug.find_article_by_slug(slug_string = slug)
         if slug_obj:
-            self.response.out.write(self.produce_html(slug_obj.article))
+            article = slug_obj.article
+            if article.draft and not users.is_current_user_admin():
+                self.do_alternate_response_code(403)
+            else:
+                # don't set response code here - it gonna be set in cacheable() decorator
+                self.response.out.write(self.produce_html(article))
         else:
-            self.do_404()
+            self.do_alternate_response_code(404)
 
     @cacheable
     def produce_html(self, article):
@@ -266,12 +260,11 @@ class AddCommentHandler(AbstractPageHandler):
         article = Article.get(article_id)
 
         author = cgi.escape(self.request.get('author')).strip()
-        #if author == '' and not users.is_current_user_admin():
-        #    author = 'Anonymous'
+        text = cgi.escape(self.request.get('text')).strip()
 
         comment = Comment(article = article,
                           author = author,
-                          text = cgi.escape(self.request.get('text')),
+                          text = text,
                           blog_owner = users.is_current_user_admin(),
                           replied_comment_id = self.get_replied_comment_id())
         comment.save()
@@ -280,18 +273,6 @@ class AddCommentHandler(AbstractPageHandler):
             # e-mail sending is not set up on the dev server yet
             utils.send_mail_to_admin_about_new_comment(comment)
         self.redirect(utils.get_article_path(article))
-
-class NotFoundPageHandler(AbstractPageHandler):
-    def get(self):
-        self.response.set_status(404)
-        self.response.out.write(self.render_articles(EmptyPageInfo(),
-                                                     self.request,
-                                                     [],
-                                                     '404.html'))
-
-# -----------------------------------------------------------------------------
-# Main program
-# -----------------------------------------------------------------------------
 
 webapp.template.register_template_library('my_tags')
 

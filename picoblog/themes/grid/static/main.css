@@ -248,3 +248,13 @@ ul.archive {
 	list-style-type: none;
 	padding-left: 0;
 }
+
+.important-notification {
+	padding: 2px;
+	text-align: center;
+	background: grey;
+	font-family: Arial, sans-serif;
+	font-size: 85%;
+	font-weight: normal;
+	color: white;
+}

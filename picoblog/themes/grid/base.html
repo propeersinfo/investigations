@@ -20,6 +20,12 @@
 </head>
 <body>
 
+{% if defs.PRODUCTION or defs.DEVSERVER %}
+<p class="important-notification">
+	The site is under testing now.
+</p>
+{% endif %}
+
 <div class="row top">
 	<div class="width_2">
 		<a href="/"><img class="logo" src="{% static_resource 'logo-transp.png' %}" alt="Soviet Groove" border="0"/></a>
@@ -77,7 +83,7 @@
 		</div>
 	</div>
 	<div class="width_3">
-		<input style="width:96%;" class="search" type="text" placeholder="search"/>
+		<input style="width:96%;" class="search" type="text" placeholder="Search not available"/>
 	</div>
 </div>
 
