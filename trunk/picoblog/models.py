@@ -15,6 +15,37 @@ MAX_ARTICLES_PER_DAY = 20
 
 ########################################################
 
+
+def notify_datastore_meta_about_put(decorated):
+    def decorator(*args, **kwargs):
+        rv = decorated(*args, **kwargs)
+        DataStoreMeta.update()
+        return rv
+    return decorator
+
+class DataStoreMeta(db.Model):
+    updated = db.DateTimeProperty(auto_now=True, auto_now_add=True)
+    #MEMCACHE_KEY = 'DataStoreMeta'
+
+    @classmethod
+    def get_time_updated(cls):
+        instance = db.Query(DataStoreMeta).get()
+        if not instance:
+            instance = DataStoreMeta()
+            instance.put()
+        return instance.updated
+
+    @classmethod
+    def update(cls):
+        instance = db.Query(DataStoreMeta).get()
+        if instance:
+            instance.updated = datetime.datetime.now()
+        else:
+            instance = DataStoreMeta()
+        instance.put()
+
+########################################################
+
 # annotation for HtmlCache.get_cached_or_make_new()
 # disables caching for admin - regular users should not see admin interface
 # disables caching for dev server also to see how changes are applied
@@ -279,6 +310,10 @@ class Article(db.Model):
             self.id = id
             self.put()
 
+    @notify_datastore_meta_about_put
+    def put(self, **kwargs):
+        return super(Article, self).put(**kwargs)
+
 
 ########################################################
 
@@ -388,6 +423,7 @@ class Slug(db.Model):
 
     @classmethod
     def assert_slug_unused(cls, slug_string):
+        # todo: try to avoid actually fetching data here
         article = cls.find_article_by_slug(slug_string)
         if article:
             raise Exception('slug %s already used' % slug_string)

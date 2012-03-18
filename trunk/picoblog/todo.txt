@@ -10,11 +10,10 @@ Major:
 - impl google search
 - impl google analytics
 - disallow slugs like "tag", "admin", "page2", "rss"
-- '/rss' is incompatible with greader (but it's ok with feedburner)
 - consider storing main slug in Article objects and additional slugs in a special table of redirects
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
 ? cache: handle If-Modified-Since?
-? markup: rewrite [tag] handling to regex callbacks - ineffective it seems
+? markup: rewrite [tag] handling to regex callbacks - this improvement is ineffective it seems
 + make 'beta' notification
 + import: implement "add one article from myopera directly"
 + disallow non-admins to view draft articles by urls both "/slug" and "/article/1234"
@@ -28,6 +27,7 @@ Major:
 + find how to copy dev db onto production completely
 
 Normal:
+- '/rss' is incompatible with greader (but it's ok with feedburner)
 - impl subscription by email
 - cache: try not to fetch heavy HtmlCache.html property if etag is matched (find how)
 - cache: limit size of HtmlCache somehow
