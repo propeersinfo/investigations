@@ -33,4 +33,4 @@ handlers:
 
 - url: /.*
   script: blog.py
-  login: admin
+  #login: admin

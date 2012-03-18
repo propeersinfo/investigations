@@ -22,7 +22,7 @@ def skip_ds_caching_for_admin(wrapped):
     def wrapper(cls, path, renderer):
         admin = users.is_current_user_admin()
         use_caching = not admin and defs.PRODUCTION
-        #use_caching = True # todo: do not commit this line! for testing purposes only!
+        #use_caching = False # todo: do not commit this line! for testing purposes only!
         if use_caching:
             return wrapped(cls, path, renderer)
         else:
