@@ -152,7 +152,7 @@ def get_content(soup):
   # invoke it *before* tags stripped
   remove_new_lines_from_certain_tags(div_content_node)
 
-  strip_tags(div_content_node, valid_tags=['br', 'a', 'object', 'param', 'embed'])
+  strip_tags(div_content_node, valid_tags=['br', 'a', 'blockquote', 'object', 'param', 'embed'])
 
   replace_brs(div_content_node)
 
@@ -277,16 +277,16 @@ def fix_image(root):
 def fix_youtube(root):
     # form 1: <object>
     for tag in root.findAll("object"):
-        m = re.search(r'http://www.youtube.com/v/[^&\"]+', str(tag))
+        m = re.search(r'youtube.com/v/([^&%\"\']+)', str(tag))
         if m:
-            tag.replaceWith("\n[%s]" % m.group(0))
+            tag.replaceWith("\n[http://youtube.com/v/%s]" % m.group(1))
     # form 2: <iframe>
     # <iframe allowfullscreen="allowfullscreen" src="http://embed.myopera.com/video/?url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DjN4BDPZq8ww&amp;height=344&amp;width=425" frameborder="0" height="350" scrolling="no" width="431">
     # ...watch%3Fv%3DjN4BDPZq8ww&...
     for tag in root.findAll("iframe"):
       if hasattr(tag, 'src'):
         src = tag['src']
-        m = re.search('youtube.*watch%3Fv%3D([^&]+)', src)
+        m = re.search('youtube.*watch%3Fv%3D([^&%\"\']+)', src)
         if m:
           #print m.group(1)
           #print src
@@ -330,20 +330,30 @@ def fix_mixcloud(root):
                 object.replaceWith("\n[http://mixcloud.com/%s/%s/]\n" % (m.group(1), m.group(2)))
 
 def get_slug(file, date):
-  if file.find('@') >= 0:
-    return "entry-%04d-%02d-%02d" % (int(date.year), int(date.month), int(date.day))
-  else:
-    return last_file_name(file)
+    if file.startswith('http'):
+        return re.sub(r'.*/', '', file)
+    elif file.find('@') >= 0:
+        return "entry-%04d-%02d-%02d" % (int(date.year), int(date.month), int(date.day))
+    else:
+        return last_file_name(file)
+
 
 def parse_file(opera_blog_post_file):
-  soup = BeautifulSoup(read_file(opera_blog_post_file))
-  date = parse_date(soup)
-  return {'title' : parse_title(soup),
-          'slug' : get_slug(opera_blog_post_file, date),
-          'date' : date,
-          'tags' : parse_tags(soup),
-          'content' : get_content(soup),
-          'comments' : get_comments(soup)}
+    if opera_blog_post_file.startswith('http'):
+        import urllib2
+        html = urllib2.urlopen(opera_blog_post_file).read()
+    else:
+        html = read_file(opera_blog_post_file)
+    soup = BeautifulSoup(html)
+    date = parse_date(soup)
+    slug = get_slug(opera_blog_post_file, date)
+    #raise Exception('%s' % slug)
+    return {'title': parse_title(soup),
+            'slug': slug,
+            'date': date,
+            'tags': parse_tags(soup),
+            'content': get_content(soup),
+            'comments': get_comments(soup)}
 
 if __name__ == '__main__':
     file = 'gintarine-pora-75'

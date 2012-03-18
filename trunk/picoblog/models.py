@@ -385,3 +385,9 @@ class Slug(db.Model):
 
     def save(self):
         self.put()
+
+    @classmethod
+    def assert_slug_unused(cls, slug_string):
+        article = cls.find_article_by_slug(slug_string)
+        if article:
+            raise Exception('slug %s already used' % slug_string)

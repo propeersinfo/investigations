@@ -336,12 +336,18 @@ class ShowHeaders(request.BlogRequestHandler):
             self.response.out.write('%s: %s\n<br>' % (key, self.request.headers[key]))
         self.response.out.write('\n<br>%s' % self.request.body)
 
-#class ShowMtime(request.BlogRequestHandler):
-#    def get(self):
-#        for f in [ 'admin.py', 'blog.py' ]:
-#            path = os.path.join(os.getcwd(), f)
-#            mtime = os.stat(path).st_mtime
-#            self.println('%s %s' % (path, mtime))
+class MemcacheTest(request.BlogRequestHandler):
+    def get(self):
+        import memcache_test
+        memcache_test.update_memcache(self.response.out)
+
+class ImportantArticleFromURL(request.BlogRequestHandler):
+    def post(self):
+        from operablogimport.importdata import import_file
+        url = self.request.get('url')
+        article = import_file(url)
+        #self.response.out.write('something imported: %s' % article)
+        self.redirect(utils.get_article_url(article))
 
 # -----------------------------------------------------------------------------
 # Functions
@@ -372,11 +378,13 @@ application = webapp.WSGIApplication(
          ('/admin/slugs/?$', ListSlugs),
          ('/admin/headers', ShowHeaders),
          ('/admin/clear-cache', ClearCaches),
-         #('/admin/show-mtime', ShowMtime)
+         ('/admin/memcache-test', MemcacheTest),
+         ('/admin/import-article-from-url', ImportantArticleFromURL)
          ],
         debug=True)
 
 def main():
+    #logging.getLogger().setLevel(logging.DEBUG)
     util.run_wsgi_app(application)
 
 if __name__ == "__main__":

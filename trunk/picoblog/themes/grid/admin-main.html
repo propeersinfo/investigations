@@ -30,9 +30,16 @@ div { margin: 10px; }
 </style>
 
 <div class="row new">
-	<form method="GET" action="/importdata/">
+	<form method="GET" action="/admin/importdata/">
 	<input type="submit" value="Import articles from Opera">
 	</form>
+</div>
+
+<div class="row new">
+    <form method="POST" action="/admin/import-article-from-url">
+    	<input name="url" value="" style="width:600px;">
+        <input type="submit" value="Import">
+    </form>
 </div>
 
 <div class="new row">
