@@ -16,12 +16,12 @@ handlers:
   static_files: static/favicon.ico
   upload: static/favicon.ico
 
-- url: /admin.*
-  script: admin.py
+- url: /admin/importdata/.*
+  script: operablogimport/importdata.py
   login: admin
 
-- url: /importdata/.*
-  script: operablogimport/importdata.py
+- url: /admin.*
+  script: admin.py
   login: admin
 
 #- url: /font.*

@@ -22,26 +22,31 @@ def import_post_object(post):
         assert type(tag_name) == str, "%s" % type(tag_name)
         return ArticleTag.get_by_name(tag_name, create_on_demand=True).key()
 
-    article = Article(title = post['title'],
-                      #slug = post['slug'],
-                      body = post['content'],
-                      published_date = post['date'],
-                      draft = False,
-                      tags = map(string2category, post['tags']))
-    article.save()
-    Slug.insert_new(post['slug'], article)
+    def transaction():
+        slug = post['slug']
+        Slug.assert_slug_unused(slug)
+        article = Article(title = post['title'],
+                          #slug = post['slug'],
+                          body = post['content'],
+                          published_date = post['date'],
+                          draft = False,
+                          tags = map(string2category, post['tags']))
+        article.save()
+        Slug.insert_new(slug, article)
+        for comment in post['comments']:
+            db_comment = Comment(article = article,
+                                 author = comment['username'],
+                                 blog_owner = comment['owner_comment'],
+                                 text = comment['text'],
+                                 published_date = comment['date'])
+            db_comment.save()
+        return article
 
-    for comment in post['comments']:
-        db_comment = Comment(article = article,
-                             author = comment['username'],
-                             blog_owner = comment['owner_comment'],
-                             text = comment['text'],
-                             published_date = comment['date'])
-        db_comment.save()
+    return transaction()
 
-def import_file(fname, out):
+def import_file(fname):
     post = parse_file(fname)
-    import_object(post)
+    return import_post_object(post)
 
 def import_all_files():
     import glob
@@ -68,7 +73,7 @@ class ImportSomeHandler(request.BlogRequestHandler):
         self.redirect('/admin/')
 
 application = webapp.WSGIApplication(
-        [('/importdata/?', ImportSomeHandler)],
+        [('/admin/importdata/?', ImportSomeHandler)],
         debug=True)
 
 def main():

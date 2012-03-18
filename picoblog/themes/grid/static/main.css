@@ -258,3 +258,5 @@ ul.archive {
 	font-weight: normal;
 	color: white;
 }
+
+.caps { font-variant: small-caps; }
