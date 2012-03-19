@@ -371,6 +371,6 @@ if __name__ == '__main__':
         print 'slug:', parsed['slug'].encode('ascii', 'replace')
         print parsed['content'].encode('ascii', 'replace')
 
-#        for c in parsed['comments']:
-#           print ''
-#           print 'comment: %s -> %s' % (c['username'], c['text'])
+        for c in parsed['comments']:
+           print ''
+           print 'comment: %s -> %s' % (c['username'], c['text'])
