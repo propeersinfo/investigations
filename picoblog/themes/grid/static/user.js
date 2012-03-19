@@ -1,3 +1,28 @@
+/*
+ * Internationalization by JavaScript.
+ * Usage: execute the following JS code. HTML should look like the following:
+ * <body lang="ru">
+ * <div class='i18n'>No lang: <i lang="EN">EN</i> <i lang="RU">RU</i> <i>No lang</i></div>
+ */
+$(document).ready(function() {
+    function get_element_display_mode(elem) {
+        var tag = elem.tagName.toLowerCase();
+        return (tag == 'div' || tag == 'p') ? 'block' : 'inline';
+    }
+    var desired_lang = $('body').get(0).lang;
+    if(desired_lang) {
+        $('.i18n').each(function() {
+            $(this).children().each(function(i, alt) {
+                if(alt.lang) {
+                    var eq = desired_lang.toLowerCase() == alt.lang.toLowerCase();
+                    var display = eq ? get_element_display_mode(alt) : 'none';
+                    $(alt).css('display', display);
+                }
+            })
+        })
+    }
+});
+
 //function comment_form_submit(form) {
 //    //alert($(form.text))
 //    try {

@@ -18,11 +18,16 @@
 <script type="text/javascript" src="{% static_resource 'admin.js' %}"></script>
 
 </head>
-<body>
+<body lang="{{desired_lang}}">
 
 {% if defs.PRODUCTION or defs.DEVSERVER %}
-<p class="important-notification">
-	The site is under testing now.
+<p class="important-notification i18n">
+	<span lang="en">
+		The site is under testing now. Submit bugs to <a href="mailto:mail@sovietgroove.com">e-mail</a> please.
+	</span>
+	<span lang="ru">
+		Сайт тестируется. Об ошибках, пожалуйста, сообщайте на <a href="mailto:mail@sovietgroove.com">почту</a>.
+	</span>
 </p>
 {% endif %}
 
@@ -130,7 +135,7 @@
 	</p></div>
 	<div class="width_4"><p>
 		2009&mdash;2012 copyleft<br/>
-		Contact: <a href="mailto:mail@sovietgroove.com">mail@sovietgroove.com</a>
+		Contact: {% link "mailto:mail@sovietgroove.com" %}
 	</p></div>
 	<div class="width_6"><p>
 		<a href="/archive/">archive</a><br/>
