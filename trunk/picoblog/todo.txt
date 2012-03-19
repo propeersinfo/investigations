@@ -4,6 +4,7 @@ Check list:
 Critical:
 
 Major:
+- an anonymous comment imported as being administrative: '/orovela-1973-georgia'
 - install uservoice.com widget
 - cache: invalidate HtmlCache entries if db was updated
 - cache: invalidate cache entries created by previous version of the app

@@ -118,13 +118,13 @@ class DataStoreMeta(db.Model):
         return cls.__get_time_updated() > date
 
 # annotation designed exclusively for HtmlCache.get_cached_or_make_new()
-# disables caching for admin - regular users should not see admin interface
-# disables caching for dev server also to see how changes are applied
 def skip_ds_caching_for_admin(wrapped):
     def wrapper(cls, path, renderer):
-        admin = users.is_current_user_admin()
-        use_caching = not admin and defs.PRODUCTION
-        use_caching = False # todo: do not commit this line! for testing purposes only!
+        use_caching = True
+        # disables caching for admin - regular users should not see admin interface
+        use_caching = use_caching and users.is_current_user_admin()
+        # disables caching for dev server to see the changes applied
+        use_caching = use_caching and defs.PRODUCTION
         if use_caching:
             return wrapped(cls, path, renderer)
         else:
