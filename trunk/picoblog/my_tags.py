@@ -1,3 +1,4 @@
+import re
 import cgi
 import random
 import urllib2
@@ -9,6 +10,12 @@ import defs
 
 register = tpl.create_template_register()
 
+
+def link(url):
+  display = url
+  display = re.sub('^mailto:\s*', '', display)
+  return '<a href="%s">%s</a>' % (url, display)
+register.simple_tag(link)
 
 # print a tag
 def blog_tag(blog_tag_name, blog_tag_title = None):

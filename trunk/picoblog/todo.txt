@@ -4,7 +4,6 @@ Check list:
 Critical:
 
 Major:
-- an anonymous comment imported as being administrative: '/orovela-1973-georgia'
 - install uservoice.com widget
 - impl google search
 - impl google analytics
