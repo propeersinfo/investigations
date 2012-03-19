@@ -100,6 +100,7 @@ $(document).ready(function() {
 </script>
 
 <body>
+
 <table id="container"><tr><td>
 
 <h1 class="admin-page-title">Edit article</h1>
@@ -132,11 +133,11 @@ $(document).ready(function() {
     </p>
 
     <p>
+        Date: <a href="{{ds_object_edit_link}}">{{ article.published_date|date:"F j, Y h:m:s" }}</a>
+    </p>
+
+    <p>
         <input type="button" name="save" onClick="save_article()" value="Save"/>
-        <!--
-        <input type="button" name="save" onClick="save_and_reedit()" value="Save and Keep Editing"/>
-        <input type="button" name="cancel" onClick="cancel_edit()" value="Cancel"/>
-        -->
         <input type="button" name="delete" onClick="del()" value="Delete"/>
     </p>
 

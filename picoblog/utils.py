@@ -16,6 +16,17 @@ class PageLoadTime():
         delta = datetime.datetime.now() - self.start_time
         out.write('<center><p>Page generated for %d:%03d<p>&nbsp;</center>' % (delta.seconds, delta.microseconds/1000))
 
+# Examples:
+# http://localhost/_ah/admin/datastore/edit?key=ahRkZXZ-c292aWV0cmFyZWdyb292ZXIPCxIHQXJ0aWNsZRjh1AEM&kind=Article&next=http%3A//localhost/_ah/admin/datastore%3Fkind%3DArticle
+# https://appengine.google.com/datastore/edit?app_id=sovietraregroove&version_id=1.357588515741945103&key=ahBzb3ZpZXRyYXJlZ3Jvb3Zlcg8LEgdBcnRpY2xlGPO7AQw
+def get_ds_object_edit_link(ds_object):
+    key = ds_object.key()
+    app_id = 'sovietraregroove'
+    if defs.PRODUCTION:
+        s = 'https://appengine.google.com/datastore/edit?app_id=%s&version_id=%s&key=%s' % (app_id, defs.APP_VERSION, key)
+    else:
+        s = '%s/_ah/admin/datastore/edit?key=%s&kind=Article' % (defs.CANONICAL_BLOG_URL, key)
+    return s
 
 def slugify(s):
   if type(s) == str:
