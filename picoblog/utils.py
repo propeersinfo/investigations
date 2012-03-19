@@ -5,8 +5,8 @@ import re
 import unicodedata
 import Cookie
 import datetime
-import defs
 
+import defs
 import models
 
 class PageLoadTime():

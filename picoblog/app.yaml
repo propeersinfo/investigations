@@ -24,13 +24,10 @@ handlers:
   script: admin.py
   login: admin
 
-#- url: /font.*
-#  script: fontgen/fontgen.py
-
 # no admin-mode to be testable
 - url: /rss
   script: blog.py
 
 - url: /.*
   script: blog.py
-  #login: admin
+  login: admin

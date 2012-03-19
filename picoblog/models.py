@@ -1,10 +1,8 @@
 import datetime
-import hashlib
-from google.appengine.api import memcache, users
 
 from google.appengine.ext import db
 
-import defs
+import caching
 import utils
 
 FETCH_THEM_ALL_COMMENTS = 100
@@ -13,90 +11,16 @@ FETCH_ALL_TAGS_FOR_TAG_CLOUD = 2000 # there are about 150 tags in Opera
 FETCH_ALL_SLUGS = 500
 MAX_ARTICLES_PER_DAY = 20
 
-########################################################
 
-
+# todo: try to move it to 'caching.py'
+# decorator
+# invocation of a decorated function will lead to update DS meta information
 def notify_datastore_meta_about_put(decorated):
     def decorator(*args, **kwargs):
         rv = decorated(*args, **kwargs)
-        DataStoreMeta.update()
+        caching.DataStoreMeta.update()
         return rv
     return decorator
-
-class DataStoreMeta(db.Model):
-    updated = db.DateTimeProperty(auto_now=True, auto_now_add=True)
-    #MEMCACHE_KEY = 'DataStoreMeta'
-
-    @classmethod
-    def get_time_updated(cls):
-        instance = db.Query(DataStoreMeta).get()
-        if not instance:
-            instance = DataStoreMeta()
-            instance.put()
-        return instance.updated
-
-    @classmethod
-    def update(cls):
-        instance = db.Query(DataStoreMeta).get()
-        if instance:
-            instance.updated = datetime.datetime.now()
-        else:
-            instance = DataStoreMeta()
-        instance.put()
-
-########################################################
-
-# annotation for HtmlCache.get_cached_or_make_new()
-# disables caching for admin - regular users should not see admin interface
-# disables caching for dev server also to see how changes are applied
-def skip_ds_caching_for_admin(wrapped):
-    def wrapper(cls, path, renderer):
-        admin = users.is_current_user_admin()
-        use_caching = not admin and defs.PRODUCTION
-        #use_caching = False # todo: do not commit this line! for testing purposes only!
-        if use_caching:
-            return wrapped(cls, path, renderer)
-        else:
-            return renderer(), None
-    return wrapper
-
-class HtmlCache(db.Model):
-    path = db.StringProperty(required=True, indexed=True)
-    #updated = db.DateTimeProperty(auto_now=True, auto_now_add=True)
-    etag = db.StringProperty(required=True)
-    # app version used when generating this cache entry
-    app_version = db.StringProperty(required=True)
-    html = db.TextProperty(required=True)
-
-    @classmethod
-    def __find(cls, path):
-        q = db.Query(HtmlCache)
-        q.filter('path = ', path)
-        return q.get()
-
-    @classmethod
-    def __add(cls, path, html):
-        etag = hashlib.sha1(html).hexdigest()
-        object = HtmlCache(path=path,
-                           html=db.Text(html, defs.HTML_ENCODING),
-                           etag=etag,
-                           app_version=defs.APP_VERSION)
-        object.save()
-        return object
-
-    @classmethod
-    @skip_ds_caching_for_admin
-    def get_cached_or_make_new(cls, path, renderer):
-        # returns tuple: HTML and HTML's etag
-        # todo: important: invalidate cache entry if its app version not matched
-
-        cache = cls.__find(path=path)
-        if cache:
-            html = cache.html
-        else:
-            html = renderer()
-            cache = cls.__add(path, html)
-        return html, cache.etag
 
 ########################################################
 
@@ -156,49 +80,9 @@ class ArticleTag(db.Model):
                  .filter('counter > ', 0)\
                  .fetch(FETCH_ALL_TAGS_FOR_TAG_CLOUD)
 
-########################################################
-
-class TagCloud():
-    """
-    All tags in memory, 2-3 KB
-    """
-    MEMCACHE_KEY = 'cached-tag-cloud'
-
-    def __init__(self):
-        self.tag_count = {}
-        self.categorized = {}
-
-    def get_tag_usage_count(self, tag_name):
-        return self.tag_count.get(tag_name, 0)
-
-    @classmethod
-    def get(cls):
-        value = memcache.get(cls.MEMCACHE_KEY)
-        if not value:
-            value = cls.__make_cloud()
-            # todo: keep it forever but don't forget to reset (patch) memcache when a tag changed in datastore
-            #memcache.set(cls.MEMCACHE_KEY, value, utils.hours(24).seconds())
-            memcache.set(cls.MEMCACHE_KEY, value, 5) # todo: not for production!
-        return value
-
-    @classmethod
-    def reset(cls):
-        memcache.delete(cls.MEMCACHE_KEY)
-
-    @classmethod
-    def __make_cloud(cls):
-        cloud = TagCloud()
-        cloud.all_tags = []
-        for tag in ArticleTag.fetch_all():
-            cloud.all_tags.append(tag)
-            cloud.tag_count[tag.name] = tag.counter
-            if cloud.categorized.has_key(tag.category):
-                cloud.categorized[tag.category].append(tag)
-            else:
-                cloud.categorized[tag.category] = [ tag ]
-        for cat in cloud.categorized:
-            cloud.categorized[cat] = sorted(cloud.categorized[cat], key=lambda tag: tag.name)
-        return cloud
+    @notify_datastore_meta_about_put
+    def put(self, **kwargs):
+        return super(ArticleTag, self).put(**kwargs)
 
 ########################################################
 
@@ -352,33 +236,37 @@ class Comment(db.Model):
                 self.replied_comment_id = self.id
             self.put()
 
+    @notify_datastore_meta_about_put
+    def put(self, **kwargs):
+        return super(Comment, self).put(**kwargs)
+
 ########################################################
 
 # generated images cache
 # such entries could be cleaned out without any problems
-class FontRenderCache(db.Model):
-    hash = db.IntegerProperty(required=True, indexed=True)
-    width = db.IntegerProperty(required=True, indexed=False)
-    height = db.IntegerProperty(required=True, indexed=False)
-    render = db.BlobProperty(required=True, indexed=False)
-    @classmethod
-    def calc_hash(cls, font_name, font_size, text):
-        return ("%s%s%s" % (font_name, font_size, text)).__hash__()
-    @classmethod
-    def find(cls, font_name, font_size, text):
-        q = db.Query(FontRenderCache)
-        q.filter('hash = ', cls.calc_hash(font_name, font_size, text))
-        return q.get()
-    @classmethod
-    def insert_new(cls, font_name, font_size, text, image):
-        obj = FontRenderCache(hash = cls.calc_hash(font_name, font_size, text),
-                              width = image.get_width(),
-                              height = image.get_height(),
-                              render = image.get_data_as_string())
-        obj.save()
-    def save(self):
-        self.put()
-
+#class FontRenderCache(db.Model):
+#    hash = db.IntegerProperty(required=True, indexed=True)
+#    width = db.IntegerProperty(required=True, indexed=False)
+#    height = db.IntegerProperty(required=True, indexed=False)
+#    render = db.BlobProperty(required=True, indexed=False)
+#    @classmethod
+#    def calc_hash(cls, font_name, font_size, text):
+#        return ("%s%s%s" % (font_name, font_size, text)).__hash__()
+#    @classmethod
+#    def find(cls, font_name, font_size, text):
+#        q = db.Query(FontRenderCache)
+#        q.filter('hash = ', cls.calc_hash(font_name, font_size, text))
+#        return q.get()
+#    @classmethod
+#    def insert_new(cls, font_name, font_size, text, image):
+#        obj = FontRenderCache(hash = cls.calc_hash(font_name, font_size, text),
+#                              width = image.get_width(),
+#                              height = image.get_height(),
+#                              render = image.get_data_as_string())
+#        obj.save()
+#    def save(self):
+#        self.put()
+#
 ########################################################
 
 class Slug(db.Model):
@@ -420,6 +308,10 @@ class Slug(db.Model):
 
     def save(self):
         self.put()
+
+    @notify_datastore_meta_about_put
+    def put(self, **kwargs):
+        return super(Slug, self).put(**kwargs)
 
     @classmethod
     def assert_slug_unused(cls, slug_string):
