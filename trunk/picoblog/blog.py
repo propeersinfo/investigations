@@ -1,4 +1,4 @@
-
+import re
 import urllib
 import cgi
 
@@ -74,12 +74,20 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'current_page_1'  : page_info.current_page,
             'pages_total'     : page_info.pages_total,
             'tag_cloud'       : caching.TagCloud.get(),
+            'desired_lang'    : self.extract_preferred_content_language(),
         }
 
         if additional_template_variables:
             template_variables.update(additional_template_variables)
 
         return self.render_template(template_name, template_variables)
+
+    def extract_preferred_content_language(self):
+        try:
+            lang = self.request.headers['Accept-Language']
+            return 'ru' if re.search('(,ru|ru;)', lang, re.IGNORECASE) else 'en'
+        except KeyError:
+            return 'en'
 
     def get_recent(self):
         return []
