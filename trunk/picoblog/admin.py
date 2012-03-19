@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 # $Id: f06befd2bc4b552d08c2d93836b674baa0dc417e $
 
 import cgi
@@ -10,10 +11,12 @@ import urllib
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
+from google.appengine.ext import db
 from google.appengine.ext.webapp import util
 import defs
 
-from models import *
+import models
+import caching
 import request
 
 import utils
@@ -47,7 +50,7 @@ class ManageTags(request.BlogRequestHandler):
 
         tags_subset = []
         categories = {}
-        for tag in db.Query(ArticleTag).order('name').fetch(ADMIN_FETCH_MAXIMUM):
+        for tag in db.Query(models.ArticleTag).order('name').fetch(ADMIN_FETCH_MAXIMUM):
             categories[tag.category] = categories.get(tag.category, 0) + 1
             if tag.category == category_selected:
                 tags_subset.append(tag)
@@ -67,7 +70,7 @@ class ManageTags(request.BlogRequestHandler):
         return_path = self.request.get('return_path')
         assert return_path is not None
         if tag_name and new_category:
-            tag = ArticleTag.get_by_name(tag_name)
+            tag = models.ArticleTag.get_by_name(tag_name)
             if tag:
                 tag.category = new_category
                 tag.save()
@@ -80,7 +83,7 @@ class GenPyCode(request.BlogRequestHandler):
         self.response.out.write('<pre>')
         self.response.out.write('tag_table = \\\n')
         self.response.out.write('[\n')
-        for tag in ArticleTag.all().fetch(ADMIN_FETCH_MAXIMUM):
+        for tag in models.ArticleTag.all().fetch(ADMIN_FETCH_MAXIMUM):
             title = tag.title
 #            if not title and tag.category not in ['misc','time','genre','']:
 #                title = tag.name.title()
@@ -118,7 +121,7 @@ class SetupBasicTags(request.BlogRequestHandler):
         from operablogimport.tags_categorized import tag_hash
         for tag_name in tag_hash.keys():
             obj = tag_hash[tag_name]
-            tag = ArticleTag.get_by_name(tag_name, create_on_demand=True)
+            tag = models.ArticleTag.get_by_name(tag_name, create_on_demand=True)
             tag.category = obj['category']
             tag.title = obj['title']
             tag.title_ru = obj['title_ru']
@@ -151,34 +154,35 @@ class ResetTagCounters(request.BlogRequestHandler):
 
 class EmptyDB(request.BlogRequestHandler):
     def post(self):
-        for cls in [ Article, Slug, Comment, ArticleTag, FontRenderCache, HtmlCache ]:
+        for cls in [ models.Article, models.Slug, models.Comment, models.ArticleTag, caching.HtmlCache ]:
             empty_table(cls.__name__)
-        TagCloud.reset()
+        caching.TagCloud.reset()
         self.redirect('/admin/')
 
 class ClearCaches(request.BlogRequestHandler):
     def post(self):
-        for cls in [ FontRenderCache, HtmlCache ]:
+        for cls in [ caching.HtmlCache ]:
             empty_table(cls.__name__)
+        caching.TagCloud.reset()
         self.redirect('/admin/')
 
 def reset_all_tag_counters():
-    q = ArticleTag.all().filter('counter !=', 0)
+    q = models.ArticleTag.all().filter('counter !=', 0)
     for tag in q.fetch(ADMIN_FETCH_MAXIMUM):
         tag.counter = 0
         tag.save()
 
 def calculate_all_tag_counters():
-    q = Article.query_all()
+    q = models.Article.query_all()
     for article in q.fetch(ADMIN_FETCH_MAXIMUM):
         for tag_key in set(article.tags):
-            tag = ArticleTag.get_by_key(tag_key, create_on_demand=True)
+            tag = models.ArticleTag.get_by_key(tag_key, create_on_demand=True)
             tag.counter += 1
             tag.save()
 
 class RecalculateTagCountersFromArticles(request.BlogRequestHandler):
     def post(self):
-        TagCloud.reset()
+        caching.TagCloud.reset()
         reset_all_tag_counters()
         calculate_all_tag_counters()
         self.redirect('/admin/')
@@ -188,7 +192,7 @@ class NewArticleHandler(request.BlogRequestHandler):
     Handles requests to create and edit a new article.
     """
     def get(self):
-        article = Article(title='-',
+        article = models.Article(title='-',
                           slug = 'x',
                           body=utils.read_file('themes/new-article.txt'),
                           draft=False)
@@ -207,18 +211,18 @@ class EditArticleHandler(request.BlogRequestHandler):
     """
     def get(self, id):
         id = int(id)
-        article = Article.get(id)
+        article = models.Article.get(id)
         if not article:
             raise ValueError, 'Article with ID %d does not exist.' % id
 
-        slugs = Slug.get_slugs_for_article(article)
+        slugs = models.Slug.get_slugs_for_article(article)
         
         #article.tag_string = ', '.join(article.tags)
         article.tag_string = ', '.join(article.get_tag_names())
         template_vars = {
             'article'  : article,
             'from'     : cgi.escape(self.request.get('from')),
-            'tag_cloud' : TagCloud.get(),
+            'tag_cloud' : caching.TagCloud.get(),
             'slugs'    : slugs
         }
         self.response.out.write(self.render_template('admin-edit.html',
@@ -244,14 +248,14 @@ class SaveArticleHandler(request.BlogRequestHandler):
             tag_names_new = [t.strip() for t in tag_names_new.split(',')]
         else:
             tag_names_new = []
-        tag_objects_new = Article.convert_string_tags(tag_names_new)
+        tag_objects_new = models.Article.convert_string_tags(tag_names_new)
 
         if not draft:
             draft = False
         else:
             draft = (draft.lower() == 'on')
 
-        article = Article.get(id) if id else None
+        article = models.Article.get(id) if id else None
         new_article = False
         if article:
             # It's an edit of an existing item.
@@ -263,7 +267,7 @@ class SaveArticleHandler(request.BlogRequestHandler):
             article.draft = draft
         else:
             # It's new.
-            article = Article(title=title,
+            article = models.Article(title=title,
                               body=body,
                               tags=tag_objects_new,
                               draft=draft)
@@ -273,14 +277,14 @@ class SaveArticleHandler(request.BlogRequestHandler):
         article.save()
 
         if new_article:
-            Slug.insert_new(slug, article)
+            models.Slug.insert_new(slug, article)
 
         if just_published:
             logging.debug('Article %d just went from draft to published. '
                           'Alerting the media.' % article.id)
             alert_the_media()
 
-        TagCloud.reset()
+        caching.TagCloud.reset()
         
         if url_from:
             self.redirect(url_from)
@@ -291,10 +295,10 @@ class DeleteArticleHandler(request.BlogRequestHandler):
     # TODO: rewrite it to method GET
     def get(self):
         id = int(self.request.get('id'))
-        article = Article.get(id)
+        article = models.Article.get(id)
         if article:
             article.delete()
-            TagCloud.reset()
+            caching.TagCloud.reset()
 
         #url_from = self.request.get("from")
         #if url_from:
@@ -306,7 +310,7 @@ class DeleteArticleHandler(request.BlogRequestHandler):
 class DeleteCommentHandler(request.BlogRequestHandler):
     def get(self, comment_id):
         comment_id = int(comment_id)
-        comment = Comment.get(comment_id)
+        comment = models.Comment.get(comment_id)
         if comment:
             article = comment.article
             comment.delete()
@@ -323,7 +327,7 @@ class Slugify(request.BlogRequestHandler):
 
 class ListSlugs(request.BlogRequestHandler):
     def get(self):
-        for slug in Slug.all():
+        for slug in models.Slug.all():
             self.response.out.write('<li>%s -> %s' % (slug.slug, slug.article.id))
 
 class ShowHeaders(request.BlogRequestHandler):

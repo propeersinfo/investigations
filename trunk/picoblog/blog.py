@@ -1,9 +1,12 @@
+
 import urllib
 import cgi
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
+from google.appengine.api import users
 
+import caching
 from models import *
 import defs
 import request
@@ -11,42 +14,6 @@ import utils
 import clevermarkup as markup
 from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo, NoPagingPageInfo
 from userinfo import UserInfo
-
-HTTP_304_NOT_MODIFIED = 304
-
-# decorator
-# HTML generation time will be printed in the bottom
-# Apply it to RequestHandler.get() methods
-def show_page_load_time(fun):
-    def decorator(self, *args, **kwargs):
-        plt = utils.PageLoadTime()
-        fun(self, *args, **kwargs)
-        plt.print_time(self.response.out)
-    return decorator
-
-# decorator
-# HTML cache will be asked before to generate content
-# ETag and 304 are implemented here
-# HTTP response code is set here
-# Apply it to methods like RequestHandler.produce_html()
-def cacheable(fun):
-    def decorator(self, *args, **kwargs):
-        html, etag = HtmlCache.get_cached_or_make_new(self.request.path, lambda: fun(self, *args, **kwargs))
-        serve = True
-        if etag and 'If-None-Match' in self.request.headers:
-            # etags are being sent via If-None-Match
-            etags = [x.strip('" ') for x in self.request.headers['If-None-Match'].split(',')]
-            if etag in etags:
-                serve = False
-        if etag: self.response.headers['ETag'] = '"%s"' % (etag,)
-        if serve:
-            self.response.set_status(200)
-            return html
-        else:
-            self.response.set_status(HTTP_304_NOT_MODIFIED)
-            return ''
-    return decorator
-
 
 class AbstractPageHandler(request.BlogRequestHandler):
     def augment_articles(self, articles, url_prefix, produce_html=True):
@@ -106,7 +73,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'next_page_url'   : page_info.next_page_url,
             'current_page_1'  : page_info.current_page,
             'pages_total'     : page_info.pages_total,
-            'tag_cloud'       : TagCloud.get(),
+            'tag_cloud'       : caching.TagCloud.get(),
         }
 
         if additional_template_variables:
@@ -123,11 +90,11 @@ class AbstractPageHandler(request.BlogRequestHandler):
         self.response.out.write(self.render_articles(EmptyPageInfo(), self.request, [], template))
 
 class FrontPageHandler(AbstractPageHandler):
-    @show_page_load_time
+    @caching.show_page_load_time
     def get(self, *args, **kwargs):
         self.response.out.write(self.produce_html(*args, **kwargs))
 
-    @cacheable
+    @caching.cacheable
     def produce_html(self, page_num = 1):
         page_num = int(page_num)
         q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
@@ -150,9 +117,9 @@ class AllTagsTagHandler(AbstractPageHandler):
                     tag.weight = cnw['weight']
                     break
 
-    @cacheable
+    @caching.cacheable
     def render_html(self):
-        tag_cloud = TagCloud.get()
+        tag_cloud = caching.TagCloud.get()
 
         # todo: try to avoid this augmentation each time
         self.__class__.augment_tag_objects_for_weights(tag_cloud.all_tags)
@@ -163,16 +130,16 @@ class AllTagsTagHandler(AbstractPageHandler):
             }
         return self.render_template('tag-listing.html', tpl_vars)
 
-    @show_page_load_time
+    @caching.show_page_load_time
     def get(self):
         self.response.out.write(self.render_html())
 	
 class ArticlesByTagHandler(AbstractPageHandler):
-    @show_page_load_time
+    @caching.show_page_load_time
     def get(self, *args, **kwargs):
         self.response.out.write(self.produce_html(*args, **kwargs))
 
-    @cacheable
+    @caching.cacheable
     def produce_html(self, tag_name, page_num = 1):
         page_num = int(page_num)
         tag_name = urllib.unquote(tag_name) # replace %20 with actual characters
@@ -199,7 +166,7 @@ class ArticleByIdHandler(AbstractPageHandler):
             self.do_alternate_response_code()
 
 class ArticleBySlugHandler(ArticleByIdHandler):
-    @show_page_load_time
+    @caching.show_page_load_time
     def get(self, slug):
         slug_obj = Slug.find_article_by_slug(slug_string = slug)
         if slug_obj:
@@ -212,7 +179,7 @@ class ArticleBySlugHandler(ArticleByIdHandler):
         else:
             self.do_alternate_response_code(404)
 
-    @cacheable
+    @caching.cacheable
     def produce_html(self, article):
         additional_template_variables = {'single_article': article}
         return self.render_articles(SinglePageInfo(article), self.request, self.get_recent(), 'articles.html',
