@@ -122,7 +122,7 @@ def skip_ds_caching_for_admin(wrapped):
     def wrapper(cls, path, renderer):
         use_caching = True
         # disables caching for admin - regular users should not see admin interface
-        use_caching = use_caching and users.is_current_user_admin()
+        use_caching = use_caching and not users.is_current_user_admin()
         # disables caching for dev server to see the changes applied
         use_caching = use_caching and defs.PRODUCTION
         if use_caching:
