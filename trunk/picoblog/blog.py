@@ -31,6 +31,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 #article.title = cgi.escape(article.title)
                 if len(articles) == 1: # only for a concrete blog post page
                     self.augment_comments_for(article)
+                article.pinned = article.published_date > datetime.datetime.now()
 
     def augment_comments_for(self, article):
         comments = []

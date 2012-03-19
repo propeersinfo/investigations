@@ -1,5 +1,6 @@
 <div class="article">
 
+{% if not article.pinned or single_article %}
 		<h1 id="article_header_{{article.id}}" class="{{article.published_class}}">
 			{% if single_article %}
 				<span></span>
@@ -10,14 +11,12 @@
 					{{ article.title|escape }}</a>
 			{% endif %}
 {% if user_info.is_admin %}
-			<a href="/admin/article/edit/{{article.id}}?from={{current_path}}">
-				<img src="/static/edit16.png" alt="[edit]" border="0">
-			</a>
+            <a href="/admin/article/edit/{{article.id}}?from={{current_path}}">
+                <img src="/static/edit16.png" alt="[edit]" border="0">
+            </a>
 {% endif %}
-		</h1>
-		<script>
-		//adjustHeader("article_header_{{article.id}}")
-		</script>
+        </h1>
+{% endif %}
 
 	    {% for p in article.complex_html.before %}
 		<p>{{ p|typographus }}</p>
@@ -31,7 +30,6 @@
 		<p>{{ p|typographus }}</p>
 		{% endfor %}
 		
-		</p>
     	<!--
 		<div class="row">
     		<div class="width_2">
@@ -82,6 +80,7 @@
     	</div>
     	-->
 
+{% if not article.pinned %}
 	    <p class="article-meta">
 			{{ article.published_date|date:"F j, Y" }}
 		</p>
@@ -91,7 +90,7 @@
 				<a href="/tag/{{tag.name}}" class="tag">{{tag.title}}</a>
 			{% endfor %}
 	    </p>
-	    
+{% endif %}
 
 {% if single_article %}
     {% include "comments.html" %}

@@ -223,7 +223,8 @@ class EditArticleHandler(request.BlogRequestHandler):
             'article'  : article,
             'from'     : cgi.escape(self.request.get('from')),
             'tag_cloud' : caching.TagCloud.get(),
-            'slugs'    : slugs
+            'slugs'    : slugs,
+            'ds_object_edit_link' : utils.get_ds_object_edit_link(article),
         }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))
