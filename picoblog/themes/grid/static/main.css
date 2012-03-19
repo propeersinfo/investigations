@@ -173,6 +173,16 @@ div.article {
 .article-meta .tag {
 	margin-left: 0.3em;
 }
+.article-meta a {
+	color: black;
+}
+.pagination a {
+	color: black;
+}
+.bottom a {
+	color: black;
+}
+
 input.search { width:97%; }
 
 div.comment {

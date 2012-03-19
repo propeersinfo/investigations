@@ -6,8 +6,6 @@ Critical:
 Major:
 - an anonymous comment imported as being administrative: '/orovela-1973-georgia'
 - install uservoice.com widget
-- cache: invalidate HtmlCache entries if db was updated
-- cache: invalidate cache entries created by previous version of the app
 - impl google search
 - impl google analytics
 - disallow slugs like "tag", "admin", "page2", "rss"
@@ -15,6 +13,8 @@ Major:
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
 ? cache: handle If-Modified-Since?
 ? markup: rewrite [tag] handling to regex callbacks - this improvement is ineffective it seems
++ cache: invalidate HtmlCache entries if db was updated
++ cache: invalidate cache entries created by previous version of the app
 + make 'beta' notification
 + import: implement "add one article from myopera directly"
 + disallow non-admins to view draft articles by urls both "/slug" and "/article/1234"
@@ -28,6 +28,7 @@ Major:
 + find how to copy dev db onto production completely
 
 Normal:
+- un-unhighlight some links - prev/next, tag links, '5 comments' - because if normal they make a mess
 - '/rss' is incompatible with greader (but it's ok with feedburner)
 - impl subscription by email
 - cache: try not to fetch heavy HtmlCache.html property if etag is matched (find how)
