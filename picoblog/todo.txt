@@ -4,6 +4,8 @@ Check list:
 Critical:
 
 Major:
+- check in IE7, IE8 - some errors there
+- bug: add an article with slug existing, after an error the '/' will be not accessible (error 500)
 - install uservoice.com widget
 - impl google search
 - impl google analytics
