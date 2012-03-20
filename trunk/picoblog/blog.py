@@ -198,17 +198,20 @@ class ArchivePageHandler(AbstractPageHandler):
     """
     Handles requests to display the list of all articles in the blog.
     """
-    def get(self, page_num):
+    @caching.show_page_load_time
+    def get(self, *args, **kwargs):
+        self.response.out.write(self.produce_html(*args, **kwargs))
+
+    @caching.cacheable
+    def produce_html(self, page_num = 1):
         page_num = int(page_num) if page_num else 1
         q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
         page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE_ARCHIVE),
                              page_num,
                              "/archive/%d",
                              "/archive/")
-        self.response.out.write(self.render_articles(page_info,
-                                                     self.request,
-                                                     [],
-                                                     'archive.html'))
+        return self.render_articles(page_info, self.request, [], 'archive.html')
+
 
 class RssArticlesHandler(AbstractPageHandler):
     """
