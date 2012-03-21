@@ -223,12 +223,12 @@ class EditArticleHandler(request.BlogRequestHandler):
         #article.tag_string = ', '.join(article.tags)
         article.tag_string = ', '.join(article.get_tag_names())
         template_vars = {
+            'defs'     : defs,
             'article'  : article,
             'from'     : cgi.escape(self.request.get('from')),
             'tag_cloud' : caching.TagCloud.get(),
             'slugs'    : slugs,
             'ds_object_edit_link' : utils.get_ds_object_edit_link(article),
-            'defs'     : defs,
         }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))

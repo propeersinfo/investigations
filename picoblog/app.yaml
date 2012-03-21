@@ -3,8 +3,8 @@ version: 1
 runtime: python
 api_version: 1
 
-builtins:
-- remote_api: on
+#builtins:
+#- remote_api: on
 
 handlers:
 
@@ -24,10 +24,16 @@ handlers:
   script: admin.py
   login: admin
 
-# no admin-mode to be testable
 - url: /rss
   script: blog.py
 
-- url: /.*
+- url: /experiment/.*
+  script: experiment.py
+
+- url: /
   script: blog.py
   login: admin
+
+- url: /.+
+  script: blog.py
+  #login: admin

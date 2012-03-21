@@ -24,7 +24,7 @@ def import_post_object(post):
 
     def transaction():
         slug = post['slug']
-        Slug.assert_slug_unused(slug)
+        Slug.assert_slug_unused(slug_string=slug)
         article = Article(title = post['title'],
                           #slug = post['slug'],
                           body = post['content'],

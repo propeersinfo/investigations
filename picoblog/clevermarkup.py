@@ -39,8 +39,8 @@ def handle_custom_tag_image(text):
         return '<img src="%s">' % addr
       else:
         return '<img src="http://dl.dropbox.com/u/%s/sg/%s" alt="%s">' % (defs.DROPBOX_USER, addr, addr)
-    #return re.sub(regex, replacer, text)
-    return re.sub(regex, '<img src="/static/cover.jpg">', text)
+    return re.sub(regex, replacer, text)
+    #return re.sub(regex, '<img src="/static/cover.jpg">', text)
 
 # [http://ya.ru/]
 def handle_custom_tag_http_link(input):
