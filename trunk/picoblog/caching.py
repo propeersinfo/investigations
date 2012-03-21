@@ -74,16 +74,24 @@ def show_page_load_time(fun):
 # ETag and 304 are implemented here
 # HTTP response code is set here
 # Apply it to methods like RequestHandler.produce_html()
-def cacheable(fun):
+def cacheable(html_generator):
     def decorator(self, *args, **kwargs):
-        html, etag = HtmlCache.get_cached_or_make_new(self.request.path, lambda: fun(self, *args, **kwargs))
+        # self -> RequestHandler
+        html, etag = HtmlCache.get_cached_or_make_new(self.request.path, lambda: html_generator(self, *args, **kwargs))
         serve = True
         if etag and 'If-None-Match' in self.request.headers:
             # etags are being sent via If-None-Match
             etags = [x.strip('" ') for x in self.request.headers['If-None-Match'].split(',')]
             if etag in etags:
                 serve = False
-        if etag: self.response.headers['ETag'] = '"%s"' % (etag,)
+        if etag:
+            self.response.headers['ETag'] = '"%s"' % (etag,)
+        #self.response.headers['Cache-Control'] = 'public, max-age=2592000'
+        self.response.headers['Cache-Control'] = 'public, must-revalidate'
+#        logging.debug('------------------------------------')
+#        logging.debug('headers: %s' % self.request.headers)
+#        logging.debug('If-None-Match: %s' % self.request.headers['If-None-Match'])
+#        logging.debug('serve: %s' % serve)
         if serve:
             self.response.set_status(200)
             return html
@@ -124,7 +132,8 @@ def skip_ds_caching_for_admin(wrapped):
         # disables caching for admin - regular users should not see admin interface
         use_caching = use_caching and not users.is_current_user_admin()
         # disables caching for dev server to see the changes applied
-        use_caching = use_caching and defs.PRODUCTION
+        #use_caching = use_caching and defs.PRODUCTION
+        #use_caching = True
         if use_caching:
             return wrapped(cls, path, renderer)
         else:
@@ -175,3 +184,5 @@ class HtmlCache(db.Model):
             html = renderer()
             c = cls.__add(path, html)
         return html, c.etag
+
+#logging.getLogger().setLevel(logging.DEBUG)
