@@ -174,6 +174,7 @@ class Article(db.Model):
         prev_tags = self.tags
         super(Article, self).delete(**kwargs)
         ArticleTag.article_removed(prev_tags)
+        caching.DataStoreMeta.update()
 
     def save(self):
         previous_version = Article.get(self.id)
@@ -240,6 +241,10 @@ class Comment(db.Model):
     def put(self, **kwargs):
         return super(Comment, self).put(**kwargs)
 
+    def delete(self, **kwargs):
+        super(Comment, self).delete(**kwargs)
+        caching.DataStoreMeta.update()
+
 ########################################################
 
 # generated images cache
@@ -295,14 +300,14 @@ class Slug(db.Model):
         return slugs[0]
     
     @classmethod
-    def insert_new(cls, slug, article):
-        if type(slug) != unicode and type(slug) != str:
-            raise Exception('param slug is of bad type: %s' % type(slug))
-        existing = cls.find_article_by_slug(slug_string=slug)
+    def insert_new(cls, slug_string, article):
+        if type(slug_string) != unicode and type(slug_string) != str:
+            raise Exception('param slug is of bad type: %s' % type(slug_string))
+        existing = cls.find_article_by_slug(slug_string=slug_string)
         if existing:
-            raise Exception('article with slug "%s" already exists' % (slug))
+            raise Exception('article with slug "%s" already exists' % (slug_string,))
         else:
-            obj = Slug(slug=slug, article=article)
+            obj = Slug(slug=slug_string, article=article)
             obj.save()
             return obj
 
