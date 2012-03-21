@@ -62,11 +62,11 @@ function del()
     }
 }
 
-function cancel_edit()
-{
-    if (confirm("Really cancel?"))
-        document.location = '/admin/'
-}
+//function cancel_edit()
+//{
+//    if (confirm("Really cancel?"))
+//        document.location = '/admin/'
+//}
 
 /*function title_changed(title_elem) {
 	slug_elem = document.getElementById('slug')
@@ -116,7 +116,7 @@ $(document).ready(function() {
     {% else %}
     <p>Slugs:
     {% for slug in slugs %}
-    	<a href="/{{slug.slug|escape}}">{{slug.slug|escape}}</a>
+        <a href="{{slug.edit_url}}">{{slug.slug|escape}}</a>&nbsp;<a href="/{{slug.slug|escape}}">&uarr;</a>
     {% endfor%}
     {% endif %}
 

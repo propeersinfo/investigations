@@ -216,6 +216,9 @@ class EditArticleHandler(request.BlogRequestHandler):
             raise ValueError, 'Article with ID %d does not exist.' % id
 
         slugs = models.Slug.get_slugs_for_article(article)
+        # augmenttion
+        for slug in slugs:
+            slug.edit_url = utils.get_ds_object_edit_link(slug)
         
         #article.tag_string = ', '.join(article.tags)
         article.tag_string = ', '.join(article.get_tag_names())
@@ -225,6 +228,7 @@ class EditArticleHandler(request.BlogRequestHandler):
             'tag_cloud' : caching.TagCloud.get(),
             'slugs'    : slugs,
             'ds_object_edit_link' : utils.get_ds_object_edit_link(article),
+            'defs'     : defs,
         }
         self.response.out.write(self.render_template('admin-edit.html',
                                                      template_vars))
@@ -275,10 +279,13 @@ class SaveArticleHandler(request.BlogRequestHandler):
             just_published = not draft
             new_article = True
 
+        if new_article:
+            models.Slug.assert_slug_unused(slug_string=slug)
+
         article.save()
 
         if new_article:
-            models.Slug.insert_new(slug, article)
+            models.Slug.insert_new(slug_string=slug, article=article)
 
         if just_published:
             logging.debug('Article %d just went from draft to published. '
