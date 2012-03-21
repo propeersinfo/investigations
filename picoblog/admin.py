@@ -164,6 +164,7 @@ class ClearCaches(request.BlogRequestHandler):
         for cls in [ caching.HtmlCache ]:
             empty_table(cls.__name__)
         caching.TagCloud.reset()
+        caching.DataStoreMeta.update()
         self.redirect('/admin/')
 
 def reset_all_tag_counters():
