@@ -18,7 +18,7 @@
 <script type="text/javascript" src="{% static_resource 'admin.js' %}"></script>
 
 </head>
-<body lang="{{desired_lang}}">
+<body>
 
 {% if defs.PRODUCTION or defs.DEVSERVER %}
 <p class="important-notification i18n">
@@ -128,18 +128,18 @@
 <div class="row bottom">
 	<div class="width_2"><p>
 		{% if user_info.user %}
-			<a href="{{user_info.logout_url}}">logout</a>
+			&nbsp;
 		{% else %}
 			<a href="{{user_info.login_url}}"><img src="{% static_resource 'login.png' %}"/></a>
 		{% endif %}
 	</p></div>
 	<div class="width_4"><p>
-		2009&mdash;2012 copyleft<br/>
-		Contact: {% link "mailto:mail@sovietgroove.com" %}
+		Contact: {% link "mailto:mail@sovietgroove.com" %}<br/>
+        2009&mdash;2012
 	</p></div>
-	<div class="width_6"><p>
+	<div class="width_3"><p>
 		<a href="/archive/">archive</a><br/>
-		<a href="/tag/">all tags</a>
+		<a href="/tag/">tags</a>
 	</p></div>
 </div>
 
