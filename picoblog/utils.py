@@ -14,7 +14,7 @@ class PageLoadTime():
         self.start_time = datetime.datetime.now()
     def print_time(self, out):
         delta = datetime.datetime.now() - self.start_time
-        out.write('<center><p>Page generated for %d:%03d<p>&nbsp;</center>' % (delta.seconds, delta.microseconds/1000))
+        out.write('<p class="page-generation-time">Page generated for %d:%03d</p>' % (delta.seconds, delta.microseconds/1000))
 
 # Examples:
 # http://localhost/_ah/admin/datastore/edit?key=ahRkZXZ-c292aWV0cmFyZWdyb292ZXIPCxIHQXJ0aWNsZRjh1AEM&kind=Article&next=http%3A//localhost/_ah/admin/datastore%3Fkind%3DArticle
@@ -48,7 +48,14 @@ def get_article_url(article):
 
 def get_article_guid(article):
   return '/article/%s' % (article.id)
-    
+
+def set_cookie(response, key, value):
+    c = Cookie.SimpleCookie()
+    c[key] = value
+    c[key]["expires"] = "Sun, 31-May-2020 23:59:59 GMT"
+    c[key]["path"] = "/"
+    response.headers.add_header('Set-Cookie', c[key].OutputString())
+
 def set_unicode_cookie(response, key, value):
   c = Cookie.SimpleCookie()
   c[key] = value.encode('unicode-escape')

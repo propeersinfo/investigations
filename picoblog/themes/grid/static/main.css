@@ -18,6 +18,7 @@ body {
 	background: #EEEEEE;
 	margin: 0 0 0 0;
 }
+img { border: 0px; } /* IE special */
 input {
 	font-family: 'Helvetica', 'Arial', sans-serif;
 }
@@ -268,3 +269,11 @@ ul.archive {
 .important-notification a { color: white; }
 
 .caps { font-variant: small-caps; }
+
+.page-generation-time {
+    padding: 1em;
+    text-align: center;
+    font-size: 80%;
+    font-family: Helvatica, Arial, sans-serif;
+    color: grey;
+}
