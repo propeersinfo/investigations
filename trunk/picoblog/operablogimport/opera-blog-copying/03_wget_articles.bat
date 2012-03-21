@@ -1,1 +1,1 @@
-wget -i wget-list -P .. --limit-rate 20k
+wget -N -i wget-list -P ..\..\operabloghtml --limit-rate 20k
