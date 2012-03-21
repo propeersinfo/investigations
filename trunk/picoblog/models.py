@@ -94,6 +94,13 @@ class Article(db.Model):
     published_date = db.DateTimeProperty(auto_now_add=True, indexed=True)
     tags = db.ListProperty(db.Key)
     draft = db.BooleanProperty(required=True, default=False)
+    slug = db.StringProperty(required=True, indexed=True)
+
+    @classmethod
+    def find_article_by_slug(cls, slug_string):
+        q = db.Query(Article)
+        q.filter('slug = ', slug_string)
+        return q.get()
 
     def fetch_comments(self):
         return Comment.get_for_article(self)
@@ -275,52 +282,50 @@ class Comment(db.Model):
 ########################################################
 
 class Slug(db.Model):
-    slug = db.StringProperty(required=True, indexed=True)
-    article = db.ReferenceProperty(Article, required=True)
-    added_date = db.DateTimeProperty(auto_now_add=True, indexed=True)
-    
-    @classmethod
-    def find_article_by_slug(cls, slug_string):
-        q = db.Query(Slug)
-        q.filter('slug = ', slug_string)
-        return q.get()
+    dummy = ''
 
-    @classmethod
-    def get_slugs_for_article(cls, article):
-        q = db.Query(Slug)
-        q.filter('article = ', article)
-        q.order('-added_date') # recent entries first
-        return q.fetch(FETCH_ALL_SLUGS)
-        
-    @classmethod
-    def get_default_slug_for_article(cls, article):
-        slugs = cls.get_slugs_for_article(article)
-        if len(slugs) == 0:
-            raise Exception('cannot find any slug for article %s' % article)
-        return slugs[0]
-    
-    @classmethod
-    def insert_new(cls, slug_string, article):
-        if type(slug_string) != unicode and type(slug_string) != str:
-            raise Exception('param slug is of bad type: %s' % type(slug_string))
-        existing = cls.find_article_by_slug(slug_string=slug_string)
-        if existing:
-            raise Exception('article with slug "%s" already exists' % (slug_string,))
-        else:
-            obj = Slug(slug=slug_string, article=article)
-            obj.save()
-            return obj
-
-    def save(self):
-        self.put()
-
-    @notify_datastore_meta_about_put
-    def put(self, **kwargs):
-        return super(Slug, self).put(**kwargs)
-
-    @classmethod
-    def assert_slug_unused(cls, slug_string):
-        # todo: try to avoid actually fetching data here
-        article = cls.find_article_by_slug(slug_string)
-        if article:
-            raise Exception('slug %s already used' % slug_string)
+#    slug = db.StringProperty(required=True, indexed=True)
+#    article = db.ReferenceProperty(Article, required=True)
+#    added_date = db.DateTimeProperty(auto_now_add=True, indexed=True)
+#
+#
+#    @classmethod
+#    def get_slugs_for_article(cls, article):
+#        q = db.Query(Slug)
+#        q.filter('article = ', article)
+#        q.order('-added_date') # recent entries first
+#        return q.fetch(FETCH_ALL_SLUGS)
+#
+#    @classmethod
+#    def get_default_slug_for_article(cls, article):
+#        slugs = cls.get_slugs_for_article(article)
+#        if len(slugs) == 0:
+#            raise Exception('cannot find any slug for article %s' % article)
+#        return slugs[0]
+#
+#    @classmethod
+#    def insert_new(cls, slug_string, article):
+#        if type(slug_string) != unicode and type(slug_string) != str:
+#            raise Exception('param slug is of bad type: %s' % type(slug_string))
+#        existing = cls.find_article_by_slug(slug_string=slug_string)
+#        if existing:
+#            raise Exception('article with slug "%s" already exists' % (slug_string,))
+#        else:
+#            obj = Slug(slug=slug_string, article=article)
+#            obj.save()
+#            return obj
+#
+#    def save(self):
+#        self.put()
+#
+#    @notify_datastore_meta_about_put
+#    def put(self, **kwargs):
+#        return super(Slug, self).put(**kwargs)
+#
+#    @classmethod
+#    def assert_slug_unused(cls, slug_string):
+#        # todo: try to avoid actually fetching data here
+#        article = cls.find_article_by_slug(slug_string)
+#        if article:
+#            raise Exception('slug %s already used' % slug_string)
+#

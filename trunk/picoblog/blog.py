@@ -181,9 +181,8 @@ class ArticleByIdHandler(AbstractPageHandler):
 class ArticleBySlugHandler(ArticleByIdHandler):
     @caching.show_page_load_time
     def get(self, slug):
-        slug_obj = Slug.find_article_by_slug(slug_string = slug)
-        if slug_obj:
-            article = slug_obj.article
+        article = Article.find_article_by_slug(slug_string = slug)
+        if article:
             if article.draft and not users.is_current_user_admin():
                 self.do_alternate_response_code(403)
             else:

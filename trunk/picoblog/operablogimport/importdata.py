@@ -24,15 +24,15 @@ def import_post_object(post):
 
     def transaction():
         slug = post['slug']
-        Slug.assert_slug_unused(slug_string=slug)
+#        Slug.assert_slug_unused(slug_string=slug)
         article = Article(title = post['title'],
-                          #slug = post['slug'],
+                          slug = slug,
                           body = post['content'],
                           published_date = post['date'],
                           draft = False,
                           tags = map(string2category, post['tags']))
         article.save()
-        Slug.insert_new(slug, article)
+#        Slug.insert_new(slug, article)
         for comment in post['comments']:
             db_comment = Comment(article = article,
                                  author = comment['username'],

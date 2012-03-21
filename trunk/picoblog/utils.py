@@ -39,9 +39,7 @@ def slugify(s):
   return s
 
 def get_article_path(article):
-  #return '/%s-%s.html' % (article.id, slugify(article.title))
-  slug = models.Slug.get_default_slug_for_article(article)
-  return '/%s' % (slug.slug)
+  return '/%s' % (article.slug,)
 
 def get_article_url(article):
   return defs.CANONICAL_BLOG_URL + get_article_path(article)

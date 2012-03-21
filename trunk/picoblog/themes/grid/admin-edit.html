@@ -114,10 +114,7 @@ $(document).ready(function() {
     {% if new_article %}
     <p><input type="text" align="left" width="80" style="width:98%" name="slug" id="slug" value="{{ article.slug|escape }}" />
     {% else %}
-    <p>Slugs:
-    {% for slug in slugs %}
-        <a href="{{slug.edit_url}}">{{slug.slug|escape}}</a>&nbsp;<a href="/{{slug.slug|escape}}">&uarr;</a>
-    {% endfor%}
+    <p>Main slug: {{article.slug}}
     {% endif %}
 
     <p><textarea name="content" cols="98%" rows="15" style="width:98%">{{ article.body|escape }}</textarea>
