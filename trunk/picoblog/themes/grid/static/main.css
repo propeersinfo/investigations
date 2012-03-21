@@ -15,6 +15,7 @@
 
 body {
 	background: white;
+	background: url('/static/chak-bg.jpg');
 	background: #EEEEEE;
 	margin: 0 0 0 0;
 }

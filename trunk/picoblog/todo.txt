@@ -4,10 +4,9 @@ Check list:
 Critical:
 
 Major:
-- caching: object (comment/article) removal must affect DataStoreMeta
-- important-notification lost at http://localhost/tag/ (at the top)
-- bug: it's needed to obtain preferred language from JavaScript (because of the caching)
-- bug: add an article with slug existing, after an error the '/' will be not accessible (error 500)
+- '/archive' - retrieve title and date only
+- not accessible: http://www.sovietgroove.com/robots.txt
+- cache etags in memcache?
 - install uservoice.com widget
 - impl google search
 - impl google analytics
@@ -16,6 +15,9 @@ Major:
 - 'new comment' form, if not filled properly, leads to inappropriate stack trace
 ? cache: handle If-Modified-Since?
 ? markup: rewrite [tag] handling to regex callbacks - this improvement is ineffective it seems
++ caching: object (comment/article) removal must affect DataStoreMeta
++ bug: it's needed to obtain preferred language from JavaScript (because of the caching)
++ bug: add an article with slug existing, after an error the '/' will be not accessible (error 500)
 + cache: invalidate HtmlCache entries if db was updated
 + cache: invalidate cache entries created by previous version of the app
 + make 'beta' notification

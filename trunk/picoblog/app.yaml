@@ -8,6 +8,14 @@ api_version: 1
 
 handlers:
 
+#- url: /stats.*
+#  script: C:\Python\gae\google\appengine\ext\appstats\ui.py
+
+- url: /gae_mini_profiler/static
+  static_dir: gae_mini_profiler/static
+- url: /gae_mini_profiler/.*
+  script: gae_mini_profiler/main.py
+
 - url: /static
   static_dir: themes/grid/static
   expiration: 30d
@@ -16,6 +24,10 @@ handlers:
   static_files: static/favicon.ico
   upload: static/favicon.ico
 
+- url: /robots.txt
+  static_files: themes/robots.txt
+  upload: themes/robots.txt
+  
 - url: /admin/importdata/.*
   script: operablogimport/importdata.py
   login: admin

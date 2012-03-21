@@ -10,6 +10,13 @@ import defs
 
 register = tpl.create_template_register()
 
+# define a stub for tag 'profiler_includes' if profiling is off
+try:
+    import appengine_config
+    dummy = appengine_config.webapp_add_wsgi_middleware
+except AttributeError:
+    def profiler_includes(*args): return ''
+    register.simple_tag(profiler_includes)
 
 def link(url):
   display = url
