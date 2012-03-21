@@ -12,8 +12,7 @@ Archive - {{defs.BLOG_NAME}}
       <li>
 {% if user_info.is_admin %}
         <a href="/admin/article/edit/{{article.id}}?from={{current_path}}">
-          <img src="/static/edit16.png">
-        </a>
+          <img src="/static/edit16.png"></a>
 {% endif %}
         {{ article.published_date|date:"Y-m-d" }}
         <a class="noul" href="{{ article.path }}">{{ article.title }}</a>

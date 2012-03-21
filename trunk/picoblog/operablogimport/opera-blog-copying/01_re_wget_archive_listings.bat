@@ -1,4 +1,4 @@
-rm index.html@startidx=*
+rm -f index.html@startidx=*
 
 wget http://my.opera.com/sovietgroove/archive/?startidx=0
 wget http://my.opera.com/sovietgroove/archive/?startidx=100

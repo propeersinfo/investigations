@@ -4,7 +4,9 @@ Check list:
 Critical:
 
 Major:
-- check in IE7, IE8 - some errors there
+- caching: object (comment/article) removal must affect DataStoreMeta
+- important-notification lost at http://localhost/tag/ (at the top)
+- bug: it's needed to obtain preferred language from JavaScript (because of the caching)
 - bug: add an article with slug existing, after an error the '/' will be not accessible (error 500)
 - install uservoice.com widget
 - impl google search
