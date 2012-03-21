@@ -1,7 +1,19 @@
+function read_cookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 /*
- * Internationalization by JavaScript.
- * Usage: execute the following JS code. HTML should look like the following:
- * <body lang="ru">
+ * I18N by JavaScript.
+ * Server side: set cookie 'user_lang' to value like 'en' or 'ru' (relying on the request header)
+ * Client side: execute the following JS code.
+ * HTML should look like the following:
  * <div class='i18n'>No lang: <i lang="EN">EN</i> <i lang="RU">RU</i> <i>No lang</i></div>
  */
 $(document).ready(function() {
@@ -9,7 +21,7 @@ $(document).ready(function() {
         var tag = elem.tagName.toLowerCase();
         return (tag == 'div' || tag == 'p') ? 'block' : 'inline';
     }
-    var desired_lang = $('body').get(0).lang;
+    var desired_lang = read_cookie('user_lang');
     if(desired_lang) {
         $('.i18n').each(function() {
             $(this).children().each(function(i, alt) {
@@ -84,16 +96,18 @@ $(document).ready(function() {
 ////////////////////////////////////////////////////
 
 $(document).ready(function() {
-    document.addEventListener('keydown', function(event) {
-        switch (event.keyCode ? event.keyCode : event.which ? event.which : null) {
-            case 0x25:
-                link = document.getElementById ('prev-link');
-                break;
-            case 0x27:
-                link = document.getElementById ('next-link');
-                break;
-        }
-        if (typeof(link) != 'undefined' && link && link.href)
-            document.location = link.href;
-    }, false);
+    if(document.addEventListener) {
+        document.addEventListener('keydown', function(event) {
+            switch (event.keyCode ? event.keyCode : event.which ? event.which : null) {
+                case 0x25:
+                    link = document.getElementById ('prev-link');
+                    break;
+                case 0x27:
+                    link = document.getElementById ('next-link');
+                    break;
+            }
+            if (typeof(link) != 'undefined' && link && link.href)
+                document.location = link.href;
+        }, false);
+    }
 });

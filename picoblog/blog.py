@@ -75,8 +75,10 @@ class AbstractPageHandler(request.BlogRequestHandler):
             'current_page_1'  : page_info.current_page,
             'pages_total'     : page_info.pages_total,
             'tag_cloud'       : caching.TagCloud.get(),
-            'desired_lang'    : self.extract_preferred_content_language(),
         }
+
+        # used for JavaScript i18n
+        utils.set_cookie(self.response, 'user_lang', self.extract_preferred_content_language())
 
         if additional_template_variables:
             template_variables.update(additional_template_variables)
@@ -104,10 +106,10 @@ class FrontPageHandler(AbstractPageHandler):
         self.response.out.write(self.produce_html(*args, **kwargs))
 
     @caching.cacheable
-    def produce_html(self, page_num = 1):
-        page_num = int(page_num)
+    def produce_html(self, page_num_1 = 1):
+        page_num_1 = int(page_num_1)
         q = Article.query_all() if users.is_current_user_admin() else Article.query_published()
-        page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE), page_num, "/page%d", "/")
+        page_info = PageInfo(PagedQuery(q, defs.MAX_ARTICLES_PER_PAGE), page_num_1, "/page%d", "/")
         return self.render_articles(page_info, self.request, self.get_recent())
 
 class AllTagsTagHandler(AbstractPageHandler):
@@ -134,6 +136,7 @@ class AllTagsTagHandler(AbstractPageHandler):
         self.__class__.augment_tag_objects_for_weights(tag_cloud.all_tags)
 
         tpl_vars = {
+            'defs'      : defs,
             'tag_cloud' : tag_cloud,
             'user_info' : UserInfo(self.request),
             }
