@@ -95,6 +95,7 @@ class Article(db.Model):
     tags = db.ListProperty(db.Key)
     draft = db.BooleanProperty(required=True, default=False)
     slug = db.StringProperty(required=True, indexed=True)
+    comments_count = db.IntegerProperty(default=0)
 
     @classmethod
     def find_article_by_slug(cls, slug_string):
@@ -177,6 +178,10 @@ class Article(db.Model):
                 return id
         raise Exception("Cannot create an article id for date %s after %d tries" % (self.published_date, MAX_ARTICLES_PER_DAY))
 
+    def increment_comment_counter(self, increment):
+        self.comments_count += increment
+        self.put()
+
     def delete(self, **kwargs):
         prev_tags = self.tags
         super(Article, self).delete(**kwargs)
@@ -222,17 +227,23 @@ class Comment(db.Model):
 
     @classmethod
     def get(cls, id):
+        #raise Exception('%s' % 'stack trace')
         q = db.Query(Comment)
         q.filter('id = ', id)
         return q.get()
 
     @classmethod
     def get_for_article(cls, article):
+        #raise Exception('%s' % 'stack trace')
         return db.Query(Comment)\
                  .filter("article = ", article)\
                  .order('replied_comment_id')\
                  .order('published_date')\
                  .fetch(FETCH_THEM_ALL_COMMENTS)
+
+    @notify_datastore_meta_about_put
+    def put(self, **kwargs):
+        return super(Comment, self).put(**kwargs)
 
     def save(self):
         if self.is_saved():
@@ -242,14 +253,12 @@ class Comment(db.Model):
             self.id = self.key().id()
             if not self.replied_comment_id:
                 self.replied_comment_id = self.id
+            self.article.increment_comment_counter(+1)
             self.put()
-
-    @notify_datastore_meta_about_put
-    def put(self, **kwargs):
-        return super(Comment, self).put(**kwargs)
 
     def delete(self, **kwargs):
         super(Comment, self).delete(**kwargs)
+        self.article.increment_comment_counter(-1)
         caching.DataStoreMeta.update()
 
 ########################################################
