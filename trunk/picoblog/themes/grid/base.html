@@ -23,10 +23,10 @@
 {% if defs.PRODUCTION or defs.DEVSERVER %}
 <p class="important-notification i18n">
 	<span lang="en">
-		The site is under testing now. Submit bugs to <a href="mailto:mail@sovietgroove.com">e-mail</a> please.
+		The site is under testing now. You could <a href="{{defs.EXTERNAL_FEEDBACK_LINK}}">submit bugs and feedback</a>.
 	</span>
 	<span lang="ru">
-		Сайт тестируется. Об ошибках, пожалуйста, сообщайте на <a href="mailto:mail@sovietgroove.com">почту</a>.
+		Сайт тестируется. <a href="{{defs.EXTERNAL_FEEDBACK_LINK}}">Сообщить куда следует</a> об ошибке либо пожелании.
 	</span>
 </p>
 {% endif %}
@@ -142,6 +142,8 @@
 		<a href="/tag/">tags</a>
 	</p></div>
 </div>
+
+{% include "../feedback.html" %}
 
 {% profiler_includes %}
 </body>

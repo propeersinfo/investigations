@@ -7,6 +7,8 @@ BLOG_OWNER = 'Soviet Groove'
 
 DROPBOX_USER = '1883230'
 
+EXTERNAL_FEEDBACK_LINK = 'http://sovietgroove.userecho.com/'
+
 THEME_DIR = 'themes/grid'
 TEMPLATE_DIR = '.'
 
