@@ -1,6 +1,7 @@
 import re
 import urllib
 import cgi
+import logging
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -17,7 +18,7 @@ from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePage
 from userinfo import UserInfo
 
 class AbstractPageHandler(request.BlogRequestHandler):
-    def augment_articles(self, articles, url_prefix, produce_html=True):
+    def augment_articles(self, articles, url_prefix, single_article, produce_html=True):
         for article in articles:
             if article:
                 if produce_html:
@@ -27,16 +28,17 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 article.tag_objects = article.get_tag_objects()
                 article.url = url_prefix + article.path
                 article.guid = url_prefix + utils.get_article_guid(article)
-                article.comments_count = article.comment_set.count()
+                #article.comments_count = -11
+
                 article.published_class = 'draft' if article.draft else 'published'
                 #article.title = cgi.escape(article.title)
-                if len(articles) == 1: # only for a concrete blog post page
+                if single_article:
                     self.augment_comments_for(article)
                 article.pinned = article.published_date > datetime.datetime.now()
 
     def augment_comments_for(self, article):
         comments = []
-        for comment in article.fetch_comments():
+        for comment in article.comment_set:
             comment.html = markup.markup2html(markup_text=comment.text,
                                               for_comment=True,
                                               rich_markup=False,
@@ -44,13 +46,15 @@ class AbstractPageHandler(request.BlogRequestHandler):
             comment.repliable = (comment.id == comment.replied_comment_id)
             comments.append(comment)
         article.comments = comments
+        #article.comments_count = len(comments)
 
     def render_articles(self,
                         page_info,
                         request,
                         recent,
                         template_name='articles.html',
-                        additional_template_variables = None):
+                        additional_template_variables = None,
+                        single_article = False):
         if not isinstance(page_info, PageInfoBase):
             raise Exception("Use 'page_info' instead of 'articles'; actual = %s" % type(page_info.articles))
 
@@ -61,7 +65,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
         if port:
             url_prefix += ':%s' % port
 
-        self.augment_articles(articles, url_prefix)
+        self.augment_articles(articles, url_prefix, single_article=single_article)
 
         user_info = UserInfo(request)
 
@@ -194,8 +198,12 @@ class ArticleBySlugHandler(ArticleByIdHandler):
     @caching.cacheable
     def produce_html(self, article):
         additional_template_variables = {'single_article': article}
-        return self.render_articles(SinglePageInfo(article), self.request, self.get_recent(), 'articles.html',
-            additional_template_variables)
+        return self.render_articles(SinglePageInfo(article),
+                                    self.request,
+                                    self.get_recent(),
+                                    'articles.html',
+                                    additional_template_variables,
+                                    single_article=True)
 
 class ArchivePageHandler(AbstractPageHandler):
     """
@@ -273,6 +281,9 @@ application = webapp.WSGIApplication(
     debug=True)
 
 def main():
+#    logging.getLogger().setLevel(logging.DEBUG)
+#    utils.setup_log_ds_queries()
+
     util.run_wsgi_app(application)
 
 if __name__ == '__main__':
