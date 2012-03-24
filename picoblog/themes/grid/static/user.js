@@ -1,3 +1,16 @@
+// enrich links to userecho.com
+$(document).ready(function() {
+    $('a[href^="http://sovietgroove.userecho.com"]').each(function() {
+        $(this).mouseenter(function() {
+            UE.Popin.preload();
+        });
+        $(this).click(function() {
+            UE.Popin.show();
+            return false; // preventing browser from following the link
+        });
+    })
+});
+
 function read_cookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
