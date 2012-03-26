@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 
 import os
 import re
@@ -108,3 +109,53 @@ if __name__ == '__main__':
 def assert_type(object, expected_type):
     if not isinstance(object, expected_type):
         raise Exception('Expected type: %s. Actual: %s' % (expected_type, type(object)))
+
+def setup_log_ds_queries():
+    #counter = 0
+
+    from google.appengine.api import apiproxy_stub_map
+    from google.appengine.datastore import datastore_index
+
+    def db_log(model, call, details=''):
+        #if model == 'Article':
+            #global counter
+            #if counter == 1: raise Exception('%s' % 'stack trace')
+            logging.debug('~~~~~~~~~~~~~~~~~~~~~~~~')
+            logging.debug('~~ DB_LOG: %s @ %s (%s)', call, model, details)
+            logging.debug('~~ %d' % counter)
+            #counter += 1
+            #if counter >= 2: counter = 0
+
+    """Apply a hook to app engine that logs db statistics."""
+    def model_name_from_key(key):
+        return key.path().element_list()[0].type()
+
+    def hook(service, call, request, response):
+        assert service == 'datastore_v3'
+        if call == 'Put':
+            for entity in request.entity_list():
+                db_log(model_name_from_key(entity.key()), call)
+        elif call in ('Get', 'Delete'):
+            for key in request.key_list():
+                db_log(model_name_from_key(key), call)
+        elif call == 'RunQuery':
+            kind = datastore_index.CompositeIndexForQuery(request)[1]
+            db_log(kind, call)
+        else:
+            db_log(None, call)
+
+    apiproxy_stub_map.apiproxy.GetPreCallHooks().Append(
+        'db_log', hook, 'datastore_v3')
+
+
+def dump_execution_time(wrapped):
+    def decorator(*args, **kwargs):
+        start_time = datetime.datetime.now()
+        rv = wrapped(*args, **kwargs)
+        dt = datetime.datetime.now() - start_time
+        logging.debug('***** %s() took %d:%03d' % (wrapped.__name__, dt.seconds, dt.microseconds/1000))
+        return rv
+    return decorator
+
+
+logging.getLogger().setLevel(logging.DEBUG)

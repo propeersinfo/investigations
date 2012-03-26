@@ -4,6 +4,7 @@ import urllib2
 
 import defs
 import my_tags
+import utils
 
 """
 Simple markup support.
@@ -40,8 +41,10 @@ def handle_custom_tag_image(text):
         return '<img src="%s">' % addr
       else:
         return '<img src="http://dl.dropbox.com/u/%s/sg/%s" alt="%s">' % (defs.DROPBOX_USER, addr, addr)
-    return re.sub(CUSTOM_TAG_IMAGE, replacer, text)
-    #return re.sub(regex, '<img src="/static/cover.jpg">', text)
+    if defs.SHOW_REAL_IMAGES:
+        return re.sub(CUSTOM_TAG_IMAGE, replacer, text)
+    else:
+        return re.sub(CUSTOM_TAG_IMAGE, '<img src="/static/cover.jpg">', text)
 
 LINK_1 = re.compile('^(https?://[^\s]+)', re.IGNORECASE)    # a link at the most beginning
 LINK_2 = re.compile('(\s)(https?://[^\s]+)', re.IGNORECASE) # all other cases
@@ -199,11 +202,11 @@ class SimpleMarkup():
 
 class CleverMarkup(SimpleMarkup):
     RECOGNIZED_PARAGRAPH_NAMES = ['picture', 'tracklist', 'techinfo', 'download']
-    article_id = None
     class CleverMarkupFailedToMatchInput(Exception):
         pass
     def __init__(self, for_comment, rich_markup = True, recognize_links = True):
         SimpleMarkup.__init__(self, for_comment, rich_markup, recognize_links)
+        self.article_id = None
     def generate_html(self, markup_text):
         if self.for_comment:
             return SimpleMarkup.generate_html(self, markup_text)
@@ -242,6 +245,7 @@ class CleverMarkup(SimpleMarkup):
         return hash if len(hash) > 0 else None
 
 # main function
+@utils.dump_execution_time
 def markup2html(markup_text, for_comment, rich_markup = True, recognize_links = True, article_id = None):
     #return SimpleMarkup(rich_markup, recognize_links).generate_html(markup_text)
     markup = CleverMarkup(for_comment, rich_markup, recognize_links)

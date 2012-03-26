@@ -3,8 +3,8 @@ version: 1
 runtime: python
 api_version: 1
 
-#builtins:
-#- remote_api: on
+builtins:
+- remote_api: on
 
 handlers:
 
@@ -42,10 +42,6 @@ handlers:
 - url: /experiment/.*
   script: experiment.py
 
-- url: /
+- url: /.*
   script: blog.py
   login: admin
-
-- url: /.+
-  script: blog.py
-  #login: admin
