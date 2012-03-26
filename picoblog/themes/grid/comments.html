@@ -38,7 +38,8 @@
 
 <!-- new comment form -->
         <p><br/><b>Your comment:</b></p>
-        <form id="comment-form" action="/comment/add/{{article.id}}" method="post" accept-charset="{{defs.HTML_ENCODING}}">
+        <form id="comment-form" action="/comment/add/{{article.id}}" method="post" accept-charset="{{defs.HTML_ENCODING}}"
+              onsubmit="return comment_form_submit(this);">
         <div class="row">
     		<div class="width_2"><p>
     			Name
