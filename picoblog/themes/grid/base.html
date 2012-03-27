@@ -5,8 +5,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset={{defs.HTML_ENCODING}}"/>
 <title>{% block title %}{% endblock %} - Soviet Groove</title>
 
-<!--
+<link rel="icon" href="/static/favicon.png" type="image/x-icon"/>
+<link rel="shortcut icon" href="/static/favicon.png" type="image/x-icon"/>
+
 <link rel="alternate" type="application/rss+xml" title="Subscribe to new articles" href="/rss"/>
+
+<!--
 <link rel="stylesheet/less" href="/static/style.less.css" type="text/css" />
 <script src="/static/less-1.0.21.min.js"></script>
 -->
@@ -28,6 +32,7 @@
 	<span lang="ru">
 		Сайт тестируется. <a href="{{defs.EXTERNAL_FEEDBACK_LINK}}">Сообщить</a> об ошибке либо пожелании.
 	</span>
+	Version {{defs.APP_VERSION}}
 </p>
 {% endif %}
 
@@ -79,10 +84,14 @@
 {% blog_tag "disco" %},
 {% blog_tag "electro" %},
 {% blog_tag "shake" %} and the
-{% blog_tag "rest" %} cool music from USSR of the
+rest cool music from USSR of the
 {% blog_tag "60s" "60's" %},
 {% blog_tag "70s" "70's" %} and
-{% blog_tag "80s" "80's" %}.&nbsp;&nbsp; <a href="/tag"><code>&lt;all-tags/&gt;</code></a>
+{% blog_tag "80s" "80's" %}.
+
+&nbsp;&nbsp; <a href="/tag"><code>&lt;all-tags/&gt;</code></a>
+
+&nbsp;&nbsp; <a href="/rss">RSS</a>
 
 	    	</div>
 		</div>
