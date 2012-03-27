@@ -56,11 +56,11 @@ def set_cookie(response, key, value):
     response.headers.add_header('Set-Cookie', c[key].OutputString())
 
 def set_unicode_cookie(response, key, value):
-  c = Cookie.SimpleCookie()
-  c[key] = value.encode('unicode-escape')
-  c[key]["expires"] = "Sun, 31-May-2020 23:59:59 GMT"
-  c[key]["path"] = "/"
-  response.headers.add_header('Set-Cookie', c[key].OutputString())
+    c = Cookie.SimpleCookie()
+    c[key] = value.encode('unicode-escape')
+    c[key]["expires"] = "Sun, 31-May-2020 23:59:59 GMT"
+    c[key]["path"] = "/"
+    response.headers.add_header('Set-Cookie', c[key].OutputString())
   
 def get_unicode_cookie(request, key, default_value):
   def unescape(s):
@@ -78,17 +78,18 @@ def read_file(file):
     return open(full).read()
 
 def send_mail_to_admin_about_new_comment(comment):
-    from google.appengine.api import mail
-    mail.send_mail(sender='zeencd@gmail.com',
-                   to='zeencd@gmail.com',
-                   subject='New comment in "%s"' % comment.article.title,
-                   body='''
+    if defs.EMAIL_NOTIFY_COMMENT:
+        from google.appengine.api import mail
+        mail.send_mail(sender='zeencd@gmail.com',
+                       to='zeencd@gmail.com',
+                       subject='New comment in "%s"' % comment.article.title,
+                       body='''
 Comment author: %s
 
-Coment text: %s
+Comment text: %s
 
 Blog post: %s
-''' % (comment.author, comment.text, get_article_url(comment.article)))
+            ''' % (comment.author, comment.text, get_article_url(comment.article)))
 
 class TimePeriod():
     def __init__(self, seconds):

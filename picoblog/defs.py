@@ -36,4 +36,6 @@ DEVSERVER = not PRODUCTION
 __APP_VERSION_FOR_UNIT_TESTS = '' # important because None value causes errors in library code further
 APP_VERSION = os.getenv('CURRENT_VERSION_ID', __APP_VERSION_FOR_UNIT_TESTS)
 
-SHOW_REAL_IMAGES = False
+SHOW_REAL_IMAGES = True
+
+EMAIL_NOTIFY_COMMENT = False
