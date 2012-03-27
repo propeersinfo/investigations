@@ -1,4 +1,6 @@
-﻿<!-- comments count -->
+﻿<a name="comments"></a>
+
+<!-- comments count -->
       {% if article.comments_count %}
         <p>
             <b>{{article.comments_count}} comments:</b>
@@ -15,7 +17,7 @@
 					{% if not comment.author %}
 						<span>Anonymous</span>
 					{% else %}
-						<span>{{comment.author}}</span>
+						<span>{{comment.author|escape}}</span>
 					{% endif %}
 				{% endif %}
 				<br>
