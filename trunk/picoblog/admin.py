@@ -154,7 +154,7 @@ class ResetTagCounters(request.BlogRequestHandler):
 
 class EmptyDB(request.BlogRequestHandler):
     def post(self):
-        for cls in [ models.Article, models.Slug, models.Comment, models.ArticleTag, caching.HtmlCache ]:
+        for cls in [ models.Article, models.Slug, models.Comment, models.ArticleTag, caching.HtmlCache, caching.DataStoreMeta ]:
             empty_table(cls.__name__)
         caching.TagCloud.reset()
         self.redirect('/admin/')

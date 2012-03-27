@@ -1,13 +1,21 @@
 Check list:
 * make sure admin links are viewable and accessible for admin only
 
+User Testing:
+- admin: ability to approve links in a comment
+- import: clean <p>'s "style" attr: http://2.sovietraregroove.appspot.com/dj-yan-shrimp-jazzy-tunes-podcast
+- after '&' was used in a comment, instead '&amp;' appears in the cookie
+- scroll to new added comment
+- fix error when submitting empty comment (server side)
+- an user commented url is suprisingly clickable at http://2.sovietraregroove.appspot.com/dos-mukasan-1976
+
 Critical:
 
 Major (1.0 stoppers):
 - import: parse 'tracklisting:' into '#tracks'
-- 'new comment' form, if not filled properly, leads to inappropriate stack trace
 ? cache: handle If-Modified-Since?
 ? markup: rewrite [tag] handling to regex callbacks (upd: this improvement is ineffective it seems)
++ 'new comment' form, if not filled properly, leads to inappropriate stack trace
 + consider storing main slug in Article objects and additional slugs in a special table of redirects
 + install uservoice.com widget
 + not accessible: http://www.sovietgroove.com/robots.txt
