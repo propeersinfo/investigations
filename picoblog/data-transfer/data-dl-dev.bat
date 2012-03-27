@@ -2,6 +2,7 @@
 
 cls
 rm -f bulkloader-*
+rm -f *.dat
 
 call:handle_kind Article
 call:handle_kind ArticleTag

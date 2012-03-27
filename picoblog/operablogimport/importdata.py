@@ -1,6 +1,7 @@
 import os
 import cgi
 import logging
+import glob
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -49,22 +50,24 @@ def import_file(fname):
     return import_post_object(post)
 
 def import_all_files():
-    import glob
+    logging.info('import_all_files() started')
     posts = []
     cnt = 0
-    for file in glob.glob("../operabloghtml/*"):
-        if IMPORT_LIMIT and cnt >= IMPORT_LIMIT:
-            break
-        if os.path.isfile(file):
-            posts.append(parse_file(file))
-            cnt += 1
-    posts = sorted(posts, key=lambda post: post['date'])
-    for post in posts:
-        try:
-            #out.write("%s %s\n" % (post['date'], post['title']))
-            import_post_object(post)
-        except db.BadValueError:
-            raise Exception('BadValueError for file %s' % (file))
+    files = glob.glob("../operabloghtml/*")
+    for file in files:
+        if IMPORT_LIMIT and cnt >= IMPORT_LIMIT: break
+        if not os.path.isfile(file): continue
+        logging.info('IMPORTING FILE %d/%d' % (cnt,len(files)))
+        #posts.append(parse_file(file))
+        import_post_object(parse_file(file))
+        cnt += 1
+#    posts = sorted(posts, key=lambda post: post['date'])
+#    for post in posts:
+#        try:
+#            #out.write("%s %s\n" % (post['date'], post['title']))
+#            import_post_object(post)
+#        except db.BadValueError:
+#            raise Exception('BadValueError for file %s' % (file))
 
 class ImportSomeHandler(request.BlogRequestHandler):
     def get(self):
@@ -77,6 +80,7 @@ application = webapp.WSGIApplication(
         debug=True)
 
 def main():
+    logging.getLogger().setLevel(logging.INFO)
     util.run_wsgi_app(application)
 
 if __name__ == "__main__":
