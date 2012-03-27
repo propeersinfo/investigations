@@ -39,7 +39,10 @@ class AbstractPageHandler(request.BlogRequestHandler):
     def augment_comments_for(self, article):
         comments = []
         for comment in article.comment_set:
-            comment.html = markup.markup2html(markup_text=comment.text,
+            # escape comment's text here not in template
+            # because some HTML may be still added by a logic
+            pre_html = cgi.escape(comment.text)
+            comment.html = markup.markup2html(markup_text=pre_html,
                                               for_comment=True,
                                               rich_markup=False,
                                               recognize_links=comment.blog_owner)
@@ -249,8 +252,13 @@ class AddCommentHandler(AbstractPageHandler):
         article_id = int(article_id)
         article = Article.get(article_id)
 
-        author = cgi.escape(self.request.get('author')).strip()
-        text = cgi.escape(self.request.get('text')).strip()
+        author = self.request.get('author').strip()
+        text = self.request.get('text').strip()
+
+        #raise Exception('Comment: %s => %s' % (a,t))
+
+        #author = cgi.escape(a).strip()
+        #text = cgi.escape(t).strip()
 
         comment = Comment(article = article,
                           author = author,
