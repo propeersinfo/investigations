@@ -216,28 +216,29 @@ class Article(db.Model):
 
 class Comment(db.Model):
 
-    id = db.IntegerProperty()
+    #id = db.IntegerProperty()
     article = db.ReferenceProperty(Article)
     blog_owner = db.BooleanProperty(required=True, default=False)
     author = db.StringProperty() # Could be None for anonymous users of myopera
     text = db.TextProperty(required=True)
     published_date = db.DateTimeProperty(auto_now_add=True)
     #replied_comment = db.SelfReferenceProperty()
-    replied_comment_id = db.IntegerProperty()
+    replied_comment = db.SelfReferenceProperty()
+    replied_comment_date = db.DateTimeProperty(auto_now=False, auto_now_add=False)
 
-    @classmethod
-    def get(cls, id):
-        #raise Exception('%s' % 'stack trace')
-        q = db.Query(Comment)
-        q.filter('id = ', id)
-        return q.get()
+#    @classmethod
+#    def get(cls, id):
+#        #raise Exception('%s' % 'stack trace')
+#        q = db.Query(Comment)
+#        q.filter('id = ', id)
+#        return q.get()
 
     @classmethod
     def get_for_article(cls, article):
         #raise Exception('%s' % 'stack trace')
         return db.Query(Comment)\
                  .filter("article = ", article)\
-                 .order('replied_comment_id')\
+                 .order('replied_comment_date')\
                  .order('published_date')\
                  .fetch(FETCH_THEM_ALL_COMMENTS)
 
@@ -247,12 +248,18 @@ class Comment(db.Model):
 
     def save(self):
         if self.is_saved():
+            # UPDATE
             self.put()
         else:
-            self.put()
+            # INSERT
+            self.put() # retrieve the key
             self.id = self.key().id()
-            if not self.replied_comment_id:
-                self.replied_comment_id = self.id
+            if self.replied_comment:
+                self.replied_comment_date = self.replied_comment.published_date
+            else:
+                self.replied_comment_date = self.published_date
+            #if not self.replied_comment_id:
+            #    self.replied_comment_id = self.id
             self.article.increment_comment_counter(+1)
             self.put()
 

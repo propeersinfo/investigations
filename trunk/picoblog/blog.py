@@ -37,8 +37,14 @@ class AbstractPageHandler(request.BlogRequestHandler):
                 article.pinned = article.published_date > datetime.datetime.now()
 
     def augment_comments_for(self, article):
+        def augment_repliable(comment):
+            try:
+                comment.repliable = not comment.replied_comment
+            except db.ReferencePropertyResolveError:
+                comment.repliable = False
+
         comments = []
-        for comment in article.comment_set:
+        for comment in article.fetch_comments():
             # escape comment's text here not in template
             # because some HTML may be still added by a logic
             pre_html = cgi.escape(comment.text)
@@ -46,7 +52,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
                                               for_comment=True,
                                               rich_markup=False,
                                               recognize_links=comment.blog_owner)
-            comment.repliable = (comment.id == comment.replied_comment_id)
+            augment_repliable(comment)
             comments.append(comment)
         article.comments = comments
         #article.comments_count = len(comments)
@@ -241,12 +247,9 @@ class RssArticlesHandler(AbstractPageHandler):
                                                      '../rss-articles.xml'))
 
 class AddCommentHandler(AbstractPageHandler):
-    def get_replied_comment_id(self):
-        str = self.request.get('reply-to').strip()
-        if str:
-            c = Comment.get(int(str))
-            if c: return c.id
-        return None
+    def get_replied_comment(self):
+        key = self.request.get('reply-to').strip()
+        return Comment.get(key) if key else None
 
     def post(self, article_id):
         article_id = int(article_id)
@@ -264,7 +267,7 @@ class AddCommentHandler(AbstractPageHandler):
                           author = author,
                           text = text,
                           blog_owner = users.is_current_user_admin(),
-                          replied_comment_id = self.get_replied_comment_id())
+                          replied_comment = self.get_replied_comment())
         comment.save()
         utils.set_unicode_cookie(self.response, "comment_author", author)
         if defs.PRODUCTION:

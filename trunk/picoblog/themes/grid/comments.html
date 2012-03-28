@@ -28,9 +28,9 @@
     			{{comment.html}}
 				{% if user_info.is_admin %}
 				<div class="comment-administration">
-					<a href="/admin/comment/delete/{{comment.id}}" title="Delete comment">delete</a>
+					<a href="/admin/comment/delete/{{comment.key}}" title="Delete comment">delete</a>
 					{% if comment.repliable %}
-						/ <a href="javascript:replyToComment({{comment.id}});">reply to this</a>
+						/ <a href="#" onclick="reply_to_comment(this, '{{comment.key}}');">reply to this</a>
 					{% endif %}
 				</div>
 				{% endif %}
@@ -47,6 +47,8 @@
     			Name
 			</p></div>
     		<div class="width_6"><p>
+                <input id="reply-to" type="hidden" name="reply-to" />
+                <br/>
 				{% if user_info.is_admin %}
 				<span class="input-label"><label>{{defs.BLOG_OWNER}}</label></span>
 				{% else %}
