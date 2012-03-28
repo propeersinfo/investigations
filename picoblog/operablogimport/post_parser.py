@@ -132,29 +132,33 @@ def parse_tags(soup):
     tags.append(a.contents[0])
   return tags
 
+def clean_element_tree(root):
+    fix_single_mp3_player(root)
+    fix_playlist_mp3_player(root)
+    remove_single_mp3_link(root)
+    fix_image(root)
+    fix_youtube(root)
+    fix_mixcloud(root)
+    fix_soundcloud(root)
+    replace_links_with_text_equal_to_href(root)
+    fix_local_link_url(root)
+    fix_links_attrs(root)
+    remove_unwanted_attributes(root)
+
+    # invoke it *before* tags stripped
+    remove_new_lines_from_certain_tags(root)
+    # strip tags
+    strip_tags(root, valid_tags=['br', 'a', 'blockquote', 'object', 'param', 'embed'])
+
+    replace_brs(root)
+
 def get_content(soup):
   # Path: div#main div.content
   div_content_node = select(soup, "div#main div.content")[0]
 
   #print "".join(map(to_string, div_content_node.contents)).encode('ascii', 'ignore')
 
-  fix_single_mp3_player(div_content_node)
-  fix_playlist_mp3_player(div_content_node)
-  remove_single_mp3_link(div_content_node)
-  fix_image(div_content_node)
-  fix_youtube(div_content_node)
-  fix_mixcloud(div_content_node)
-  fix_soundcloud(div_content_node)
-  replace_links_with_text_equal_to_href(div_content_node)
-  fix_local_link_url(div_content_node)
-  fix_links_attrs(div_content_node)
-
-  # invoke it *before* tags stripped
-  remove_new_lines_from_certain_tags(div_content_node)
-
-  strip_tags(div_content_node, valid_tags=['br', 'a', 'blockquote', 'object', 'param', 'embed'])
-
-  replace_brs(div_content_node)
+  clean_element_tree(div_content_node)
 
   text = node_to_string(div_content_node)
   text = text.replace('&amp;', '&')
@@ -185,6 +189,8 @@ def get_comments(soup):
         return False
     def get_text(div_text, try_to_find_user_name = True):
         if div_text:
+            clean_element_tree(div_text)
+
             tags = div_text.contents
             tags = map(fix_br, tags)
             text = "".join(map(to_string, tags)).strip()
@@ -243,6 +249,11 @@ def remove_new_lines_from_certain_tags(root):
     for sub_root in sub_roots:
         for e in sub_root.findAll(text=True):
             e.replaceWith(NavigableString(unicode(e).strip()))
+
+def remove_unwanted_attributes(root):
+    for tag in root.findAll():
+        if hasattr(tag, 'style'):
+            del tag['style']
 
 def fix_single_mp3_player(root):
     for object_tag in root.findAll("object"):
