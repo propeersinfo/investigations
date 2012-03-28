@@ -34,7 +34,7 @@ ADMIN_FETCH_MAXIMUM = 10 * 1000
 class ShowAdminMainPageHandler(request.BlogRequestHandler):
     def get(self):
         appname = os.getenv('APPLICATION_ID')
-        ds_prod = 'https://appengine.google.com/datastore/explorer?&app_id=%s' % appname
+        ds_prod = 'https://appengine.google.com/datastore/explorer?&app_id=%s&version_id=%s' % (appname, defs.APP_VERSION)
         ds_dev = '/_ah/admin/datastore'
         ds = ds_prod if defs.PRODUCTION else ds_dev
         template_vars = {
@@ -318,9 +318,8 @@ class DeleteArticleHandler(request.BlogRequestHandler):
         self.redirect('/')
 
 class DeleteCommentHandler(request.BlogRequestHandler):
-    def get(self, comment_id):
-        comment_id = int(comment_id)
-        comment = models.Comment.get(comment_id)
+    def get(self, comment_key):
+        comment = models.Comment.get(comment_key)
         if comment:
             article = comment.article
             comment.delete()
@@ -376,24 +375,26 @@ def alert_the_media():
 
 application = webapp.WSGIApplication(
         [
-         ('/admin/?', ShowAdminMainPageHandler),
-         ('/admin/article/new/?', NewArticleHandler),
-         ('/admin/article/delete/?', DeleteArticleHandler),
-         ('/admin/article/save/?', SaveArticleHandler),
-         ('/admin/article/edit/(\d+)$', EditArticleHandler),
-         ('/admin/comment/delete/(\d+)$', DeleteCommentHandler),
-         ('/admin/setup-basic-tags', SetupBasicTags),
-         ('/admin/tags/generate-python-code', GenPyCode),
-         ('/admin/recalculate-tag-counters', RecalculateTagCountersFromArticles),
-         ('/admin/reset-tag-counters', ResetTagCounters),
-         ('/admin/empty-db', EmptyDB),
-         ('/admin/tags', ManageTags),
-         ('/admin/slugify/(.*)$', Slugify),
-         ('/admin/slugs/?$', ListSlugs),
-         ('/admin/headers', ShowHeaders),
-         ('/admin/clear-cache', ClearCaches),
-         ('/admin/memcache-test', MemcacheTest),
-         ('/admin/import-article-from-url', ImportantArticleFromURL)
+        ('/admin/article/new/?', NewArticleHandler),
+        ('/admin/article/delete/?', DeleteArticleHandler),
+        ('/admin/article/save/?', SaveArticleHandler),
+        ('/admin/article/edit/(\d+)$', EditArticleHandler),
+
+        ('/admin/comment/delete/(.+)$', DeleteCommentHandler),
+
+        ('/admin/?', ShowAdminMainPageHandler),
+        ('/admin/setup-basic-tags', SetupBasicTags),
+        ('/admin/tags/generate-python-code', GenPyCode),
+        ('/admin/recalculate-tag-counters', RecalculateTagCountersFromArticles),
+        ('/admin/reset-tag-counters', ResetTagCounters),
+        ('/admin/empty-db', EmptyDB),
+        ('/admin/tags', ManageTags),
+        ('/admin/slugify/(.*)$', Slugify),
+        ('/admin/slugs/?$', ListSlugs),
+        ('/admin/headers', ShowHeaders),
+        ('/admin/clear-cache', ClearCaches),
+        ('/admin/memcache-test', MemcacheTest),
+        ('/admin/import-article-from-url', ImportantArticleFromURL)
          ],
         debug=True)
 
