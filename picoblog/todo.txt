@@ -2,10 +2,11 @@ Check list:
 * make sure admin links are viewable and accessible for admin only
 
 User Testing:
+- implement overquota screen
+- handle over quota errors
 - admin: ability to approve links in a comment
-- import: clean <p>'s "style" attr: http://2.sovietraregroove.appspot.com/dj-yan-shrimp-jazzy-tunes-podcast
-- after '&' was used in a comment, instead '&amp;' appears in the cookie
-- scroll to new added comment
++ import: clean <p>'s "style" attr: http://2.sovietraregroove.appspot.com/dj-yan-shrimp-jazzy-tunes-podcast
++ after '&' was used in a comment, instead '&amp;' appears in the cookie
 - fix error when submitting empty comment (server side)
 - an user commented url is suprisingly clickable at http://2.sovietraregroove.appspot.com/dos-mukasan-1976
 
@@ -98,6 +99,7 @@ Normal:
 + navigation with Ctrl+arrows
 
 Low priority:
+- scroll to new added comment
 - consider Birman-style shortcuts: Ctrl+Up/Dn
 - markup: do not introduce <br> tags within <object>
 - rss streams for tags
