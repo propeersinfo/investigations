@@ -216,15 +216,16 @@ class Article(db.Model):
 
 class Comment(db.Model):
 
-    #id = db.IntegerProperty()
     article = db.ReferenceProperty(Article)
     blog_owner = db.BooleanProperty(required=True, default=False)
     author = db.StringProperty() # Could be None for anonymous users of myopera
     text = db.TextProperty(required=True)
     published_date = db.DateTimeProperty(auto_now_add=True)
-    #replied_comment = db.SelfReferenceProperty()
     replied_comment = db.SelfReferenceProperty()
     replied_comment_date = db.DateTimeProperty(auto_now=False, auto_now_add=False)
+    approved = db.BooleanProperty(default=False)
+    user_ip = db.StringProperty()
+    user_agent = db.StringProperty()
 
 #    @classmethod
 #    def get(cls, id):

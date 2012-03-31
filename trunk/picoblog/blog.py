@@ -6,7 +6,7 @@ import logging
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.api import users
-from google.appengine.ext import appstats
+from google.appengine.runtime.apiproxy_errors import OverQuotaError
 
 import caching
 from models import *
@@ -16,6 +16,20 @@ import utils
 import clevermarkup as markup
 from paging import PagedQuery, PageInfoBase, PageInfo, EmptyPageInfo, SinglePageInfo, NoPagingPageInfo
 from userinfo import UserInfo
+
+HTTP_500_SERVICE_UNAVAILABLE = 503
+
+def handle_over_quota(get_or_post):
+    def wrapper(self, *args, **kwargs):
+        try:
+            #raise OverQuotaError('test')
+            return get_or_post(self, *args, **kwargs)
+        except OverQuotaError, msg:
+            logging.error(msg)
+            self.response.set_status(HTTP_500_SERVICE_UNAVAILABLE)
+            template = 'over-quota.html'
+            self.response.out.write(self.render_articles(EmptyPageInfo(), self.request, [], template))
+    return wrapper
 
 class AbstractPageHandler(request.BlogRequestHandler):
     def augment_articles(self, articles, url_prefix, single_article, produce_html=True):
@@ -115,6 +129,7 @@ class AbstractPageHandler(request.BlogRequestHandler):
         self.response.out.write(self.render_articles(EmptyPageInfo(), self.request, [], template))
 
 class FrontPageHandler(AbstractPageHandler):
+    @handle_over_quota
     @caching.show_page_load_time
     def get(self, *args, **kwargs):
         self.response.out.write(self.produce_html(*args, **kwargs))
@@ -247,7 +262,7 @@ class RssArticlesHandler(AbstractPageHandler):
                                                      '../rss-articles.xml'))
 
 class AddCommentHandler(AbstractPageHandler):
-    def get_replied_comment(self):
+    def __get_replied_comment(self):
         key = self.request.get('reply-to').strip()
         return Comment.get(key) if key else None
 
@@ -258,16 +273,14 @@ class AddCommentHandler(AbstractPageHandler):
         author = self.request.get('author').strip()
         text = self.request.get('text').strip()
 
-        #raise Exception('Comment: %s => %s' % (a,t))
-
-        #author = cgi.escape(a).strip()
-        #text = cgi.escape(t).strip()
-
         comment = Comment(article = article,
                           author = author,
                           text = text,
                           blog_owner = users.is_current_user_admin(),
-                          replied_comment = self.get_replied_comment())
+                          replied_comment = self.__get_replied_comment(),
+                          user_ip = self.request.remote_addr,
+                          user_agent = self.request.headers['USER_AGENT']
+                          )
         comment.save()
         utils.set_unicode_cookie(self.response, "comment_author", author)
         if defs.PRODUCTION:
