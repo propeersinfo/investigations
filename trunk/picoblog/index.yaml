@@ -41,6 +41,18 @@ indexes:
 - kind: Comment
   properties:
   - name: article
+  - name: published_date
+  - name: replied_comment_date
+
+- kind: Comment
+  properties:
+  - name: article
+  - name: replied_comment_date
+  - name: published_date
+
+- kind: Comment
+  properties:
+  - name: article
   - name: replied_comment_id
   - name: published_date
 
