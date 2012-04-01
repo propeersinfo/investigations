@@ -30,7 +30,7 @@
 				<div class="comment-administration">
 					<a href="/admin/comment/delete/{{comment.key}}" title="Delete comment">delete</a>
 					{% if comment.repliable %}
-						/ <a href="#" onclick="reply_to_comment(this, '{{comment.key}}');">reply to this</a>
+						/ <a href="#" onclick="return reply_to_comment(this, '{{comment.key}}');">reply to this</a>
 					{% endif %}
 				</div>
 				{% endif %}
