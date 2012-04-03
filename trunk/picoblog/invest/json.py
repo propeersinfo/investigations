@@ -1,6 +1,7 @@
 import datetime
 import simplejson as json
-#import json
+
+import json_helper
 
 class Entity(object):
     def __init__(self):
@@ -10,56 +11,17 @@ class Entity(object):
         self.num = 51
 
     def __str__(self):
-        return 'Entity(param=%s,dt=%s)' % (self.param, self.dt)
+        return 'Entity(param=%s,dt=%s,num=%d)' % (self.param, self.dt, self.num)
 
-    @classmethod
-    def from_dict(cls, dct):
-        obj = Entity()
-        for key in dct.keys():
-            value = dct[key]
-            try:
-                value = datetime.datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
-            except ValueError:
-                pass
-            except TypeError:
-                pass
-            setattr(obj, key, value)
-        #obj.param = dct.get('param')
-        #obj.dt = dct.get('dt')
-        return obj
+Entity = json_helper.setup_from_dict(Entity)
 
-def define_json_classes(*classes):
-    dct = dict()
-    for cls in classes:
-        dct['__%s__' % cls.__name__] = cls
-    return  dct
-
-TYPES = define_json_classes(Entity)
-
-def make_encoder(types):
-    class ParametrizedTypeEncoder(json.JSONEncoder):
-        def default(self, obj):
-            if isinstance(obj, *(types.values())):
-                key = '__%s__' % obj.__class__.__name__
-                return { key: obj.__dict__ }
-            elif isinstance(obj, datetime.datetime):
-                return obj.strftime("%Y-%m-%d %H:%M:%S")
-            return json.JSONEncoder.default(self, obj)
-    return ParametrizedTypeEncoder
-
-def make_decoder(types):
-    def decoder(dct):
-        if len(dct) == 1:
-            type_name, value = dct.items()[0]
-            #type_name = type_name.strip('_')
-            if type_name in types:
-                return types[type_name].from_dict(value)
-        return dct
-    return decoder
+TYPES = json_helper.define_json_classes(Entity)
 
 #s = json.dumps(Entity(), cls=CustomTypeEncoder)
 o = Entity()
 print o
-s = json.dumps(o, cls=make_encoder(TYPES))
+s = json_helper.dumps(o, TYPES)
+#s = json.dumps(o, cls=make_encoder(TYPES))
 print s
-print json.loads(s, object_hook=make_decoder(TYPES))
+#print json.loads(s, object_hook=make_decoder(TYPES))
+print json_helper.loads(s, TYPES)
