@@ -34,25 +34,27 @@
 {%endcomment%}
 
 		<div class="row">
-    		<div class="width_2">
+    		<div class="width_2 cover">
+    			<p>
     			{% if article.complex_html.named.image %}
     			{{ article.complex_html.named.image }}
     			{% else %}
 	    		<img src="/static/cover.jpg" width="140"/>
     			{% endif %}
+    			</p>
     		</div>
-    		<div class="width_6">
-    			<div class="row">
-    				<div class="width_3 tracks">
+    		<div class="width_6 tracks">
+    			<table border="0" cellpadding="0" cellspacing="0"><tr><td>
 						<p>
-						<a href="#">A1. Mediniai Ratai</a>
+						A1. Mediniai Ratai
 						<br/>A2. As - Berzas
 						<br/>A3. Ateisiu Tylia Nakti
-						<br/><a href="#">A4. Saule</a>
+						<br/>A4. Saule
 						<br/>A5. Uzmirstoji taure
 						</p>
-    				</div>
-    				<div class="width_3 tracks">
+    			</td><td>
+    					&nbsp;&nbsp;
+    			</td><td>
 						<p>
 						B1. Rudenio pasaka
 						<br/>B2. Svajoniu Vygej
@@ -60,8 +62,7 @@
 						<br/>B4. Vinguriavo Takelis
 						<br/>B5. Vasara
 						</p>
-    				</div>
-    			</div>
+    			</td></tr></table>
     			<div class="row">
     				<div class="width_6 info">
     					<p>
