@@ -191,9 +191,10 @@ div.article {
 	font-size: 14px;
 }
 .info p {
-	font-family: serif, Times New Roman, Georgia !important;
+	/*font-family: serif, Times New Roman, Georgia !important;*/
 	font-size: 14px;
 	font-style: italic;
+	font-style: normal;
 }
 .download {
 	font-size: 85%;

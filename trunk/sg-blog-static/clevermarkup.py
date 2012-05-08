@@ -1,6 +1,7 @@
 import re
 import unittest
 import urllib2
+import sys
 
 import defs
 import my_tags
@@ -151,6 +152,7 @@ class Paragraph():
         else:
             return Paragraph(None, input)
 
+
 class ParagraphCollection(list):
     def __init__(self, p_list = list()):
         list.__init__(self)
@@ -161,18 +163,33 @@ class ParagraphCollection(list):
                 self.hash[p.name.lower()] = p
     def get_named_paragraph(self, name):
         return self.hash.get(name.lower())
-    def break_into_three_groups(self, names_wanted):
-        before = ParagraphCollection()
+#    def break_into_three_groups(self, names_wanted):
+#        before = ParagraphCollection()
+#        named = ParagraphCollection()
+#        after = ParagraphCollection()
+#        where_to_add_to = before
+#        for idx, p in enumerate(self):
+#            if p.name and names_wanted.count(p.name) > 0:
+#                named.append(p)
+#                where_to_add_to = after
+#            else:
+#                where_to_add_to.append(p)
+#        return before, named, after
+    def break_into_groups(self, names_wanted, names_mandatory):
+        def every_mandatory_name_found(in_para_list):
+            return True
+
         named = ParagraphCollection()
-        after = ParagraphCollection()
-        where_to_add_to = before
-        for idx, p in enumerate(self):
-            if p.name and names_wanted.count(p.name) > 0:
-                named.append(p)
-                where_to_add_to = after
-            else:
-                where_to_add_to.append(p)
-        return before, named, after
+        rest = ParagraphCollection()
+        for p in self:
+            where = named if (p.name and p.name in names_wanted) else rest
+            where.append(p)
+
+        if every_mandatory_name_found(named):
+            return named, rest
+        else:
+            return None, list(*self)
+
 
 def break_into_paragraphs(markup_text):
     def convert_line_ends_to_unix_type(str):
@@ -201,48 +218,65 @@ class SimpleMarkup():
         return result_string
 
 class CleverMarkup(SimpleMarkup):
-    RECOGNIZED_PARAGRAPH_NAMES = ['picture', 'tracklist', 'techinfo', 'download']
+    RECOGNIZED_PARAS = ['image', 'tracks', 'info', 'download']
+    MANDATORY_PARAS = ['tracks']
+
     class CleverMarkupFailedToMatchInput(Exception):
         pass
+
     def __init__(self, for_comment, rich_markup = True, recognize_links = True):
         SimpleMarkup.__init__(self, for_comment, rich_markup, recognize_links)
         self.article_id = None
+
     def generate_html(self, markup_text):
+        def para2html(paragraph):
+            return markup2html_paragraph(paragraph.body)
+
+        def convert_named_para_list_to_hash(pp):
+            hash = {}
+            for p in pp:
+                assert p.name
+                hash[str(p.name)] = para2html(p)
+            return hash
+
         if self.for_comment:
             return SimpleMarkup.generate_html(self, markup_text)
         pp = break_into_paragraphs(markup_text)
-        before, named, after = pp.break_into_three_groups(self.RECOGNIZED_PARAGRAPH_NAMES)
-        def para2html(paragraph):
-            return markup2html_paragraph(paragraph.body)
+        #before, named, after = pp.break_into_three_groups(self.RECOGNIZED_PARAGRAPH_NAMES)
+        named, rest = pp.break_into_groups(self.RECOGNIZED_PARAS, self.MANDATORY_PARAS)
         rv = {
-            'before': map(para2html, before),
-            'middle': self.get_the_middle(pp),
-            'after':  map(para2html, after)
+            #'before': map(para2html, before),
+            #'middle': self.get_the_middle(pp),
+            #'after':  map(para2html, after),
+            'named': convert_named_para_list_to_hash(named),
+            'rest': map(para2html, rest),
         }
+        print >>sys.stderr, 'named:', rv['named'].keys()
+        print >>sys.stderr, 'rest:', rv['rest']
         return rv
-    def get_the_middle(self, pp):
-        def break_tracklist_into_sides(text):
-            m = re.search('^(.*)(B0?1\.?\s.*)$', text, re.MULTILINE|re.IGNORECASE|re.DOTALL)
-            if m:
-                return markup2html_paragraph(m.group(1).strip()),\
-                       markup2html_paragraph(m.group(2).strip())
-            else:
-                return None, None
-        hash = {}
 
-        for name in self.RECOGNIZED_PARAGRAPH_NAMES:
-            p = pp.get_named_paragraph(name)
-            if p:
-                if name == 'tracklist':
-                    side_a, side_b = break_tracklist_into_sides(p.body)
-                    if side_a and side_b:
-                        hash[name] = {
-                            'side_a' : side_a,
-                            'side_b' : side_b
-                        }
-                        continue
-                hash[name] = markup2html_paragraph(p.body if p else 'no-named-p-%s' % name)
-        return hash if len(hash) > 0 else None
+#    def get_the_middle(self, pp):
+#        def break_tracklist_into_sides(text):
+#            m = re.search('^(.*)(B0?1\.?\s.*)$', text, re.MULTILINE|re.IGNORECASE|re.DOTALL)
+#            if m:
+#                return markup2html_paragraph(m.group(1).strip()),\
+#                       markup2html_paragraph(m.group(2).strip())
+#            else:
+#                return None, None
+#        hash = {}
+#        for name in self.RECOGNIZED_PARAS:
+#            p = pp.get_named_paragraph(name)
+#            if p:
+#                if name == 'tracks':
+#                    side_a, side_b = break_tracklist_into_sides(p.body)
+#                    if side_a and side_b:
+#                        hash[name] = {
+#                            'side_a' : side_a,
+#                            'side_b' : side_b
+#                        }
+#                        continue
+#                hash[name] = markup2html_paragraph(p.body if p else 'no-named-p-%s' % name)
+#        return hash if len(hash) > 0 else None
 
 # main function
 #@utils.dump_execution_time
