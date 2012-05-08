@@ -41,10 +41,10 @@ def handle_custom_tag_image(text):
         return '<img src="%s">' % addr
       else:
         return '<img src="http://dl.dropbox.com/u/%s/sg/%s" alt="%s">' % (defs.DROPBOX_USER, addr, addr)
-    if defs.SHOW_REAL_IMAGES:
+    if not defs.IMAGE_PLACEHOLDER:
         return re.sub(CUSTOM_TAG_IMAGE, replacer, text)
     else:
-        return re.sub(CUSTOM_TAG_IMAGE, '<img src="/static/cover.jpg">', text)
+        return re.sub(CUSTOM_TAG_IMAGE, '<img src="%s">' % defs.IMAGE_PLACEHOLDER, text)
 
 LINK_1 = re.compile('^(https?://[^\s]+)', re.IGNORECASE)    # a link at the most beginning
 LINK_2 = re.compile('(\s)(https?://[^\s]+)', re.IGNORECASE) # all other cases

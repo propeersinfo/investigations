@@ -29,6 +29,54 @@
 	    {% for p in article.complex_html.after %}
 		<p>{{ p|typographus }}</p>
 		{% endfor %}
+
+{%comment%}
+		<div class="row">
+    		<div class="width_2">
+    			<img src="/static/cover.jpg" width="140"/>
+    		</div>
+    		<div class="width_6">
+    			<div class="row">
+    				<div class="width_2 tracks">
+						<p>
+						<a href="#">A1. Mediniai Ratai</a>
+						<br/>A2. As - Berzas
+						<br/>A3. Ateisiu Tylia Nakti
+						<br/><a href="#">A4. Saule</a>
+						<br/>A5. Uzmirstoji taure
+						</p>
+    				</div>
+    				<div class="width_2 tracks">
+						<p>
+						B1. Rudenio pasaka
+						<br/>B2. Svajoniu Vygej
+						<br/>B3. Zuvedra
+						<br/>B4. Vinguriavo Takelis
+						<br/>B5. Vasara
+						</p>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="width_6 info">
+    					<p>
+						Title: Mindaugo Tamošiūno Kūriniai
+						<br/>Written by M. Tamošiūnas
+						<br/>Performed by Oktava
+						<br/>Soloists: V. Petrušonis (A side, male), S. Bagdonaitė (B side, female)
+						<br/>Melodiya LP C30-04787-88
+						</p>
+    				</div>
+    			</div>
+    		</div>
+		</div>
+
+		<p>
+		Download VBR, 61 MB:<br>
+		<a href="#" class="dl_button_x">rapidshare.com</a> /
+		<a href="#" class="dl_button_x">savefrom.net</a> /
+		<a href="#" class="dl_button_x">narod.ru</a>
+		</p>
+{%endcomment%}
 		
 {% if not article.pinned %}
 	    <p class="article-meta">
@@ -41,6 +89,8 @@
 			{% endfor %}
 	    </p>
 {% endif %}
+
+&nbsp;<br>
 
 {% if single_article %}
 {% include "../disqus.html" %}
