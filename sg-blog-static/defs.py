@@ -40,8 +40,8 @@ DEVSERVER = not PRODUCTION
 #APP_VERSION = os.getenv('CURRENT_VERSION_ID', __APP_VERSION_FOR_UNIT_TESTS)
 APP_VERSION = utils.get_seconds_since_epoch()
 
-IMAGE_PLACEHOLDER = '/static/cover.jpg'
-#IMAGE_PLACEHOLDER = None
+#IMAGE_PLACEHOLDER = '/static/cover.jpg'
+IMAGE_PLACEHOLDER = None
 
 EMAIL_NOTIFY_COMMENT = True
 

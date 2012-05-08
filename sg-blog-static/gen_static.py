@@ -93,6 +93,8 @@ class ArticleDataStoreMock():
         assert type(meta['date']) == datetime.datetime
         assert type(meta['tags']) in (list, set)
 
+        #raise Exception('%s' % (clever_object['named'],))
+
         self.title = meta['title']
         self.complex_html = clever_object
         self.pinned = False
@@ -113,8 +115,16 @@ def generate_article(slug):
     md = MarkdownFile.parse(md_file)
     clever_object = clevermarkup.markup2html(md.text, for_comment=False)
 
+    #print 'clever_object:', type(clever_object['middle'])
+
+    print >>sys.stderr, 'named at gen_static:', clever_object['named'].keys()
+    for p in clever_object['named']:
+        print >>sys.stderr, '-', type(p)
+
     article = ArticleDataStoreMock(clever_object, md.meta)
     articles = [ article ]
+
+    #raise Exception('%s' % (article.complex_html['named']['info'],))
 
     template_variables = {
         'defs'         : defs,
@@ -247,4 +257,5 @@ def generate_all():
 
 
 if __name__ == '__main__':
-    generate_all()
+    #generate_all()
+    generate_article('qaya-1974')
