@@ -140,9 +140,10 @@ def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = Tru
     html = html.replace('\n', '<br>\n') # NB: the last transformation
     return html
 
+
 class Paragraph():
     def __init__(self, name, body):
-        self.name = name
+        self.name = name.lower() if name else name
         self.body = body
     @classmethod
     def parse(cls, input):
@@ -161,22 +162,18 @@ class ParagraphCollection(list):
             self.append(p)
             if p.name:
                 self.hash[p.name.lower()] = p
+
     def get_named_paragraph(self, name):
         return self.hash.get(name.lower())
-#    def break_into_three_groups(self, names_wanted):
-#        before = ParagraphCollection()
-#        named = ParagraphCollection()
-#        after = ParagraphCollection()
-#        where_to_add_to = before
-#        for idx, p in enumerate(self):
-#            if p.name and names_wanted.count(p.name) > 0:
-#                named.append(p)
-#                where_to_add_to = after
-#            else:
-#                where_to_add_to.append(p)
-#        return before, named, after
+
     def break_into_groups(self, names_wanted, names_mandatory):
-        def every_mandatory_name_found(in_para_list):
+        def every_mandatory_name_is_found(in_para_list):
+            names_real = [ p.name for p in in_para_list ]
+            #print >>sys.stderr, 'names_real:', names_real
+            #print >>sys.stderr, 'names_mandatory:', names_mandatory
+            for name in names_mandatory:
+                if name not in names_real:
+                    return False
             return True
 
         named = ParagraphCollection()
@@ -185,10 +182,10 @@ class ParagraphCollection(list):
             where = named if (p.name and p.name in names_wanted) else rest
             where.append(p)
 
-        if every_mandatory_name_found(named):
+        if every_mandatory_name_is_found(named):
             return named, rest
         else:
-            return None, list(*self)
+            return [], [ p for p in self ]
 
 
 def break_into_paragraphs(markup_text):
@@ -204,6 +201,7 @@ def break_into_paragraphs(markup_text):
     pp = map(lambda str: Paragraph.parse(str), pp)
     return ParagraphCollection(pp)
 
+
 class SimpleMarkup():
     def __init__(self, for_comment, rich_markup = True, recognize_links = True):
         self.for_comment = for_comment
@@ -217,42 +215,60 @@ class SimpleMarkup():
             result_string += "<p>%s</p>\n" % markup2html_paragraph(p.body)
         return result_string
 
+def para2html(p):
+    if isinstance(p, Paragraph):
+        s = p.body
+    elif type(p) in (str, unicode):
+        s = p
+    else:
+        raise Exception('incorrect type of param: %s' % type(p))
+    return markup2html_paragraph(s)
+
+def break_tracklist_into_sides(para):
+    assert para.name == 'tracks'
+    lines = para.body.split('\n')
+    lines = map(lambda l: l.strip(), lines)
+    #print >>sys.stderr, 'SPLIT:', lines
+    len_a = len(lines) / 2
+    len_b = len(lines) - len_a
+    side_a = '\n'.join(lines[0:len_a])
+    side_b = '\n'.join(lines[len_a:])
+    return {
+        'side_a': para2html(side_a),
+        'side_b': para2html(side_b),
+    }
+    #return para2html(para)
+
+def convert_named_para_list_to_hash(pp):
+    hash = {}
+    for p in pp:
+        assert p.name
+        name = p.name
+        if name == 'tracks':
+            hash[name] = break_tracklist_into_sides(p)
+        else:
+            hash[name] = para2html(p)
+    return hash
+
+RECOGNIZED_PARAS = ['image', 'tracks', 'info', 'download']
+MANDATORY_PARAS = ['tracks']
+
 class CleverMarkup(SimpleMarkup):
-    RECOGNIZED_PARAS = ['image', 'tracks', 'info', 'download']
-    MANDATORY_PARAS = ['tracks']
-
-    class CleverMarkupFailedToMatchInput(Exception):
-        pass
-
     def __init__(self, for_comment, rich_markup = True, recognize_links = True):
         SimpleMarkup.__init__(self, for_comment, rich_markup, recognize_links)
         self.article_id = None
 
     def generate_html(self, markup_text):
-        def para2html(paragraph):
-            return markup2html_paragraph(paragraph.body)
-
-        def convert_named_para_list_to_hash(pp):
-            hash = {}
-            for p in pp:
-                assert p.name
-                hash[str(p.name)] = para2html(p)
-            return hash
-
         if self.for_comment:
             return SimpleMarkup.generate_html(self, markup_text)
         pp = break_into_paragraphs(markup_text)
-        #before, named, after = pp.break_into_three_groups(self.RECOGNIZED_PARAGRAPH_NAMES)
-        named, rest = pp.break_into_groups(self.RECOGNIZED_PARAS, self.MANDATORY_PARAS)
+        named, rest = pp.break_into_groups(RECOGNIZED_PARAS, MANDATORY_PARAS)
         rv = {
-            #'before': map(para2html, before),
-            #'middle': self.get_the_middle(pp),
-            #'after':  map(para2html, after),
             'named': convert_named_para_list_to_hash(named),
             'rest': map(para2html, rest),
         }
-        print >>sys.stderr, 'named:', rv['named'].keys()
-        print >>sys.stderr, 'rest:', rv['rest']
+        #print >>sys.stderr, 'named:', rv['named'].keys()
+        #print >>sys.stderr, 'rest:', rv['rest']
         return rv
 
 #    def get_the_middle(self, pp):

@@ -117,9 +117,9 @@ def generate_article(slug):
 
     #print 'clever_object:', type(clever_object['middle'])
 
-    print >>sys.stderr, 'named at gen_static:', clever_object['named'].keys()
-    for p in clever_object['named']:
-        print >>sys.stderr, '-', type(p)
+    #print >>sys.stderr, 'named at gen_static:', clever_object['named'].keys()
+    #for p in clever_object['named']:
+    #    print >>sys.stderr, '-', type(p)
 
     article = ArticleDataStoreMock(clever_object, md.meta)
     articles = [ article ]
