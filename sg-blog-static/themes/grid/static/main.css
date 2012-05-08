@@ -23,8 +23,8 @@
 
 
 body {
-	background: white;
 	background: url('/static/chak-bg.jpg');
+	background: white;
 	background: #EEEEEE;
 	margin: 0 0 0 0;
 }
@@ -186,6 +186,9 @@ div.article {
 }
 .sidebar-links { }
 
+.cover img {
+	width: 100%;
+}
 .tracks p {
 	font-family: Arial !important;
 	font-size: 14px;
