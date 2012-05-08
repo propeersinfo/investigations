@@ -1,0 +1,11 @@
+<p>The image below should not be even requested by browser after the first page load.
+
+<p>
+	<script>
+		document.write('<a href="?' + Math.random() + '">Update this page</a> with NO refresh.')
+	</script>
+	<noscript>
+		<a href="">Update this page</a> with NO refresh.
+	</noscript>
+
+<p><img src="never-expire.jpg">

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html><head>
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+<link rel="stylesheet" type="text/css" href="/static/main.css">
+<link rel="stylesheet" type="text/css" href="/static/main_002.css">
+
+<link rel="alternate" type="application/rss+xml" title="Soviet Rare Groove" href="/rss/">
+
+<link rel="e2-theme-image" id="e2-i-loading-spinner" href="/static/loading-spinner.gif">
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
+<meta name="viewport" content="width=1024">
+
+<meta name="robots" content="index, follow">
+
+<title>{% block title %}{% endblock %}</title>
+
+<style>
+</style>
+
+<script>
+{% include "scripts.js" %}
+</script>
+
+{% include "../googleanalytics.html" %}
+
+</head>
+
+<body>
+
+
+<div style="position: fixed; left: 0px; top: 0px; width: 100%; height: 1px; background: url(&quot;system/theme/images/loading-bar.gif&quot;) repeat-x scroll left center transparent; opacity: 0;" id="e2-thinkbar"></div>
+
+<div>
+
+    <div class="top-spacer"></div>
+
+	<div class="user-picture">
+	  <a href="/"><img src="/static/userpic.jpg" alt=""></a>
+	</div>
+
+
+	<!-- search box -->
+	<div class="form-search">
+		<form id="e2-form-search" class="e2-enterable" action="/search/" method="post">
+			<div>
+				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tbody><tr valign="middle">
+					<td align="right"><img class="loupe" src="/static/search.gif" alt="Поиск" onclick="with (document.getElementById ('query')) { focus (); select () }" align="absmiddle" height="16" width="16"></td>
+					<td width="100%">
+					<input style="width: 100%;" class="text" name="query" id="query" type="search">
+					</td>
+					<td><input class="enter" src="/static/enter.gif" alt="Найти" align="absmiddle" height="16" type="image" width="16"></td>
+				</tr>
+				</tbody></table>
+			</div>
+		</form>
+		<p>&nbsp;</p>
+	</div>
+
+
+	<div class="blog-title-and-description">
+	  <h1>
+        <a href="/"><span id="e2-blog-title">Soviet Rare Groove</span></a> 
+		<a class="rss-link" style="" href="/rss/">RSS</a>
+		{% if user_info.user %}
+			<a class="rss-link" href="/admin/article/new/">NEW ARTICLE</a>
+		{% endif %}
+	  </h1>
+	  <p>
+	  <span id="e2-blog-description">
+		A blog about groovy, funky, jazzy, soulful, beat, easy, twist and psych sides of music produced in USSR during the period of 1965&ndash;85.
+	  </span>
+	  </p>
+	</div>
+
+    <div class="top-line"></div>
+
+</div>
+
+<div class="clear"></div>
+
+<div class="sidebar">
+	<div class="sidebar-element">
+		<!--h2>Styles</h2-->
+		<ul class="links-list">
+		<li>{% blog_tag "jazz" %}</li>
+		<li>{% blog_tag "garage" "garage/beat" %}</li>
+		<li>{% blog_tag "pop" %}, {% blog_tag "disco" %}</li>
+    	<li>{% blog_tag "easy" %}</li>
+    	<li>{% blog_tag "shake" "shake/twist" %}</li>
+    	<li>{% blog_tag "psyche" %}, {% blog_tag "prog" %}</li>
+    	<li>{% blog_tag "electro" %}</li>
+		</ul>
+	</div>
+    <div class="sidebar-element">
+        <ul class="links-list">
+		<li>{% blog_tag "60s" "60's" %}, {% blog_tag "70s" "70's" %}, {% blog_tag "80s" "80's" %}</li>
+        </ul>
+	</div>
+    <div class="sidebar-element">
+		<ul class="links-list">
+		<li>{% blog_tag "mixes" %}, {% blog_tag "best" %}</li>
+		</ul>
+	</div>
+    <div class="sidebar-element">
+		<ul class="links-list">
+		<li>{% blog_tag "russia" %}</li>
+    	<li>{% blog_tag "estonia" %}</li>
+		<li>{% blog_tag "latvia" %}</li>
+		<li>{% blog_tag "lithuania" %}</li>
+		<li>{% blog_tag "armenia" %}</li>
+		<li>{% blog_tag "azerbaijan" %}</li>
+		<li>{% blog_tag "georgia" %}</li>
+    	<li>{% blog_tag "ukraine" %}</li>
+		<li>{% blog_tag "moldova" %}</li>
+		<li>{% blog_tag "belarus" %}</li>
+    	<li>{% blog_tag "tajikistan" %}</li>
+		<li>{% blog_tag "turkmenia" %}</li>
+		<li>{% blog_tag "uzbekistan" %}</li>
+		<li>{% blog_tag "kazakstan" %}</li>
+    	</ul>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+<div class="main-content">
+	<div class="only note">
+    	{% block main %}{% endblock %}
+	</div>
+	
+	<div class="pagination">
+	    Articles
+		<!-- prev page link -->
+		{% if prev_page_url %}
+		  &larr; <a href="{{prev_page_url}}">previous</a>
+		{% else %}
+		  &larr; previous
+		{% endif %}
+		...
+		<!-- next page link -->
+		{% if next_page_url %}
+		  <a href="{{next_page_url}}">next</a> &rarr;
+		{% else %}
+		  next &rarr;
+		{% endif %}
+	</div>
+</div>
+
+<div class="clear"></div>
+
+<div class="bottom-line"></div>
+
+
+<div class="visual-login">
+{% if user_info.user %}
+	admin:{{user_info.is_admin}} <a href="{{user_info.logout_url}}">logout</a>
+{% else %}
+	<a href="{{user_info.login_url}}">login</a>
+{% endif %}
+
+</div>
+
+<div class="copyrights icons">
+©&nbsp;<span id="e2-blog-author">xxx xxxxx</span>, 2002<span class="range">...</span>2011 
+</div>
+
+<div class="engine-info">
+engine-info
+</div>
+
+<div class="bottom-spacer"></div>
+
+</body></html>

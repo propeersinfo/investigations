@@ -1,0 +1,63 @@
+<div class="article">
+
+{% if not article.pinned or single_article %}
+		<h1 id="article_header_{{article.id}}" class="{{article.published_class}}">
+			{% if single_article %}
+				<span></span>
+				{{ article.title|escape }}
+			{% else %}
+				<a href="{{article.slug}}">
+					<span></span>
+					{{ article.title|escape }}</a>
+			{% endif %}
+{% if user_info.is_admin %}
+            <a href="/admin/article/edit/{{article.id}}?from={{current_path}}">
+                <img src="/static/edit16.png" alt="[edit]" border="0">
+            </a>
+{% endif %}
+        </h1>
+{% endif %}
+
+	    {% for p in article.complex_html.before %}
+		<p>{{ p|typographus }}</p>
+		{% endfor %}
+		
+		{% if article.complex_html.middle %}
+			{% include "article-clever.html" %}
+		{% endif %}
+			
+	    {% for p in article.complex_html.after %}
+		<p>{{ p|typographus }}</p>
+		{% endfor %}
+		
+{% if not article.pinned %}
+	    <p class="article-meta">
+			{{ article.published_date|date:"F j, Y" }}
+		</p>
+		<p class="article-meta">
+			Tags:
+			{% for tag in article.tags %}
+				<a href="tag/{{tag}}" class="tag">{{tag}}</a>
+			{% endfor %}
+	    </p>
+{% endif %}
+
+{% if single_article %}
+{% include "../disqus.html" %}
+{% endif %}
+
+{%comment%}
+{% if single_article %}
+    {% include "comments.html" %}
+{% else %}
+    <p class="article-meta">
+		<span id="e2-comments-count">
+			<a href="{{article.path}}#comments">
+				{{article.comments_count}} comments
+			</a>
+		</span>
+    </p>
+{% endif %}
+{%endcomment%}
+
+</div>

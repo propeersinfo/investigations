@@ -1,0 +1,14 @@
+/*
+@font-face {
+	font-family: 'DinMy';
+	src: url('/static/fonts/DINPro-Regular.eot');
+	src: local('O'),
+		url('/static/fonts/DINPro-Regular.eot?#iefix') format('embedded-opentype'),
+		url('/static/fonts/DINPro-Regular.woff') format('woff'),
+		url('/static/fonts/DINPro-Regular.ttf') format('truetype'),
+		url('/static/fonts/DINPro-Regular.svg#DINPro-Regular') format('svg')
+		;
+	font-weight: normal;
+	font-style: normal;
+}
+*/

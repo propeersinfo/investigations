@@ -1,0 +1,49 @@
+		<div class="row">
+    		<div class="width_2">
+    			<p>
+    			{{article.complex_html.middle.picture}}
+    			</p>
+    		</div>
+    		<div class="width_6">
+    			<div class="row">
+    					{% if article.complex_html.middle.tracklist %}
+    						{% if article.complex_html.middle.tracklist.side_a %}
+    							<div class="width_3 tracks">
+									<p>
+										{{ article.complex_html.middle.tracklist.side_a|typographus }}
+									</p>
+								</div><div class="width_3 tracks">
+									<p>
+										{{ article.complex_html.middle.tracklist.side_b|typographus }}
+									</p>
+    							</div>
+							{% else %}
+								<div class="width_6 tracks">
+								<p>
+									{{ article.complex_html.middle.tracklist|typographus }}
+								</p>
+								</div>
+							{% endif %}
+						{% else %}
+							<div class="width_6 tracks">
+							<p>no track listing</p>
+							</div>
+						{% endif %}
+    			</div>
+    			<div class="row">
+    				<div class="width_6 info">
+    					<p>
+						{{ article.complex_html.middle.techinfo|typographus }}
+						</p>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="width_1"><p>
+    		    &nbsp;
+			</p></div>
+    		<div class="width_7"><p class="download">
+				{{ article.complex_html.middle.download|typographus }}
+			</p></div>
+    	</div>

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+	{% if single_article %}
+		{{single_article.title|escape}} - Soviet Rare Groove
+	{% else %}
+		Soviet Rare Groove
+	{% endif %}
+{% endblock %}
+
+
+{% block main %}
+
+	{% if paging_title %}
+		<p>{{ paging_title }}</p>
+	{% endif %}
+
+	<ul class="archive">
+	{% for article in articles %}
+		<li><em class="date">{{article.meta.date|date:"Y"}}</em> <a href="../{{article.meta.slug}}">{{article.meta.title}}</a>
+	{% endfor %}
+	</ul>
+  
+{% endblock %}

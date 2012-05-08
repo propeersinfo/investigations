@@ -1,0 +1,79 @@
+{% extends "admin-base.html" %}
+
+{% block main %}
+
+{% if defs.DEVSERVER %}
+    <script>
+    function confirm_db_emptying() {
+        return confirm('Really empty DB?')
+    }
+    </script>
+{% else %}
+    <script>
+    function confirm_db_emptying() {
+        var confirmation = 'production'
+        var input = prompt('Type "' + confirmation + '" to empty DB')
+        if(input == confirmation) {
+            alert('DB gonna be emptied now!')
+            return true
+        } else {
+            return false
+        }
+    }
+    </script>
+{% endif %}
+
+<style>
+div { margin: 10px; }
+.row { float: left; }
+.new { clear: both; }
+</style>
+
+<div class="row new">
+	<form method="GET" action="/admin/importdata/">
+	<input type="submit" value="Import articles from Opera">
+	</form>
+</div>
+
+<div class="row new">
+    <form method="POST" action="/admin/import-article-from-url">
+    	<input name="url" value="" style="width:600px;">
+        <input type="submit" value="Import">
+    </form>
+</div>
+
+<div class="new row">
+	<form method="POST" action="/admin/reset-tag-counters">
+	<input type="submit" value="Reset tag counters">
+	</form>
+</div>
+
+<div class="row">
+	<form method="POST" action="/admin/recalculate-tag-counters">
+	<input type="submit" value="Recalculate tag counters from articles">
+	</form>
+</div>
+
+<div class="row">
+	<form method="POST" action="/admin/setup-basic-tags">
+	<input type="submit" value="Categorize tags (auto)">
+	</form>
+</div>
+
+<div class="row">
+	<a href="/admin/tags">Manage tags</a>
+</div>
+
+<div class="row new">
+    <form method="POST" action="/admin/clear-cache">
+        <input type="submit" value="Clear DS/mem caches">
+    </form>
+</div>
+
+<div class="row new">
+    <form method="POST" action="/admin/empty-db" onsubmit="javascript: return confirm_db_emptying();">
+	<input type="submit" value="Empty DB (danger!)" style="background:#f00;">
+	</form>
+</div>
+
+{% endblock %}
