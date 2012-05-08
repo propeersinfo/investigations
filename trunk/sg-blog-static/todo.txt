@@ -1,0 +1,19 @@
+Important:
+
+- rss: fix html markup
+- rss: use absolute links
++ use current timestamp as APP VERSION
++ tag rewrite: rewrite tags while converting html to markup also
++ tag rewrite: do it by a table, remove spaces also
++ rss: basics
++ tag cloud
++ external comments
+
+Less important:
+
+- robots.txt
+- sitemap
+- implement google search
+- implement google analytics
+- auto generated image dimensions
+- external comments: import opera comments
