@@ -237,6 +237,10 @@ def para2html(p):
 
 def break_tracklist_into_sides(para):
     def decide_break_into_n_columns(lines):
+        # return amount of columns it would be better to break the lines into
+        if len(lines) < 4:
+            return 1
+
         THRESHOLD_CHARS_PER_LINE_AVG = 35
         for line in lines:
             print >>sys.stderr, 'len: %s' % len(line)
