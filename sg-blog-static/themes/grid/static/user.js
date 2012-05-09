@@ -115,7 +115,7 @@ $(document).ready(function() {
     }
 });
 
-if(document.location.hostname == 'localhost') {
+if(document.location.hostname == 'localhost' && document.location.pathname.indexOf('/preview') == 0) {
     $(document).ready(function() {
         $("a").each(function(pos,a){
             var m = a.href.match(/^(http:..localhost)(.+)$/);

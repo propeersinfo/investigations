@@ -1,5 +1,6 @@
 Important:
 
+- fix HTML title
 - rss: fix html markup
 - rss: use absolute links
 + use current timestamp as APP VERSION
@@ -11,6 +12,7 @@ Important:
 
 Less important:
 
+- similar articles (by tags categorized as 'artist')
 - robots.txt
 - sitemap
 - implement google search
