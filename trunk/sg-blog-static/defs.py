@@ -3,7 +3,7 @@ import utils
 
 HTML_ENCODING = 'UTF-8'
 
-BLOG_NAME = 'Soviet Groove'
+BLOG_NAME = 'Soviet Groove Blog'
 BLOG_OWNER = 'Soviet Groove'
 
 DROPBOX_USER = '1883230'
@@ -33,6 +33,7 @@ TOTAL_RECENT = 10
 #  CANONICAL_BLOG_URL = 'http://www.sovietgroove.com'
 PRODUCTION = True
 CANONICAL_BLOG_URL = 'http://www.sovietgroove.com'
+#CANONICAL_BLOG_URL = 'http://3.sovietraregroove.appspot.com'
 
 DEVSERVER = not PRODUCTION
 
