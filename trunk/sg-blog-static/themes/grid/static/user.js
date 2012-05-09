@@ -114,3 +114,14 @@ $(document).ready(function() {
         }, false);
     }
 });
+
+if(document.location.hostname == 'localhost') {
+    $(document).ready(function() {
+        $("a").each(function(pos,a){
+            var m = a.href.match(/^(http:..localhost)(.+)$/);
+            if(m[2].indexOf('/preview') < 0) {
+                a.href = m[1] + '/preview' + m[2];
+            }
+        });
+    });
+}

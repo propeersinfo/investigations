@@ -257,5 +257,5 @@ def generate_all():
 
 
 if __name__ == '__main__':
-    generate_all()
-    #generate_article('qaya-1974')
+    #generate_all()
+    generate_article('jazz-78-lp1')

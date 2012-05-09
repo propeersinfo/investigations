@@ -142,6 +142,14 @@ def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = Tru
     return html
 
 
+PARA_COVER = 'cover'
+PARA_TRACKS = 'tracks'
+PARA_INFO = 'info'
+PARA_DOWNLOAD = 'download'
+RECOGNIZED_PARAS = [PARA_COVER, PARA_TRACKS, PARA_INFO, PARA_DOWNLOAD]
+MANDATORY_PARAS = [PARA_TRACKS]
+
+
 class Paragraph():
     def __init__(self, name, body):
         self.name = name.lower() if name else name
@@ -228,12 +236,30 @@ def para2html(p):
 
 
 def break_tracklist_into_sides(para):
-    assert para.name == 'tracks'
+    def decide_break_into_n_columns(lines):
+        THRESHOLD_CHARS_PER_LINE_AVG = 35
+        for line in lines:
+            print >>sys.stderr, 'len: %s' % len(line)
+        lengths = [ len(line) for line in lines ]
+        sum_lengths = utils.average_number(lengths)
+        avg_length = sum_lengths / len(lengths)
+        print >>sys.stderr, 'sum_lengths:', sum_lengths, 'average:', avg_length
+        return 1 if avg_length > THRESHOLD_CHARS_PER_LINE_AVG else 2
+
+    assert para.name == PARA_TRACKS
     lines = para.body.split('\n')
     lines = map(lambda l: l.strip(), lines)
-    len_a = int(math.ceil(float(len(lines)) / 2))
-    side_a = '\n'.join(lines[0:len_a])
-    side_b = '\n'.join(lines[len_a:])
+
+    num_columns = decide_break_into_n_columns(lines)
+    if num_columns == 1:
+        side_a = '\n'.join(lines)
+        side_b = ''
+    elif num_columns == 2:
+        len_a = int(math.ceil(float(len(lines)) / 2))
+        side_a = '\n'.join(lines[0:len_a])
+        side_b = '\n'.join(lines[len_a:])
+    else:
+        assert False
     return {
         'side_a': para2html(side_a),
         'side_b': para2html(side_b),
@@ -244,12 +270,12 @@ def modify_download_para(p):
     def replacer(match):
         url = match.group(0)
         domain = match.group(1)
-        if domain.lower() == 'savefrom.net':
-            return ''
-        else:
-            return '<a href="%s">%s</a>' % (url, domain)
+#        if domain.lower() == 'savefrom.net':
+#            return ''
+#        else:
+        return '<a href="%s">%s</a>' % (url, domain)
 
-    assert p.name == 'download'
+    assert p.name == PARA_DOWNLOAD
     URL_REGEX = 'https?://([^/]+)/\S+'
     s = re.sub(URL_REGEX, replacer, p.body)
     return s # para2html(s)
@@ -260,17 +286,13 @@ def convert_named_para_list_to_hash(pp):
     for p in pp:
         assert p.name
         name = p.name
-        if name == 'tracks':
+        if name == PARA_TRACKS:
             hash[name] = break_tracklist_into_sides(p)
-        elif name == 'download':
+        elif name == PARA_DOWNLOAD:
             hash[name] = modify_download_para(p)
         else:
             hash[name] = para2html(p)
     return hash
-
-
-RECOGNIZED_PARAS = ['image', 'tracks', 'info', 'download']
-MANDATORY_PARAS = ['tracks']
 
 
 class CleverMarkup(SimpleMarkup):
