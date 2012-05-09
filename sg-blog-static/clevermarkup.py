@@ -2,6 +2,7 @@ import re
 import unittest
 import urllib2
 import sys
+import math
 
 import defs
 import my_tags
@@ -215,6 +216,7 @@ class SimpleMarkup():
             result_string += "<p>%s</p>\n" % markup2html_paragraph(p.body)
         return result_string
 
+
 def para2html(p):
     if isinstance(p, Paragraph):
         s = p.body
@@ -224,20 +226,34 @@ def para2html(p):
         raise Exception('incorrect type of param: %s' % type(p))
     return markup2html_paragraph(s)
 
+
 def break_tracklist_into_sides(para):
     assert para.name == 'tracks'
     lines = para.body.split('\n')
     lines = map(lambda l: l.strip(), lines)
-    #print >>sys.stderr, 'SPLIT:', lines
-    len_a = len(lines) / 2
-    len_b = len(lines) - len_a
+    len_a = int(math.ceil(float(len(lines)) / 2))
     side_a = '\n'.join(lines[0:len_a])
     side_b = '\n'.join(lines[len_a:])
     return {
         'side_a': para2html(side_a),
         'side_b': para2html(side_b),
     }
-    #return para2html(para)
+
+
+def modify_download_para(p):
+    def replacer(match):
+        url = match.group(0)
+        domain = match.group(1)
+        if domain.lower() == 'savefrom.net':
+            return ''
+        else:
+            return '<a href="%s">%s</a>' % (url, domain)
+
+    assert p.name == 'download'
+    URL_REGEX = 'https?://([^/]+)/\S+'
+    s = re.sub(URL_REGEX, replacer, p.body)
+    return s # para2html(s)
+
 
 def convert_named_para_list_to_hash(pp):
     hash = {}
@@ -246,12 +262,16 @@ def convert_named_para_list_to_hash(pp):
         name = p.name
         if name == 'tracks':
             hash[name] = break_tracklist_into_sides(p)
+        elif name == 'download':
+            hash[name] = modify_download_para(p)
         else:
             hash[name] = para2html(p)
     return hash
 
+
 RECOGNIZED_PARAS = ['image', 'tracks', 'info', 'download']
 MANDATORY_PARAS = ['tracks']
+
 
 class CleverMarkup(SimpleMarkup):
     def __init__(self, for_comment, rich_markup = True, recognize_links = True):
