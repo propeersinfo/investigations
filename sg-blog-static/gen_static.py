@@ -138,7 +138,7 @@ def generate_article(slug):
         'current_page_1'  : None, #page_info.current_page,
         'pages_total'     : None, #page_info.pages_total,
         'tag_cloud'       : articles_by_tags,
-        'single_article'  : True,
+        'single_article'  : article,
         }
     html = render_template('articles.html', template_variables)
     html_file = os.path.join(defs.STATIC_HTML_DIR, '%s' % slug)
@@ -196,6 +196,7 @@ def generate_listings():
             'next_page_url': page_url(current_page_1+1) if current_page_1 < pages_total else None,
             'single_article'  : False,
             'tag_cloud'       : BlogMeta.instance(),
+            'defs'            : defs,
             }
         html = render_template('articles.html', template_variables)
         html_file = os.path.join(defs.STATIC_HTML_DIR, html_file_short)
@@ -257,5 +258,5 @@ def generate_all():
 
 
 if __name__ == '__main__':
-    #generate_all()
-    generate_article('jazz-78-lp1')
+    generate_all()
+    #generate_article('jazz-78-lp1')

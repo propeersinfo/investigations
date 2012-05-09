@@ -1,8 +1,8 @@
 Important:
 
-- fix HTML title
 - rss: fix html markup
 - rss: use absolute links
++ fix HTML title
 + use current timestamp as APP VERSION
 + tag rewrite: rewrite tags while converting html to markup also
 + tag rewrite: do it by a table, remove spaces also
