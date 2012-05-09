@@ -2,12 +2,11 @@
 
 {% block title %}
 	{% if single_article %}
-		{{single_article.title|escape}} - Soviet Rare Groove
+		{{single_article.title}} - {{defs.BLOG_NAME}}
 	{% else %}
-		Soviet Rare Groove
+		{{defs.BLOG_NAME}}
 	{% endif %}
 {% endblock %}
-
 
 {% block main %}
 

@@ -4,11 +4,11 @@
 		<h1 id="article_header_{{article.id}}" class="{{article.published_class}}">
 			{% if single_article %}
 				<span></span>
-				{{ article.title|escape }}
+				{{ article.title|escape|typographus }}
 			{% else %}
 				<a href="{{article.slug}}">
 					<span></span>
-					{{ article.title|escape }}</a>
+					{{ article.title|escape|typographus }}</a>
 			{% endif %}
 {% if user_info.is_admin %}
             <a href="/admin/article/edit/{{article.id}}?from={{current_path}}">
