@@ -12,6 +12,8 @@ Important:
 
 Less important:
 
+- split source into two different projects: markup with HTML generator and gae static project
+- auto generate 140px thumbnails for dropbox
 - similar articles (by tags categorized as 'artist')
 - robots.txt
 - sitemap
