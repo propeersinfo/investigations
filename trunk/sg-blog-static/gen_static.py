@@ -33,6 +33,8 @@ class BlogMeta:
         articles_by_tags = {}
         for md_short in glob.glob1(defs.MARKDOWN_DIR, '*'):
             md_full = os.path.join(defs.MARKDOWN_DIR, md_short)
+            if os.path.isdir(md_full):
+                continue
             print >>sys.stderr, 'md:', md_full
             md = MarkdownFile.parse(md_full, read_content=False)
             #print >>sys.stderr, '  tags:', md.meta['tags']
@@ -166,8 +168,9 @@ def fetch_articles_sorted():
     mds = []
     for md_short in glob.glob1(defs.MARKDOWN_DIR, '*'):
         md_full = os.path.join(defs.MARKDOWN_DIR, md_short)
-        md = MarkdownFile.parse(md_full, read_content=True)
-        mds.append(md)
+        if os.path.isfile(md_full):
+            md = MarkdownFile.parse(md_full, read_content=True)
+            mds.append(md)
     mds = sorted(mds, key=lambda md: md.meta['date'], reverse=True)
 
     articles = []
