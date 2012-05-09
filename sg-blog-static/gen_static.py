@@ -248,7 +248,8 @@ def generate_all():
 
     # generate every article
     for short_file in glob.glob1(defs.MARKDOWN_DIR, '*'):
-        generate_article(short_file)
+        if os.path.isfile(os.path.join(defs.MARKDOWN_DIR, short_file)):
+            generate_article(short_file)
 
     generate_listings()
 

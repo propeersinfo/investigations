@@ -242,12 +242,12 @@ def break_tracklist_into_sides(para):
             return 1
 
         THRESHOLD_CHARS_PER_LINE_AVG = 35
-        for line in lines:
-            print >>sys.stderr, 'len: %s' % len(line)
+        #for line in lines:
+        #    print >>sys.stderr, 'len: %s' % len(line)
         lengths = [ len(line) for line in lines ]
         sum_lengths = utils.average_number(lengths)
         avg_length = sum_lengths / len(lengths)
-        print >>sys.stderr, 'sum_lengths:', sum_lengths, 'average:', avg_length
+        #print >>sys.stderr, 'sum_lengths:', sum_lengths, 'average:', avg_length
         return 1 if avg_length > THRESHOLD_CHARS_PER_LINE_AVG else 2
 
     assert para.name == PARA_TRACKS

@@ -1,6 +1,6 @@
-rm html\*
-rm html\special\*
-rm html\tag\*
+rm -f html\*
+rm -f html\special\*
+rm -f html\tag\*
 
 SET PYTHONPATH=%PYTHONPATH%;C:\Python\gae
 SET PYTHONPATH=%PYTHONPATH%;C:\Python\gae\lib\webob_1_1_1

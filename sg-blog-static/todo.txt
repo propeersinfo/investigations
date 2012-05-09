@@ -1,7 +1,5 @@
 Important:
 
-- rss: fix html markup
-- rss: use absolute links
 + fix HTML title
 + use current timestamp as APP VERSION
 + tag rewrite: rewrite tags while converting html to markup also
@@ -12,6 +10,12 @@ Important:
 
 Less important:
 
+- write a script for new article
+- use a script like '/charset/utf-8/path/to/file' to rewrite HTTP charset
+- rss: give full article's text, not just the link
+- rss: fix html markup (it's kinda broken)
+- rss: use absolute links
+- swith from ctrl-right to ctrl-down
 - split source into two different projects: markup with HTML generator and gae static project
 - auto generate 140px thumbnails for dropbox
 - similar articles (by tags categorized as 'artist')
