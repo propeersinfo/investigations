@@ -10,18 +10,20 @@ Important:
 
 Less important:
 
-- write a script for new article
+- a script generating new article by template
 - use a script like '/charset/utf-8/path/to/file' to rewrite HTTP charset
 - rss: give full article's text, not just the link
 - rss: fix html markup (it's kinda broken)
 - rss: use absolute links
 - swith from ctrl-right to ctrl-down
 - split source into two different projects: markup with HTML generator and gae static project
-- auto generate 140px thumbnails for dropbox
+- images: auto generate 140px thumbnails for dropbox
+- images: add <img> dimensions automatically
 - similar articles (by tags categorized as 'artist')
 - robots.txt
 - sitemap
 - implement google search
 - implement google analytics
-- auto generated image dimensions
 - external comments: import opera comments
+- typography: text like 7" is handled incorrectly
+- allow renaming slugs via making HTTP redirects

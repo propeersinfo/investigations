@@ -95,6 +95,21 @@ $(document).ready(function() {
 });
 
 ////////////////////////////////////////////////////
+// rewrite links to /preview/
+////////////////////////////////////////////////////
+
+if(document.location.hostname == 'localhost' && document.location.pathname.indexOf('/preview') == 0) {
+    $(document).ready(function() {
+        $("a").each(function(pos,a){
+            var m = a.href.match(/^(http:..localhost)(.+)$/);
+            if(m[2].indexOf('/preview') < 0) {
+                a.href = m[1] + '/preview' + m[2];
+            }
+        });
+    });
+}
+
+////////////////////////////////////////////////////
 // ctrl+arrows navigation
 ////////////////////////////////////////////////////
 
@@ -114,14 +129,3 @@ $(document).ready(function() {
         }, false);
     }
 });
-
-if(document.location.hostname == 'localhost' && document.location.pathname.indexOf('/preview') == 0) {
-    $(document).ready(function() {
-        $("a").each(function(pos,a){
-            var m = a.href.match(/^(http:..localhost)(.+)$/);
-            if(m[2].indexOf('/preview') < 0) {
-                a.href = m[1] + '/preview' + m[2];
-            }
-        });
-    });
-}
