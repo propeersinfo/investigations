@@ -3,6 +3,7 @@ import unittest
 import urllib2
 import sys
 import math
+import Image
 
 import defs
 import my_tags
@@ -241,7 +242,7 @@ def break_tracklist_into_sides(para):
         if len(lines) < 4:
             return 1
 
-        THRESHOLD_CHARS_PER_LINE_AVG = 35
+        THRESHOLD_CHARS_PER_LINE_AVG = 30
         #for line in lines:
         #    print >>sys.stderr, 'len: %s' % len(line)
         lengths = [ len(line) for line in lines ]
@@ -317,28 +318,6 @@ class CleverMarkup(SimpleMarkup):
         #print >>sys.stderr, 'rest:', rv['rest']
         return rv
 
-#    def get_the_middle(self, pp):
-#        def break_tracklist_into_sides(text):
-#            m = re.search('^(.*)(B0?1\.?\s.*)$', text, re.MULTILINE|re.IGNORECASE|re.DOTALL)
-#            if m:
-#                return markup2html_paragraph(m.group(1).strip()),\
-#                       markup2html_paragraph(m.group(2).strip())
-#            else:
-#                return None, None
-#        hash = {}
-#        for name in self.RECOGNIZED_PARAS:
-#            p = pp.get_named_paragraph(name)
-#            if p:
-#                if name == 'tracks':
-#                    side_a, side_b = break_tracklist_into_sides(p.body)
-#                    if side_a and side_b:
-#                        hash[name] = {
-#                            'side_a' : side_a,
-#                            'side_b' : side_b
-#                        }
-#                        continue
-#                hash[name] = markup2html_paragraph(p.body if p else 'no-named-p-%s' % name)
-#        return hash if len(hash) > 0 else None
 
 # main function
 #@utils.dump_execution_time
