@@ -219,6 +219,7 @@ div.article {
 .pagination { font-size: 85%; }
 .pagination a 		{	color: #333; }
 .pagination a:hover {	color: #f33; }
+.pagination-top { margin-bottom: 1.5em; }
 .bottom a       {	color: #333; }
 .bottom a:hover {	color: #f33; }
 
