@@ -144,7 +144,9 @@ MP3_PLAYLIST = re.compile('\[dewplaylist\s+([^\]]+playlist)\]', re.IGNORECASE)
 
 # [dew.playlist]
 def handle_custom_tag_playlist(input):
-    swf = my_tags.static_resource('dewplayer-playlist.swf')
+    # NB: this does not work when the player and xml are placed at different domains
+    #swf = my_tags.static_resource('dewplayer-playlist.swf')
+    swf = "http://dl.dropbox.com/u/%s/%s" % (defs.DROPBOX_USER, 'dewplayer-playlist.swf')
     replace = '<object width="240" height="200"><embed src="%s" width="240" height="200" type="application/x-shockwave-flash" flashvars="&xml=http://dl.dropbox.com/u/%s/sg/\\1&autoreplay=1" quality="high"></embed></object>' % (swf, defs.DROPBOX_USER)
     return re.sub(MP3_PLAYLIST, replace, input)
 

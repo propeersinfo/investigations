@@ -10,8 +10,8 @@ Important:
 
 Less important:
 
+- specify dropbox images's width/height
 - do not gen 1-item tag pages and don't show such tags
-- article: player not loaded at http://localhost/giedrius-kuprevicius
 - a script generating new article by template
 - use a script like '/charset/utf-8/path/to/file' to rewrite HTTP charset
 - rss: give full article's text, not just the link
@@ -29,3 +29,4 @@ Less important:
 - external comments: import opera comments
 - typography: text like 7" is handled incorrectly
 - allow renaming slugs via making HTTP redirects
++ article: player not loaded at http://localhost/giedrius-kuprevicius

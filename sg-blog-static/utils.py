@@ -115,7 +115,8 @@ def read_file(path, charset = "utf-8"):
         f.close()
 
 def write_file(path, content):
-    if type(content) == django.utils.safestring.SafeUnicode or type(content) == unicode:
+    #if type(content) == django.utils.safestring.SafeUnicode or type(content) == unicode:
+    if type(content) == unicode:
         content = unicode(content).encode('utf-8')
     #raise Exception('%s' % (type(content),))
     if type(content) == str:
