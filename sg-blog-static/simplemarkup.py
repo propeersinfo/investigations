@@ -4,7 +4,7 @@ import unittest
 import urllib2
 import sys
 import math
-#import Image
+import Image
 
 import defs
 import my_tags
@@ -45,26 +45,26 @@ def handle_custom_tag_image(text, config = None):
             return '<img src="%s">' % addr
         else:
             url = 'http://dl.dropbox.com/u/%s/sg/%s' % (defs.DROPBOX_USER, addr)
+            image_file = os.path.join(defs.DROPBOX_LOCAL_DIR, addr)
 
             do_resize = ('cover140px' in config) if config else False
             if do_resize:
-                DROPBOX_LOCAL_DIR = 'D:/dropbox/Public/sg'
-                IMAGE_FILE = os.path.join(DROPBOX_LOCAL_DIR, addr)
-                PREVIEW_DIR = os.path.join(DROPBOX_LOCAL_DIR, 'img', '140px')
-                PREVIEW_FILE = os.path.join(PREVIEW_DIR, addr)
+                THUMBNAIL_DIR = os.path.join(defs.DROPBOX_LOCAL_DIR, 'img', '140px')
+                thumbnail_file = os.path.join(THUMBNAIL_DIR, addr)
+
+                # rewrite url and file
                 url = 'http://dl.dropbox.com/u/%s/sg/img/140px/%s' % (defs.DROPBOX_USER, addr)
+                image_file = thumbnail_file
 
-                if not os.path.exists(PREVIEW_FILE):
-                    import Image
-                    size = 140, 140
-                    img = Image.open(IMAGE_FILE)
-                    img.thumbnail(size, Image.ANTIALIAS)
-                    #utils.mkdirs(PREVIEW_FILE)
-                    img.save(PREVIEW_FILE, "JPEG")
-                    #raise Exception('%s / %s' % (PREVIEW_FILE, url))
+                if not os.path.exists(thumbnail_file):
+                    th_size = 140, 140
+                    img = Image.open(image_file)
+                    img.thumbnail(th_size, Image.ANTIALIAS)
+                    img.save(thumbnail_file, "JPEG")
 
-            border = '' # 'style="border:3px solid red;"' if do_resize else ''
-            return '<img src="%s" alt="%s" %s>' % (url, addr, border)
+            img = Image.open(image_file)
+            image_w, image_h = img.size
+            return '<img src="%s" width="%s" height="%s" alt="%s">' % (url, image_w, image_h, addr)
     if not defs.IMAGE_PLACEHOLDER:
         return re.sub(CUSTOM_TAG_IMAGE, replacer, text)
     else:
