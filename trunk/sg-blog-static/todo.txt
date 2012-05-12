@@ -10,9 +10,11 @@ Important:
 
 Less important:
 
+- thumbnails: compare mtime deciding to make a thumbnail or not
+- do handle paragraph '#download' even if layout is plain
 - markup: add meta param 'see also' refering to a tag
 - specify dropbox images's width/height
-- do not gen 1-item tag pages and don't show such tags
+- tag: do not gen 1-item tag pages and don't show such tags (remember about tags linked from markup)
 - a script generating new article by template
 - use a script like '/charset/utf-8/path/to/file' to rewrite HTTP charset
 - rss: give full article's text, not just the link
