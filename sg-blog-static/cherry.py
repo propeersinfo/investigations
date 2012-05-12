@@ -19,9 +19,7 @@ class Root:
 
     @cherrypy.expose
     def default(self, slug):
-        gen_static.generate_article(slug)
-        html_file = os.path.join(os.path.dirname(__file__), 'html', slug)
-        return utils.read_file(html_file)
+        return utils.read_file(gen_static.generate_article(slug))
 
     @cherrypy.expose
     def tag(self, tag_name):

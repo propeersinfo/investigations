@@ -26,20 +26,6 @@
 </head>
 <body>
 
-{#
-{% if defs.PRODUCTION or defs.DEVSERVER %}
-<p class="important-notification i18n">
-	<span lang="en">
-		The site is under testing now. You could <a href="{{defs.EXTERNAL_FEEDBACK_LINK}}">submit bugs and feedback</a>.
-	</span>
-	<span lang="ru">
-		Сайт тестируется. <a href="{{defs.EXTERNAL_FEEDBACK_LINK}}">Сообщить</a> об ошибке либо пожелании.
-	</span>
-	Version {{defs.APP_VERSION}}
-</p>
-{% endif %}
-#}
-
 <div class="row top">
 	<div class="width_2">
 		<a href="/"><img class="logo" src="{{ 'logo-transp.png'|static_resource }}" alt="Soviet Groove" border="0"/></a>
@@ -59,43 +45,22 @@
 				<!--
 				<h1><a href="/"><span></span>Soviet Rare Groove</a></h1>
 				-->
-{#
-				<h1>
-					<a href="/">Soviet Rare Groove</a>
-					<sup><a href="/rss">RSS</a></sup>
-{#
-{% if user_info.is_admin %}
-					<small>
-						/ <a href="/admin/article/new">add article</a>,
-						  <a href="/admin/">admin</a>
-					</small>
-{% endif %}
-#}
-				</h1>
-#}
 			</div>
-{#
-			<div class="width_4">
-				<input class="search" type="text"/>
-			</div>
-#}
 		</div>
 		<div class="row about">
 			<div class="width_6">
 
-{#
-{% blog_tag "funk" "Funk" %},
-{% blog_tag "jazz" %},
-{% blog_tag "psychedelic" %},
-{% blog_tag "progressive" %},
-{% blog_tag "disco" %},
-{% blog_tag "electro" %},
-{% blog_tag "shake" %} and the
+{{ ''|blog_tag("funk", "Funk") }},
+{{ ''|blog_tag("jazz") }},
+{{ ''|blog_tag("psychedelic") }},
+{{ ''|blog_tag("progressive") }},
+{{ ''|blog_tag("disco") }},
+{{ ''|blog_tag("electro") }},
+{{ ''|blog_tag("shake") }} and the
 rest cool music from USSR of the
-{% blog_tag "60s" "60's" %},
-{% blog_tag "70s" "70's" %} and
-{% blog_tag "80s" "80's" %}.
-#}
+{{ ''|blog_tag("60s", "60's") }},
+{{ ''|blog_tag("70s", "70's") }} and
+{{ ''|blog_tag("80s", "80's") }}.
 
 <!--
 &nbsp;&nbsp; <a href="/tag"><code>&lt;all-tags/&gt;</code></a>

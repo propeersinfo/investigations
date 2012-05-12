@@ -10,6 +10,7 @@ Important:
 
 Less important:
 
+- markup: add meta param 'see also' refering to a tag
 - specify dropbox images's width/height
 - do not gen 1-item tag pages and don't show such tags
 - a script generating new article by template
