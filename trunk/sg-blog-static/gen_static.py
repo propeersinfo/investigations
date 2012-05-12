@@ -4,10 +4,20 @@ import glob
 import os
 import datetime
 import re
-
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
 import sys
+from jinja2.ext import Extension
+from jinja2.nodes import Output
+from jinja2.utils import contextfunction
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_generator.settings")
+
+#from google.appengine.ext import webapp
+#from google.appengine.ext.webapp import template
+from django.shortcuts import render_to_response
+from django import template
+from django.template import loader
+from django.template.context import Context
+from jinja2 import Environment, FileSystemLoader
 
 import clevermarkup
 import defs
@@ -15,12 +25,52 @@ from userinfo import UserInfo
 import utils
 from operaimport.post_parser import parse_date_string
 from operaimport.tag_rewrite import rewrite_tag
+import typographus
 
-webapp.template.register_template_library('my_tags')
+register = template.Library()
+register.filter('typographus', typographus.typo)
+
+#class OnlyOnceExtension(Extension):
+#    tags = set(['static_resource'])
+#    @contextfunction
+#    def parse(self, parser):
+#        return Output("My Owl Extension")
+
+def render_template(template_name, variables):
+    # GAE
+    #tpl_path = os.path.join(os.path.dirname(__file__),
+    #    defs.THEME_DIR,
+    #    defs.TEMPLATE_DIR,
+    #    template_name)
+    #return template.render(tpl_path, variables)
+
+    # Django
+    #tpl = loader.get_template(template_name)
+    #c = Context(variables)
+    #return tpl.render(c)
+
+    # Jinja2
+    env = Environment(loader=FileSystemLoader('themes/grid'), extensions=[])
+    def static_resource(value):
+        return '/static/%s' % value
+    def typographus(value):
+        from typographus import typo
+        return typo(value)
+    env.filters['static_resource'] = static_resource
+    env.filters['typographus'] = typographus
+    tpl = env.get_template(template_name)
+    return tpl.render(variables)
+
+
+#webapp.template.register_template_library('my_tags')
 
 # info about tags used in articles, etc
 class BlogMeta:
     INSTANCE = None
+
+    def __init__(self, all_articles, articles_by_tags):
+        self.all_articles = all_articles
+        self.articles_by_tags = articles_by_tags
 
     @classmethod
     def instance(cls):
@@ -30,6 +80,7 @@ class BlogMeta:
 
     @classmethod
     def _collect_metadata(cls):
+        all_articles = []
         articles_by_tags = {}
         for md_short in glob.glob1(defs.MARKDOWN_DIR, '*'):
             md_full = os.path.join(defs.MARKDOWN_DIR, md_short)
@@ -37,6 +88,7 @@ class BlogMeta:
                 continue
             print >>sys.stderr, 'md:', md_full
             md = MarkdownFile.parse(md_full, read_content=False)
+            all_articles.append(md)
             #print >>sys.stderr, '  tags:', md.meta['tags']
             #print >>sys.stderr, '  date:', md.meta['date']
 
@@ -45,7 +97,7 @@ class BlogMeta:
                     articles_by_tags[tag].append(md)
                 else:
                     articles_by_tags[tag] = [md]
-        return articles_by_tags
+        return BlogMeta(all_articles, articles_by_tags)
 
 
 class MarkdownFile():
@@ -55,6 +107,9 @@ class MarkdownFile():
 
     @classmethod
     def parse(cls, file, read_content = True):
+
+        read_content = True # todo: the param rewritten!
+
         MD_PROPERTY_REGEX = re.compile('\s*#\s*'  '([a-zA-Z0-9_-]+)'  '\s*:\s*'  '(.*)'  '\s*')
         slug = os.path.split(file)[-1]
         #raise Exception('setting slug to: %s' % (slug,))
@@ -106,9 +161,9 @@ class ArticleDataStoreMock():
         self.url = utils.get_article_url(self)
         self.guid = utils.get_article_guid(self)
 
-
 def generate_article(slug):
-    articles_by_tags = BlogMeta.instance()
+    blog_meta = BlogMeta.instance()
+    articles_by_tags = blog_meta.articles_by_tags
 
     md_file = os.path.join(defs.MARKDOWN_DIR, slug)
 
@@ -139,7 +194,7 @@ def generate_article(slug):
         'next_page_url'   : None, #page_info.next_page_url,
         'current_page_1'  : None, #page_info.current_page,
         'pages_total'     : None, #page_info.pages_total,
-        'tag_cloud'       : articles_by_tags,
+        'tag_cloud'       : blog_meta,
         'single_article'  : article,
         }
     html = render_template('articles.html', template_variables)
@@ -148,7 +203,8 @@ def generate_article(slug):
 
 
 def generate_tag_page(tag_name):
-    articles_by_tags = BlogMeta.instance()
+    blog_meta = BlogMeta.instance()
+    articles_by_tags = blog_meta.articles_by_tags
 
     # generate tag page(s)
     mds = articles_by_tags[tag_name]
@@ -157,12 +213,17 @@ def generate_tag_page(tag_name):
     template_variables = {
         'paging_title': 'There are %d articles tagged <b>%s</b>:' % (len(mds), tag_name),
         'articles':     mds,
-        'tag_cloud':    articles_by_tags,
+        'tag_cloud':    blog_meta,
+        'defs':         defs,
     }
     html = render_template('tag.html', template_variables)
     html_file = os.path.join(defs.STATIC_HTML_TAG_DIR, tag_name)
     utils.write_file(html_file, html)
 
+def article_from_markup(md):
+    assert isinstance(md, MarkdownFile)
+    clever_object = clevermarkup.markup2html(md.text, for_comment=False)
+    return ArticleDataStoreMock(clever_object, md.meta)
 
 def fetch_articles_sorted():
     mds = []
@@ -175,39 +236,47 @@ def fetch_articles_sorted():
 
     articles = []
     for md in mds:
-        clever_object = clevermarkup.markup2html(md.text, for_comment=False)
-        article = ArticleDataStoreMock(clever_object, md.meta)
-        articles.append(article)
+        #clever_object = clevermarkup.markup2html(md.text, for_comment=False)
+        #article = ArticleDataStoreMock(clever_object, md.meta)
+        #articles.append(article)
+        articles.append(article_from_markup(md))
 
     return articles
 
 
 def page_url(page1):
-    return '/page%d' % page1 if page1 > 1 else '/'
+    return '/page/%d' % page1 if page1 > 1 else '/'
 
 def page_file(page1):
     return 'index.html' if page1 == 1 else 'page%d' % page1
 
-def generate_listings():
+def generate_listings(one_page1_required = None):
     def generate_page(articles, html_file_short, current_page_1, pages_total):
-
         template_variables = {
-            'articles': articles,
-            'current_page_1': current_page_1,
-            'pages_total': pages_total,
-            'prev_page_url': page_url(current_page_1-1) if current_page_1 >= 2 else None,
-            'next_page_url': page_url(current_page_1+1) if current_page_1 < pages_total else None,
-            'single_article'  : False,
-            'tag_cloud'       : BlogMeta.instance(),
-            'defs'            : defs,
+            'articles'       : articles,
+            'current_page_1' : current_page_1,
+            'pages_total'    : pages_total,
+            'prev_page_url'  : page_url(current_page_1-1) if current_page_1 >= 2 else None,
+            'next_page_url'  : page_url(current_page_1+1) if current_page_1 < pages_total else None,
+            'single_article' : False,
+            'tag_cloud'      : BlogMeta.instance(),
+            'defs'           : defs,
             }
         html = render_template('articles.html', template_variables)
         html_file = os.path.join(defs.STATIC_HTML_DIR, html_file_short)
         utils.write_file(html_file, html)
 
+#    if one_page1_required >= 1:
+#        blog_meta = BlogMeta.instance()
+#        mds = sorted(blog_meta.all_articles, key=lambda md: md.meta['date'], reverse=True)
+#        start = (one_page1_required - 1) * defs.MAX_ARTICLES_PER_PAGE
+#        mds = mds[ start :  start + defs.MAX_ARTICLES_PER_PAGE ]
+#        articles = [ article_from_markup(md) for md in mds]
+#        pages = [ articles ]
+#    else:
     articles = fetch_articles_sorted()
-
     pages = utils.split_list_into_chunks(articles, defs.MAX_ARTICLES_PER_PAGE)
+
     for page0 in xrange(len(pages)):
         page1 = page0 + 1
         page = pages[page0]
@@ -216,7 +285,7 @@ def generate_listings():
 
 
 def generate_listing(page1):
-    generate_listings()
+    generate_listings(page1)
     html_file_short = page_file(page1)
     return os.path.join(defs.STATIC_HTML_DIR, html_file_short)
 
@@ -235,16 +304,9 @@ def generate_rss():
     return html_file
 
 
-def render_template(template_name, variables):
-    tpl_path = os.path.join(os.path.dirname(__file__),
-        defs.THEME_DIR,
-        defs.TEMPLATE_DIR,
-        template_name)
-    return template.render(tpl_path, variables)
-
-
 def generate_all():
-    articles_by_tags = BlogMeta.instance()
+    blog_meta = BlogMeta.instance()
+    articles_by_tags = blog_meta.articles_by_tags
 
     # generate every article
     for short_file in glob.glob1(defs.MARKDOWN_DIR, '*'):
@@ -262,5 +324,5 @@ def generate_all():
 
 
 if __name__ == '__main__':
-    generate_all()
-    #generate_article('jazz-78-lp1')
+    #generate_all()
+    generate_article('band-called-75-1979')

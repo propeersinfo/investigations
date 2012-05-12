@@ -48,6 +48,8 @@ EMAIL_NOTIFY_COMMENT = True
 
 NEW_COMMENT_IMPLEMENTATION = True
 
-MARKDOWN_DIR        = os.path.join(os.path.dirname(__file__), 'operaimport', 'markdown')
-STATIC_HTML_DIR     = os.path.join(os.path.dirname(__file__), 'html')
-STATIC_HTML_TAG_DIR = os.path.join(os.path.dirname(__file__), 'html', 'tag')
+#PROJECT_DIR = 'd:/workspace/investigations/sg-blog-static'
+PROJECT_DIR = os.path.dirname(__file__)
+MARKDOWN_DIR        = os.path.join(PROJECT_DIR, 'operaimport', 'markdown')
+STATIC_HTML_DIR     = os.path.join(PROJECT_DIR, 'html')
+STATIC_HTML_TAG_DIR = os.path.join(PROJECT_DIR, 'html', 'tag')

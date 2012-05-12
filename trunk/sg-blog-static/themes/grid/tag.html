@@ -12,12 +12,12 @@
 {% block main %}
 
 	{% if paging_title %}
-		<p>{{ paging_title }}</p>
+		<p>{{ paging_title|safe|escape }}</p>
 	{% endif %}
 
 	<ul class="archive">
 	{% for article in articles %}
-		<li><em class="date">{{article.meta.date|date:"Y"}}</em> <a href="../{{article.meta.slug}}">{{article.meta.title}}</a>
+		<li><em class="date">{{article.meta.date.strftime("%Y")}}</em> <a href="../{{article.meta.slug}}">{{article.meta.title}}</a>
 	{% endfor %}
 	</ul>
   

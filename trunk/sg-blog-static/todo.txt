@@ -10,6 +10,8 @@ Important:
 
 Less important:
 
+- do not gen 1-item tag pages and don't show such tags
+- article: player not loaded at http://localhost/giedrius-kuprevicius
 - a script generating new article by template
 - use a script like '/charset/utf-8/path/to/file' to rewrite HTTP charset
 - rss: give full article's text, not just the link

@@ -1,5 +1,6 @@
 		<div class="sidebar-panel sidebar-tags">
-{% if tag_cloud %}		
+{% if tag_cloud %}
+    {#
 		<!--img src="/font?text=Regions"><br-->
 		<ul>
 		<li>{% blog_tag_cnt tag_cloud "best" "Favourites" %}</li>
@@ -25,6 +26,7 @@
 	    <li>{% blog_tag_cnt tag_cloud "kyrgyzstan" "Kyrgyzstan" %}</li>
 	    <li>{% blog_tag_cnt tag_cloud "foreign" "Foreign" %}</li>
 	    </ul>
+	#}
 {% else %}
 		-~-~-
 {% endif %}
