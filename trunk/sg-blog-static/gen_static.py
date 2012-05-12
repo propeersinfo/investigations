@@ -5,6 +5,7 @@ import os
 import datetime
 import re
 import sys
+import jinja2
 from jinja2.ext import Extension
 from jinja2.nodes import Output
 from jinja2.utils import contextfunction
@@ -55,6 +56,10 @@ def render_template(template_name, variables):
         return '/static/%s' % value
     def typographus(value):
         from typographus import typo
+        if isinstance(value, jinja2.runtime.Undefined):
+            value = ''
+        if type(value) == str:
+            value = unicode(value)
         return typo(value)
     env.filters['static_resource'] = static_resource
     env.filters['typographus'] = typographus
