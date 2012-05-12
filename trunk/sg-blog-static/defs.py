@@ -7,6 +7,7 @@ BLOG_NAME = 'Soviet Groove Blog'
 BLOG_OWNER = 'Soviet Groove'
 
 DROPBOX_USER = '1883230'
+DROPBOX_LOCAL_DIR = 'D:/dropbox/Public/sg'
 
 EXTERNAL_FEEDBACK_LINK = 'http://sovietgroove.userecho.com/'
 
