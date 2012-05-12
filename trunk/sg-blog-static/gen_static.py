@@ -61,8 +61,24 @@ def render_template(template_name, variables):
         if type(value) == str:
             value = unicode(value)
         return typo(value)
+    def blog_tag(value, tag_name, tag_title = None):
+        if not tag_title:
+            tag_title = tag_name
+        return '<a href="/tag/%s">%s</a>' % (tag_name, tag_title)
+    def blog_tag_cnt(value, tag_cloud, blog_tag_name, blog_tag_title = None):
+        if not blog_tag_title:
+            blog_tag_title = blog_tag_name
+        mapp = tag_cloud.articles_by_tags
+        count = len(mapp[blog_tag_name]) if mapp.has_key(blog_tag_name) else 0
+        if count > 0:
+            return '<a href="/tag/%s">%s</a> <span>%s</span>' % (blog_tag_name, blog_tag_title, count)
+        else:
+            return '%s' % blog_tag_title
+
     env.filters['static_resource'] = static_resource
     env.filters['typographus'] = typographus
+    env.filters['blog_tag'] = blog_tag
+    env.filters['blog_tag_cnt'] = blog_tag_cnt
     tpl = env.get_template(template_name)
     return tpl.render(variables)
 
@@ -73,10 +89,20 @@ def render_template(template_name, variables):
 class BlogMeta:
     INSTANCE = None
 
-    def __init__(self, all_articles, articles_by_slugs, articles_by_tags):
-        self.all_articles = all_articles
+    def __init__(self, articles_by_slugs, articles_by_tags):
         self.articles_by_slugs = articles_by_slugs
         self.articles_by_tags = articles_by_tags
+
+    def get_article_by_slug(self, slug):
+        md = self.articles_by_slugs[slug]
+        md_file = os.path.join(defs.MARKDOWN_DIR, slug)
+        t1 = md.meta['mtime']
+        t2 = os.path.getmtime(md_file)
+        if t1 < t2:
+            md = MarkdownFile.parse(md_file)
+            self.articles_by_slugs[md.meta['slug']] = md
+            #raise Exception('%s' % ('changed!',))
+        return md
 
     @classmethod
     def instance(cls):
@@ -86,7 +112,6 @@ class BlogMeta:
 
     @classmethod
     def _collect_metadata(cls):
-        all_articles = []
         articles_by_slugs = {}
         articles_by_tags = {}
         for md_short in glob.glob1(defs.MARKDOWN_DIR, '*'):
@@ -95,7 +120,6 @@ class BlogMeta:
                 continue
             print >>sys.stderr, 'md:', md_full
             md = MarkdownFile.parse(md_full, read_content=False)
-            all_articles.append(md)
             articles_by_slugs[md.meta['slug']] = md
             #print >>sys.stderr, '  tags:', md.meta['tags']
             #print >>sys.stderr, '  date:', md.meta['date']
@@ -105,7 +129,7 @@ class BlogMeta:
                     articles_by_tags[tag].append(md)
                 else:
                     articles_by_tags[tag] = [md]
-        return BlogMeta(all_articles, articles_by_slugs, articles_by_tags)
+        return BlogMeta(articles_by_slugs, articles_by_tags)
 
 
 class MarkdownFile():
@@ -122,7 +146,8 @@ class MarkdownFile():
         slug = os.path.split(file)[-1]
         #raise Exception('setting slug to: %s' % (slug,))
         meta = {
-            'slug': slug
+            'slug': slug,
+            'mtime': os.path.getmtime(file),
         }
         f = codecs.open(file, "r", defs.HTML_ENCODING)
         try:
@@ -177,7 +202,8 @@ def generate_article(slug):
 
     print >>sys.stderr, 'Generating for %s ...' % md_file
 
-    md = MarkdownFile.parse(md_file)
+    #md = MarkdownFile.parse(md_file)
+    md = blog_meta.get_article_by_slug(slug)
     clever_object = clevermarkup.markup2html(md.text, for_comment=False)
 
     #print 'clever_object:', type(clever_object['middle'])
@@ -208,6 +234,7 @@ def generate_article(slug):
     html = render_template('articles.html', template_variables)
     html_file = os.path.join(defs.STATIC_HTML_DIR, '%s' % slug)
     utils.write_file(html_file, html)
+    return html_file
 
 
 def generate_tag_page(tag_name):
@@ -256,7 +283,7 @@ def page_url(page1):
     return '/page/%d' % page1 if page1 > 1 else '/'
 
 def page_file(page1):
-    return 'index.html' if page1 == 1 else 'page%d' % page1
+    return 'index.html' if page1 == 1 else 'page/%d' % page1
 
 def generate_listings(one_page1_required = None):
     def generate_page(articles, html_file_short, current_page_1, pages_total):
@@ -334,3 +361,4 @@ def generate_all():
 if __name__ == '__main__':
     generate_all()
     #generate_article('band-called-75-1979')
+    #generate_rss()
