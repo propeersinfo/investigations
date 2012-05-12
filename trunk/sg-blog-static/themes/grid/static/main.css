@@ -216,6 +216,7 @@ div.article {
 }
 .article-meta a 		{ color: #333; }
 .article-meta a:hover	{ color: #f33; }
+.pagination { font-size: 85%; }
 .pagination a 		{	color: #333; }
 .pagination a:hover {	color: #f33; }
 .bottom a       {	color: #333; }
@@ -350,4 +351,21 @@ ul.archive em.date {
 }.dl_button:active {
 	position:relative;
 	top:1px;
+}
+
+
+.keyboard-shortcut {
+background: #F0F0C0;
+color: #A64;
+background: #ccc;
+color: black;
+padding: 0 .33em;
+border-radius: .33em;
+-moz-border-radius: .33em;
+-webkit-border-radius: .33em;
+text-decoration: none;
+font-size: 85%;
+}
+.tsp {
+margin-right: -0.167em;
 }

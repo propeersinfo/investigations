@@ -10,6 +10,10 @@
 
 {% block main %}
 
+	{% if not single_article %}
+		{% include "pagination-top.html" %}
+	{% endif %}
+  
 	{% if paging_title %}
 		<p>{{ paging_title }}</p>
 	{% endif %}
@@ -19,7 +23,7 @@
 	{% endfor %}
   
 	{% if not single_article %}
-		{% include "pagination.html" %}
+		{% include "pagination-bottom.html" %}
 	{% endif %}
   
 {% endblock %}

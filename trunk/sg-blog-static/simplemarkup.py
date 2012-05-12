@@ -52,15 +52,15 @@ def handle_custom_tag_image(text, config = None):
                 THUMBNAIL_DIR = os.path.join(defs.DROPBOX_LOCAL_DIR, 'img', '140px')
                 thumbnail_file = os.path.join(THUMBNAIL_DIR, addr)
 
-                # rewrite url and file
-                url = 'http://dl.dropbox.com/u/%s/sg/img/140px/%s' % (defs.DROPBOX_USER, addr)
-                image_file = thumbnail_file
-
                 if not os.path.exists(thumbnail_file):
                     th_size = 140, 140
                     img = Image.open(image_file)
                     img.thumbnail(th_size, Image.ANTIALIAS)
                     img.save(thumbnail_file, "JPEG")
+
+                # rewrite url and file
+                url = 'http://dl.dropbox.com/u/%s/sg/img/140px/%s' % (defs.DROPBOX_USER, addr)
+                image_file = thumbnail_file
 
             img = Image.open(image_file)
             image_w, image_h = img.size

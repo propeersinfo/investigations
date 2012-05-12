@@ -116,14 +116,16 @@ if(document.location.hostname == 'localhost' && document.location.pathname.index
 $(document).ready(function() {
     if(document.addEventListener) {
         document.addEventListener('keydown', function(event) {
-            switch (event.keyCode ? event.keyCode : event.which ? event.which : null) {
-                case 0x25:
+            var key = event.keyCode ? event.keyCode : event.which ? event.which : null
+            switch (key) {
+                case 38:
                     link = document.getElementById ('prev-link');
                     break;
-                case 0x27:
+                case 40:
                     link = document.getElementById ('next-link');
                     break;
             }
+            //if (key != 17) alert(event.keyCode + ' / ' + event.which)
             if (typeof(link) != 'undefined' && link && link.href)
                 document.location = link.href;
         }, false);
