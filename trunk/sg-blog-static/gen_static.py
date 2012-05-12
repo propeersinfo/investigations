@@ -73,8 +73,9 @@ def render_template(template_name, variables):
 class BlogMeta:
     INSTANCE = None
 
-    def __init__(self, all_articles, articles_by_tags):
+    def __init__(self, all_articles, articles_by_slugs, articles_by_tags):
         self.all_articles = all_articles
+        self.articles_by_slugs = articles_by_slugs
         self.articles_by_tags = articles_by_tags
 
     @classmethod
@@ -86,6 +87,7 @@ class BlogMeta:
     @classmethod
     def _collect_metadata(cls):
         all_articles = []
+        articles_by_slugs = {}
         articles_by_tags = {}
         for md_short in glob.glob1(defs.MARKDOWN_DIR, '*'):
             md_full = os.path.join(defs.MARKDOWN_DIR, md_short)
@@ -94,6 +96,7 @@ class BlogMeta:
             print >>sys.stderr, 'md:', md_full
             md = MarkdownFile.parse(md_full, read_content=False)
             all_articles.append(md)
+            articles_by_slugs[md.meta['slug']] = md
             #print >>sys.stderr, '  tags:', md.meta['tags']
             #print >>sys.stderr, '  date:', md.meta['date']
 
@@ -102,7 +105,7 @@ class BlogMeta:
                     articles_by_tags[tag].append(md)
                 else:
                     articles_by_tags[tag] = [md]
-        return BlogMeta(all_articles, articles_by_tags)
+        return BlogMeta(all_articles, articles_by_slugs, articles_by_tags)
 
 
 class MarkdownFile():
@@ -329,5 +332,5 @@ def generate_all():
 
 
 if __name__ == '__main__':
-    #generate_all()
-    generate_article('band-called-75-1979')
+    generate_all()
+    #generate_article('band-called-75-1979')
