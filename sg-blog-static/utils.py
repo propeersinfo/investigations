@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 import codecs
 import logging
-
 import os
+
 import re
 import unicodedata
 import Cookie
 import datetime
-import sys
-from google.appengine.api import users
-import simplejson as json
 import time
+import django
+import errno
 
 import defs
 
@@ -116,6 +115,9 @@ def read_file(path, charset = "utf-8"):
         f.close()
 
 def write_file(path, content):
+    if type(content) == django.utils.safestring.SafeUnicode or type(content) == unicode:
+        content = unicode(content).encode('utf-8')
+    #raise Exception('%s' % (type(content),))
     if type(content) == str:
         f = codecs.open(path, "wb")
     else:
@@ -126,6 +128,7 @@ def write_file(path, content):
         f.close()
 
 def send_mail_to_admin_about_new_comment(article, comment):
+    from google.appengine.api import users
     if defs.PRODUCTION and defs.EMAIL_NOTIFY_COMMENT and not users.is_current_user_admin():
         from google.appengine.api import mail
         mail.send_mail(sender='zeencd@gmail.com',
@@ -240,3 +243,12 @@ def get_seconds_since_epoch():
 
 def average_number(numbers):
     return reduce(lambda sum, len: sum + len, numbers, 0)
+
+
+#def mkdirs(path):
+#    try:
+#        os.makedirs(path)
+#    except OSError as exc: # Python >2.5
+#        if exc.errno == errno.EEXIST:
+#            pass
+#        else: raise

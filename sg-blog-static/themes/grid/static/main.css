@@ -297,6 +297,7 @@ ul.archive li {
 ul.archive em.date {
 	margin-right: 0.5em;
 	font-style: normal;
+	font-size: 85%;
 }
 
 .important-notification {

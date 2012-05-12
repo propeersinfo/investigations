@@ -2,7 +2,7 @@
     		<div class="width_2 cover">
     			<p>
     			{% if article.complex_html.named.cover %}
-    				{{ article.complex_html.named.cover }}
+    				{{ article.complex_html.named.cover|typographus|safe|escape }}
     			{% else %}
 	    			<img src="/static/cover-generic-140.jpg" width="140"/>
     			{% endif %}
@@ -10,16 +10,16 @@
     		</div>
     		<div class="width_6 tracks">
     			<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
-						<p>{{ article.complex_html.named.tracks.side_a }}</p>
+						<p>{{ article.complex_html.named.tracks.side_a|typographus|safe|escape }}</p>
     			</td><td>
     					&nbsp; &nbsp;
     			</td><td valign="top">
-						<p>{{ article.complex_html.named.tracks.side_b }}</p>
+						<p>{{ article.complex_html.named.tracks.side_b|typographus|safe|escape }}</p>
     			</td></tr></table>
     			<div class="row">
     				<div class="width_6 info">
     					<p>
-						{{ article.complex_html.named.info|typographus }}
+						{{ article.complex_html.named.info|typographus|safe|escape }}
 						</p>
     				</div>
     			</div>
@@ -27,9 +27,9 @@
 		</div>
 
 	    {% for p in article.complex_html.rest %}
-		<p>{{ p|typographus }}</p>
+		<p>{{ p|typographus|safe|escape }}</p>
 		{% endfor %}
 
 		{% if article.complex_html.named.download %}
-			<p>{{ article.complex_html.named.download|typographus }}</p>
+			<p>{{ article.complex_html.named.download|typographus|safe|escape }}</p>
 		{% endif %}

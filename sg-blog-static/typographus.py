@@ -391,7 +391,7 @@ class Typographus:
     def process(self, string):
         
         if not isinstance(string, unicode):
-            raise Exception, u'only unicode instances allowed for Typographus'
+            raise Exception, u'only unicode instances allowed for Typographus, actual is %s' % type(string)
         
         
         value = self.removeRedundantBlocks(string)

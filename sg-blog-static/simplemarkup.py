@@ -1,3 +1,4 @@
+import os
 import re
 import unittest
 import urllib2
@@ -34,16 +35,36 @@ Custom []-styled tags are supported:
 
 CUSTOM_TAG_IMAGE = re.compile("\[([^\]]+(jpe?g|png|gif))\]", re.IGNORECASE)
 
-def handle_custom_tag_image(text):
+def handle_custom_tag_image(text, config = None):
     #replacement = '<img src="http://dl.dropbox.com/u/%s/sg/\\1" alt="\\1">' % defs.DROPBOX_USER
     #replacement = '<img src="/static/cover.jpg" width="140" alt="\\1">'
     #return regex.sub(replacement, text)
     def replacer(m):
-        addr = m.group(1)
+        addr = m.group(1).strip()
         if addr.startswith('http'):
             return '<img src="%s">' % addr
         else:
-            return '<img src="http://dl.dropbox.com/u/%s/sg/%s" alt="%s">' % (defs.DROPBOX_USER, addr, addr)
+            url = 'http://dl.dropbox.com/u/%s/sg/%s' % (defs.DROPBOX_USER, addr)
+
+            do_resize = ('cover140px' in config) if config else False
+            if do_resize:
+                DROPBOX_LOCAL_DIR = 'D:/dropbox/Public/sg'
+                IMAGE_FILE = os.path.join(DROPBOX_LOCAL_DIR, addr)
+                PREVIEW_DIR = os.path.join(DROPBOX_LOCAL_DIR, 'img', '140px')
+                PREVIEW_FILE = os.path.join(PREVIEW_DIR, addr)
+                url = 'http://dl.dropbox.com/u/%s/sg/img/140px/%s' % (defs.DROPBOX_USER, addr)
+
+                if not os.path.exists(PREVIEW_FILE):
+                    import Image
+                    size = 140, 140
+                    img = Image.open(IMAGE_FILE)
+                    img.thumbnail(size, Image.ANTIALIAS)
+                    #utils.mkdirs(PREVIEW_FILE)
+                    img.save(PREVIEW_FILE, "JPEG")
+                    #raise Exception('%s / %s' % (PREVIEW_FILE, url))
+
+            border = '' # 'style="border:3px solid red;"' if do_resize else ''
+            return '<img src="%s" alt="%s" %s>' % (url, addr, border)
     if not defs.IMAGE_PLACEHOLDER:
         return re.sub(CUSTOM_TAG_IMAGE, replacer, text)
     else:
@@ -127,12 +148,12 @@ def handle_custom_tag_playlist(input):
     replace = '<object width="240" height="200"><embed src="%s" width="240" height="200" type="application/x-shockwave-flash" flashvars="&xml=http://dl.dropbox.com/u/%s/sg/\\1&autoreplay=1" quality="high"></embed></object>' % (swf, defs.DROPBOX_USER)
     return re.sub(MP3_PLAYLIST, replace, input)
 
-def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = True):
+def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = True, config = None):
     html = markup_text
     if rich_markup and recognize_links:
         html = handle_custom_tag_http_link(html)
     if rich_markup:
-        html = handle_custom_tag_image(html)
+        html = handle_custom_tag_image(html, config)
         html = handle_custom_tag_mp3(html)
         html = handle_custom_tag_playlist(html)
         html = handle_custom_tag_youtube(html)

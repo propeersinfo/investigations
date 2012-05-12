@@ -93,17 +93,17 @@ class SimpleMarkup():
         return result_string
 
 
-def para2html(p):
+def para2html(p, config = None):
     if isinstance(p, Paragraph):
         s = p.body
     elif type(p) in (str, unicode):
         s = p
     else:
         raise Exception('incorrect type of param: %s' % type(p))
-    return markup2html_paragraph(s)
+    return markup2html_paragraph(s, config=config)
 
 
-def break_tracklist_into_sides(para):
+def break_tracklist_into_sides_as_html(para):
     def decide_break_into_n_columns(lines):
         # return amount of columns it would be better to break the lines into
         if len(lines) < 4:
@@ -132,13 +132,14 @@ def break_tracklist_into_sides(para):
         side_b = '\n'.join(lines[len_a:])
     else:
         assert False
+
     return {
         'side_a': para2html(side_a),
         'side_b': para2html(side_b),
     }
 
 
-def modify_download_para(p):
+def convert_download_paragraph_to_html(p):
     def replacer(match):
         url = match.group(0)
         domain = match.group(1)
@@ -153,17 +154,24 @@ def modify_download_para(p):
     return s # para2html(s)
 
 
-def convert_named_para_list_to_hash(pp):
+def convert_cover_paragraph_to_html(p):
+    assert p.name == PARA_COVER
+    return para2html(p, config=['cover140px'])
+
+def convert_named_paragraphs_to_hash(pp):
     hash = {}
     for p in pp:
         assert p.name
         name = p.name
         if name == PARA_TRACKS:
-            hash[name] = break_tracklist_into_sides(p)
+            html_piece = break_tracklist_into_sides_as_html(p)
         elif name == PARA_DOWNLOAD:
-            hash[name] = modify_download_para(p)
+            html_piece = convert_download_paragraph_to_html(p)
+        elif name == PARA_COVER:
+            html_piece = convert_cover_paragraph_to_html(p)
         else:
-            hash[name] = para2html(p)
+            html_piece = para2html(p)
+        hash[name] = html_piece
     return hash
 
 
@@ -178,7 +186,7 @@ class CleverMarkup(SimpleMarkup):
         pp = break_into_paragraphs(markup_text)
         named, rest = pp.break_into_groups(RECOGNIZED_PARAS, MANDATORY_PARAS)
         rv = {
-            'named': convert_named_para_list_to_hash(named),
+            'named': convert_named_paragraphs_to_hash(named),
             'rest': map(para2html, rest),
         }
         #print >>sys.stderr, 'named:', rv['named'].keys()
