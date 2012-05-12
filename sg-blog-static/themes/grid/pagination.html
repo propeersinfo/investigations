@@ -1,20 +1,9 @@
 	<div class="pagination">
-		<div>
 		{% if prev_page_url %}
-		  <a href="{{prev_page_url}}">Fresher</a> &larr;
-		  <link rel="prev" href="{{prev_page_url}}" id="prev-link" />
+		  <span class="keyboard-shortcut">Ctrl<span class="tsp">&nbsp;</span>+<span class="tsp">&nbsp;</span>↓</span> <a href="{{next_page_url}}" id="next-link">Earlier</a>
 		{% else %}
-		  Fresher &larr;
-		{% endif %}
-		Ctrl
+
 		{% if next_page_url %}
-		  &rarr; <a href="{{next_page_url}}">Older</a>
-		  <link rel="next" href="{{next_page_url}}" id="next-link" />
-		{% else %}
-		  &rarr; Older
+		  <span class="keyboard-shortcut">Ctrl<span class="tsp">&nbsp;</span>+<span class="tsp">&nbsp;</span>↓</span> <a href="{{next_page_url}}" id="next-link">Earlier</a>
 		{% endif %}
-		</div>
-		<div>
-		Page {{current_page_1}} of {{pages_total}}
-		</div>
 	</div>
