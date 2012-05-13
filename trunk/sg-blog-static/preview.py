@@ -20,7 +20,7 @@ import gen_static
 
 class TagHandler(webapp.RequestHandler):
     def get(self, tag_name):
-        gen_static.generate_tag_page(tag_name)
+        gen_static.generate_tag(tag_name)
         html_file = os.path.join(os.path.dirname(__file__), 'html', 'tag', tag_name)
         html = utils.read_file(html_file)
         self.response.out.write(html)
