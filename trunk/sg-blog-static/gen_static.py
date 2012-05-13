@@ -339,6 +339,17 @@ def generate_rss():
     return html_file
 
 
+def generate_search():
+    html_file = os.path.join(defs.STATIC_HTML_DIR, 'special', 'search')
+    template_variables = {
+        'defs': defs,
+        'tag_cloud': BlogMeta.instance(),
+    }
+    html = render_template('search.html', template_variables)
+    utils.write_file(html_file, html)
+    return html_file
+
+
 def generate_all():
     blog_meta = BlogMeta.instance()
     articles_by_tags = blog_meta.articles_by_tags
