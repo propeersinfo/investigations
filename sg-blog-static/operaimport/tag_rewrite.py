@@ -32,4 +32,5 @@ replaces = {
 'twist\'n\'beat':		'shake',
 'uno naissoo':			'naissoo',
 'vainshtein':			'weinstein',
+'melodia':              'melodiya',
 }

@@ -34,6 +34,10 @@ class Root:
         #raise Exception('%s' % (file_path,))
         return serve_file(file_path)
 
+    @cherrypy.expose
+    def search(self, **params):
+        return utils.read_file(gen_static.generate_search())
+
 if __name__ == '__main__':
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root = Root()

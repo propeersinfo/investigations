@@ -1,5 +1,35 @@
-Important:
+Priority 1
 
+- implement google analytics
+- external comments: import opera comments
+
+Priority X
+
+- links block
+- thumbnails: compare mtime deciding to make a thumbnail or not
+- do handle paragraph '#download' even if layout is plain
+- markup: add meta param 'see also' refering to a tag
+- markup: add meta param 'break into n columns' for 'tracks'
+- tag: do not gen 1-item tag pages and don't show such tags (remember about tags linked from markup)
+- script generating new article by template
+- use a script like '/charset/utf-8/path/to/file' to rewrite HTTP charset
+- rss: give full article's text, not just the link
+- rss: fix html markup (it's kinda broken)
+- rss: use absolute links
+- split source into two different projects: markup with HTML generator and gae static project
+- similar articles block (by tags categorized as 'artist')
+- robots.txt
+- sitemap
+- typography: text like 7" is handled incorrectly
+- implement slug renaming via making HTTP redirects
+
+Completed
+
++ get contacts back (email)
++ images: add <img> dimensions automatically
++ images: auto generate 140px thumbnails for dropbox
++ article: player not loaded at http://localhost/giedrius-kuprevicius
++ swith from ctrl-right to ctrl-down
 + fix HTML title
 + use current timestamp as APP VERSION
 + tag rewrite: rewrite tags while converting html to markup also
@@ -7,29 +37,4 @@ Important:
 + rss: basics
 + tag cloud
 + external comments
-
-Less important:
-
-- thumbnails: compare mtime deciding to make a thumbnail or not
-- do handle paragraph '#download' even if layout is plain
-- markup: add meta param 'see also' refering to a tag
-- specify dropbox images's width/height
-- tag: do not gen 1-item tag pages and don't show such tags (remember about tags linked from markup)
-- a script generating new article by template
-- use a script like '/charset/utf-8/path/to/file' to rewrite HTTP charset
-- rss: give full article's text, not just the link
-- rss: fix html markup (it's kinda broken)
-- rss: use absolute links
-- swith from ctrl-right to ctrl-down
-- split source into two different projects: markup with HTML generator and gae static project
-- images: auto generate 140px thumbnails for dropbox
-- images: add <img> dimensions automatically
-- similar articles (by tags categorized as 'artist')
-- robots.txt
-- sitemap
-- implement google search
-- implement google analytics
-- external comments: import opera comments
-- typography: text like 7" is handled incorrectly
-- allow renaming slugs via making HTTP redirects
-+ article: player not loaded at http://localhost/giedrius-kuprevicius
++ implement google search
