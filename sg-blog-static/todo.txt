@@ -25,6 +25,7 @@ Priority X
 
 Completed
 
++ fasten generation of a single page
 + get contacts back (email)
 + images: add <img> dimensions automatically
 + images: auto generate 140px thumbnails for dropbox

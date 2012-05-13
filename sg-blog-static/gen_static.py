@@ -104,6 +104,9 @@ class BlogMeta:
             #raise Exception('%s' % ('changed!',))
         return md
 
+    def get_all_articles(self):
+        return self.articles_by_slugs.values()
+
     @classmethod
     def instance(cls):
         if not cls.INSTANCE:
@@ -237,7 +240,7 @@ def generate_article(slug):
     return html_file
 
 
-def generate_tag_page(tag_name):
+def generate_tag(tag_name):
     blog_meta = BlogMeta.instance()
     articles_by_tags = blog_meta.articles_by_tags
 
@@ -254,6 +257,7 @@ def generate_tag_page(tag_name):
     html = render_template('tag.html', template_variables)
     html_file = os.path.join(defs.STATIC_HTML_TAG_DIR, tag_name)
     utils.write_file(html_file, html)
+    return html_file
 
 def article_from_markup(md):
     assert isinstance(md, MarkdownFile)
@@ -286,7 +290,8 @@ def page_file(page1):
     return 'index.html' if page1 == 1 else 'page/%d' % page1
 
 def generate_listings(one_page1_required = None):
-    def generate_page(articles, html_file_short, current_page_1, pages_total):
+    def generate_page(articles, current_page_1, pages_total):
+        html_file_short = page_file(current_page_1)
         template_variables = {
             'articles'       : articles,
             'current_page_1' : current_page_1,
@@ -301,22 +306,28 @@ def generate_listings(one_page1_required = None):
         html_file = os.path.join(defs.STATIC_HTML_DIR, html_file_short)
         utils.write_file(html_file, html)
 
-#    if one_page1_required >= 1:
-#        blog_meta = BlogMeta.instance()
-#        mds = sorted(blog_meta.all_articles, key=lambda md: md.meta['date'], reverse=True)
-#        start = (one_page1_required - 1) * defs.MAX_ARTICLES_PER_PAGE
-#        mds = mds[ start :  start + defs.MAX_ARTICLES_PER_PAGE ]
-#        articles = [ article_from_markup(md) for md in mds]
-#        pages = [ articles ]
-#    else:
-    articles = fetch_articles_sorted()
-    pages = utils.split_list_into_chunks(articles, defs.MAX_ARTICLES_PER_PAGE)
+    if one_page1_required >= 1:
+        # a little optimization
+        blog_meta = BlogMeta.instance()
+        mds = sorted(blog_meta.get_all_articles(), key=lambda md: md.meta['date'], reverse=True)
+        #raise Exception('%s' % (len(mds),))
+        start = (one_page1_required - 1) * defs.MAX_ARTICLES_PER_PAGE
+        #raise Exception('%s' % (start,))
+        mds = mds[ start :  start + defs.MAX_ARTICLES_PER_PAGE ]
+        page = [ article_from_markup(md) for md in mds]
+        #raise Exception('%s' % (len(page),))
+        pages_total = len(blog_meta.articles_by_slugs.values())
+        #raise Exception('%s' % (one_page1_required,))
+        generate_page(page, one_page1_required, pages_total)
+    else:
+        # generate every listing page
+        articles = fetch_articles_sorted()
+        pages = utils.split_list_into_chunks(articles, defs.MAX_ARTICLES_PER_PAGE)
 
-    for page0 in xrange(len(pages)):
-        page1 = page0 + 1
-        page = pages[page0]
-        html_file_short = page_file(page1)
-        generate_page(page, html_file_short, current_page_1=page1, pages_total=len(pages))
+        for page0 in xrange(len(pages)):
+            page1 = page0 + 1
+            page = pages[page0]
+            generate_page(page, current_page_1=page1, pages_total=len(pages))
 
 
 def generate_listing(page1):
@@ -364,7 +375,7 @@ def generate_all():
     # generate every tag
     for tag in articles_by_tags.keys():
         print >>sys.stderr, ' a tag "%s"' % tag
-        generate_tag_page(tag)
+        generate_tag(tag)
 
     generate_rss()
 
