@@ -3,6 +3,13 @@ Priority 1
 - implement google analytics
 - external comments: import opera comments
 
+
+Priority Middle
+
+- move images to picasa/etc
+- markup broken 'melodia-band-complete'
+- markup: broken playlist 'http://localhost/the-last-portion-of-qaya'
+
 Priority X
 
 - links block
