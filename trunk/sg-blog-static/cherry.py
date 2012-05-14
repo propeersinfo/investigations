@@ -20,6 +20,11 @@ class Root:
         return utils.read_file(gen_static.generate_article(slug))
 
     @cherrypy.expose
+    def reset(self):
+        gen_static.BlogMeta.reset()
+        raise cherrypy.HTTPRedirect("/")
+
+    @cherrypy.expose
     def tag(self, tag_name):
         return utils.read_file(gen_static.generate_tag(tag_name))
 

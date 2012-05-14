@@ -10,7 +10,7 @@ from jinja2.ext import Extension
 from jinja2.nodes import Output
 from jinja2.utils import contextfunction
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_generator.settings")
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_generator.settings")
 
 #from google.appengine.ext import webapp
 #from google.appengine.ext.webapp import template
@@ -92,6 +92,10 @@ class BlogMeta:
     def __init__(self, articles_by_slugs, articles_by_tags):
         self.articles_by_slugs = articles_by_slugs
         self.articles_by_tags = articles_by_tags
+
+    @classmethod
+    def reset(cls):
+        cls.INSTANCE = None
 
     def get_article_by_slug(self, slug):
         md = self.articles_by_slugs[slug]
@@ -289,6 +293,7 @@ def page_url(page1):
 def page_file(page1):
     return 'index.html' if page1 == 1 else 'page/%d' % page1
 
+# param one_page1_required allows us optimize HTML generation by just one page
 def generate_listings(one_page1_required = None):
     def generate_page(articles, current_page_1, pages_total):
         html_file_short = page_file(current_page_1)
@@ -307,17 +312,13 @@ def generate_listings(one_page1_required = None):
         utils.write_file(html_file, html)
 
     if one_page1_required >= 1:
-        # a little optimization
+        # generate just one HTML file
         blog_meta = BlogMeta.instance()
         mds = sorted(blog_meta.get_all_articles(), key=lambda md: md.meta['date'], reverse=True)
-        #raise Exception('%s' % (len(mds),))
         start = (one_page1_required - 1) * defs.MAX_ARTICLES_PER_PAGE
-        #raise Exception('%s' % (start,))
         mds = mds[ start :  start + defs.MAX_ARTICLES_PER_PAGE ]
         page = [ article_from_markup(md) for md in mds]
-        #raise Exception('%s' % (len(page),))
         pages_total = len(blog_meta.articles_by_slugs.values())
-        #raise Exception('%s' % (one_page1_required,))
         generate_page(page, one_page1_required, pages_total)
     else:
         # generate every listing page
@@ -370,14 +371,14 @@ def generate_all():
         if os.path.isfile(os.path.join(defs.MARKDOWN_DIR, short_file)):
             generate_article(short_file)
 
-    generate_listings()
-
     # generate every tag
     for tag in articles_by_tags.keys():
         print >>sys.stderr, ' a tag "%s"' % tag
         generate_tag(tag)
 
+    generate_listings()
     generate_rss()
+    generate_search()
 
 
 if __name__ == '__main__':
