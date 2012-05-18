@@ -138,6 +138,7 @@ $(document).ready(function() {
 ////////////////////////////////////////////////////
 
 function report_error(msg) {
+    alert('cannot load additional comments')
     $('#external_comments_errors').text(msg);
 }
 
@@ -186,7 +187,12 @@ function load_comments() {
             });
         },
         error: function(xhr, ajaxOptions, thrownError) {
-            report_error('an error occured getting comments: "' + thrownError + '"');
+            //report_error('an error occured getting comments: "' + thrownError + '"');
+            $('#comment-loading-error').
+                css('display', 'table').
+                text('Cannot load more comments at the moment.').
+                delay(5000).
+                fadeOut('slow');
         }
     });
 }
@@ -226,7 +232,9 @@ function setup_new_comment_form() {
 }
 
 $(document).ready(function() {
-    load_comments();
+    if($('#comment-list').length > 0) {
+        load_comments();
+    }
 });
 
 $(document).ready(function() {

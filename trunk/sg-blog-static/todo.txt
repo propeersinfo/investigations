@@ -1,9 +1,7 @@
 Priority 1
 
-- make search form non javascript
-- google analytics doesnot register any visitor
-+ implement google analytics
-- external comments: import opera comments
+- ".html" suffix: add it to the tags also
+- make search input non javascript
 
 
 Priority Middle
@@ -14,6 +12,7 @@ Priority Middle
 
 Priority X
 
+- edit tags "beat", "shake", "twist"
 - links block
 - thumbnails: compare mtime deciding to make a thumbnail or not
 - do handle paragraph '#download' even if layout is plain
@@ -48,3 +47,6 @@ Completed
 + tag cloud
 + external comments
 + implement google search
++ google analytics doesnot register any visitor
++ implement google analytics
++ external comments: import opera comments
