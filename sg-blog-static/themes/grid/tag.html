@@ -17,7 +17,7 @@
 
 	<ul class="archive">
 	{% for article in articles %}
-		<li><em class="date">{{article.meta.date.strftime("%Y")}}</em> <a href="../{{article.meta.slug}}">{{article.meta.title|typographus}}</a>
+		<li><em class="date">{{article.published_date.strftime("%Y")}}</em> <a href="{{article.path}}">{{article.title|typographus}}</a>
 	{% endfor %}
 	</ul>
   

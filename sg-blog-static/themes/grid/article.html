@@ -1,12 +1,12 @@
 <div class="article">
 
 {% if not article.pinned or single_article %}
-		<h1 id="article_header_{{article.id}}" class="{{article.published_class}}">
+		<h1 class="{{article.published_class}}">
 			{% if single_article %}
 				<span></span>
 				{{ article.title|typographus|escape }}
 			{% else %}
-				<a href="/{{article.slug}}">
+				<a href="{{article.path}}">
 					<span></span>
 					{{ article.title|typographus }}</a>
 			{% endif %}

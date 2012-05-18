@@ -1,4 +1,5 @@
 import os
+import re
 import cherrypy
 from cherrypy.lib.static import serve_file
 import gen_static
@@ -12,11 +13,18 @@ class Root:
 
     @cherrypy.expose
     def page(self, page1):
-        page1 = int(page1)
+        if type(page1) == str:
+            m = re.match('(\d+)\.html', page1)
+            if m:
+                page1 = int(m.group(1))
+            else:
+                raise Exception('illegal page url %s' % page1)
         return utils.read_file(gen_static.generate_listing(page1))
 
     @cherrypy.expose
-    def default(self, slug):
+    def default(self, path):
+        m = re.match('(.+)\.html', path)
+        slug = m.group(1) if m else path
         return utils.read_file(gen_static.generate_article(slug))
 
     @cherrypy.expose
@@ -27,6 +35,12 @@ class Root:
     @cherrypy.expose
     def tag(self, tag_name):
         return utils.read_file(gen_static.generate_tag(tag_name))
+
+    @cherrypy.expose
+    def rss(self):
+        response = cherrypy.response
+        response.headers['Content-Type'] = 'text/xml'
+        return utils.read_file(gen_static.generate_rss())
 
     @cherrypy.expose
     def static(self, *url_path, **url_params):

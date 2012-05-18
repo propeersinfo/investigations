@@ -38,12 +38,22 @@ class RestfulHandler(webapp.RequestHandler):
     @handle_exceptions
     @allow_xss
     def get(self, path):
-        self.do_fetch(path)
+        self.do_fetch(self.__class__.filter_path(path))
 
     @handle_exceptions
     @allow_xss
     def post(self, path):
-        self.do_append(path)
+        self.do_append(self.__class__.filter_path(path))
+
+
+    @classmethod
+    def filter_path(cls, path):
+        # try to remove leading 'WWW'
+        path_low = path.lower()
+        www_pfx = 'www.'
+        if path_low.startswith('www.') and len(path_low) > len(www_pfx):
+            path = path[len(www_pfx) : ]
+        return path
 
 #    def options(self, *args):
 #        self.response.headers['Access-Control-Allow-Origin'] = '*'

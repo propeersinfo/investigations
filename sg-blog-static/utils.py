@@ -254,9 +254,16 @@ def average_number(numbers):
 #            pass
 #        else: raise
 
-def get_article_path(slug):
-    return '/%s' % slug
+def get_article_path(article):
+    assert type(article) is not str
+    #import gen_static
+    #assert article.__class__ == gen_static.ArticleDataStoreMock, article.__class__
+    #assert isinstance(article, gen_static.ArticleDataStoreMock)
+    return '/%s.html' % article.slug
 
 
-def get_article_url(slug):
-    return '%s/%s' % (defs.CANONICAL_BLOG_URL, slug)
+def get_article_url(article):
+    assert type(article) is not str
+    #import gen_static
+    #assert article.__class__ == gen_static.ArticleDataStoreMock, article.__class__
+    return '%s/%s.html' % (defs.CANONICAL_BLOG_URL, article.slug)
