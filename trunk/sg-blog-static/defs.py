@@ -3,7 +3,7 @@ import utils
 
 HTML_ENCODING = 'UTF-8'
 
-BLOG_NAME = 'Soviet Groove Blog'
+BLOG_NAME = 'Soviet Groove'
 BLOG_OWNER = 'Soviet Groove'
 
 DROPBOX_USER = '1883230'

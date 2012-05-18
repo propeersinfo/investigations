@@ -253,3 +253,10 @@ def average_number(numbers):
 #        if exc.errno == errno.EEXIST:
 #            pass
 #        else: raise
+
+def get_article_path(slug):
+    return '/%s' % slug
+
+
+def get_article_url(slug):
+    return '%s/%s' % (defs.CANONICAL_BLOG_URL, slug)
