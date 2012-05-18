@@ -21,6 +21,7 @@ from jinja2.utils import contextfunction
 from jinja2 import Environment, FileSystemLoader
 
 import clevermarkup
+from comment_db import CommentDB
 import defs
 from userinfo import UserInfo
 import utils
@@ -232,6 +233,11 @@ def generate_article(slug):
     article = ArticleDataStoreMock(clever_object, md.meta)
     articles = [ article ]
 
+    comments_db = CommentDB.get_instance('operaimport/comments4json.result.json')
+    db_path = '/%s.html' % slug
+    comments = comments_db.get_comments_for_path(db_path)
+    #raise Exception('%s -> %s' % (db_path, comments,))
+
     #raise Exception('%s' % (article.complex_html['named']['info'],))
 
     template_variables = {
@@ -248,6 +254,7 @@ def generate_article(slug):
         'pages_total'     : None, #page_info.pages_total,
         'tag_cloud'       : blog_meta,
         'single_article'  : article,
+        'comments'        : comments if comments else [],
         }
     html = render_template('articles.html', template_variables)
     html_file = os.path.join(defs.STATIC_HTML_DIR, '%s.html' % slug)
