@@ -132,3 +132,103 @@ $(document).ready(function() {
         }, false);
     }
 });
+
+////////////////////////////////////////////////////
+// external comments
+////////////////////////////////////////////////////
+
+function report_error(msg) {
+    $('#external_comments_errors').text(msg);
+}
+
+//function add_comment(comment) {
+//    var external_comments = document.getElementById('external_comments');
+//    if(external_comments) {
+//        var li = document.createElement('li');
+//        li.innerHTML = '<b>' + comment.name + '</b>: ' + comment.text;
+//        external_comments.appendChild(li);
+//    } else {
+//        alert('external_comments not found')
+//    }
+//}
+
+function add_comment(comment) {
+    var clone = $('#comment-template').clone();
+    clone.find('.comment-name').text(comment.name);
+    clone.find('.comment-text').text(comment.text);
+    clone.appendTo('#comment-list');
+}
+
+function get_rest_url_for_current_document() {
+    var host = window.location.hostname;
+    if(host == 'localhost') {
+        // rewrite domain for purposes of debug and support
+        host = 'www.sovietgroove.com';
+    }
+    var path = host + window.location.pathname;
+    return 'http://localhost/comments/' + path;
+}
+
+function load_comments() {
+    $.ajax({
+        //url: get_rest_url_for_current_document()+'?callback=?',
+        //dataType: 'jsonp',
+        url: get_rest_url_for_current_document(),
+        dataType: 'json',
+        success: function(json_data) {
+            //alert('json_data = _' + json_data + '_');
+            //alert(typeof(json_data.length))
+            //if(typeof(json_data) == 'string') {}
+            //json_data = JSON.parse(json_data);
+            //alert('json_data: ' + dump_object(json_data));
+            $.each(json_data, function(idx, comment) {
+                add_comment(comment);
+            });
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            report_error('an error occured getting comments: "' + thrownError + '"');
+        }
+    });
+}
+
+function setup_new_comment_form() {
+    //var action = get_rest_url_for_current_document() + '?return=' + encodeURIComponent(window.location);
+    //$('#new_comment_form').attr('action', action);
+
+    $('#new_comment_form').submit(function () {
+        try {
+            var name = $('#new_comment_form input[name="name"]').val();
+            var text = $('#new_comment_form textarea[name="text"]').val();
+            var new_comment = {
+                'name': name,
+                'text': text
+            };
+            $.ajax({
+                url:get_rest_url_for_current_document(),
+                type:'POST',
+                // NB: content type other than default leads Firefox to use OPTIONS method (that's wrong in practice)
+                //contentType: 'application/json',
+                data:JSON.stringify(new_comment),
+                success:function (res) {
+                    //alert('form sent ok: ' + res)
+                    add_comment(new_comment)
+                },
+                error: function(x, y, z) {
+                    report_error('error sending comment to server')
+                }
+            });
+            return false;
+        } catch (e) {
+            alert('Error submitting form: ' + e);
+            return false;
+        }
+    })
+}
+
+$(document).ready(function() {
+    load_comments();
+});
+
+$(document).ready(function() {
+    setup_new_comment_form();
+});

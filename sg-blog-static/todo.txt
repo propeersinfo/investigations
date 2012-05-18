@@ -1,6 +1,8 @@
 Priority 1
 
-- implement google analytics
+- make search form non javascript
+- google analytics doesnot register any visitor
++ implement google analytics
 - external comments: import opera comments
 
 

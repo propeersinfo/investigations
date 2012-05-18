@@ -1,0 +1,52 @@
+﻿		<a name="comments"></a>
+		
+
+        <p><br/><b>Your comment:</b></p>
+        <form id="new_comment_form" action="" method="POST" accept-charset="{{defs.HTML_ENCODING}}">
+        <div class="row">
+    		<div class="width_2"><p>
+    			Name
+			</p></div>
+    		<div class="width_6"><p>
+    			<input name="name" type="text" value="" style="width: 98%;"/>
+			</p></div>
+        </div>
+        <div class="row">
+    		<div class="width_2"><p>
+    			&nbsp;
+			</p></div>
+    		<div class="width_6"><p>
+    			<textarea id="comment-text" name="text" rows="2" style="width: 98%;"></textarea>
+			</p></div>
+        </div>
+        <div class="row">
+    		<div class="width_2"><p>
+    			&nbsp;
+			</p></div>
+    		<div class="width_6"><p>
+    			<input type="submit" value='Add comment' style="float:right;"/>
+			</p></div>
+        </div>
+		</form>
+		<div id="external_comments_errors"></div>
+		
+		
+		<!-- comments count -->
+		<p>
+		<b>10 comments:</b>
+		</p>
+      
+
+		<div id="comment-list">
+			<div style="display: none;">
+				<div id="comment-template" class="row comment">
+					<div class="width_2"><p>
+						<span class='comment-name'>Name</span><br>
+						<span class='comment-date'>May 18, 2012</span>
+					</p></div>
+					<div class="width_6 comment-text">
+						Text
+					</div>
+				</div>
+			</div>
+        </div>

@@ -14,10 +14,10 @@ from jinja2.utils import contextfunction
 
 #from google.appengine.ext import webapp
 #from google.appengine.ext.webapp import template
-from django.shortcuts import render_to_response
-from django import template
-from django.template import loader
-from django.template.context import Context
+#from django.shortcuts import render_to_response
+#from django import template
+#from django.template import loader
+#from django.template.context import Context
 from jinja2 import Environment, FileSystemLoader
 
 import clevermarkup
@@ -28,8 +28,8 @@ from operaimport.post_parser import parse_date_string
 from operaimport.tag_rewrite import rewrite_tag
 import typographus
 
-register = template.Library()
-register.filter('typographus', typographus.typo)
+#register = template.Library()
+#register.filter('typographus', typographus.typo)
 
 #class OnlyOnceExtension(Extension):
 #    tags = set(['static_resource'])
@@ -51,7 +51,7 @@ def render_template(template_name, variables):
     #return tpl.render(c)
 
     # Jinja2
-    env = Environment(loader=FileSystemLoader('themes/grid'), extensions=[])
+    env = Environment(loader=FileSystemLoader(['themes/grid', 'themes']), extensions=[])
     def static_resource(value):
         return '/static/%s' % value
     def typographus(value):
@@ -201,6 +201,7 @@ class ArticleDataStoreMock():
         self.url = utils.get_article_url(self)
         self.guid = utils.get_article_guid(self)
 
+
 def generate_article(slug):
     blog_meta = BlogMeta.instance()
     articles_by_tags = blog_meta.articles_by_tags
@@ -226,7 +227,8 @@ def generate_article(slug):
 
     template_variables = {
         'defs'         : defs,
-        'current_path' : 'fake-current-path',
+        #'current_path'      : utils.get_article_path(slug),
+        #'current_path_full' : utils.get_article_url(slug),
         'articles'     : articles,
         'user_info'    : UserInfo(),
         #'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
@@ -383,5 +385,5 @@ def generate_all():
 
 if __name__ == '__main__':
     generate_all()
-    #generate_article('band-called-75-1979')
+    #generate_article('jaan-kuman-tantsurutme-complete')
     #generate_rss()

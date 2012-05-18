@@ -5,6 +5,7 @@ from jinja2 import Environment, FileSystemLoader
 from operaimport.post_parser import parse_file
 
 OPERA_HTML_DIR = 'D:/docs/opera-import/opera-blog-copying/operabloghtml'
+URL_BASE = 'http://www.sovietgroove.com'
 
 def write_file(path, content):
     if type(content) == unicode:
@@ -24,21 +25,26 @@ def render_template(template_name, vars):
 
 articles = list()
 com_cnt = 0
+OFFSET = 1000
 for html_file in glob.glob('%s/*' % OPERA_HTML_DIR):
     print html_file
-    #html_file = os.path.join(OPERA_HTML_DIR, 'dos-mukasan-1976')
     article = parse_file(html_file)
-    articles.append(article)
-    for c in article['comments']:
-        #print c['date'].strftime('%Y-%m-%d %H:%M:%S')
-        com_cnt += 1
-    break
+    cc = article['comments']
+    if len(cc) > 0:
+        articles.append(article)
+        for c in cc:
+            com_cnt += 1
+            c['fake_id'] = com_cnt + OFFSET
+            print c['fake_id']
+    else:
+        print '-skipping-0-comments-'
 
 print 'there are %d articles' % (len(articles))
 print 'there are %d comments' % (com_cnt,)
 
 tpl_vars = {
     'articles': articles,
+    'URL_BASE': URL_BASE,
 }
 xml = render_template('export2disqus.tpl.xml', tpl_vars)
 write_file('export2disqus.res.xml', xml)
