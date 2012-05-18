@@ -37,6 +37,14 @@ import typographus
 #    def parse(self, parser):
 #        return Output("My Owl Extension")
 
+def page_url(page1):
+    return '/page/%d.html' % page1 if page1 > 1 else '/'
+
+
+def page_file(page1):
+    return 'index.html' if page1 == 1 else 'page/%d.html' % page1
+
+
 def render_template(template_name, variables):
     # GAE
     #tpl_path = os.path.join(os.path.dirname(__file__),
@@ -198,6 +206,7 @@ class ArticleDataStoreMock():
         self.published_date = meta['date']
         self.tags = meta['tags']
         self.slug = meta['slug']
+        self.path = utils.get_article_path(self)
         self.url = utils.get_article_url(self)
         self.guid = utils.get_article_guid(self)
 
@@ -241,7 +250,7 @@ def generate_article(slug):
         'single_article'  : article,
         }
     html = render_template('articles.html', template_variables)
-    html_file = os.path.join(defs.STATIC_HTML_DIR, '%s' % slug)
+    html_file = os.path.join(defs.STATIC_HTML_DIR, '%s.html' % slug)
     utils.write_file(html_file, html)
     return html_file
 
@@ -253,10 +262,11 @@ def generate_tag(tag_name):
     # generate tag page(s)
     mds = articles_by_tags[tag_name]
     mds = sorted(mds, key=lambda md: md.meta['date'], reverse=True)
+    articles = [ article_from_markup(md) for md in mds ]
     #raise Exception('%s' % (len(mds),))
     template_variables = {
         'paging_title': 'There are %d articles tagged <b>%s</b>:' % (len(mds), tag_name),
-        'articles':     mds,
+        'articles':     articles,
         'tag_cloud':    blog_meta,
         'defs':         defs,
     }
@@ -288,12 +298,6 @@ def fetch_articles_sorted():
 
     return articles
 
-
-def page_url(page1):
-    return '/page/%d' % page1 if page1 > 1 else '/'
-
-def page_file(page1):
-    return 'index.html' if page1 == 1 else 'page/%d' % page1
 
 # param one_page1_required allows us optimize HTML generation by just one page
 def generate_listings(one_page1_required = None):

@@ -16,7 +16,7 @@ handlers:
 - url: /static2
   static_dir: static2
 
-- url: /rss
+- url: /rss.xml
   static_files: html/special/rss.xml
   upload: html/special/rss.xml
   mime_type: text/xml
