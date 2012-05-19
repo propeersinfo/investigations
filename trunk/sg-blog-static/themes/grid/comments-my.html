@@ -1,6 +1,6 @@
 ﻿		<a name="comments"></a>
-		
-{#
+
+
         <p><br/><b>Your comment:</b></p>
         <form id="new_comment_form" action="" method="POST" accept-charset="{{defs.HTML_ENCODING}}">
         <div class="row">
@@ -29,7 +29,7 @@
         </div>
 		</form>
 		<div id="external_comments_errors"></div>
-#}		
+
 
 		<!-- comments count -->
 		<p>
@@ -39,7 +39,7 @@
 
 		<div id="comment-list">
 			{% for c in comments %}
-			<div id="comment-template" class="row comment">
+			<div class="row comment">
 				<div class="width_2"><p>
 					<span class='comment-name'>{{ c.name|escape }}</span><br>
 					<span class='comment-date'>{{ c.date.strftime('%b %d, %Y') }}</span>
@@ -51,6 +51,7 @@
 			{% endfor %}
 			
 			<div style="display: none;">
+				<!-- Template for a comment added by JavaScript. Invisible via CSS. -->
 				<div id="comment-template" class="row comment">
 					<div class="width_2"><p>
 						<span class='comment-name'>Name</span><br>
