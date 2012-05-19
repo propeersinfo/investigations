@@ -239,7 +239,7 @@ def limit(lst, limit):
 
 def get_seconds_since_epoch():
     float = time.mktime(time.gmtime())
-    return str(int(float))
+    return int(float)
 
 
 def average_number(numbers):

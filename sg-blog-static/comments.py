@@ -1,5 +1,6 @@
 import urllib
 import urllib2
+import datetime
 import simplejson as json
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -33,6 +34,13 @@ def allow_xss(wrapped):
         return wrapped(self, *args, **kwargs)
     return wrapper
 
+def format_now_rfc():
+    # return string like 'Wed, 22 Oct 2008 10:52:40 GMT'
+    from wsgiref.handlers import format_date_time
+    from time import mktime
+    now = datetime.datetime.now()
+    stamp = mktime(now.timetuple())
+    return format_date_time(stamp)
 
 class RestfulHandler(webapp.RequestHandler):
     @handle_exceptions
@@ -76,7 +84,8 @@ class RestfulHandler(webapp.RequestHandler):
         if return_url:
             new_comment = {
                 'name': self.request.get('name'),
-                'text': self.request.get('text')
+                'text': self.request.get('text'),
+                'date': format_now_rfc(),
             }
         else:
             ct = self.request.headers['Content-Type']
@@ -88,7 +97,12 @@ class RestfulHandler(webapp.RequestHandler):
             if json_str[-1] == '=':
                 json_str = json_str[0:-1] # remove that fucking trailing '='
 
-            new_comment = json.loads(json_str)
+            data = json.loads(json_str)
+            new_comment = {
+                'name': data['name'],
+                'text': data['text'],
+                'date': format_now_rfc(),
+                }
 
         assert type(new_comment) == dict
         entry = CommentSet.get_by_path(path)

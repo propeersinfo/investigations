@@ -133,13 +133,22 @@ $(document).ready(function() {
     }
 });
 
+// return a string like 'Jun 16, 2001'
+function format_date_mdy(d) {
+    var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+    var curr_date = d.getDate();
+    var curr_month = d.getMonth();
+    var curr_year = d.getFullYear();
+    return m_names[curr_month] + " " + curr_date + ", " + curr_year;
+}
+
 ////////////////////////////////////////////////////
 // external comments
 ////////////////////////////////////////////////////
 
 function report_error(msg) {
-    //alert('cannot load additional comments');
-    $('#external_comments_errors').text(msg);
+    alert('error adding comment');
+    //$('#external_comments_errors').text(msg);
 }
 
 //function add_comment(comment) {
@@ -153,10 +162,25 @@ function report_error(msg) {
 //    }
 //}
 
-function add_comment(comment) {
+function add_comment(comment, is_new) {
+    if(typeof is_new == 'undefined') {
+        is_new = false;
+    }
+    var date_str = 'n/a';
+    if(is_new) {
+        date_str = format_date_mdy(new Date());
+    } else {
+        var date = Date.parse(comment.date);
+        if(date) {
+            date = new Date();
+            date_str = format_date_mdy(date);
+        }
+    }
+
     var clone = $('#comment-template').clone();
     clone.find('.comment-name').text(comment.name);
     clone.find('.comment-text').text(comment.text);
+    clone.find('.comment-date').text(date_str);
     clone.appendTo('#comment-list');
 }
 
@@ -217,7 +241,7 @@ function setup_new_comment_form() {
                 data:JSON.stringify(new_comment),
                 success:function (res) {
                     //alert('form sent ok: ' + res)
-                    add_comment(new_comment)
+                    add_comment(new_comment, true)
                 },
                 error: function(x, y, z) {
                     report_error('error sending comment to server')
