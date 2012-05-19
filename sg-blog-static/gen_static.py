@@ -73,14 +73,14 @@ def render_template(template_name, variables):
     def blog_tag(value, tag_name, tag_title = None):
         if not tag_title:
             tag_title = tag_name
-        return '<a href="/tag/%s">%s</a>' % (tag_name, tag_title)
+        return '<a href="/tag/%s.html">%s</a>' % (tag_name, tag_title)
     def blog_tag_cnt(value, tag_cloud, blog_tag_name, blog_tag_title = None):
         if not blog_tag_title:
             blog_tag_title = blog_tag_name
         mapp = tag_cloud.articles_by_tags
         count = len(mapp[blog_tag_name]) if mapp.has_key(blog_tag_name) else 0
         if count > 0:
-            return '<a href="/tag/%s">%s</a> <span>%s</span>' % (blog_tag_name, blog_tag_title, count)
+            return '<a href="/tag/%s.html">%s</a> <span>%s</span>' % (blog_tag_name, blog_tag_title, count)
         else:
             return '%s' % blog_tag_title
 
@@ -278,7 +278,7 @@ def generate_tag(tag_name):
         'defs':         defs,
     }
     html = render_template('tag.html', template_variables)
-    html_file = os.path.join(defs.STATIC_HTML_TAG_DIR, tag_name)
+    html_file = os.path.join(defs.STATIC_HTML_TAG_DIR, '%s.html' % tag_name)
     utils.write_file(html_file, html)
     return html_file
 

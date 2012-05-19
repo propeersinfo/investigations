@@ -138,7 +138,7 @@ $(document).ready(function() {
 ////////////////////////////////////////////////////
 
 function report_error(msg) {
-    alert('cannot load additional comments')
+    //alert('cannot load additional comments');
     $('#external_comments_errors').text(msg);
 }
 
