@@ -1,12 +1,13 @@
 Priority 1
 
-- comments: send email on comment received
-- ".html" suffix: add it to the tags also
-- make search input non javascript
-
 
 Priority Middle
 
+- adding new comment in JS: scroll down
+- adding new comment in JS: clear message text
+- remember commenter's name in cookies
+- comments: send email on comment received
+- make search input non javascript
 - page "275.html" (max) is being generated somewhow
 - move images to picasa/etc
 - markup broken 'melodia-band-complete'
@@ -52,3 +53,4 @@ Completed
 + google analytics doesnot register any visitor
 + implement google analytics
 + external comments: import opera comments
++ ".html" suffix: add it to the tags also

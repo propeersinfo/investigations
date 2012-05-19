@@ -147,7 +147,7 @@ function format_date_mdy(d) {
 ////////////////////////////////////////////////////
 
 function report_error(msg) {
-    alert('error adding comment');
+    //alert('error adding comment');
     //$('#external_comments_errors').text(msg);
 }
 
