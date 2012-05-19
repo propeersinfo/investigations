@@ -34,6 +34,8 @@ class Root:
 
     @cherrypy.expose
     def tag(self, tag_name):
+        m = re.match('(.+)\.html', tag_name)
+        tag_name = m.group(1) if m else tag_name
         return utils.read_file(gen_static.generate_tag(tag_name))
 
     @cherrypy.expose
