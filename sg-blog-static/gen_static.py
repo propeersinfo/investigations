@@ -1,28 +1,18 @@
-import cgi
+# this must go first - this var is to be checked in defs.py
+import os
+os.environ.setdefault('SERVER_PROFILE', 'PRODUCTION')
+
 import codecs
 import glob
-import os
 import datetime
 import re
 import sys
 import jinja2
-from jinja2.ext import Extension
-from jinja2.nodes import Output
-from jinja2.utils import contextfunction
-
-#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_generator.settings")
-
-#from google.appengine.ext import webapp
-#from google.appengine.ext.webapp import template
-#from django.shortcuts import render_to_response
-#from django import template
-#from django.template import loader
-#from django.template.context import Context
 from jinja2 import Environment, FileSystemLoader
 
+import defs
 import clevermarkup
 from comment_db import CommentDB
-import defs
 from userinfo import UserInfo
 import utils
 from operaimport.post_parser import parse_date_string
@@ -395,6 +385,7 @@ def generate_all():
 
 
 if __name__ == '__main__':
-    generate_all()
+    print 'start'
+    #generate_all()
     #generate_article('jaan-kuman-tantsurutme-complete')
     #generate_rss()

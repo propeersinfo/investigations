@@ -1,10 +1,13 @@
+# this must go first - this var is to be checked in defs.py
 import os
+os.environ.setdefault('SERVER_PROFILE', 'DEVELOPMENT')
+
 import re
 import cherrypy
 from cherrypy.lib.static import serve_file
+
 import gen_static
 import utils
-
 
 class Root:
     @cherrypy.expose
@@ -38,7 +41,7 @@ class Root:
         tag_name = m.group(1) if m else tag_name
         return utils.read_file(gen_static.generate_tag(tag_name))
 
-    @cherrypy.expose
+    @cherrypy.expose(alias="rss.xml")
     def rss(self):
         response = cherrypy.response
         response.headers['Content-Type'] = 'text/xml'
