@@ -25,21 +25,19 @@ MAX_ARTICLES_PER_PAGE_ARCHIVE = 50
 MAX_ARTICLES_RSS = 10
 TOTAL_RECENT = 10
 
-## todo: need to be reviewed
-#if os.environ.get('SERVER_SOFTWARE','').lower().find('development') >= 0:
-#  PRODUCTION = False
-#  CANONICAL_BLOG_URL = 'http://localhost'
-#else:
-#  PRODUCTION = True
-#  CANONICAL_BLOG_URL = 'http://www.sovietgroove.com'
-PRODUCTION = True
-CANONICAL_BLOG_URL = 'http://www.sovietgroove.com'
-#CANONICAL_BLOG_URL = 'http://3.sovietraregroove.appspot.com'
-
+_is_production = {
+    'PRODUCTION': True,
+    'DEVELOPMENT': False,
+}
+PRODUCTION = _is_production[os.getenv('SERVER_PROFILE', 'Env var SERVER_PROFILE not set')]
 DEVSERVER = not PRODUCTION
 
-#__APP_VERSION_FOR_UNIT_TESTS = '' # important because None value causes errors in library code further
-#APP_VERSION = os.getenv('CURRENT_VERSION_ID', __APP_VERSION_FOR_UNIT_TESTS)
+if PRODUCTION:
+    CANONICAL_BLOG_URL = 'http://www.sovietgroove.com'
+else:
+    CANONICAL_BLOG_URL = 'http://localhost:8080'
+
+
 APP_VERSION = utils.get_seconds_since_epoch()
 
 #IMAGE_PLACEHOLDER = '/static/cover.jpg'
@@ -47,9 +45,6 @@ IMAGE_PLACEHOLDER = None
 
 EMAIL_NOTIFY_COMMENT = True
 
-NEW_COMMENT_IMPLEMENTATION = True
-
-#PROJECT_DIR = 'd:/workspace/investigations/sg-blog-static'
 PROJECT_DIR = os.path.dirname(__file__)
 MARKDOWN_DIR        = os.path.join(PROJECT_DIR, 'operaimport', 'markdown')
 STATIC_HTML_DIR     = os.path.join(PROJECT_DIR, 'html')
