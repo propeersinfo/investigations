@@ -146,21 +146,13 @@ function format_date_mdy(d) {
 // external comments
 ////////////////////////////////////////////////////
 
-function report_error(msg) {
-    //alert('error adding comment');
-    //$('#external_comments_errors').text(msg);
+function report_error(selector, msg) {
+    $(selector).
+        css('display', 'table').
+        text(msg).
+        delay(5000).
+        fadeOut('slow');
 }
-
-//function add_comment(comment) {
-//    var external_comments = document.getElementById('external_comments');
-//    if(external_comments) {
-//        var li = document.createElement('li');
-//        li.innerHTML = '<b>' + comment.name + '</b>: ' + comment.text;
-//        external_comments.appendChild(li);
-//    } else {
-//        alert('external_comments not found')
-//    }
-//}
 
 function add_comment(comment, is_new) {
     if(typeof is_new == 'undefined') {
@@ -201,30 +193,17 @@ function load_comments() {
         url: get_rest_url_for_current_document(),
         dataType: 'json',
         success: function(json_data) {
-            //alert('json_data = _' + json_data + '_');
-            //alert(typeof(json_data.length))
-            //if(typeof(json_data) == 'string') {}
-            //json_data = JSON.parse(json_data);
-            //alert('json_data: ' + dump_object(json_data));
             $.each(json_data, function(idx, comment) {
                 add_comment(comment);
             });
         },
         error: function(xhr, ajaxOptions, thrownError) {
-            //report_error('an error occured getting comments: "' + thrownError + '"');
-            $('#comment-loading-error').
-                css('display', 'table').
-                text('Cannot load more comments at the moment.').
-                delay(5000).
-                fadeOut('slow');
+            report_error('#comment-loading-error', 'Cannot load more comments at the moment.');
         }
     });
 }
 
 function setup_new_comment_form() {
-    //var action = get_rest_url_for_current_document() + '?return=' + encodeURIComponent(window.location);
-    //$('#new_comment_form').attr('action', action);
-
     $('#new_comment_form').submit(function () {
         try {
             var name = $('#new_comment_form input[name="name"]').val();
@@ -240,11 +219,10 @@ function setup_new_comment_form() {
                 //contentType: 'application/json',
                 data:JSON.stringify(new_comment),
                 success:function (res) {
-                    //alert('form sent ok: ' + res)
                     add_comment(new_comment, true)
                 },
                 error: function(x, y, z) {
-                    report_error('error sending comment to server')
+                    report_error('#new-comment-error', 'Cannot post new comment. Make sure every field is filled.');
                 }
             });
             return false;
