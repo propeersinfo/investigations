@@ -1,10 +1,12 @@
 Priority 1
 
+- comments.py: assert incoming data - fields 'text' and 'name'
+- adding new comment: check form before submit
 
 Priority Middle
 
-- adding new comment in JS: scroll down
-- adding new comment in JS: clear message text
+- adding new comment: scroll down if success
+- adding new comment: clear message text if success
 - remember commenter's name in cookies
 - comments: send email on comment received
 - make search input non javascript

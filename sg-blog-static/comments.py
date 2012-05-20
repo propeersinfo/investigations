@@ -1,5 +1,4 @@
 import urllib
-import urllib2
 import datetime
 import simplejson as json
 from google.appengine.ext import webapp
@@ -79,12 +78,21 @@ class RestfulHandler(webapp.RequestHandler):
         self.response.out.write(json_str)
 
     def do_append(self, path):
-        """ update entry or create it on demand """
+        """ append a comment to comment set """
+
         return_url = self.request.get('return')
         if return_url:
+            assert False, 'this functionality is disabled now'
+            def get_param(name):
+                value = self.request.get('name')
+                value = value.strip() if value is not None else ''
+                if not value:
+                    raise Exception('error: param %s not specified' % name)
+                return value
+
             new_comment = {
-                'name': self.request.get('name'),
-                'text': self.request.get('text'),
+                'name': get_param('name'),
+                'text': get_param('text'),
                 'date': format_now_rfc(),
             }
         else:
@@ -98,6 +106,13 @@ class RestfulHandler(webapp.RequestHandler):
                 json_str = json_str[0:-1] # remove that fucking trailing '='
 
             data = json.loads(json_str)
+
+            mandatory_keys = [ 'name', 'text' ]
+            for key in mandatory_keys:
+                value = data.get(key, '').strip()
+                if not value:
+                    raise Exception('error: param %s not specified' % key)
+
             new_comment = {
                 'name': data['name'],
                 'text': data['text'],
