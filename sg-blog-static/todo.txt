@@ -1,13 +1,8 @@
 Priority 1
 
-- comments.py: assert incoming data - fields 'text' and 'name'
-- adding new comment: check form before submit
-
 Priority Middle
 
-- adding new comment: scroll down if success
-- adding new comment: clear message text if success
-- remember commenter's name in cookies
+- comments.py: use ip-address in email notification (not in db)
 - comments: send email on comment received
 - make search input non javascript
 - page "275.html" (max) is being generated somewhow
@@ -56,3 +51,8 @@ Completed
 + implement google analytics
 + external comments: import opera comments
 + ".html" suffix: add it to the tags also
++ comments.py: assert incoming data - fields 'text' and 'name'
++ adding new comment: check form before submit
++ adding new comment: scroll down if success
++ adding new comment: clear message text if success
++ remember commenter's name in cookies
