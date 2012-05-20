@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
 import codecs
 import logging
-import os
 
 import re
 import unicodedata
 import Cookie
 import datetime
 import time
-import django
-import errno
 
 import defs
-
-import inspect
 
 #def get_class_that_defined_method(method):
 #    obj = method.im_self
@@ -115,14 +110,14 @@ def read_file(path, charset = "utf-8"):
         f.close()
 
 def write_file(path, content):
-    #if type(content) == django.utils.safestring.SafeUnicode or type(content) == unicode:
     if type(content) == unicode:
         content = unicode(content).encode('utf-8')
-    #raise Exception('%s' % (type(content),))
-    if type(content) == str:
-        f = codecs.open(path, "wb")
+    elif type(content) == str:
+        pass
     else:
         raise Exception('content is of a non-tested type %s' % type(content))
+
+    f = codecs.open(path, "wb")
     try:
         return f.write(content)
     finally:

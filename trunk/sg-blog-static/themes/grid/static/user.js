@@ -13,7 +13,27 @@ $(document).ready(function() {
 });
 */
 
-function read_cookie(name) {
+// set a cookie with typical params
+function set_cookie(name, value) {
+    //$.cookie("example", "foo", { path: '/', expires: 365 });
+
+    var days = 365;
+    var expires;
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        expires = "; expires="+date.toGMTString();
+    } else {
+        expires = "";
+    }
+    document.cookie = name+"="+value+expires+"; path=/";
+}
+
+// todo: replace it with a JQuery version
+function get_cookie(name) {
+    //return $.cookie(name);
+
+    // non jquery version below
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
     for(var i=0;i < ca.length;i++) {
@@ -36,7 +56,7 @@ $(document).ready(function() {
         var tag = elem.tagName.toLowerCase();
         return (tag == 'div' || tag == 'p') ? 'block' : 'inline';
     }
-    var desired_lang = read_cookie('user_lang');
+    var desired_lang = get_cookie('user_lang');
     if(desired_lang) {
         $('.i18n').each(function() {
             $(this).children().each(function(i, alt) {
@@ -50,16 +70,16 @@ $(document).ready(function() {
     }
 });
 
-function comment_form_submit(form) {
-    var text_elem = form.elements['text'];
-    var text = $.trim(text_elem.value);
-    if(text.length > 0) {
-        return true;
-    } else {
-        $(text_elem).css('border', '1px solid #f00');
-        return false;
-    }
-}
+//function comment_form_submit(form) {
+//    var text_elem = form.elements['text'];
+//    var text = $.trim(text_elem.value);
+//    if(text.length > 0) {
+//        return true;
+//    } else {
+//        $(text_elem).css('border', '1px solid #f00');
+//        return false;
+//    }
+//}
 
 ////////////////////////////////////////////////////
 // replace youtube images with video clips
@@ -119,10 +139,10 @@ $(document).ready(function() {
             if (!event.ctrlKey) return;
             var link = null;
             switch (event.keyCode ? event.keyCode : event.which ? event.which : null) {
-                case 38:
+                case 38: // up arrow
                     link = document.getElementById ('prev-link');
                     break;
-                case 40:
+                case 40: // down arrow
                     link = document.getElementById ('next-link');
                     break;
             }
@@ -142,13 +162,21 @@ function format_date_mdy(d) {
     return m_names[curr_month] + " " + curr_date + ", " + curr_year;
 }
 
+function scroll_bottom() {
+    $('html, body').animate({ scrollTop: $(document).height() }, 500);
+}
+
+function scroll_top() {
+    $('html, body').animate({ scrollTop: '0px' }, 500);
+}
+
 ////////////////////////////////////////////////////
 // external comments
 ////////////////////////////////////////////////////
 
 function report_error(selector, msg) {
     $(selector).
-        css('display', 'table').
+        css('display', 'table'). // it maybe an inline element initially
         text(msg).
         delay(5000).
         fadeOut('slow');
@@ -178,12 +206,8 @@ function add_comment(comment, is_new) {
 
 function get_rest_url_for_current_document() {
     var host = window.location.hostname;
-    if(host == 'localhost') {
-        // rewrite domain for purposes of debug and support
-        host = 'www.sovietgroove.com';
-    }
     var path = host + window.location.pathname;
-    return 'http://localhost/comments/' + path;
+    return 'http://' + host + '/comments/' + path;
 }
 
 function load_comments() {
@@ -204,14 +228,24 @@ function load_comments() {
 }
 
 function setup_new_comment_form() {
-    $('#new_comment_form').submit(function () {
+    var form = $('#new_comment_form');
+
+    // pre set name from cookies
+    $('#new_comment_form input[name="name"]').val(get_cookie('commenter_name'));
+
+    form.submit(function () {
         try {
             var name = $('#new_comment_form input[name="name"]').val();
-            var text = $('#new_comment_form textarea[name="text"]').val();
+            var text_el = $('#new_comment_form textarea[name="text"]');
+            var text = text_el.val();
             var new_comment = {
                 'name': name,
                 'text': text
             };
+
+            // save commenter's name before to send the comment
+            set_cookie('commenter_name', new_comment.name);
+
             $.ajax({
                 url:get_rest_url_for_current_document(),
                 type:'POST',
@@ -219,7 +253,9 @@ function setup_new_comment_form() {
                 //contentType: 'application/json',
                 data:JSON.stringify(new_comment),
                 success:function (res) {
-                    add_comment(new_comment, true)
+                    add_comment(new_comment, true);
+                    text_el.val('');
+                    scroll_bottom();
                 },
                 error: function(x, y, z) {
                     report_error('#new-comment-error', 'Cannot post new comment. Make sure every field is filled.');
