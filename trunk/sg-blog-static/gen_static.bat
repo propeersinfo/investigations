@@ -8,3 +8,6 @@ SET PYTHONPATH=%PYTHONPATH%;C:\Python\gae\lib\django_0_96
 SET PYTHONPATH=%PYTHONPATH%;C:\Python\gae\lib\simplejson
 
 python gen_static.py
+
+:: review result
+browser.bat "http://localhost/"

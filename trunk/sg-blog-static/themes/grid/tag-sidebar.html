@@ -26,6 +26,13 @@
 	    <li>{{ ''|blog_tag_cnt(tag_cloud, "kyrgyzstan", "Kyrgyzstan") }}</li>
 	    <li>{{ ''|blog_tag_cnt(tag_cloud, "foreign", "Foreign") }}</li>
 	    </ul>
+
+	    {% if a_listing_page %}
+	    	&nbsp;<br>
+	    	&nbsp;<br>
+		    {% include "links.html" %}
+	    {% endif %}
+	    
 {% else %}
 		no tag data
 {% endif %}

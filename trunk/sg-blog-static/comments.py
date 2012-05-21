@@ -5,6 +5,28 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext import db
 
+def send_mail_to_admin_about_new_comment(path, comment):
+    #from google.appengine.api import users
+    #if defs.PRODUCTION and defs.EMAIL_NOTIFY_COMMENT and not users.is_current_user_admin():
+
+    url = 'http://%s' % path
+
+    body='''
+Comment author: %s
+
+Comment text: %s
+
+Blog post: %s''' % (comment['name'], comment['text'], url)
+
+    #raise Exception('email body: %s' % (body,))
+
+    from google.appengine.api import mail
+    mail.send_mail(sender='zeencd@gmail.com',
+                   to='zeencd@gmail.com',
+                   subject='[SG.com] New comment at %s' % path,
+                   body=body)
+
+
 class CommentSet(db.Model):
     # path like 'domain.com/full/path'
     path = db.StringProperty()
@@ -133,6 +155,8 @@ class RestfulHandler(webapp.RequestHandler):
             entry = CommentSet(path=path, json=json.dumps(comment_list))
             entry.put()
             #self.response.out.write('an entry created')
+
+        send_mail_to_admin_about_new_comment(path, new_comment)
 
         if return_url:
             self.redirect(return_url)

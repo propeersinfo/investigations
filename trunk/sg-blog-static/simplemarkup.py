@@ -1,14 +1,10 @@
 import os
 import re
-import unittest
 import urllib2
-import sys
-import math
 import Image
 
 import defs
 import my_tags
-import utils
 
 """
 Simple markup support.
@@ -140,7 +136,7 @@ def handle_custom_tag_soundcloud_playlist(input):
     replace  = '<object height="115" width="100%"><param name="movie" value="http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F\\1&amp;amp;show_comments=false&amp;amp;auto_play=false&amp;amp;show_playcount=false&amp;amp;show_artwork=false&amp;amp;color=ff7700"><param name="allowscriptaccess" value="never"><embed height="115" src="http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F\\1&amp;amp;show_comments=false&amp;amp;auto_play=false&amp;amp;show_playcount=false&amp;amp;show_artwork=false&amp;amp;color=ff7700" type="application/x-shockwave-flash" width="100%" allowscriptaccess="never"></embed></object>'
     return re.sub(SC_PLAYLIST, replace, input)
 
-MP3_PLAYLIST = re.compile('\[dewplaylist\s+([^\]]+playlist)\]', re.IGNORECASE)
+MP3_PLAYLIST = re.compile('\[dewplaylist\s+([^\]]+)\]', re.IGNORECASE)
 
 # [dew.playlist]
 def handle_custom_tag_playlist(input):

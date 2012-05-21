@@ -2,24 +2,22 @@ Priority 1
 
 Priority Middle
 
+- fix counter for "Russian Fed."
 - comments.py: use ip-address in email notification (not in db)
-- comments: send email on comment received
-- make search input non javascript
 - page "275.html" (max) is being generated somewhow
 - move images to picasa/etc
 - markup broken 'melodia-band-complete'
-- markup: broken playlist 'http://localhost/the-last-portion-of-qaya'
 
 Priority X
 
+- make youtube player widescreen, not 3:4
 - edit tags "beat", "shake", "twist"
-- links block
+- external links block (show only for "page/x.html"
 - thumbnails: compare mtime deciding to make a thumbnail or not
 - do handle paragraph '#download' even if layout is plain
 - markup: add meta param 'see also' refering to a tag
 - markup: add meta param 'break into n columns' for 'tracks'
 - tag: do not gen 1-item tag pages and don't show such tags (remember about tags linked from markup)
-- script generating new article by template
 - use a script like '/charset/utf-8/path/to/file' to rewrite HTTP charset
 - rss: give full article's text, not just the link
 - rss: fix html markup (it's kinda broken)
@@ -56,3 +54,7 @@ Completed
 + adding new comment: scroll down if success
 + adding new comment: clear message text if success
 + remember commenter's name in cookies
++ make search input non javascript
++ comments: send email on comment received
++ markup: broken playlist 'http://localhost:8080/the-last-portion-of-qaya.html'
++ script generating new article by template
