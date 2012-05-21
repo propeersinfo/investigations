@@ -63,7 +63,13 @@ rest cool music from USSR of the
 		</div>
 	</div>
 	<div class="width_4 search_input">
-		{% include "search-input.html" %}
+
+		<form method="get" action="/search.html">
+			<input type="text" name="q" value=""/>
+			<input type="submit" name="submit" value="Search"/>
+		</form>
+
+		{#% include "search-input.html" %#}
 	</div>
 </div>
 

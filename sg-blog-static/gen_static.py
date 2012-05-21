@@ -17,7 +17,6 @@ from userinfo import UserInfo
 import utils
 from operaimport.post_parser import parse_date_string
 from operaimport.tag_rewrite import rewrite_tag
-import typographus
 
 #register = template.Library()
 #register.filter('typographus', typographus.typo)
@@ -73,7 +72,11 @@ def render_template(template_name, variables):
             return '<a href="/tag/%s.html">%s</a> <span>%s</span>' % (blog_tag_name, blog_tag_title, count)
         else:
             return '%s' % blog_tag_title
+    def sidebar_link(value, title, description, url):
+        #return '<li><a href="%s">%s</a><br>\n<span class="description">%s</span></li>\n' % (url, title, description.lower())
+        return '<li><a href="%s" title="%s">%s</a>' % (url, description.lower(), title)
 
+    env.filters['sidebar_link'] = sidebar_link
     env.filters['static_resource'] = static_resource
     env.filters['typographus'] = typographus
     env.filters['blog_tag'] = blog_tag
@@ -309,6 +312,7 @@ def generate_listings(one_page1_required = None):
             'single_article' : False,
             'tag_cloud'      : BlogMeta.instance(),
             'defs'           : defs,
+            'a_listing_page' : True, # a marker for pages '/' and '/page/15.html'
             }
         html = render_template('articles.html', template_variables)
         html_file = os.path.join(defs.STATIC_HTML_DIR, html_file_short)
@@ -355,7 +359,7 @@ def generate_rss():
 
 
 def generate_search():
-    html_file = os.path.join(defs.STATIC_HTML_DIR, 'special', 'search')
+    html_file = os.path.join(defs.STATIC_HTML_DIR, 'special', 'search.html')
     template_variables = {
         'defs': defs,
         'tag_cloud': BlogMeta.instance(),
@@ -366,26 +370,34 @@ def generate_search():
 
 
 def generate_all():
+    print 'collecting meta...'
     blog_meta = BlogMeta.instance()
     articles_by_tags = blog_meta.articles_by_tags
 
     # generate every article
+    print 'generating articles...'
     for short_file in glob.glob1(defs.MARKDOWN_DIR, '*'):
         if os.path.isfile(os.path.join(defs.MARKDOWN_DIR, short_file)):
             generate_article(short_file)
 
     # generate every tag
+    print 'generating tags...'
     for tag in articles_by_tags.keys():
         print >>sys.stderr, ' a tag "%s"' % tag
         generate_tag(tag)
 
+    print 'generating front page and others...'
     generate_listings()
+
+    print 'generating rss.xml...'
     generate_rss()
+
+    print 'generating search page...'
     generate_search()
 
 
 if __name__ == '__main__':
     print 'start'
-    #generate_all()
+    generate_all()
     #generate_article('jaan-kuman-tantsurutme-complete')
     #generate_rss()

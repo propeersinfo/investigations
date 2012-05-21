@@ -14,9 +14,8 @@ $(document).ready(function() {
 */
 
 // set a cookie with typical params
+// code by quirksmode
 function set_cookie(name, value) {
-    //$.cookie("example", "foo", { path: '/', expires: 365 });
-
     var days = 365;
     var expires;
     if (days) {
@@ -29,11 +28,8 @@ function set_cookie(name, value) {
     document.cookie = name+"="+value+expires+"; path=/";
 }
 
-// todo: replace it with a JQuery version
+// code by quirksmode
 function get_cookie(name) {
-    //return $.cookie(name);
-
-    // non jquery version below
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
     for(var i=0;i < ca.length;i++) {

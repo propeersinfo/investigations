@@ -29,6 +29,7 @@ _is_production = {
     'PRODUCTION': True,
     'DEVELOPMENT': False,
 }
+print 'os.getenv("SERVER_PROFILE"): %s' % os.getenv('SERVER_PROFILE')
 PRODUCTION = _is_production[os.getenv('SERVER_PROFILE', 'Env var SERVER_PROFILE not set')]
 DEVSERVER = not PRODUCTION
 
@@ -38,7 +39,7 @@ else:
     CANONICAL_BLOG_URL = 'http://localhost:8080'
 
 
-APP_VERSION = utils.get_seconds_since_epoch()
+APP_VERSION = str(utils.get_seconds_since_epoch())
 
 #IMAGE_PLACEHOLDER = '/static/cover.jpg'
 IMAGE_PLACEHOLDER = None
@@ -49,3 +50,5 @@ PROJECT_DIR = os.path.dirname(__file__)
 MARKDOWN_DIR        = os.path.join(PROJECT_DIR, 'operaimport', 'markdown')
 STATIC_HTML_DIR     = os.path.join(PROJECT_DIR, 'html')
 STATIC_HTML_TAG_DIR = os.path.join(PROJECT_DIR, 'html', 'tag')
+
+FORMAT_YMD_HMS = "%Y-%m-%d %H:%M:%S"

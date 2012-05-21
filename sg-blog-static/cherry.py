@@ -9,6 +9,13 @@ from cherrypy.lib.static import serve_file
 import gen_static
 import utils
 
+def cut_mandatory_html_extension(s):
+    m = re.match('(.+)\.html', s, re.IGNORECASE)
+    if m:
+        return m.group(1)
+    else:
+        raise cherrypy.NotFound()
+
 class Root:
     @cherrypy.expose
     def index(self):
@@ -26,8 +33,7 @@ class Root:
 
     @cherrypy.expose
     def default(self, path):
-        m = re.match('(.+)\.html', path)
-        slug = m.group(1) if m else path
+        slug = cut_mandatory_html_extension(path)
         return utils.read_file(gen_static.generate_article(slug))
 
     @cherrypy.expose
@@ -37,8 +43,7 @@ class Root:
 
     @cherrypy.expose
     def tag(self, tag_name):
-        m = re.match('(.+)\.html', tag_name)
-        tag_name = m.group(1) if m else tag_name
+        tag_name = cut_mandatory_html_extension(tag_name)
         return utils.read_file(gen_static.generate_tag(tag_name))
 
     @cherrypy.expose(alias="rss.xml")
@@ -52,7 +57,7 @@ class Root:
         file_path = os.path.join(current_dir, 'themes', 'grid', 'static', *url_path)
         return serve_file(file_path)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='search.html')
     def search(self, **params):
         return utils.read_file(gen_static.generate_search())
 

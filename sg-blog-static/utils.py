@@ -123,21 +123,6 @@ def write_file(path, content):
     finally:
         f.close()
 
-def send_mail_to_admin_about_new_comment(article, comment):
-    from google.appengine.api import users
-    if defs.PRODUCTION and defs.EMAIL_NOTIFY_COMMENT and not users.is_current_user_admin():
-        from google.appengine.api import mail
-        mail.send_mail(sender='zeencd@gmail.com',
-                       to='zeencd@gmail.com',
-                       subject='New comment in "%s"' % article.title,
-                       body='''
-Comment author: %s
-
-Comment text: %s
-
-Blog post: %s
-            ''' % (comment.author, comment.text, get_article_url(article)))
-
 class TimePeriod():
     def __init__(self, seconds):
         self.__seconds = seconds

@@ -21,9 +21,9 @@ handlers:
   upload: html/special/rss.xml
   mime_type: text/xml
 
-- url: /search
-  static_files: html/special/search
-  upload: html/special/search
+- url: /search.html
+  static_files: html/special/search.html
+  upload: html/special/search.html
   mime_type: text/html
 
 - url: /comments/(.+)
