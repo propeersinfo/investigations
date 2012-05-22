@@ -5,20 +5,16 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext import db
 
-def send_mail_to_admin_about_new_comment(path, comment):
-    #from google.appengine.api import users
-    #if defs.PRODUCTION and defs.EMAIL_NOTIFY_COMMENT and not users.is_current_user_admin():
-
+# todo: consider handling over quota exc
+def send_mail_to_admin_about_new_comment(path, comment, client_ip):
     url = 'http://%s' % path
 
     body='''
-Comment author: %s
+%s (%s)
 
-Comment text: %s
+%s
 
-Blog post: %s''' % (comment['name'], comment['text'], url)
-
-    #raise Exception('email body: %s' % (body,))
+%s''' % (comment['name'], client_ip, comment['text'], url)
 
     from google.appengine.api import mail
     mail.send_mail(sender='zeencd@gmail.com',
@@ -156,7 +152,7 @@ class RestfulHandler(webapp.RequestHandler):
             entry.put()
             #self.response.out.write('an entry created')
 
-        send_mail_to_admin_about_new_comment(path, new_comment)
+        send_mail_to_admin_about_new_comment(path, new_comment, self.request.remote_addr)
 
         if return_url:
             self.redirect(return_url)

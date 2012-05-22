@@ -1,5 +1,7 @@
 Priority 1
 
+- fix appversion for static resources!!!
+
 Priority Middle
 
 - fix counter for "Russian Fed."

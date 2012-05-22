@@ -247,6 +247,8 @@ div.comment p {
   border-bottom-style: dashed;*/
 }
 .comment-administration a:hover { color: red; }
+#new_comment_form a { color: black; }
+#new_comment_form a:hover { color: #f33; }
 
 .below-top h1 {
 	margin: 0 0 0.2em 0;

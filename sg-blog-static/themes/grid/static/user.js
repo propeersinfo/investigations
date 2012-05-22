@@ -166,6 +166,47 @@ function scroll_top() {
     $('html, body').animate({ scrollTop: '0px' }, 500);
 }
 
+// convert a text input into an element that looks like <a> when non-focused
+// and like an editable text input when focused
+function setup_plain_editor(input) {
+    var plain = $(document.createElement('a'));
+    plain.attr('href', '#');
+    plain.css({
+        'text-decoration': 'none',
+        'border-bottom': '1px dashed',
+
+        'line-height': '1.0',
+        'display': 'inline-block',
+        'vertical-align': 'baseline'
+    });
+    plain.insertBefore(input);
+
+    function input_focus_lost() {
+        if($.trim(input.val()).length > 0) {
+            input.hide();
+            plain.text(input.val());
+            plain.show();
+        }
+    }
+
+    input_focus_lost();
+
+    input.blur(function() {
+        input_focus_lost();
+    });
+
+    plain.click(function() {
+        input.show();
+        input.focus();
+        plain.hide();
+        return false;
+    });
+}
+
+$(document).ready(function() {
+    //setup_plain_editor('#new_comment_form input[name="name"]');
+});
+
 ////////////////////////////////////////////////////
 // external comments
 ////////////////////////////////////////////////////
@@ -227,7 +268,12 @@ function setup_new_comment_form() {
     var form = $('#new_comment_form');
 
     // pre set name from cookies
-    $('#new_comment_form input[name="name"]').val(get_cookie('commenter_name'));
+    var input_name = $('#new_comment_form input[name="name"]');
+    var name_from_cookie = get_cookie('commenter_name');
+    if(name_from_cookie) {
+        input_name.val(name_from_cookie);
+    }
+    setup_plain_editor(input_name);
 
     form.submit(function () {
         try {
