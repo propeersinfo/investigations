@@ -1,20 +1,57 @@
+from StringIO import StringIO
+import os
+import re
 import urllib
 import datetime
 import simplejson as json
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext import db
+from wsgiref.handlers import format_date_time
 
 # todo: consider handling over quota exc
-def send_mail_to_admin_about_new_comment(path, comment, client_ip):
+
+def pretty_print_json_readable_unicode(json_text):
+    def do_level(out, root, level = 0):
+        offset = '  ' * level
+        offset2 = '  ' * (level+1)
+        if type(root) == list:
+            out.write('%s[\n' % (offset,))
+            for i, item in enumerate(root):
+                if i > 0: out.write('%s,\n' % offset)
+                do_level(out, item, level+1)
+            out.write('\n%s]' % (offset,))
+        elif type(root) == dict:
+            out.write('%s{\n' % (offset,))
+            for i, key in enumerate(root.keys()):
+                if i > 0: out.write('%s,\n' % '')
+                out.write('%s"%s": ' % (offset2, key))
+                do_level(out, root[key], level+1)
+            out.write('\n%s}' % offset)
+        elif type(root) == unicode:
+            out.write('"%s"' % (root,))
+        else:
+            raise Exception('unsupported yet type %s' % type(root))
+
+    assert isinstance(json_text, (str, unicode))
+    out = StringIO()
+    try:
+        do_level(out, json.loads(json_text))
+        return out.getvalue()
+    finally:
+        out.close()
+
+def send_mail_to_admin_about_new_comment(path, comment_system_base_url, comment, client_ip):
     url = 'http://%s' % path
+    edit_url = '%s/comments/edit/%s' % (comment_system_base_url, path)
 
     body='''
 %s (%s)
 
 %s
 
-%s''' % (comment['name'], client_ip, comment['text'], url)
+%s
+%s''' % (comment['name'], client_ip, comment['text'], url, edit_url)
 
     from google.appengine.api import mail
     mail.send_mail(sender='zeencd@gmail.com',
@@ -53,32 +90,84 @@ def allow_xss(wrapped):
 
 def format_now_rfc():
     # return string like 'Wed, 22 Oct 2008 10:52:40 GMT'
-    from wsgiref.handlers import format_date_time
     from time import mktime
-    now = datetime.datetime.now()
+    now = datetime.datetime.utcnow()
     stamp = mktime(now.timetuple())
     return format_date_time(stamp)
+
+def filter_path(path):
+    # try to remove leading 'WWW'
+    path_low = path.lower()
+    www_pfx = 'www.'
+    if path_low.startswith('www.') and len(path_low) > len(www_pfx):
+        path = path[len(www_pfx) : ]
+    return path
+
+#def render_template(template_name, variables):
+#    env = Environment(loader=FileSystemLoader(['comments']), cache_size=0)
+#    tpl = env.get_template(template_name)
+#    return tpl.render(variables)
+
+def render_template(template_name, template_vars):
+    from google.appengine.ext.webapp import template
+    template_path = os.path.join(os.path.dirname(__file__), 'themes', 'comments', template_name)
+    text = template.render(template_path, template_vars)
+    #raise Exception('google template returns %s' % type(text))
+    return text
+
+class EditHandler(webapp.RequestHandler):
+    def get(self, path):
+        path = filter_path(path)
+        entry = CommentSet.get_by_path(path)
+        if entry:
+            text = entry.json
+            def unicode_decoder(m):
+                code = int(m.group(1), base=16)
+                assert type(code) == int
+                res = unichr(code)
+                #raise Exception('res: %s' % type(res))
+                return '%s' % res
+            text = re.sub('\\\u([0-9a-fA-F]{4})', unicode_decoder, text)
+            text = pretty_print_json_readable_unicode(text)
+
+            assert type(text) == unicode
+            self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
+            #self.response.out.write('<p>Comments has been found for path %s' % (path))
+            #self.response.out.write('<p><textarea cols=80 rows=30 style="width:100%%;">%s</textarea>' % text)
+            tpl_vars = {
+                'json': text,
+                'path': path
+            }
+            self.response.out.write(render_template('edit.html', tpl_vars))
+        else:
+            self.response.set_status(404)
+            self.response.out.write('no comments found for path %s' % path)
+
+    def post(self, path):
+        path = filter_path(path)
+        json_text = self.request.get('json')
+        json_obj = json.loads(json_text)
+        #raise Exception('%s' % (json_obj,))
+        entry = CommentSet.get_by_path(path)
+        if entry:
+            entry.json = json.dumps(json_obj)
+            entry.put()
+            self.redirect('/comments/edit/%s' % path)
+        else:
+            self.response.set_status(404)
+            self.response.out.write('No comments fount for the path')
 
 class RestfulHandler(webapp.RequestHandler):
     @handle_exceptions
     @allow_xss
     def get(self, path):
-        self.do_fetch(self.__class__.filter_path(path))
+        self.do_fetch(filter_path(path))
 
     @handle_exceptions
     @allow_xss
     def post(self, path):
-        self.do_append(self.__class__.filter_path(path))
+        self.do_append(filter_path(path))
 
-
-    @classmethod
-    def filter_path(cls, path):
-        # try to remove leading 'WWW'
-        path_low = path.lower()
-        www_pfx = 'www.'
-        if path_low.startswith('www.') and len(path_low) > len(www_pfx):
-            path = path[len(www_pfx) : ]
-        return path
 
 #    def options(self, *args):
 #        self.response.headers['Access-Control-Allow-Origin'] = '*'
@@ -152,7 +241,7 @@ class RestfulHandler(webapp.RequestHandler):
             entry.put()
             #self.response.out.write('an entry created')
 
-        send_mail_to_admin_about_new_comment(path, new_comment, self.request.remote_addr)
+        send_mail_to_admin_about_new_comment(path, self.request.host_url, new_comment, self.request.remote_addr)
 
         if return_url:
             self.redirect(return_url)
@@ -160,6 +249,7 @@ class RestfulHandler(webapp.RequestHandler):
 
 def main():
     application = webapp.WSGIApplication([
+        ('/comments/edit/(.+)', EditHandler),
         ('/comments/(.+)', RestfulHandler),
     ], debug=True)
     util.run_wsgi_app(application)

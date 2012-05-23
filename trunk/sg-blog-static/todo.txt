@@ -1,11 +1,12 @@
 Priority 1
 
 - must I provide last-updated header for rss.xml?
-- comment administration
 
 Priority Middle
 
-- email to the admin not 'a user'
+- comments js: add spinner for new comment posting
+- comments js: add spinner for comment loading
+- tag categorization page (for users and for me)
 - fix counter for "Russian Fed."
 - comments.py: use ip-address in email notification (not in db)
 - page "275.html" (max) is being generated somewhow
@@ -14,6 +15,7 @@ Priority Middle
 
 Priority X
 
+- email to the admin not 'a user'
 - make youtube player widescreen, not 3:4
 - edit tags "beat", "shake", "twist"
 - external links block (show only for "page/x.html"
@@ -64,3 +66,4 @@ Completed
 + script generating new article by template
 + fix appversion for infinite static resources
 + clean RSS with http://feedvalidator.org
++ comment administration

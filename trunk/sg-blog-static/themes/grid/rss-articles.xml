@@ -5,13 +5,13 @@
     <title>{{ defs.BLOG_NAME|escape }}</title>
     <link>{{ defs.CANONICAL_BLOG_URL }}/</link>
     <description>{{ defs.BLOG_NAME|escape }}</description>
-    <pubDate>{{ last_updated.strftime("%a, %d %b %Y %H:%M:%S %Z") }}</pubDate>
+    <pubDate>{{ last_updated.strftime("%a, %d %b %Y %H:%M:%S %z") }}</pubDate>
     {% for article in articles %}
     <item>
       <title>{{ article.title|escape }}</title>
       <link>{{ article.url }}</link>
       <guid>{{ article.guid }}</guid>
-      <pubDate>{{ article.published_date.strftime("%a, %d %b %Y %H:%M:%S %Z") }}</pubDate>
+      <pubDate>{{ article.published_date.strftime("%a, %d %b %Y %H:%M:%S %z") }}</pubDate>
       <description>[CDATA[
 	    <a href="{{article.url}}">{{article.url}}</a>]]</description>
       {# author must contain an email, not text #}
