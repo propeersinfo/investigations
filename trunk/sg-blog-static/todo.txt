@@ -1,12 +1,12 @@
 Priority 1
 
+- external comments: char '+' is not saved into db
 - must I provide last-updated header for rss.xml?
 
 Priority Middle
 
 - comments js: add spinner for new comment posting
 - comments js: add spinner for comment loading
-- tag categorization page (for users and for me)
 - fix counter for "Russian Fed."
 - comments.py: use ip-address in email notification (not in db)
 - page "275.html" (max) is being generated somewhow
@@ -67,3 +67,5 @@ Completed
 + fix appversion for infinite static resources
 + clean RSS with http://feedvalidator.org
 + comment administration
++ external comments: protect administration with password
++ tag categorization page (for users and for me)

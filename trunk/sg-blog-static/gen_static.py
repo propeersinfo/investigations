@@ -1,6 +1,7 @@
 # this must go first - this var is to be checked in defs.py
 import os
 import urllib
+from operaimport import tags_categorized
 
 os.environ.setdefault('SERVER_PROFILE', 'PRODUCTION')
 
@@ -277,6 +278,20 @@ def generate_tag(tag_name):
     utils.write_file(html_file, html)
     return html_file
 
+def generate_tag_cat():
+    html_file = os.path.join(defs.STATIC_HTML_TAG_DIR, 'all.html')
+    cats, uncat = tags_categorized.get_used_tags_categories()
+    #raise Exception('len(uncat): %s' % (len(uncat),))
+    tpl_vars = {
+        'defs': defs,
+        'tag_cloud': BlogMeta.instance(),
+        'categories' : cats,
+        'uncategorized': uncat,
+    }
+    html = render_template('tag-listing.html', tpl_vars)
+    utils.write_file(html_file, html)
+    return html_file
+
 def article_from_markup(md):
     assert isinstance(md, MarkdownFile)
     clever_object = clevermarkup.markup2html(md.text, for_comment=False)
@@ -387,6 +402,9 @@ def generate_all():
     for tag in articles_by_tags.keys():
         print >>sys.stderr, ' a tag "%s"' % tag
         generate_tag(tag)
+
+    # tag categories (site map)
+    generate_tag_cat()
 
     print 'generating front page and others...'
     generate_listings()

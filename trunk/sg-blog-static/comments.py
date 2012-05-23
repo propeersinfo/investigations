@@ -3,6 +3,7 @@ import os
 import re
 import urllib
 import datetime
+from google.appengine.api import users
 import simplejson as json
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -136,7 +137,9 @@ class EditHandler(webapp.RequestHandler):
             #self.response.out.write('<p><textarea cols=80 rows=30 style="width:100%%;">%s</textarea>' % text)
             tpl_vars = {
                 'json': text,
-                'path': path
+                'path': path,
+                'is_admin': users.is_current_user_admin(),
+                'logout_url': users.create_logout_url(self.request.path)
             }
             self.response.out.write(render_template('edit.html', tpl_vars))
         else:
