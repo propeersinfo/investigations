@@ -315,7 +315,9 @@ ul.archive em.date {
 }
 .important-notification a { color: white; }
 
-.caps { font-variant: small-caps; }
+.caps {
+	font-variant: small-caps;
+}
 
 .page-generation-time {
     padding: 1em;

@@ -26,6 +26,10 @@ handlers:
   upload: html/special/search.html
   mime_type: text/html
 
+- url: /comments/edit/(.+)
+  script: comments.py
+  login: admin
+  
 - url: /comments/(.+)
   script: comments.py
   

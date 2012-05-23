@@ -44,7 +44,10 @@ class Root:
     @cherrypy.expose
     def tag(self, tag_name):
         tag_name = cut_mandatory_html_extension(tag_name)
-        return utils.read_file(gen_static.generate_tag(tag_name))
+        if tag_name == 'all':
+            return utils.read_file(gen_static.generate_tag_cat())
+        else:
+            return utils.read_file(gen_static.generate_tag(tag_name))
 
     @cherrypy.expose(alias="rss.xml")
     def rss(self):
