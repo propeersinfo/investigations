@@ -14,6 +14,7 @@ import HTMLParser
 import urllib
 
 import tag_rewrite
+import utils
 
 def last_file_name(f):
   return re.sub('.*[/\\\]', '', f)
@@ -110,6 +111,18 @@ def parse_title(soup):
   s = unescape_html(s)
   return s
 
+
+'''
+        import time
+        naive = datetime.datetime.strptime(sdate, fmt)
+        utc_struct_time = time.gmtime(time.mktime(naive.timetuple()))
+        utc = datetime.datetime.fromtimestamp(time.mktime(utc_struct_time))
+        utc = utc.strftime('%Y-%m-%d %H:%M:%S %Z %z.')
+        raise Exception('parsed %s into %s' % (sdate, utc))
+        return utc
+
+'''
+
 def parse_date_string(sdate):
     # Example: Thursday, 21. July, 22:31
     # Example: Friday, 28. August 2009, 22:30
@@ -121,13 +134,20 @@ def parse_date_string(sdate):
                 "%d. %B %Y, %H:%M",
                 "%A, %B %d, %Y %H:%M:%S %p",
                 "%Y-%m-%d %H:%M:%S"):
-      try:
-        parsed = datetime.datetime.strptime(sdate, fmt)
-        if parsed.year == 1900: parsed = parsed.replace(year = 2011)
-        return parsed
-      except ValueError:
-        pass
+        parsed = None
+        try:
+            parsed = datetime.datetime.strptime(sdate, fmt)
+        except ValueError:
+            pass
+
+        if parsed:
+            assert parsed.year > 1900
+            parsed = utils.try_clone_naive_local_datetime_with_timezone_info(parsed)
+            utc = parsed.astimezone(utils.UTC()) # UTC is a preferred format for almost all
+            #raise Exception('converted local %s to utc %s' % (parsed, utc))
+            return utc
     raise Exception("Cannot parse date %s" % sdate)
+
 
 def parse_date(soup):
   # Path: div#firstpost p.postdate
