@@ -214,3 +214,10 @@ def get_used_tags_categories():
             uncategorized.append(tag_name)
 
     return tags_by_cat, uncategorized
+
+def get_region_tags():
+    tags = list()
+    for row in _tag_table:
+        if row[1] == 'region':
+            tags.append(row[0])
+    return list(set(tags))

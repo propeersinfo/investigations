@@ -7,7 +7,6 @@ Priority Middle
 
 - comments js: add spinner for new comment posting
 - comments js: add spinner for comment loading
-- fix counter for "Russian Fed."
 - comments.py: use ip-address in email notification (not in db)
 - page "275.html" (max) is being generated somewhow
 - move images to picasa/etc
@@ -69,3 +68,4 @@ Completed
 + comment administration
 + external comments: protect administration with password
 + tag categorization page (for users and for me)
++ fix counter for "Russian Fed."

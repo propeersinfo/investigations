@@ -90,6 +90,8 @@ def render_template(template_name, variables):
 
 #webapp.template.register_template_library('my_tags')
 
+DEFAULT_COUNTRY_TAG = 'russia'
+
 # info about tags used in articles, etc
 class BlogMeta:
     INSTANCE = None
@@ -136,11 +138,20 @@ class BlogMeta:
             #print >>sys.stderr, '  tags:', md.meta['tags']
             #print >>sys.stderr, '  date:', md.meta['date']
 
+            # add tag 'russia' to certain articles
+            region_tags = tags_categorized.get_region_tags()
+            intersection = set(md.meta['tags']) & set(region_tags)
+            if not len(intersection):
+                countryable = len( set(md.meta['tags']) & {'info', 'mix'}) == 0
+                if countryable:
+                    md.meta['tags'].append(DEFAULT_COUNTRY_TAG)
+
             for tag in md.meta['tags']:
                 if articles_by_tags.has_key(tag):
                     articles_by_tags[tag].append(md)
                 else:
                     articles_by_tags[tag] = [md]
+
         return BlogMeta(articles_by_slugs, articles_by_tags)
 
 
