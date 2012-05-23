@@ -223,24 +223,39 @@ function add_comment(comment, is_new) {
     if(typeof is_new == 'undefined') {
         is_new = false;
     }
-    var date_str = 'n/a';
+    var date_short = 'n/a';
+    var date_long = null;
     if(is_new) {
-        date_str = format_date_mdy(new Date());
+        date_short = format_date_mdy(new Date());
     } else {
         var date = Date.parse(comment.date);
         if(date) {
-            date = new Date();
-            date_str = format_date_mdy(date);
+            date = new Date(date);
+            date_short = format_date_mdy(date);
+            date_long = date.toUTCString();
         }
     }
 
     var clone = $('#comment-template').clone();
-    clone.find('.comment-name').text(comment.name);
-    clone.find('.comment-text').text(comment.text);
-    clone.find('.comment-date').text(date_str);
+    var name_el = clone.find('.comment-name');
+    var text_el = clone.find('.comment-text');
+    var date_el = clone.find('.comment-date');
+    name_el.text(comment.name);
+    text_el.text(comment.text);
+    date_el.text(date_short);
+    if(date_long) date_el.attr('title', date_long);
     clone.appendTo('#comment-list');
+
+//    // setup administrative tools
+//    var edit_url = get_rest_url_for_current_document() + '?edit=' + encodeURIComponent(comment.date);
+//    var edit_el = $(document.createElement('a'));
+//    edit_el.text('[ed]');
+//    edit_el.attr('href', edit_url);
+//    $(document.createTextNode(' ')).appendTo(name_el);
+//    edit_el.appendTo(name_el);
 }
 
+// return string like 'http://thisserver/comments/domain/path/path'
 function get_rest_url_for_current_document() {
     var host = window.location.hostname;
     var path = host + window.location.pathname;
