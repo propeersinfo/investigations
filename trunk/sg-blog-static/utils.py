@@ -247,3 +247,34 @@ def get_article_url(article):
     #import gen_static
     #assert article.__class__ == gen_static.ArticleDataStoreMock, article.__class__
     return '%s/%s.html' % (defs.CANONICAL_BLOG_URL, article.slug)
+
+class UTC(datetime.tzinfo):
+    def utcoffset(self, dt):
+        return datetime.timedelta(0)
+    def tzname(self, dt):
+        return "UTC"
+    def dst(self, dt):
+        return datetime.timedelta(0)
+
+class ConstantOffsetTimeZone(datetime.tzinfo):
+    def __init__(self, utc_offset):
+        super(ConstantOffsetTimeZone, self).__init__()
+        #assert utc_offset.seconds % 60 == 0, 'actual seconds: %s' % utc_offset.seconds
+        #assert utc_offset.microseconds == 0
+        #raise Exception('utc_offset: %s %s' % (utc_offset.seconds, utc_offset.microseconds))
+        self.utc_offset = utc_offset
+    def utcoffset(self, dt):
+        return self.utc_offset
+    def tzname(self, dt):
+        assert False, 'tzname could not be defined, do not use formatting %%Z'
+    def dst(self, dt):
+        return datetime.timedelta(0)
+
+def try_clone_naive_local_datetime_with_timezone_info(dt):
+    if dt.tzinfo:
+        return dt
+    else:
+        #utc_offset = datetime.datetime.now() - datetime.datetime.utcnow()
+        utc_offset = datetime.timedelta(hours=defs.DEFAULT_LOCAL_TIMEZONE_OFFSET)
+        aware = dt.replace(tzinfo=ConstantOffsetTimeZone(utc_offset))
+        return aware

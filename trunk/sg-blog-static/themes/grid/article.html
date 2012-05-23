@@ -31,7 +31,8 @@
 {% if not article.pinned %}
 	    <p class="article-meta">
 	    	{# F j, Y #}
-			{{ article.published_date.strftime("%B %d, %Y") }}
+			<span title="{{ article.published_date.strftime('%Y-%m-%d %H:%M:%S %Z') }}">
+				{{ article.published_date.strftime('%B %d, %Y') }}</span>
 		</p>
 		<p class="article-meta">
 			Tags:

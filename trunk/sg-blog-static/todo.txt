@@ -1,9 +1,11 @@
 Priority 1
 
-- fix appversion for static resources!!!
+- must I provide last-updated header for rss.xml?
+- comment administration
 
 Priority Middle
 
+- email to the admin not 'a user'
 - fix counter for "Russian Fed."
 - comments.py: use ip-address in email notification (not in db)
 - page "275.html" (max) is being generated somewhow
@@ -60,3 +62,5 @@ Completed
 + comments: send email on comment received
 + markup: broken playlist 'http://localhost:8080/the-last-portion-of-qaya.html'
 + script generating new article by template
++ fix appversion for infinite static resources
++ clean RSS with http://feedvalidator.org

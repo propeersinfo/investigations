@@ -1,5 +1,7 @@
 # this must go first - this var is to be checked in defs.py
 import os
+import urllib
+
 os.environ.setdefault('SERVER_PROFILE', 'PRODUCTION')
 
 import codecs
@@ -51,7 +53,7 @@ def render_template(template_name, variables):
     # Jinja2
     env = Environment(loader=FileSystemLoader(['themes/grid', 'themes']), extensions=[])
     def static_resource(value):
-        return '/static/%s' % value
+        return '/static/%s?v=%s' % (value, urllib.quote_plus(defs.APP_VERSION))
     def typographus(value):
         from typographus import typo
         if isinstance(value, jinja2.runtime.Undefined):
