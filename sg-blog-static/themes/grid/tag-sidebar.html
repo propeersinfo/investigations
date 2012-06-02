@@ -1,19 +1,19 @@
 		<div class="sidebar-panel sidebar-tags">
 {% if tag_cloud %}
 
-		<!--img src="/font?text=Regions"><br-->
 		<ul>
 		<li>{{ ''|blog_tag_cnt(tag_cloud, "best", "Favourites") }}</li>
 		<li>{{ ''|blog_tag_cnt(tag_cloud, "mix", "Mixes &amp; comps") }}</li>
+		</ul>
+		
+		<ul>
 		<li><a href="/tag/all.html">Site map</a></li>
-		<!--
-		<li><a href="/rss.xml">RSS</a></li>
-		-->
+		<li><a href="{{defs.RSS_URL}}">Subscribe</a> <a href="{{defs.RSS_URL}}"><img src="{{'rss10x10.png'|static_resource}}" style="vertical-align: middle;"></a>
 		</ul>
 		
 	    <ul>
 		<li class="title">Regions:</li>
-		<li>{{ ''|blog_tag_cnt(tag_cloud, "russia", "Russian Fed.") }}</li>
+		<li>{{ ''|blog_tag_cnt(tag_cloud, "russia", "Russia") }}</li>
 	    <li>{{ ''|blog_tag_cnt(tag_cloud, "ukraine", "Ukraine") }}</li>
 	    <li>{{ ''|blog_tag_cnt(tag_cloud, "moldova", "Moldova") }}</li>
 	    <li>{{ ''|blog_tag_cnt(tag_cloud, "belarus", "Belarus") }}</li>

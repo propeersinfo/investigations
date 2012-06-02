@@ -1,35 +1,23 @@
 <!DOCTYPE html>
+<html>
 
 <!--
 DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 -->
 
-<html>
-
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset={{defs.HTML_ENCODING}}"/>
 <title>{% block title %}{{ defs.BLOG_NAME }}{% endblock %}</title>
 
-<link rel="icon" href="/static/favicon.png" type="image/x-icon"/>
-<link rel="shortcut icon" href="/static/favicon.png" type="image/x-icon"/>
-
-{#
-<link rel="alternate" type="application/rss+xml" title="Subscribe to new articles" href="/rss.xml"/>
-#}
-
-<!--
-<link rel="stylesheet/less" href="/static/style.less.css" type="text/css" />
-<script src="/static/less-1.0.21.min.js"></script>
--->
+<link rel="icon" href="{{ 'favicon.png'|static_resource }}" type="image/x-icon"/>
+<link rel="shortcut icon" href="{{ 'favicon.png'|static_resource }}" type="image/x-icon"/>
+<link rel="alternate" type="application/rss+xml" title="Subscribe to new articles" href="{{defs.RSS_URL}}"/>
 <link href="{{ 'grid-compiled.css'|static_resource }}" type="text/css" rel="stylesheet"/>
 <link href="{{ 'main.css'|static_resource }}" type="text/css" rel="stylesheet"/>
  
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script type="text/javascript" src="{{ 'user.js'|static_resource }}"></script>
-<!--
-<script type="text/javascript" src="{{ 'admin.js'|static_resource }}"></script>
--->
 
 </head>
 <body>
@@ -53,11 +41,6 @@ rest cool music from USSR of the
 {{ ''|blog_tag("60s", "60's") }},
 {{ ''|blog_tag("70s", "70's") }} and
 {{ ''|blog_tag("80s", "80's") }}.
-
-<!--
-&nbsp;&nbsp; <a href="/tag"><code>&lt;all-tags/&gt;</code></a>
-&nbsp;&nbsp; <a href="/rss">RSS</a>
--->
 
 	    	</div>
 		</div>
@@ -120,9 +103,6 @@ rest cool music from USSR of the
 	{#
 	<div class="width_3"><p>
 		&nbsp;
-		<!--
-		<a href="/archive/">archive</a> &nbsp; <a href="/tag/">tags</a>
-		-->
 	</p></div>
 	#}
 </div>

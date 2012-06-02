@@ -18,9 +18,10 @@ TAG_URL_PATH = 'tag'
 DATE_URL_PATH = 'date'
 MEDIA_URL_PATH = 'static'
 RSS2_URL_PATH = 'rss'
+RSS_URL = 'http://feeds.feedburner.com/sovietgroove'
 ARCHIVE_URL_PATH = 'archive'
 
-MAX_ARTICLES_PER_PAGE = 5
+MAX_ARTICLES_PER_PAGE = 10
 MAX_ARTICLES_PER_PAGE_ARCHIVE = 50
 MAX_ARTICLES_RSS = 10
 TOTAL_RECENT = 10
@@ -29,7 +30,7 @@ _is_production = {
     'PRODUCTION': True,
     'DEVELOPMENT': False,
 }
-print 'os.getenv("SERVER_PROFILE"): %s' % os.getenv('SERVER_PROFILE')
+#print 'os.getenv("SERVER_PROFILE"): %s' % os.getenv('SERVER_PROFILE')
 PRODUCTION = _is_production[os.getenv('SERVER_PROFILE', 'Env var SERVER_PROFILE not set')]
 DEVSERVER = not PRODUCTION
 

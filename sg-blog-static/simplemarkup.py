@@ -101,7 +101,7 @@ def handle_custom_tag_youtube(input):
     input = form2(input)
     return input
 
-MP3 = re.compile("\[([^\]]+mp3)\]", re.IGNORECASE)
+MP3 = re.compile("\[\s*([^\]]+\.mp3)\s*\]", re.IGNORECASE)
 
 # [dir/cool track.mp3]
 def handle_custom_tag_mp3(input):
@@ -109,9 +109,11 @@ def handle_custom_tag_mp3(input):
         mp3_name = re.sub(r'^.*/', '', m.group(1))
         mp3_link = "http://dl.dropbox.com/u/%s/sg/%s" % (defs.DROPBOX_USER, urllib2.quote(m.group(1), safe='/'))
         swf = my_tags.static_resource('dewplayer-mini.swf')
-        flash = "<object width='160' height='18'><embed src='" + swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + mp3_link + "' quality='high'></embed></object>"
+        flash = "<object width='160' height='18'><embed src='" + swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + mp3_link + "&autoplay=1' quality='high'></embed></object>"
+        icon = '<a href="%s" class="audio-player" data-swf-html="%s"><img src="/static/play.png" alt="play"></a>' % (mp3_link, flash.replace('"', '\\"'))
         dl = "<a href=\"%s\">%s</a>" % (mp3_link, mp3_name)
-        return "%s %s" % (flash, dl)
+        return "%s %s" % (icon, dl)
+
     regex = MP3
     return re.sub(regex, replacer, input)
 
