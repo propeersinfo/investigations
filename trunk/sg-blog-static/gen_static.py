@@ -78,7 +78,12 @@ def render_template(template_name, variables):
     def sidebar_link(value, title, description, url):
         #return '<li><a href="%s">%s</a><br>\n<span class="description">%s</span></li>\n' % (url, title, description.lower())
         return '<li><a href="%s" title="%s">%s</a>' % (url, description.lower(), title)
+    def urlencode(value):
+        if isinstance(value, unicode):
+            value = value.encode('utf-8')
+        return urllib.quote(value, '')
 
+    env.filters['urlencode'] = urlencode
     env.filters['sidebar_link'] = sidebar_link
     env.filters['static_resource'] = static_resource
     env.filters['typographus'] = typographus

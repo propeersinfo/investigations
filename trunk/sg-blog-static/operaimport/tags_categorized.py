@@ -35,7 +35,7 @@ _tag_table =\
     [u'gennadiy gladkov'   , u'composer' , u'Gennadiy Gladkov'   , u'Геннадий Гладков'   ],
     [u'eurocrime'          , u'genre'    , u''                   , u''                   ],
     [u'disco'              , u'genre'    , u''                   , u''                   ],
-    [u'avilov'             , u'ensemble' , u'Avilov'             , u'Авилов'             ],
+    [u'avilov'             , u'ensemble' , u'Avilov\'s Rhythm'   , u'Авилов'             ],
     [u'alla pugachova'     , u'vocalist' , u'Alla Pugachova'     , u'Алла Пугачова'      ],
     [u'80s'                , u'time'     , u'80\'s'              , u''                   ],
     [u'soul'               , u'genre'    , u''                   , u''                   ],
@@ -103,7 +103,7 @@ _tag_table =\
     [u'musical'            , u'genre'    , u''                   , u''                   ],
     [u'lithuania'          , u'region'   , u'lithuania'          , u''                   ],
     [u'kuprevicius'        , u'composer' , u'Giedrius Kuprevicius', u'Гиедриус Купревиcиус'],
-    [u'vainshtein'         , u'jazz'     , u'Iosif Vainshtein'   , u'Иосиф Ваинштеин'    ],
+    [u'vainshtein'         , u'jazz'     , u'Iosif Weinstein'    , u'Иосиф Ваинштеин'    ],
     [u'uno naissoo'        , u'composer' , u'Uno Naissoo'        , u'Уно Наиссоо'        ],
     [u'fix'                , u'ensemble' , u'Fix'                , u'Фиx'                ],
     [u'syabry'             , u'ensemble' , u'Syabry'             , u'Сябрий'             ],
@@ -125,7 +125,7 @@ _tag_table =\
     [u'groove beats'       , u'genre'    , u''                   , u''                   ],
     [u'oktava'             , u'ensemble' , u'Oktava'             , u'Октава'             ],
     [u'theatre'            , u'genre'    , u''                   , u''                   ],
-    [u'tonis magi'         , u'vocalist' , u'Tonis Magi'         , u'Тонис Маги'         ],
+    [u'tonis magi'         , u'vocalist' , u'Tõnis Mägi'         , u'Тонис Маги'         ],
     [u'orchestra'          , u'genre'    , u''                   , u''                   ],
     [u'saulsky'            , u'composer' , u'Yuri Saulsky'       , u'Юри Саулский'       ],
     [u'azerbayjan'         , u'region'   , u'azerbayjan'         , u''                   ],
@@ -156,7 +156,7 @@ _tag_table =\
     [u'mr-and-7'          , u'modern'       , u'Mr. And-7'             , u''     ],
     [u'jazz-78'           , u'series'       , u'Jazz-78'               , u''     ],
     [u'arsenal'           , u'jazz'         , u'Arsenal'               , u''     ],
-    [u'estradines-melodijos'  , u'ensemble' , u'Estradines Melodijos'  , u''     ],
+    [u'estradines-melodijos'  , u'ensemble' , u'Estradinės Melodijos'  , u''     ],
     [u'gazizov'           , u'composer'     , u'Robert Gazizov'        , u''     ],
     [u'recognize'         , u'misc'         , u''                      , u''     ],
     [u'modern'            , u'misc'         , u''                      , u''     ],
@@ -165,6 +165,7 @@ _tag_table =\
     [u'weedska'           , u'modern'       , u'Weedska'               , u''     ],
     [u'kuut'              , u'vocalist'     , u'Marju Kuut'            , u''     ],
     [u'jazz-fusion'       , u'genre'        , u''                      , u''     ],
+    [u'jazz-comfort'      , u'jazz'         , u'Jazz Comfort'          , u''     ],
 ]
 
 from operaimport.tag_rewrite import rewrite_tag

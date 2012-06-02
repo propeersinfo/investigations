@@ -1,10 +1,12 @@
 Priority 1
 
+- turn new RSS on (at feedburner + link to feedburner)
 - external comments: char '+' is not saved into db
-- must I provide last-updated header for rss.xml?
 
 Priority Middle
 
+- auto-tag 'russia' is missed at '/' but is presented at '/slug.html'
+- all javascripts delay-loaded
 - comments js: add spinner for new comment posting
 - comments js: add spinner for comment loading
 - comments.py: use ip-address in email notification (not in db)
@@ -69,3 +71,5 @@ Completed
 + external comments: protect administration with password
 + tag categorization page (for users and for me)
 + fix counter for "Russian Fed."
++ must I provide last-updated header for rss.xml? No.
++ social share buttons

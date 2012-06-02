@@ -166,6 +166,15 @@ function scroll_top() {
     $('html, body').animate({ scrollTop: '0px' }, 500);
 }
 
+function share_popup(url) {
+    var w = 700;
+    var h = 500;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    window.open(url, 'Share', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+    return false; // prevent tag A's std behaviour
+}
+
 // convert a text input into an element that looks like <a> when non-focused
 // and like an editable text input when focused
 function setup_plain_editor(input) {
@@ -334,4 +343,17 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     setup_new_comment_form();
+});
+
+/////////////////////////////////////////////
+
+// audio player
+$(document).ready(function() {
+    $('.audio-player').click(function() {
+        var swf = $(this).attr('data-swf-html');
+        if(swf) {
+            $(this).replaceWith(swf);
+        }
+        return false;
+    });
 });

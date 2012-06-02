@@ -12,6 +12,8 @@ from wsgiref.handlers import format_date_time
 
 # todo: consider handling over quota exc
 
+# format an str/unicode json-string as one readable by humans
+# standard json.sumps() produces all these '\xUUUU'
 def pretty_print_json_readable_unicode(json_text):
     def do_level(out, root, level = 0):
         offset = '  ' * level
@@ -29,12 +31,13 @@ def pretty_print_json_readable_unicode(json_text):
                 out.write('%s"%s": ' % (offset2, key))
                 do_level(out, root[key], level+1)
             out.write('\n%s}' % offset)
-        elif type(root) == unicode:
+        elif isinstance(root, basestring):
+            root = root.replace('"', '\\"').replace('\r', '\\r').replace('\n', '\\n')
             out.write('"%s"' % (root,))
         else:
             raise Exception('unsupported yet type %s' % type(root))
 
-    assert isinstance(json_text, (str, unicode))
+    assert isinstance(json_text, (basestring))
     out = StringIO()
     try:
         do_level(out, json.loads(json_text))
@@ -131,7 +134,7 @@ class EditHandler(webapp.RequestHandler):
             text = re.sub('\\\u([0-9a-fA-F]{4})', unicode_decoder, text)
             text = pretty_print_json_readable_unicode(text)
 
-            assert type(text) == unicode
+            assert isinstance(text, basestring)
             self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
             #self.response.out.write('<p>Comments has been found for path %s' % (path))
             #self.response.out.write('<p><textarea cols=80 rows=30 style="width:100%%;">%s</textarea>' % text)
