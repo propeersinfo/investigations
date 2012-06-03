@@ -205,6 +205,24 @@ class MarkdownFile():
         tags = map(rewrite_tag, tags)
         return tags
 
+def get_related_articles(article):
+    return []
+
+#    def get_single_tag():
+#        series_tags = [ tag for tag in article.tags ]
+#        if len(series_tags) > 0:
+#            return series_tags[0]
+#
+#    the_tag = get_single_tag()
+#    #raise Exception('%s' % (the_tag,))
+#    if the_tag:
+#        blog_meta = BlogMeta.instance()
+#        ra = blog_meta.articles_by_tags[the_tag]
+#        ra = [ a for a in ra if a.meta['slug'] != article.slug ]
+#        #raise Exception('%s' % (related_articles,))
+#        return ra
+#    else:
+#        return []
 
 class ArticleDataStoreMock():
     def __init__(self, clever_object, meta):
@@ -222,6 +240,8 @@ class ArticleDataStoreMock():
         self.path = utils.get_article_path(self)
         self.url = utils.get_article_url(self)
         self.guid = utils.get_article_guid(self)
+
+        self.related_articles = get_related_articles(self)
 
 
 def generate_article(slug):

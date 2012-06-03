@@ -348,6 +348,7 @@ $(document).ready(function() {
 /////////////////////////////////////////////
 
 // audio player
+// respond on clicking 'play' image button by inserting a swf player instead of the button image
 $(document).ready(function() {
     $('.audio-player').click(function() {
         var swf = $(this).attr('data-swf-html');
