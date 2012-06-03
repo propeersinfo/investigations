@@ -28,6 +28,17 @@
 			{% endfor %}
 		{% endif %}
 		
+{% if article.related_articles %}
+		<p>
+		Related articles:
+		<ul>
+		{% for a in article.related_articles %}
+			<li><a href="/{{a.meta.slug}}.html">{{ a.meta.title }}</a></li>
+		{% endfor%}
+		</ul>
+		</p>
+{% endif %}
+		
 {% if not article.pinned %}
 	    <p class="article-meta">
 	    	{# F j, Y #}
