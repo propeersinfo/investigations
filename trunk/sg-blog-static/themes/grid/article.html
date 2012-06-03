@@ -27,16 +27,33 @@
 			<p>{{ p|typographus|safe|escape }}</p>
 			{% endfor %}
 		{% endif %}
-		
+
+{#
 {% if article.related_articles %}
-		<p>
+		<div class="see-also">
 		Related articles:
 		<ul>
 		{% for a in article.related_articles %}
-			<li><a href="/{{a.meta.slug}}.html">{{ a.meta.title }}</a></li>
+			<li>— <a href="/{{a.meta.slug}}.html">{{ a.meta.title }}</a></li>
 		{% endfor%}
 		</ul>
-		</p>
+		</div>
+{% endif %}
+#}
+
+{% if article.related_articles %}
+		<div class="row see-also">
+			<div class="width_1">
+				<p>See also:</p>
+			</div>
+			<div class="width_7">
+				<ul>
+				{% for a in article.related_articles %}
+					<li><a href="/{{a.meta.slug}}.html">{{ a.meta.title }}</a></li>
+				{% endfor%}
+				</ul>
+			</div>
+		</div>
 {% endif %}
 		
 {% if not article.pinned %}

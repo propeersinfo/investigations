@@ -206,23 +206,26 @@ class MarkdownFile():
         return tags
 
 def get_related_articles(article):
-    return []
-
+#    # choose a single tag among all ones
 #    def get_single_tag():
-#        series_tags = [ tag for tag in article.tags ]
+#        series_tags = [ tag for tag in article.tags if tags_categorized.is_series_tag(tag) ]
 #        if len(series_tags) > 0:
 #            return series_tags[0]
 #
-#    the_tag = get_single_tag()
-#    #raise Exception('%s' % (the_tag,))
-#    if the_tag:
-#        blog_meta = BlogMeta.instance()
-#        ra = blog_meta.articles_by_tags[the_tag]
-#        ra = [ a for a in ra if a.meta['slug'] != article.slug ]
-#        #raise Exception('%s' % (related_articles,))
-#        return ra
-#    else:
-#        return []
+#        artist_tags = [ tag for tag in article.tags if tags_categorized.is_artist_tag(tag) ]
+#        if len(artist_tags) > 0:
+#            return artist_tags[0]
+#
+#        return None
+
+    the_tag = tags_categorized.get_tag_for_related_articles(article.tags)
+    if the_tag:
+        blog_meta = BlogMeta.instance()
+        ra = blog_meta.articles_by_tags[the_tag]
+        ra = [ a for a in ra if a.meta['slug'] != article.slug ]
+        return ra[:3]
+    else:
+        return []
 
 class ArticleDataStoreMock():
     def __init__(self, clever_object, meta):
