@@ -294,3 +294,14 @@ ul.archive em.date {
 
 /* Misc */
 
+.see-also li,
+.see-also p
+{
+	font-size: 90%;
+	font-style: italic;
+	font-family: serif !important;
+}
+.see-also ul {
+	margin-top: 0;
+	padding-left: 0;
+}

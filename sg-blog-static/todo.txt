@@ -5,6 +5,7 @@ Priority 1
 
 Priority Middle
 
+- randomize 'see also' block
 - auto-tag 'russia' is missed at '/' but is presented at '/slug.html'
 - all javascripts delay-loaded
 - comments js: add spinner for new comment posting
@@ -73,3 +74,4 @@ Completed
 + fix counter for "Russian Fed."
 + must I provide last-updated header for rss.xml? No.
 + social share buttons
++ 'see also' block implemented for each article

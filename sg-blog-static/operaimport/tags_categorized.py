@@ -170,10 +170,21 @@ _tag_table =\
 
 from operaimport.tag_rewrite import rewrite_tag
 
+class dict_of_lists(dict):
+    def __init__(self):
+        super(dict_of_lists, self).__init__()
+    def append(self, key, value):
+        if self.has_key(key):
+            assert isinstance(self[key], list)
+            self[key].append(value)
+        else:
+            self[key] = [ value ]
+
+
 tag_info_by_tag_name = dict()
-#tag_info_by_category = dict()
+tag_info_by_category = dict_of_lists()
 for row in _tag_table:
-    name = row[0]
+    name = original_name = row[0]
     assert name
     name = rewrite_tag(name)
     cat = row[1]
@@ -187,11 +198,18 @@ for row in _tag_table:
         'title':    title,
         'title_ru': title_ru
     }
-    tag_info_by_tag_name[name] = tag_info
-    #if tag_info_by_category.has_key(cat):
-    #    tag_info_by_category[cat].append(tag_info)
-    #else:
-    #    tag_info_by_category[cat] = [tag_info ]
+    #print 'names: "%s" => "%s"' % (original_name, name)
+
+    if not tag_info_by_tag_name.has_key(name):
+        #assert not tag_info_by_tag_name.has_key(name), 'duplicate definition for tag %s, prob. because of %s' % (name, original_name)
+        #if name == 'shake':
+        #    print 'setting for tag %s' % name
+        tag_info_by_tag_name[name] = tag_info
+        tag_info_by_category.append(tag_info['category'], tag_info)
+        #if tag_info_by_category.has_key(cat):
+        #    tag_info_by_category[cat].append(tag_info)
+        #else:
+        #    tag_info_by_category[cat] = [tag_info ]
 
 # return hash category_name -> tag_info
 def get_used_tags_categories():
@@ -222,3 +240,11 @@ def get_region_tags():
         if row[1] == 'region':
             tags.append(row[0])
     return list(set(tags))
+
+def get_tag_for_related_articles(tag_names):
+    for cat in [ 'series', 'ensemble', 'jazz', 'composer', 'vocalist', 'modern', 'genre' ]:
+        tag_names_2 = [ ti['name'] for ti in tag_info_by_category[cat] ]
+        intersection = list(set(tag_names) & set(tag_names_2))
+        if len(intersection):
+            return intersection[0]
+    return None
