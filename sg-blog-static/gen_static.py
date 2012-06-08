@@ -1,5 +1,6 @@
 # this must go first - this var is to be checked in defs.py
 import os
+import random
 import urllib
 from operaimport import tags_categorized
 
@@ -223,6 +224,7 @@ def get_related_articles(article):
         blog_meta = BlogMeta.instance()
         ra = blog_meta.articles_by_tags[the_tag]
         ra = [ a for a in ra if a.meta['slug'] != article.slug ]
+        random.shuffle(ra)
         return ra[:3]
     else:
         return []
