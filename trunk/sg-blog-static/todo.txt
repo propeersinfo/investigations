@@ -1,6 +1,5 @@
 Priority 1
 
-- turn new RSS on (at feedburner + link to feedburner)
 - external comments: char '+' is not saved into db
 
 Priority Middle
@@ -75,3 +74,4 @@ Completed
 + must I provide last-updated header for rss.xml? No.
 + social share buttons
 + 'see also' block implemented for each article
++ turn new RSS on (at feedburner + link to feedburner)

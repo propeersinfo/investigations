@@ -166,6 +166,8 @@ _tag_table =\
     [u'kuut'              , u'vocalist'     , u'Marju Kuut'            , u''     ],
     [u'jazz-fusion'       , u'genre'        , u''                      , u''     ],
     [u'jazz-comfort'      , u'jazz'         , u'Jazz Comfort'          , u''     ],
+    [u'tantsurutme'       , u'series'       , u'Tantsurütme 7"s'     , u''     ],
+    
 ]
 
 from operaimport.tag_rewrite import rewrite_tag
