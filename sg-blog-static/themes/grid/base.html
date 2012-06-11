@@ -11,6 +11,8 @@ DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/
 <meta http-equiv="Content-Type" content="text/html; charset={{defs.HTML_ENCODING}}"/>
 <title>{% block title %}{{ defs.BLOG_NAME }}{% endblock %}</title>
 
+{% block redirect %}{% endblock %}
+
 <link rel="icon" href="{{ 'favicon.png'|static_resource }}" type="image/x-icon"/>
 <link rel="shortcut icon" href="{{ 'favicon.png'|static_resource }}" type="image/x-icon"/>
 <link rel="alternate" type="application/rss+xml" title="Subscribe to new articles" href="{{defs.RSS_URL}}"/>
@@ -38,7 +40,8 @@ DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/
 {{ ''|blog_tag("disco") }},
 {{ ''|blog_tag("electro") }},
 {{ ''|blog_tag("shake") }} and the
-rest cool music from USSR of the
+{{ ''|blog_tag("all", "rest") }}
+cool music from USSR of the
 {{ ''|blog_tag("60s", "60's") }},
 {{ ''|blog_tag("70s", "70's") }} and
 {{ ''|blog_tag("80s", "80's") }}.
@@ -99,7 +102,8 @@ rest cool music from USSR of the
 		&nbsp;
 	</p></div>
 	<div class="width_7"><p>
-		<a href="mailto:mail@sovietgroove.com">Email</a> and comments are open for questions and offers.
+		2009&minus;2012 <a href="mailto:mail@sovietgroove.com">mail@sovietgroove.com</a><br>
+		Email and comments are open for questions and offers
 	</p></div>
 	{#
 	<div class="width_3"><p>
