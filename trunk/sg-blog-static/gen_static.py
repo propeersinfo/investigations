@@ -144,19 +144,20 @@ class BlogMeta:
             #print >>sys.stderr, '  tags:', md.meta['tags']
             #print >>sys.stderr, '  date:', md.meta['date']
 
-            # add tag 'russia' to certain articles
-            region_tags = tags_categorized.get_region_tags()
-            intersection = set(md.meta['tags']) & set(region_tags)
-            if not len(intersection):
-                countryable = len( set(md.meta['tags']) & {'info', 'mix'}) == 0
-                if countryable:
-                    md.meta['tags'].append(DEFAULT_COUNTRY_TAG)
+            if md.meta.has_key('tags'):
+                # add tag 'russia' to certain articles
+                region_tags = tags_categorized.get_region_tags()
+                intersection = set(md.meta['tags']) & set(region_tags)
+                if not len(intersection):
+                    countryable = len( set(md.meta['tags']) & {'info', 'mix'}) == 0
+                    if countryable:
+                        md.meta['tags'].append(DEFAULT_COUNTRY_TAG)
 
-            for tag in md.meta['tags']:
-                if articles_by_tags.has_key(tag):
-                    articles_by_tags[tag].append(md)
-                else:
-                    articles_by_tags[tag] = [md]
+                for tag in md.meta['tags']:
+                    if articles_by_tags.has_key(tag):
+                        articles_by_tags[tag].append(md)
+                    else:
+                        articles_by_tags[tag] = [md]
 
         return BlogMeta(articles_by_slugs, articles_by_tags)
 
@@ -231,22 +232,25 @@ def get_related_articles(article):
 
 class ArticleDataStoreMock():
     def __init__(self, clever_object, meta):
-        assert type(meta['date']) == datetime.datetime
-        assert type(meta['tags']) in (list, set)
+        self.redirect = None
 
-        #raise Exception('%s' % (clever_object['named'],))
+        if meta.has_key('redirect'):
+            self.redirect = meta['redirect']
+        else:
+            assert type(meta['date']) == datetime.datetime
+            assert type(meta['tags']) in (list, set)
 
-        self.title = meta['title']
-        self.complex_html = clever_object
-        self.pinned = False
-        self.published_date = meta['date']
-        self.tags = meta['tags']
-        self.slug = meta['slug']
-        self.path = utils.get_article_path(self)
-        self.url = utils.get_article_url(self)
-        self.guid = utils.get_article_guid(self)
+            self.title = meta['title']
+            self.complex_html = clever_object
+            self.pinned = False
+            self.published_date = meta['date']
+            self.tags = meta['tags']
+            self.slug = meta['slug']
+            self.path = utils.get_article_path(self)
+            self.url = utils.get_article_url(self)
+            self.guid = utils.get_article_guid(self)
 
-        self.related_articles = get_related_articles(self)
+            self.related_articles = get_related_articles(self)
 
 
 def generate_article(slug):
@@ -268,32 +272,45 @@ def generate_article(slug):
     #    print >>sys.stderr, '-', type(p)
 
     article = ArticleDataStoreMock(clever_object, md.meta)
-    articles = [ article ]
 
-    comments_db = CommentDB.get_instance('operaimport/comments4json.result.json')
-    db_path = '/%s.html' % slug
-    comments = comments_db.get_comments_for_path(db_path)
-    #raise Exception('%s -> %s' % (db_path, comments,))
-
-    #raise Exception('%s' % (article.complex_html['named']['info'],))
-
-    template_variables = {
-        'defs'         : defs,
-        #'current_path'      : utils.get_article_path(slug),
-        #'current_path_full' : utils.get_article_url(slug),
-        'articles'     : articles,
-        'user_info'    : UserInfo(),
-        #'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
-        'comment_author'  : 'fake',
-        'prev_page_url'   : None, #page_info.prev_page_url,
-        'next_page_url'   : None, #page_info.next_page_url,
-        'current_page_1'  : None, #page_info.current_page,
-        'pages_total'     : None, #page_info.pages_total,
-        'tag_cloud'       : blog_meta,
-        'single_article'  : article,
-        'comments'        : comments if comments else [],
+    if article.redirect:
+        target_title = blog_meta.articles_by_slugs[article.redirect].meta['title']
+        template_variables = {
+            'defs': defs,
+            'tag_cloud': blog_meta,
+            'redirect_url': '/%s.html' % article.redirect,
+            'redirect_title': target_title,
         }
-    html = render_template('articles.html', template_variables)
+        html = render_template('redirect.html', template_variables)
+
+    else:
+        articles = [ article ]
+
+        comments_db = CommentDB.get_instance('operaimport/comments4json.result.json')
+        db_path = '/%s.html' % slug
+        comments = comments_db.get_comments_for_path(db_path)
+        #raise Exception('%s -> %s' % (db_path, comments,))
+
+        #raise Exception('%s' % (article.complex_html['named']['info'],))
+
+        template_variables = {
+            'defs'         : defs,
+            #'current_path'      : utils.get_article_path(slug),
+            #'current_path_full' : utils.get_article_url(slug),
+            'articles'     : articles,
+            'user_info'    : UserInfo(),
+            #'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
+            'comment_author'  : 'fake',
+            'prev_page_url'   : None, #page_info.prev_page_url,
+            'next_page_url'   : None, #page_info.next_page_url,
+            'current_page_1'  : None, #page_info.current_page,
+            'pages_total'     : None, #page_info.pages_total,
+            'tag_cloud'       : blog_meta,
+            'single_article'  : article,
+            'comments'        : comments if comments else [],
+            }
+        html = render_template('articles.html', template_variables)
+
     html_file = os.path.join(defs.STATIC_HTML_DIR, '%s.html' % slug)
     utils.write_file(html_file, html)
     return html_file
@@ -345,6 +362,7 @@ def fetch_articles_sorted():
         if os.path.isfile(md_full):
             md = MarkdownFile.parse(md_full, read_content=True)
             mds.append(md)
+    mds = filter(lambda md: not md.meta.has_key('redirect'), mds)
     mds = sorted(mds, key=lambda md: md.meta['date'], reverse=True)
 
     articles = []
@@ -379,7 +397,9 @@ def generate_listings(one_page1_required = None):
     if one_page1_required >= 1:
         # generate just one HTML file
         blog_meta = BlogMeta.instance()
-        mds = sorted(blog_meta.get_all_articles(), key=lambda md: md.meta['date'], reverse=True)
+        mds = blog_meta.get_all_articles()
+        mds = filter(lambda md: not md.meta.has_key('redirect'), mds)
+        mds = sorted(mds, key=lambda md: md.meta['date'], reverse=True)
         start = (one_page1_required - 1) * defs.MAX_ARTICLES_PER_PAGE
         mds = mds[ start :  start + defs.MAX_ARTICLES_PER_PAGE ]
         page = [ article_from_markup(md) for md in mds]

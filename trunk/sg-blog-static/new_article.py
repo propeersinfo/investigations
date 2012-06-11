@@ -33,10 +33,25 @@ if os.path.exists(fname):
     print 'Article already exists: %s' % fname
     sys.exit(1)
 
+text = u'''# title: %s
+# date: %s
+# tags: 
+
+# cover
+
+# info
+
+# tracks
+
+# download
+Download:
+''' % (title, datetime.datetime.now().strftime(defs.FORMAT_YMD_HMS))
+
 f = codecs.open(fname, 'wb')
-print >>f, '# title: %s' % title.encode('utf-8')
-print >>f, '# date: %s' % datetime.datetime.now().strftime(defs.FORMAT_YMD_HMS)
-print >>f, '# tags: '
+f.write(text.encode('utf-8'))
+#print >>f, '# title: %s' % title.encode('utf-8')
+#print >>f, '# date: %s' % datetime.datetime.now().strftime(defs.FORMAT_YMD_HMS)
+#print >>f, '# tags: '
 f.close()
 
 EDITOR = 'D:/portable/Sublime/sublime_text.exe'

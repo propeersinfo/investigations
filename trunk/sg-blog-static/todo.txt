@@ -1,5 +1,6 @@
 Priority 1
 
+- having articles tagged both 'disco petrenko' and 'disco-petrenko' only one of them will be visible thru /tag/disco-petrenko.html
 - external comments: char '+' is not saved into db
 
 Priority Middle
