@@ -6,7 +6,7 @@ class ParseNode
     raise "eval is not implemented for class #{self.class}"
   end
 
-  # declare children nodes; usefule for tree pretty print
+  # declare children nodes; useful for tree pretty print
   def children()
     raise "get_children is not implemented for class #{self.class}"
   end
@@ -21,9 +21,9 @@ class FuncDef < ParseNode
     @block = block
   end
 
-  def to_s(); "#{self.class}(id=#{@id} args=#{@arglist} block=#{@block})"; end
+  def to_s(); "#{self.class}(id=#{@id} args=#{@arglist} block=#{@block})" end
 
-  def children; [ @arglist, @block ]; end
+  def children; [ @arglist, @block ] end
 
   def eval(context)
     raise "attach this function to context - that's all"
@@ -55,9 +55,9 @@ class Block < ParseNode
     @statements = statements
   end
 
-  def to_s; "#{self.class}"; end
+  def to_s; "#{self.class}" end
 
-  def children; @statements; end
+  def children; @statements end
 
   def eval(context)
     @statements.map do |e|
@@ -123,7 +123,7 @@ class Addition < ParseNode
   def children; @elements; end
 
   def eval(context)
-    "<dummy eval's result for #{self.class}>"
+    "<dummy eval result for #{self.class}>"
   end
 end
 
@@ -134,8 +134,8 @@ class IdUse < ParseNode
   def initialize(id)
     @id = id
   end
-  def to_s; "Id:#{@id}"; end
-  def children; []; end
+  def to_s; "Id:#{@id}" end
+  def children; [] end
 end
 
 ###################################
@@ -144,10 +144,10 @@ class NumLiteralFunc < ParseNode
   def initialize(value)
     @value = value
   end
-  def to_s; "#{self.class}(#{@value})"; end
-  def children; []; end
+  def to_s; "#{self.class}(#{@value})" end
+  def children; [] end
   def eval(context)
-    return self
+    self
   end
 end
 
@@ -157,6 +157,6 @@ class StringLiteral < ParseNode
   def initialize(value)
     @value = value
   end
-  def to_s; "Str:#{@value}"; end
-  def children; []; end
+  def to_s; "Str:#{@value}" end
+  def children; [] end
 end

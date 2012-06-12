@@ -18,6 +18,7 @@ parser.consume_all_input = true
 src = <<SOURCE
 x = y = 11;
 SOURCE
+
 root = parser.parse(src, :root => :source_unit)
 
 if root
