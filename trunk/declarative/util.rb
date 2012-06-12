@@ -1,3 +1,5 @@
+require_relative "nodes"
+
 # Where root is a ParseNode
 def print_tree(root, offset = 0)
   return if root == nil
@@ -10,16 +12,18 @@ def print_tree(root, offset = 0)
   end
 
   # Try to avoid situations where 'root' is not a ParseNode but Array/String/Fixnum
-  chn = if root.class.to_s == "Array"
-           root
-         elsif root.class.to_s == "String"
-           []
-         elsif root.class.to_s == "Fixnum"
-           []
-         else
-           root.children
-         end
-  chn.map do |e|
+  children = if root.class == Array
+               root
+             elsif root.class == String
+               []
+             elsif root.class == Fixnum
+               []
+             elsif root.kind_of? ParseNode
+               root.children
+             else
+               raise "unsupported node class #{root.class}"
+             end
+  children.map do |e|
     print_tree(e, offset+1)
   end
 end
