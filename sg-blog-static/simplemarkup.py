@@ -41,6 +41,7 @@ def handle_custom_tag_image(text, config = None):
             return '<img src="%s">' % addr
         else:
             url = 'http://dl.dropbox.com/u/%s/sg/%s' % (defs.DROPBOX_USER, addr)
+            large_url = None
             image_file = os.path.join(defs.DROPBOX_LOCAL_DIR, addr)
 
             do_resize = ('cover140px' in config) if config else False
@@ -55,12 +56,17 @@ def handle_custom_tag_image(text, config = None):
                     img.save(thumbnail_file, "JPEG")
 
                 # rewrite url and file
+                large_url = url
                 url = 'http://dl.dropbox.com/u/%s/sg/img/140px/%s' % (defs.DROPBOX_USER, addr)
                 image_file = thumbnail_file
 
             img = Image.open(image_file)
             image_w, image_h = img.size
-            return '<img src="%s" width="%s" height="%s" alt="%s">' % (url, image_w, image_h, addr)
+            html = '<img src="%s" width="%s" height="%s" alt="%s">' % (url, image_w, image_h, addr)
+            if large_url:
+                html = '<a href="%s">%s</a>' % (large_url, html)
+            return html
+
     if not defs.IMAGE_PLACEHOLDER:
         return re.sub(CUSTOM_TAG_IMAGE, replacer, text)
     else:
@@ -117,11 +123,11 @@ def handle_custom_tag_mp3(input):
     regex = MP3
     return re.sub(regex, replacer, input)
 
-MIXCLOUD = re.compile("\[\s*(http://)?(www.)?mixcloud.com/([a-zA-Z0-9-]+)/([a-zA-Z0-9-]+)/?\s*\]", re.IGNORECASE)
+MIXCLOUD = re.compile("\[\s*((http://)?(www.)?mixcloud.com/([a-zA-Z0-9-]+)/([a-zA-Z0-9-]+)/?)\s*\]", re.IGNORECASE)
 
 # [http://www.mixcloud.com/user/mixname/]
 def handle_custom_tag_mixcloud(input):
-    replace  = '<object height="400" width="400"><param name="movie" value="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\3%2F\\4%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\3%2F\\4%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="400" width="400"></object>'
+    replace  = u'<object height="300" width="400"><param name="movie" value="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\4%2F\\5%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="http://www.mixcloud.com/media/swf/player/mixcloudLoader.swf?feed=http%3A%2F%2Fwww.mixcloud.com%2F\\4%2F\\5%2F&amp;embed_uuid=3b4627b1-74e1-43ef-bc52-717acca644d4&amp;embed_type=widget_standard" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="300" width="400"></object><p><a href="\\1">The mix at mixcloud&nbsp;\u2197</a></p>'
     return re.sub(MIXCLOUD, replace, input)
 
 SC_TRACK = re.compile("\[\s*soundcloud\s+([0-9]+)\s*\]", re.IGNORECASE)
