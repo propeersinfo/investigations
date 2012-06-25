@@ -220,15 +220,20 @@ def get_related_articles(article):
 #
 #        return None
 
-    the_tag = tags_categorized.get_tag_for_related_articles(article.tags)
-    if the_tag:
-        blog_meta = BlogMeta.instance()
-        ra = blog_meta.articles_by_tags[the_tag]
-        ra = [ a for a in ra if a.meta['slug'] != article.slug ]
-        random.shuffle(ra)
-        return ra[:3]
+    blog_meta = BlogMeta.instance()
+
+    if article.see_list:
+        ra = [ blog_meta.articles_by_slugs[slug] for slug in article.see_list ]
+        ra = map(lambda md: article_from_markup(md), ra)
     else:
-        return []
+        the_tag = tags_categorized.get_tag_for_related_articles(article.tags)
+        if the_tag:
+            ra = blog_meta.articles_by_tags[the_tag]
+            ra = [ a for a in ra if a.meta['slug'] != article.slug ]
+            random.shuffle(ra)
+            return ra[:3]
+        else:
+            return []
 
 class ArticleDataStoreMock():
     def __init__(self, clever_object, meta):
@@ -249,6 +254,7 @@ class ArticleDataStoreMock():
             self.path = utils.get_article_path(self)
             self.url = utils.get_article_url(self)
             self.guid = utils.get_article_guid(self)
+            self.see_list = ['my-electro-proto-rap-mix-1982-92'] if meta.has_key('see') else None
 
             self.related_articles = get_related_articles(self)
 

@@ -304,5 +304,6 @@ ul.archive em.date {
 }
 .see-also ul {
 	margin-top: 0;
+	margin-bottom: 0.3em;
 	padding-left: 0;
 }

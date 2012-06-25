@@ -166,7 +166,12 @@ _tag_table =\
     [u'kuut'              , u'vocalist'     , u'Marju Kuut'            , u''     ],
     [u'jazz-fusion'       , u'genre'        , u''                      , u''     ],
     [u'jazz-comfort'      , u'jazz'         , u'Jazz Comfort'          , u''     ],
-    [u'tantsurutme'       , u'series'       , u'Tantsurütme 7"s'     , u''     ],
+    [u'tantsurutme'       , u'series'       , u'Tantsurütme 7"s'       , u''     ],
+    [u'straume'           , u'jazz'         , u'Egils Straume'         , u''     ],
+    [u'paulus'            , u'jazz'         , u'Tiit Paulus'           , u''     ],
+    [u'steady-rock'       , u'modern'       , u'Steady Rock'           , u''     ],
+    [u'yan-shrimp'        , u'modern'       , u'Yan Shrimp'            , u''     ],
+    [u'morozov'           , u'ensemble'     , u'Yuri Morozov'          , u''     ],
     
 ]
 
