@@ -154,8 +154,24 @@ def handle_custom_tag_playlist(input):
     replace = '<object width="240" height="200"><embed src="%s" width="240" height="200" type="application/x-shockwave-flash" flashvars="&xml=http://dl.dropbox.com/u/%s/sg/\\1&autoreplay=1" quality="high"></embed></object>' % (swf, defs.DROPBOX_USER)
     return re.sub(MP3_PLAYLIST, replace, input)
 
+# the order is important
+MARKUP_LINK_REGEXPS = [
+    # [one two] ~> http://ya.ru
+    r'\[([^\]]+)\]\s*~>\s*(http[^\s]+)',
+    # one ~> http://ya.ru
+    r'([^\s]+)\s*~>\s*(http[^\s]+)'
+]
+def handle_markup_link(input):
+    def replacer_text_link(m):
+        return '<a href="%s">%s</a>' % (m.group(2), m.group(1))
+    for r in MARKUP_LINK_REGEXPS:
+        input = re.sub(r, replacer_text_link, input)
+    return input
+
 def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = True, config = None):
     html = markup_text
+    if rich_markup:
+        html = handle_markup_link(html)
     if rich_markup and recognize_links:
         html = handle_custom_tag_http_link(html)
     if rich_markup:
@@ -168,3 +184,17 @@ def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = Tru
         html = handle_custom_tag_soundcloud_playlist(html)
     html = html.replace('\n', '<br>\n') # NB: the last transformation
     return html
+
+def assert_handle_markup_link(input, golden):
+    actual = handle_link(input)
+    if actual != golden:
+        print 'test failed'
+        print 'golden: %s' % golden
+        print 'actual: %s' % actual
+        raise Exception('a test failed - execution interrupted')
+
+if __name__ == '__main__':
+    assert_handle_markup_link('before text ~> http://ya.ru after', 'before <a href="http://ya.ru">text</a> after')
+    assert_handle_markup_link('before text~>http://ya.ru after', 'before <a href="http://ya.ru">text</a> after')
+    assert_handle_markup_link('before [one two] ~> http://ya.ru after', 'before <a href="http://ya.ru">one two</a> after')
+    print 'tests passed'
