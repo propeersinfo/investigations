@@ -16,14 +16,15 @@ def filter_tag_text(s):
     regexps = {
         # characters inacceptable for certain FS's
         r'[/\\]': '#',
-        r':': ' - ',
-        r';': ' # ',
+        r'([^\s]):([^\s])': '\\1-\\2',  # aaa:bbb  => aaa-bbb
+        r':': ' - ',                    # aaa: bbb => aaa - bbb
+        r';': '.',
         #r';': ' # ',
         r'[\?\*<>]': '',
         r'["]': '\'',
         # to be applied last
         r'\.+$': '',   # any trailing dots
-        r'[ \t]+': ' ', # two spaces to one
+        r'\s+': ' ', # two spaces to one
     }
     for regex in regexps:
         replace = regexps[regex]
@@ -33,7 +34,8 @@ def filter_tag_text(s):
     return s
 
 def ascii_only(s):
-    return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
+    #return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
+    return unicode(s)
 
 def get_common_artist(audios):
     def to_string(obj):
