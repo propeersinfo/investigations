@@ -7,12 +7,16 @@
 
 {% block main %}
 
+	{#
 	{% if paging_title %}
 		<p>There are {{articles_count}} articles tagged <b>{{tag_title}}</b>:</p>
 	{% endif %}
+	#}
 
 	{% if about_text %}
 		<p>{{ about_text }}</p>
+	{% else %}
+		<p>There are {{articles_count}} articles tagged <b>{{tag_title}}</b>:</p>
 	{% endif %}
 
 	<ul class="archive">
