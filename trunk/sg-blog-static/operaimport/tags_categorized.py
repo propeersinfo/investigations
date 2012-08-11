@@ -155,7 +155,7 @@ _tag_table =\
     [u'video'             , u'misc'         , u''                      , u''     ],
     [u'mr-and-7'          , u'modern'       , u'Mr. And-7'             , u''     ],
     [u'jazz-78'           , u'series'       , u'Jazz-78'               , u'Джаз-78'     ],
-    [u'tantsurutme'       , u'series'       , u'Tantsurütme 7   "s'       , u'Танцевальные ритмы'     ],
+    [u'tantsurutme'       , u'series'       , u'Tantsurütme 7"s'       , u'Танцевальные ритмы'     ],
     [u'arsenal'           , u'jazz'         , u'Arsenal'               , u'Арсенал'     ],
     [u'estradines-melodijos'  , u'ensemble' , u'Estradinės Melodijos'  , u'Эстрадные мелодии'     ],
     [u'gazizov'           , u'composer'     , u'Robert Gazizov'        , u''     ],
