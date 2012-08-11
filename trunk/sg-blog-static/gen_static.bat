@@ -1,4 +1,5 @@
 rm -f html\*
+rm -f html\page\*
 rm -f html\special\*
 rm -f html\tag\*
 

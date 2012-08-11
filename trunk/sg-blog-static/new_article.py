@@ -1,5 +1,7 @@
 # coding=utf-8
 
+# utility script adding new article to the static blog
+
 import codecs
 import os
 import datetime

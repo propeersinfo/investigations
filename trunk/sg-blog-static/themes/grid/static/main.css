@@ -53,6 +53,11 @@ div strong
     color: #333;
 }
 
+blockquote {
+	font-family: serif;
+	font-style: italic;
+}
+
 a         { color: #0000cc; }
 a:visited { color: #838; }
 a:hover   { color: #f33; }
@@ -110,7 +115,7 @@ img.logo:hover {
 .sidebar-tags ul li {
 	margin-bottom: 0.25em;
 }
-.sidebar-tags ul li span {
+.sidebar-tags ul li .count {
 	color: grey;
 	font-size: 85%;
 }
@@ -121,8 +126,17 @@ img.logo:hover {
     color: #333;
 	padding-bottom: 4px;
 }
+.sidebar-panel li.title-compact {
+	font-weight: bold;
+    color: #333;
+}
 .sidebar-panel ul {
 	margin-bottom: 20px;
+}
+
+.sidebar-panel .note {
+	font-family: serif !important;
+	font-style: italic;
 }
 
 /* Article region */

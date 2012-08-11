@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block title %}
-	{% if single_article %}
-		{{single_article.title|escape}} - Soviet Rare Groove
-	{% else %}
-		Soviet Rare Groove
-	{% endif %}
+	{{ defs.BLOG_NAME }} - {{ tag_title }}
 {% endblock %}
 
 
 {% block main %}
 
 	{% if paging_title %}
-		<p>{{ paging_title|typographus|safe|escape }}</p>
+		<p>There are {{articles_count}} articles tagged <b>{{tag_title}}</b>:</p>
+	{% endif %}
+
+	{% if about_text %}
+		<p>{{ about_text }}</p>
 	{% endif %}
 
 	<ul class="archive">

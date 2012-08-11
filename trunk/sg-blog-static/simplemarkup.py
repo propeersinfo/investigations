@@ -88,20 +88,22 @@ def handle_custom_tag_http_link(input):
 
 YOUTUBE_1 = re.compile("\[\s*(http://)?(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9-_]+)\s*\]", re.IGNORECASE)
 YOUTUBE_2 = re.compile("\[\s*(http://)?(www\.)?youtube\.com/v/([a-zA-Z0-9-_]+)(\?.*)?\s*\]", re.IGNORECASE)
+#YT_DIM = (480, 360)
+YT_DIM = (300, 225)
 
 # [http://www.youtube.com/watch?v=XXXXXXXXX]
 def handle_custom_tag_youtube(input):
     def form1(input):
         regex = YOUTUBE_1
         replace = '<a href="http://www.youtube.com/watch?v=\\3">'\
-                  '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'\
-                  '</a>\n<a href="http://www.youtube.com/watch?v=\\3">http://www.youtube.com/watch?v=\\3</a>'
+                  '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="%d" height="%d">'\
+                  '</a>' % YT_DIM
         return re.sub(regex, replace, input)
     def form2(input):
         regex = YOUTUBE_2
         replace = '<a href="http://www.youtube.com/watch?v=\\3">'\
-                  '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="480" height="360">'\
-                  '</a>\n<a href="http://www.youtube.com/watch?v=\\3">http://www.youtube.com/watch?v=\\3</a>'
+                  '<img class="youtube" ytid="\\3" src="http://img.youtube.com/vi/\\3/0.jpg" width="%d" height="%d">'\
+                  '</a>' % YT_DIM
         return re.sub(regex, replace, input)
     input = form1(input)
     input = form2(input)
@@ -141,7 +143,7 @@ SC_PLAYLIST = re.compile("\[\s*soundcloud-playlist\s+([0-9]+)\s*\]", re.IGNORECA
 
 # [soundcloud-playlist 12345]
 def handle_custom_tag_soundcloud_playlist(input):
-    replace  = '<object height="115" width="100%"><param name="movie" value="http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F\\1&amp;amp;show_comments=false&amp;amp;auto_play=false&amp;amp;show_playcount=false&amp;amp;show_artwork=false&amp;amp;color=ff7700"><param name="allowscriptaccess" value="never"><embed height="115" src="http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F\\1&amp;amp;show_comments=false&amp;amp;auto_play=false&amp;amp;show_playcount=false&amp;amp;show_artwork=false&amp;amp;color=ff7700" type="application/x-shockwave-flash" width="100%" allowscriptaccess="never"></embed></object>'
+    replace  = '<object height="200" width="100%"><param name="movie" value="http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F\\1&amp;amp;show_comments=false&amp;amp;auto_play=false&amp;amp;show_playcount=false&amp;amp;show_artwork=false&amp;amp;color=ff7700"><param name="allowscriptaccess" value="never"><embed height="200" src="http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F\\1&amp;amp;show_comments=false&amp;amp;auto_play=false&amp;amp;show_playcount=false&amp;amp;show_artwork=false&amp;amp;color=ff7700" type="application/x-shockwave-flash" width="100%" allowscriptaccess="never"></embed></object>'
     return re.sub(SC_PLAYLIST, replace, input)
 
 MP3_PLAYLIST = re.compile('\[dewplaylist\s+([^\]]+)\]', re.IGNORECASE)
@@ -157,15 +159,20 @@ def handle_custom_tag_playlist(input):
 # the order is important
 MARKUP_LINK_REGEXPS = [
     # [one two] ~> http://ya.ru
-    r'\[([^\]]+)\]\s*~>\s*(http[^\s]+)',
+    r'\[([^\]]+)\]\s*~>\s*(http://[\.a-z0-9]+[^\s]+)',
     # one ~> http://ya.ru
-    r'([^\s]+)\s*~>\s*(http[^\s]+)'
+    r'([^\s]+)\s*~>\s*(http://[\.a-z0-9]+[^\s]+)'
 ]
 def handle_markup_link(input):
     def replacer_text_link(m):
         return '<a href="%s">%s</a>' % (m.group(2), m.group(1))
     for r in MARKUP_LINK_REGEXPS:
         input = re.sub(r, replacer_text_link, input)
+    return input
+
+def handle_emphasis(input):
+    REGEX = ur'((^)|(?<=\s))  \*([^\s][^*]*[^\s])\*  ((?=[\s.,;!?])|($))'
+    input = re.sub(REGEX, '<em>\\3</em>', input, flags = re.VERBOSE)
     return input
 
 def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = True, config = None):
@@ -182,6 +189,7 @@ def markup2html_paragraph(markup_text, rich_markup = True, recognize_links = Tru
         html = handle_custom_tag_mixcloud(html)
         html = handle_custom_tag_soundcloud_track(html)
         html = handle_custom_tag_soundcloud_playlist(html)
+    html = handle_emphasis(html)
     html = html.replace('\n', '<br>\n') # NB: the last transformation
     return html
 
