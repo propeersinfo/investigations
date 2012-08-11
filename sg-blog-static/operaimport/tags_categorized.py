@@ -2,50 +2,50 @@
 
 _tag_table =\
 [
-    [u'isaac shwartz'      , u'composer' , u'Isaac Shwartz'      , u'Исаак Шварц'       ],
+    [u'shwartz'            , u'composer' , u'Isaac Shwartz'      , u'Исаак Шварц'       ],
     [u'70s'                , u'time'     , u'70\'s'              , u''                   ],
     [u'movie'              , u'misc'     , u''                   , u''                   ],
     [u'ye-ye'              , u'genre'    , u'yé-yé'              , u''                   ],
     [u'60s'                , u'time'     , u'60\'s'              , u''                   ],
     [u'funk'               , u'genre'    , u''                   , u''                   ],
     [u'armenia'            , u'region'   , u'armenia'            , u''                   ],
-    [u'orchestra groove'   , u'genre'    , u'orchestra groove'   , u''                   ],
+    [u'orchestra-groove'   , u'genre'    , u'orchestra groove'   , u''                   ],
     [u'tukhmanov'          , u'composer' , u'David Tukhmanov'    , u'Давид Тухманов'     ],
     [u'vodograi'           , u'ensemble' , u'Vodograi'           , u'Водограй'           ],
-    [u'dear boy'           , u'misc'     , u''                   , u''                   ],
+    [u'dear-boy'           , u'misc'     , u''                   , u''                   ],
     [u'psychedelic'        , u'genre'    , u''                   , u''                   ],
     [u'ensembles'          , u'misc'     , u''                   , u''                   ],
     [u'ukraine'            , u'region'   , u'ukraine'            , u''                   ],
-    [u'veselye rebyata'    , u'ensemble' , u'Veselye Rebyata'    , u'ВИА Веселые ребята'     ],
-    [u'poyushie serdca'    , u'ensemble' , u'Poyushie Serdtsa'   , u'ВИА Поюшие сердца'      ],
-    [u'evgeny gevorgyan'   , u'composer' , u'Yevgeny Gevorgyan'  , u'Евгений Геворгян'   ],
+    [u'veselye-rebyata'    , u'ensemble' , u'Veselye Rebyata'    , u'ВИА Веселые ребята'     ],
+    [u'poyushie-serdca'    , u'ensemble' , u'Poyushie Serdtsa'   , u'ВИА Поюшие сердца'      ],
+    [u'gevorgyan'          , u'composer' , u'Yevgeny Gevorgyan'  , u'Евгений Геворгян'   ],
     [u'sci-fi'             , u'misc'     , u''                   , u''                   ],
     [u'krylatov'           , u'composer' , u'Yevgeny Krylatov'   , u'Евгений Крылатов'   ],
     [u'motorcycle'         , u'misc'     , u''                   , u''                   ],
     [u'garanyan'           , u'jazz'     , u'Georgy Garanyan'    , u'Георгий Гаранян'    ],
     [u'azerbaijan'         , u'region'   , u'azerbaijan'         , u''                   ],
     [u'bulbuloglu'         , u'composer' , u'Polad Bülbüloğlu'   , u'Полад Бюль-бюль Оглы' ],
-    [u'muslim magomayev'   , u'vocalist' , u'Muslim Magomayev'   , u'Муслим Магомаев'   ],
-    [u'gradsky'            , u'ensemble' , u'Alexander Gradsky'  , u'Александр Градский' ],
+    [u'magomayev'          , u'vocalist' , u'Muslim Magomayev'   , u'Муслим Магомаев'   ],
+    [u'gradsky'            , u'ensemble' , u'Alexander Gradsky'  , u'Александр Градский и ансамбль "Скоморохи"' ],
     [u'best'               , u'misc'     , u''                   , u''                   ],
     [u'melodia'            , u'jazz'     , u'Melodiya'           , u'Ансамбль Мелодия'            ],
-    [u'alexander zatsepin' , u'composer' , u'Alexander Zatsepin' , u'Александр Зацепин'  ],
-    [u'aida vedisheva'     , u'vocalist' , u'Aida Vedisheva'     , u'Аида Ведишева'      ],
+    [u'zatsepin'           , u'composer' , u'Alexander Zatsepin' , u'Александр Зацепин'  ],
+    [u'vedisheva'          , u'vocalist' , u'Aida Vedisheva'     , u'Аида Ведишева'      ],
     [u'pop'                , u'genre'    , u''                   , u''                   ],
-    [u'gennadiy gladkov'   , u'composer' , u'Gennadiy Gladkov'   , u'Геннадий Гладков'   ],
+    [u'gladkov'            , u'composer' , u'Gennadiy Gladkov'   , u'Геннадий Гладков'   ],
     [u'eurocrime'          , u'genre'    , u''                   , u''                   ],
     [u'disco'              , u'genre'    , u''                   , u''                   ],
     [u'avilov'             , u'ensemble' , u'Avilov\'s Rhythm'   , u'ВИА Ритм п/у Авилова'   ],
-    [u'alla pugachova'     , u'vocalist' , u'Alla Pugachova'     , u'Алла Пугачёва'      ],
+    [u'pugachova'          , u'vocalist' , u'Alla Pugachova'     , u'Алла Пугачёва'      ],
     [u'80s'                , u'time'     , u"80's"               , u''                   ],
     [u'soul'               , u'genre'    , u''                   , u''                   ],
     [u'plamya'             , u'ensemble' , u'Plamya'             , u'ВИА Пламя'              ],
-    [u'igor nazaruk'       , u'jazz'     , u'Igor Nazaruk'       , u'Игорь Назарук'      ],
+    [u'nazaruk'            , u'jazz'     , u'Igor Nazaruk'       , u'Игорь Назарук'      ],
     [u'jazz-funk'          , u'genre'    , u''                   , u''                   ],
     [u'jazz'               , u'genre'    , u''                   , u''                   ],
     [u'imants kalnins'     , u'composer' , u'Imants Kalniņš'     , u'Имантс Калнынш'     ],
     [u'latvia'             , u'region'   , u'latvia'             , u''                   ],
-    [u'edita pyekha'       , u'vocalist' , u'Edita Piekha'       , u'Эдита Пьеха'        ],
+    [u'pyekha      '       , u'vocalist' , u'Edita Piekha'       , u'Эдита Пьеха'        ],
     [u'qaya'               , u'ensemble' , u'Qaya'               , u'Вокальный квартет Гая' ],
     [u'mix'                , u'misc'     , u''                   , u''                   ],
     [u'soulviet'           , u'misc'     , u''                   , u''                   ],
@@ -56,38 +56,38 @@ _tag_table =\
     [u'konstantin orbelian', u'jazz'     , u'Konstantin Orbelyan', u'Константин Орбелян' ],
     [u'belarus'            , u'region'   , u'belarus'            , u''                   ],
     [u'verasy'             , u'ensemble' , u'Verasy'             , u'Верасы'            ],
-    [u'raimonds pauls'     , u'composer' , u'Raimonds Pauls'     , u'Раймонд Паулс'     ],
-    [u'library mood'       , u'genre'    , u'library mood'       , u''                   ],
-    [u'jazz groove'        , u'genre'    , u''                   , u''                   ],
+    [u'pauls'              , u'composer' , u'Raimonds Pauls'     , u'Раймонд Паулс'     ],
+    [u'library-mood'       , u'genre'    , u'library mood'       , u''                   ],
+    [u'jazz-groove'        , u'genre'    , u''                   , u''                   ],
     [u'beat'               , u'genre'    , u''                   , u''                   ],
     [u'eolika'             , u'ensemble' , u'Eolika'             , u'Эолика'             ],
-    [u'david goloschekin'  , u'jazz'     , u'David Goloschekin'  , u'Давид Голощекин'    ],
+    [u'goloschekin'        , u'jazz'     , u'David Goloschekin'  , u'Давид Голощекин'    ],
     [u'art-rock'           , u'genre'    , u''                   , u''                   ],
-    [u'space funk'         , u'genre'    , u''                   , u''                   ],
+    [u'space-funk'         , u'genre'    , u''                   , u''                   ],
     [u'zodiac'             , u'ensemble' , u'Zodiac'             , u'Зодиак'             ],
     [u'moldavia'           , u'region'   , u'moldavia'           , u''                   ],
-    [u'maria codrianu'     , u'vocalist' , u'Maria Codrianu'     , u'Мария Кодриану'     ],
+    [u'codrianu'           , u'vocalist' , u'Maria Codrianu'     , u'Мария Кодриану'     ],
     [u'orizont'            , u'ensemble' , u'Orizont'            , u'Оризонт'            ],
-    [u'happy euro'         , u'genre'    , u'happy euro'         , u''                   ],
-    [u'golubye gitary'     , u'ensemble' , u'Golubye Gitary'     , u'Голубые Гитары'    ],
+    [u'happy-euro'         , u'genre'    , u'happy euro'         , u''                   ],
+    [u'golubye-gitary'     , u'ensemble' , u'Golubye Gitary'     , u'Голубые Гитары'    ],
     [u'shake'              , u'genre'    , u''                   , u''                   ],
     [u'surf'               , u'genre'    , u''                   , u''                   ],
-    [u'rock atelye'        , u'ensemble' , u'Rock Atelye'        , u'Рок-Ателье'        ],
-    [u'all tracks'         , u'misc'     , u''                   , u''                   ],
+    [u'rock-atelye'        , u'ensemble' , u'Rock Atelye'        , u'Рок-Ателье'        ],
+    [u'all-tracks'         , u'misc'     , u''                   , u''                   ],
     [u'info'               , u'misc'     , u''                   , u''                   ],
     [u'modo'               , u'ensemble' , u'Modo'               , u'Модо'               ],
-    [u'dj jankie'          , u'modern'   , u'Jan-Kit'            , u''                   ],
+    [u'jan-kit'            , u'modern'   , u'Jan-Kit'            , u''                   ],
     [u'estonia'            , u'region'   , u'estonia'            , u''                   ],
     [u'vitamiin'           , u'ensemble' , u'Vitamiin'           , u'Витамин'           ],
     [u'kazakhstan'         , u'region'   , u'kazakhstan'         , u''                   ],
     [u'dos-mukasan'        , u'ensemble' , u'Dos-Mukasan'        , u'Дос–Мукасан'        ],
     [u'garage'             , u'genre'    , u''                   , u''                   ],
     [u'georgia'            , u'region'   , u'georgia'            , u''                   ],
-    [u'disco band'         , u'ensemble' , u'Disco Band'         , u'Оркестр и вокальная группа Диско'         ],
+    [u'disco-band'         , u'ensemble' , u'Disco Band'         , u'Оркестр и вокальная группа Диско'         ],
     [u'links'              , u'misc'     , u''                   , u''                   ],
     [u'vdokhnovenie'       , u'ensemble' , u'Vdokhnovenie'       , u'Вдохновенье'        ],
     [u'iveriya'            , u'ensemble' , u'Iveriya'            , u'Иверия'             ],
-    [u'boris rychkov'      , u'composer' , u'Boris Rychkov'      , u'Борис Рычков'       ],
+    [u'rychkov'            , u'composer' , u'Boris Rychkov'      , u'Борис Рычков'       ],
     [u'poyushie-gitary'    , u'ensemble' , u'Poyushie Gitary'    , u'Поюшие Гитары'     ],
     [u'uzbekistan'         , u'region'   , u'uzbekistan'         , u''                   ],
     [u'big beat'           , u'genre'    , u''                   , u''                   ],
@@ -103,8 +103,8 @@ _tag_table =\
     [u'musical'            , u'genre'    , u''                   , u''                   ],
     [u'lithuania'          , u'region'   , u'lithuania'          , u''                   ],
     [u'kuprevicius'        , u'composer' , u'Giedrius Kuprevicius', u'Гедриус Купревичус'],
-    [u'vainshtein'         , u'jazz'     , u'Iosif Weinstein'    , u'Иосиф Вайнштейн'    ],
-    [u'uno naissoo'        , u'composer' , u'Uno Naissoo'        , u'Уно Наиссоо'        ],
+    [u'weinstein'          , u'jazz'     , u'Iosif Weinstein'    , u'Иосиф Вайнштейн'    ],
+    [u'naissoo'            , u'composer' , u'Uno Naissoo'        , u'Уно Наиссоо'        ],
     [u'fix'                , u'ensemble' , u'Fix'                , u'Фикс'                ],
     [u'syabry'             , u'ensemble' , u'Syabry'             , u'Сябры'              ],
     [u'progressive'        , u'genre'    , u''                   , u''                   ],
@@ -122,10 +122,10 @@ _tag_table =\
     [u'blues'              , u'genre'    , u''                   , u''                   ],
     [u'folk'               , u'genre'    , u''                   , u''                   ],
     [u'pesnyary'           , u'ensemble' , u'Pesnyary'           , u'Песняры'            ],
-    [u'groove beats'       , u'genre'    , u''                   , u''                   ],
+    [u'groove-beats'       , u'genre'    , u''                   , u''                   ],
     [u'oktava'             , u'ensemble' , u'Oktava'             , u'Октава'             ],
     [u'theatre'            , u'genre'    , u''                   , u''                   ],
-    [u'tonis magi'         , u'vocalist' , u'Tõnis Mägi'         , u'Тынис Мяги'         ],
+    [u'magi'               , u'vocalist' , u'Tõnis Mägi'         , u'Тынис Мяги'         ],
     [u'orchestra'          , u'genre'    , u''                   , u''                   ],
     [u'saulsky'            , u'composer' , u'Yuri Saulsky'       , u'Юрий Саульский'     ],
     [u'azerbayjan'         , u'region'   , u'azerbayjan'         , u''                   ],
@@ -141,7 +141,7 @@ _tag_table =\
     [u'bboybreaks'         , u'genre'    , u''                   , u''                   ],
     [u'ariel'              , u'ensemble' , u'Ariel'              , u'Ариэль'             ],
     [u'tajikistan'         , u'region'   , u'Tajikistan'         , u''                   ],
-    [u'jaan kuman'         , u'jazz'     , u'Jaan Kuman'         , u'Яан Куман'          ],
+    [u'kuman'              , u'jazz'     , u'Jaan Kuman'         , u'Яан Куман'          ],
     [u'kyrgyzstan'         , u'region'   , u'kyrgyzstan'         , u''                   ],
     [u'moldova'            , u'region'   , u'moldova'            , u''                   ],
     [u'russia'             , u'region'   , u'russia'             , u''                   ],
@@ -155,9 +155,9 @@ _tag_table =\
     [u'video'             , u'misc'         , u''                      , u''     ],
     [u'mr-and-7'          , u'modern'       , u'Mr. And-7'             , u''     ],
     [u'jazz-78'           , u'series'       , u'Jazz-78'               , u'Джаз-78'     ],
-    [u'tantsurutme'       , u'series'       , u'Tantsurütme 7"s'       , u'Танцевальные ритмы'     ],
-    [u'arsenal'           , u'jazz'         , u'Arsenal'               , u''     ],
-    [u'estradines-melodijos'  , u'ensemble' , u'Estradinės Melodijos'  , u''     ],
+    [u'tantsurutme'       , u'series'       , u'Tantsurütme 7   "s'       , u'Танцевальные ритмы'     ],
+    [u'arsenal'           , u'jazz'         , u'Arsenal'               , u'Арсенал'     ],
+    [u'estradines-melodijos'  , u'ensemble' , u'Estradinės Melodijos'  , u'Эстрадные мелодии'     ],
     [u'gazizov'           , u'composer'     , u'Robert Gazizov'        , u''     ],
     [u'recognize'         , u'misc'         , u''                      , u''     ],
     [u'modern'            , u'misc'         , u''                      , u''     ],
@@ -288,18 +288,51 @@ if __name__ == '__main__':
 
     _tag_table.sort(key=lambda row: row[1])
 
-    #cats = dict()
-    #for row in _tag_table:
-
-
+    cats = dict_of_lists()
     for row in _tag_table:
+        cats.append(row[1], row)
+
+    def print_property(property_name, property_value, require_value = False):
+        if property_value or require_value:
+            #print type(property_name), type(property_value)
+            property_value = property_value.replace('"', '\\"')
+            pn_quoted = '"%s"' % property_name
+            print u'      %-10s : "%s",' % (pn_quoted, property_value)
+
+    print 'tags_by_category = ['
+    for cat in cats.keys():
+        rows = cats[cat]
         print '{'
-        new_column_order = [ 1, 0, 2, 3 ]
-        for offset in new_column_order:
-            property_name = column_names_by_offset[offset]
-            property_value = row[offset]
-            if property_value:
-                #print type(property_name), type(property_value)
-                pn_quoted = '"%s"' % property_name
-                print u'  %-10s : "%s",' % (pn_quoted, property_value)
-        print '},'
+        print '  "category": "%s",' % cat
+        print ''
+        print '  "tags": ['
+        for row in rows:
+            print '    {'
+            new_column_order = [ 0, 2, 3 ]
+            for offset in new_column_order:
+                property_name = column_names_by_offset[offset]
+                property_value = row[offset]
+                print_property(property_name, property_value)
+
+            if cat != 'misc' and cat != 'time':
+                for property_name in [ 'descr_en', 'descr_ru', 'urls' ]:
+                    print_property(property_name, '', True)
+
+            #descr_en = None
+            #descr_ru = None
+            #if cat == 'ensemble':
+            #    descr_en = u'An official ensemble from Russia. Established 197x.'
+            #    #descr_ru = u'Вокально-инстурментальный ансамбль из. Основан в 197x году.'
+            #if descr_en:
+            #    print_property('descr_en', descr_en)
+            #if descr_ru:
+            #    print_property('descr_ru', descr_ru)
+
+            #                if property_value:
+#                    #print type(property_name), type(property_value)
+#                    pn_quoted = '"%s"' % property_name
+#                    print u'      %-10s : "%s",' % (pn_quoted, property_value)
+            print '    },'
+
+        print '],'
+    print ']'
