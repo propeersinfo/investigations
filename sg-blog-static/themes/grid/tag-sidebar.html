@@ -3,12 +3,15 @@
 
 		<ul>
 		<li>{{ ''|blog_tag_cnt(tag_cloud, "best", "Favourites") }}</li>
-		<li>{{ ''|blog_tag_cnt(tag_cloud, "mix", "Mixes &amp; comps") }}</li>
+		<li>{{ ''|blog_tag_cnt(tag_cloud, "mix", "Mixes") }}</li>
+		<li><a href="/tag/all.html">Site map</a></li>
 		</ul>
 		
 		<ul>
-		<li><a href="/tag/all.html">Site map</a></li>
-		<li><a href="{{defs.RSS_URL}}">Subscribe&thinsp;/&thinsp;RSS</a> <a href="{{defs.RSS_URL}}"><img src="{{'rss10x10.png'|static_resource}}" style="vertical-align: middle;"></a>
+		<li class="title-compact">Subscribe:</li>
+		<li>
+			<a href="{{defs.RSS_URL}}" class="caps">rss</a>
+			<a href="http://sovietgroove.livejournal.com/" class="caps">жж</a>
 		</ul>
 		
 	    <ul>
@@ -32,7 +35,6 @@
 	    </ul>
 
 	    {% if a_listing_page %}
-	    	&nbsp;<br>
 	    	&nbsp;<br>
 		    {% include "links.html" %}
 	    {% endif %}

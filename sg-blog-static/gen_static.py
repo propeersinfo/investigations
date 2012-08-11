@@ -73,7 +73,7 @@ def render_template(template_name, variables):
         mapp = tag_cloud.articles_by_tags
         count = len(mapp[blog_tag_name]) if mapp.has_key(blog_tag_name) else 0
         if count > 0:
-            return '<a href="/tag/%s.html">%s</a> <span>%s</span>' % (blog_tag_name, blog_tag_title, count)
+            return '<a href="/tag/%s.html">%s</a> <span class="count">%s</span>' % (blog_tag_name, blog_tag_title, count)
         else:
             return '%s' % blog_tag_title
     def sidebar_link(value, title, description, url):
@@ -331,7 +331,13 @@ def generate_tag(tag_name):
     mds = sorted(mds, key=lambda md: md.meta['date'], reverse=True)
     articles = [ article_from_markup(md) for md in mds ]
     #raise Exception('%s' % (len(mds),))
+
+    about_text = tags_categorized.get_about_text(tag_name)
+
     template_variables = {
+    	'tag_title':    tag_name,
+        'about_text':   about_text,
+    	'articles_count': len(mds),
         'paging_title': 'There are %d articles tagged <b>%s</b>:' % (len(mds), tag_name),
         'articles':     articles,
         'tag_cloud':    blog_meta,

@@ -85,8 +85,8 @@ function replaceYoutubeImageWithClip(img) {
 	var ytid = img.getAttribute('ytid');
 	
 	repl = document.createElement('iframe');
-	repl.setAttribute('width', 480);
-	repl.setAttribute('height', 360);
+	repl.setAttribute('width', 300);
+	repl.setAttribute('height', 225);
 	repl.setAttribute('src', 'http://www.youtube.com/embed/'+ytid+'?autoplay=1&theme=dark');
 	repl.setAttribute('frameborder', 0);
 	repl.setAttribute('allowfullscreen', 1);
@@ -96,7 +96,7 @@ function replaceYoutubeImageWithClip(img) {
 function prepareYoutubeClips() {
   $("img.youtube").each(function(pos,img){
     var preview = img.src;
-    img.style.background = "black url(" + preview + ")";
+    img.style.background = "black url(" + preview + ") 50% 50%";
     img.src = "/static/playvideo480.png";
     var a = img.parentNode;
     if(a) {

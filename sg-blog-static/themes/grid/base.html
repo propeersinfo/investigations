@@ -27,7 +27,7 @@ DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/
 
 <div class="row top">
 	<div class="width_2">
-		<a href="/"><img class="logo" src="{{ 'logo-transp.png'|static_resource }}" alt="Soviet Groove" border="0"/></a>
+		<a href="{{defs.CANONICAL_BLOG_URL}}"><img class="logo" src="{{ 'logo-transp.png'|static_resource }}" alt="Soviet Groove" border="0"/></a>
 	</div>
 	<div class="width_6">
 		<div class="row about">
@@ -91,9 +91,7 @@ cool music from USSR of the
 	</div>
 
     <div class="width_2">
-    {#
-    {% include "external-links.html" %}
-    #}
+    	{% include "wanted.html" %}
     </div>
 </div>
 
@@ -101,15 +99,15 @@ cool music from USSR of the
 	<div class="width_2"><p>
 		&nbsp;
 	</p></div>
-	<div class="width_7"><p>
+	<div class="width_5"><p>
 		2009&minus;2012 <a href="mailto:mail@sovietgroove.com">mail@sovietgroove.com</a><br>
-		Offers and questions are acceptable
+		Your works, vinyl rips and questions are welcome.<br>
+		Высылайте миксы, рипы, в частности.
 	</p></div>
-	{#
 	<div class="width_3"><p>
-		&nbsp;
+		Get your <a href="http://db.tt/d8tftcJ">2&nbsp;GB Dropbox</a> for free.
+		One the most useful piece of software ever.
 	</p></div>
-	#}
 </div>
 
 {% include "googleanalytics.html" %}

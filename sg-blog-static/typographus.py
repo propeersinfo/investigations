@@ -181,13 +181,13 @@ rules_symbols = compile_ruleset(
     (r':+', r':'),
     (r',+', r','),
     
-    (r'\+\++', '++'),
-    (r'--+', '--'),
-    (r'===+', '==='),
+    #(r'\+\++', '++'),
+    #(r'--+', '--'),
+    #(r'===+', '==='),
     
     # убиваем эмобредни
-    (r'!+\?+[!|\?]*', '?!'),
-    (r'\?+!+[!|\?]*', '?!'),
+    #(r'!+\?+[!|\?]*', '?!'),
+    #(r'\?+!+[!|\?]*', '?!'),
 
     # знаки (c), (r), (tm)
     (ur'\([cс]\)', sym['copy'], re.I), # русский и латинский варианты
@@ -197,7 +197,7 @@ rules_symbols = compile_ruleset(
     (r'\s+(?=[%s|%s|%s])' % (sym['trade'], sym['copy'], sym['reg']), ''),
     
     # автор неправ. скорее всего малолетки балуются
-    (ur'\.{2,}', sym['hellip']),
+    (ur'\.{3,}', sym['hellip']),
     
     # спецсимволы для 1/2 1/4 3/4
     (ur'\b1/2\b', sym['1/2']),
@@ -220,17 +220,17 @@ rules_symbols = compile_ruleset(
     (r'(-+%s+|%s+-+)\s+(?=\S)' % (arrow_right, arrow_left), r'\1' + sym['nbsp']), # неразрывные пробелы после стрелок
     
     # стрелки
-    (r'<+-+', sym['larr']),
-    (r'-+>+', sym['rarr']),
+    #(r'<+-+', sym['larr']),
+    #(r'-+>+', sym['rarr']),
     
     )
 
 rules_quotes = compile_ruleset(
     
     # разносим неправильные кавычки
-    #(ur'([^"]\w+)"(\w+)"', u'\g<1> "\g<2>"'),
+    (ur'([^"]\w+)"(\w+)"', u'\g<1> "\g<2>"'),
     (ur'([^"]\S+)"(\S+)"', ur'\1 "\2"'),
-    (ur'"(\S+)"(\S+)', ur'"\1" \2'),
+    #(ur'"(\S+)"(\S+)', ur'"\1" \2'),
     
     # превращаем кавычки в ёлочки. Двойные кавычки склеиваем.
     # ((?:«|»|„|“|&quot;|"))((?:\.{3,5}|[a-zA-Zа-яА-Я_]|\n))
@@ -315,7 +315,7 @@ rules_main = compile_ruleset(
     (u'(\d+)\s?(%s)' % counts, u'\g<1>%s\g<2>' % sym['nbsp'], re.S),
     
     #«уе» в денежных суммах
-    (u'(\d+|%s)\s?уеs' % counts, u'\g<1>%sу.е.' % sym['nbsp']),
+    #(u'(\d+|%s)\s?уеs' % counts, u'\g<1>%sу.е.' % sym['nbsp']),
     
     # Денежные суммы, расставляя пробелы в нужных местах.
     (u'(\d+|%s)\s?(%s)' %(counts, money), u'\g<1>%s\g<2>' % sym['nbsp'], re.S),
@@ -334,7 +334,7 @@ rules_main = compile_ruleset(
 
 rules_smiles = compile_ruleset(
     
-    (r'[:|;|-]*?\){3,}', sym[':)']),
+    #(r'[:|;|-]*?\){3,}', sym[':)']),
     
 )
 
@@ -409,8 +409,15 @@ class Typographus:
         if string.strip() == '':
             return ''
         
-        for rule_set in (rules_strict, rules_main, rules_symbols, rules_braces,
-                         rules_quotes, rules_smiles, final_cleanup):
+        for rule_set in (
+                         rules_strict,
+                         rules_main,
+                         rules_symbols,
+                         rules_braces,
+                         rules_quotes,
+                         rules_smiles,
+                         final_cleanup
+                         ):
             string = reduce(lambda string, rule: rule(string), rule_set, string)
         
         # вложенные кавычки

@@ -68,13 +68,15 @@
 				<a href="/tag/{{tag}}.html" class="tag">{{tag}}</a>
 			{% endfor %}
 			</td><td valign=top nowrap>
+{#
 {% if single_article %}
-
+#}
 				<a href="https://twitter.com/intent/tweet?status={{article.title|urlencode}}%20{{article.url|urlencode}}" onclick="return share_popup(this.href);" title="Tweet"><img src="/static/tw.png?v={{defs.APP_VERSION}}" alt="Tweet"></a>
 				<a href="http://www.facebook.com/sharer/sharer.php?src=sp&u={{article.url|urlencode}}&t={{article.title|urlencode}}" onclick="return share_popup(this.href);" title="Share in Facebook"><img src="/static/fb.png?v={{defs.APP_VERSION}}" alt="Share in Facebook"></a>
 				<a href="http://vk.com/share.php?url={{article.url|urlencode}}&title={{article.title|urlencode}}" onclick="return share_popup(this.href);" title="Поделиться ВКонтакте"><img src="/static/vk.png?v={{defs.APP_VERSION}}" alt="Поделиться ВКонтакте"></a>
-
+{#
 {% endif %}
+#}
 		</td></tr></table>
 	    
 {% endif %}
