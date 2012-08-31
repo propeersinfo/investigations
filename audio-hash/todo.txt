@@ -1,0 +1,9 @@
+audio hash
+- read flac via metaflac
+- mass test against foobar2000
+- mass test against mplayer
+- mass self test hash before and after the tag written
+- make sure albums uploaded onto narod are hashed correctly to the new algorithm
++ when calculating hash by my algorithm, test the result against mplayer's one
+
++ case insensitive search in audio hash files made by mp3tag

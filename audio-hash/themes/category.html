@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+/ {{category_title}}
+{% endblock %}
+
+{% block category %}
+/ {{category_title}}
+{% endblock %}
+
+
+{% block main %}
+
+<ol class="lotta_links">
+{% for album in albums %}
+	<li><a href="/{{album.album_hash}}.html">{{album.title|escape|typo}}</a>
+{% endfor %}
+</ol>
+
+{% endblock main %}

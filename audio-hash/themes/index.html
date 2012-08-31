@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block category %}
+<img src="/static/years.png">
+{% endblock %}
+
+
+{% block main %}
+
+	{#
+	<ol class="lotta_links">
+	{% for cat in scg.categories %}
+		<li><a href="/{{cat}}.html">{{cat}}</a></li>
+	{% endfor %}
+	</ol>
+	#}
+
+	<ol class="lotta_links">
+	{% for cat in cats %}
+		<li><a href="/{{cat.name}}.html">{{cat.title}} ({{cat.count}})</a></li>
+	{% endfor %}
+	</ol>
+	
+{% endblock main %}

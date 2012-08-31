@@ -1,0 +1,111 @@
+@font-face {
+    font-family: 'DroidSans';
+    src: url('fonts/DroidSans-webfont.eot');
+    src: url('fonts/DroidSans-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/DroidSans-webfont.woff') format('woff'),
+         url('fonts/DroidSans-webfont.ttf') format('truetype'),
+         url('fonts/DroidSans-webfont.svg#DroidSansRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DroidSans';
+    src: url('fonts/DroidSans-Bold-webfont.eot');
+    src: url('fonts/DroidSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/DroidSans-Bold-webfont.woff') format('woff'),
+         url('fonts/DroidSans-Bold-webfont.ttf') format('truetype'),
+         url('fonts/DroidSans-Bold-webfont.svg#DroidSansBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: Helvetica, 'DroidSans', sans-serif;
+}
+h1 {
+	font-size: 180%;
+}
+div, p, ul, ol, li {
+	font-family: serif;
+	font-size: 105%;
+}
+
+ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.footer {
+	margin-top: 2em;
+	font-size: 85%;
+	color: #444;
+}
+.footer p {
+	margin: 0.3em;
+}
+.footer a {
+	color: black;
+}
+
+body {
+	background: url('/static/punkte_pink_edit.jpg');
+	background-attachment:fixed;
+	margin: 20px;
+}
+
+#everything {
+	height: 100%;
+	width: 800px;
+	margin: auto;
+	padding: 10px 50px;
+	background: white;
+}
+
+a {
+	color: #CC345D;
+}
+a:hover {
+	color: #CC345D;
+}
+.path a {
+	color: #111;
+	text-decoration: none;
+}
+.path a:hover {
+	text-decoration: underline;
+}
+.lotta_links a {
+	color: black;
+	text-decoration: none;
+}
+.lotta_links a:hover {
+	color: #CC345D;
+	text-decoration: none;
+}
+
+.columns {
+	overflow:hidden;
+}
+.left {
+	width:230px;
+	float:left;
+}
+.right {
+	margin-left: 230px;
+}
+
+.right ul, .right ol {
+	margin: 0;
+}
+
+/* site name + path */
+h2.path {
+	color: #111;
+	margin-bottom:0;
+}
+/* title of an album */
+h1 {
+	color: #CC345D;
+	margin-top: 0.2em;
+}

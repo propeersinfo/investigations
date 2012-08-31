@@ -1,0 +1,43 @@
+<!doctype html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>
+		Советский архив {% block title %}{% endblock %}
+	</title>
+	<link href="/static/main.css" type="text/css" rel="stylesheet"/>
+	<link rel="icon" href="/static/favicon.png" type="image/x-icon"/>
+</head>
+
+
+<body>
+
+<div id="everything">
+
+<h2 class="path">
+	<a href="/">
+		<img src="/static/crash.png" style="margin-left:0px;">
+	</a>
+	<span style="vertical-align:9px;">
+		{% block category %}{% endblock %}
+	</span>
+</h2>
+
+{% block main %}{% endblock %}
+
+<div class="footer">
+	<p>	Год две тысячи двенадцатый.
+		<a href="mailto:arkiv@yandex.ru">arkiv@yandex.ru</a><br>
+	<!--Всего здесь {{scg.total_size}} байт.<br>-->
+	<p>	Сайт создан исключительно для ознакомления россиян с культурным наследием своей страны
+		и не преследует целей заработка.
+		После прослушивания данных музыкальных материалов пользователь обязан удалить их
+		со своих устройств.
+	<p> Расшифровка. EP, 000, С62, Г62, М62 — миньоны 7". LP, С60, М30 — гиганты 12".
+	<p style="display:none;">
+		Всего здесь {{scg.total_size|format_size}}.
+</div>
+
+</div>
+
+</body>

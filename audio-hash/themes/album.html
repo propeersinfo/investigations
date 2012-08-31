@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+/ {{ album.title }}
+{% endblock %}
+
+{% block category %}
+/ <a href="/{{category}}.html">{{category_title}}</a>
+{% endblock %}
+
+{% block main %}
+
+<h1>{{ album.title|typo }}</h1>
+
+<div class="columns">
+	<div class="left">
+		<img src="/static/generic.jpg" width="200">
+	</div>
+	<div class="right">
+		<ul>
+		{% for track in album.tracks %}
+			<li>{{ track.file_name|typo }}
+		{% endfor %}
+		</ul>
+		<p>
+			<a href="{{ album.url }}">Скачать</a>
+			{{ album.audio_format|upper }}
+			<i>x</i> kbps,
+			{{ album.total_size | format_size_mb }} MB
+		</p>
+	</div>
+</div>
+
+{% endblock main %}
