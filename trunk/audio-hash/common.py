@@ -16,7 +16,7 @@ RECOGNIZED_AUDIO_EXTENSIONS = [ 'mp3', 'flac', 'ape' ]
 
 
 def check_hex_digest(hex_str):
-    return not not re.match('[0-9A-Fa-f]{32}', hex_str)
+    return not not re.match('^[0-9A-Fa-f]{32}$', hex_str)
 
 
 def append_file(file, content):
