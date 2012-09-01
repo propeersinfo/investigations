@@ -10,7 +10,7 @@ import hashlib
 
 from common import SafeStreamFilter
 from common import dict_of_lists
-from common import get_album_sizes
+from common import check_hex_digest
 from common import format_size_mb
 from common import Album
 
@@ -28,8 +28,9 @@ def get_volumes():
     volume = {
       'name': volume_name,
     }
+    volumes.append(volume)
     for album_json_short in os.listdir(volume_dir):
-      if len(album_json_short) == 32:
+      if check_hex_digest(album_json_short):
         album_json_abs = os.path.join(volume_dir, album_json_short)
         try:
           with codecs.open(album_json_abs, 'r', 'utf-8') as f:
@@ -42,11 +43,8 @@ def get_volumes():
           print 'cannot read file %s' % album_json_abs
           raise
 
-    volumes.append(volume)
-
-  hashes_unique = [(hash, albums[0]) for hash, albums in all_album_hashes.items() if len(albums) == 1]
+  hashes_unique = [ albums[0] for hash, albums in all_album_hashes.items() if len(albums) == 1]
   #hashes_duplicated = [ (hash,albums)    for hash,albums in all_album_hashes.items() if len(albums) >  1 ]
-
   return volumes, hashes_unique#, hashes_duplicated
 
 
@@ -57,16 +55,13 @@ if __name__ == '__main__':
   list_file = '%s.list' % base_name
 
   volumes, hashes_unique = get_volumes()
-
-  # sort by album['path']
-  hashes_unique = sorted(hashes_unique, key=lambda tuple: tuple[1]['path'])
-
+  hashes_unique = sorted(hashes_unique, key=lambda album: album['path'])
   with codecs.open(list_file, 'w', 'utf-8') as f:
-    for (hash, album) in hashes_unique:
+    for album in hashes_unique:
       album = Album(album)
       dir = album['path']
       dir_size = album['total_size']
       fmt = album.get_audio_format()
-      line = u'%s %s %-4s %s' % (hash, format_size_mb(dir_size), fmt, dir)
+      line = u'%s %4s %-4s %s' % (album['album_hash'], format_size_mb(dir_size), fmt, dir)
       print >> f, line
       print >> sys.stdout, line

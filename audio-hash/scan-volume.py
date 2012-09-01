@@ -41,6 +41,15 @@ if __name__ == '__main__':
     volume_name = sys.argv[2]
     #hash_file = sys.argv[3]
 
+    #print u'root_dir: %s' % root_dir
+
+    if type(root_dir) == str:
+        print 'decoding...'
+        root_dir = root_dir.decode('windows-1251') # todo: how to rewrite that in a general way?
+        #root_dir = root_dir.decode('cp866')
+
+    #print u'root_dir: %s' % root_dir
+
     assert os.path.exists(root_dir) and os.path.isdir(root_dir)
     #assert os.path.exists(hash_file) and os.path.isfile(hash_file)
 
