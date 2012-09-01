@@ -1,5 +1,5 @@
 audio hash
-- read flac via metaflac
++ read flac via metaflac
 - mass test against foobar2000
 - mass test against mplayer
 - mass self test hash before and after the tag written
