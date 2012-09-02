@@ -11,11 +11,14 @@ import codecs
 import re
 import cherrypy
 from cherrypy.lib.static import serve_file
+from time import mktime
+from datetime import datetime
 import jinja2
 from jinja2 import Environment, FileSystemLoader
 
 # import gen_static
 # import utils
+import time
 
 from common import Album
 from common import format_size
@@ -171,7 +174,8 @@ def gen_index_page():
   template_variables = {
     'scg': scg,
     'cats': cats,
-  }
+    'up_date': datetime.fromtimestamp(time.mktime(time.localtime())),
+    }
   return render_template('index.html', template_variables)
 
 

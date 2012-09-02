@@ -37,6 +37,11 @@ def empty_files(*files):
     write_file(file, '')
 
 
+def read_file(file):
+  with codecs.open(file, 'r', 'utf-8') as f:
+    return f.read()
+
+
 # try to cut off the given start of the string
 # case insensitive
 def cut_start(title, pattern):
