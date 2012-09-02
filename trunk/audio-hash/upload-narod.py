@@ -125,6 +125,7 @@ def main():
         hash1, size, fmt, dir = re.split(r'\s+', line.strip(), 3)
         if dir:
           if not os.path.exists(dir):
+            print 'directory does not exist: %s' % dir
             raise Exception('directory does not exist: %s' % dir)
           entries.append((hash1, size, fmt, dir))
     except UnicodeDecodeError:
