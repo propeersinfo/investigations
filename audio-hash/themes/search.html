@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}
+/ Поиск
+{% endblock %}
+
+{% block search_link %}
+<h2><span class="text active_path">Поиск</span></h2>
+{% endblock %}
+
+{% block main %}
+
+<style type="text/css">
+    input#search {
+        width:100%;
+        font-size:125%;
+    }
+</style>
+
+<script type="text/javascript">
+    var the_albums = [
+        /*
+        {
+            "words": "the beatles white album onion helter skelter",
+            "title": "The Beatle - White Album",
+            "url": "/111111.html"
+        },
+        {
+            "words": "the beatles rubber soul",
+            "title": "The Beatles - Rubber Soul",
+            "url": "/22222.html"
+        },
+        {
+            "words": "queen a night at the opera",
+            "title": "Queen - A night at the opera",
+            "url": "/33333.html"
+        },
+        {
+            "words": "давид тухманов",
+            "title": "Давид Тухманов",
+            "url": "/33333.html"
+        }
+        */
+        {% for album in albums %}
+            {
+            "words": "{{ album.words() }}",
+            "title": "{{ album.title() }}",
+            "url": "{{ album.html_location() }}"
+            }
+            {% if not loop.last %}
+            ,
+            {% endif %}
+        {% endfor %}
+    ];
+
+    function match_every_word(album, words) {
+        var i = 0;
+        for(i = 0; i < words.length; i++) {
+            if(album['words'].indexOf(words[i]) < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function do_search(search_text) {
+        search_text = search_text.replace(/^\s+|\s+$/g, ''); // strip
+        if(search_text.length == 0) {
+            return [];
+        }
+        search_text = search_text.toLowerCase();
+        var words = search_text.split(/[ ]+/);
+        var res = [];
+        var i;
+        for(i = 0; i < the_albums.length; i++) {
+            if(match_every_word(the_albums[i], words)) {
+                //alert('found an album!');
+                res.push(the_albums[i]);
+            }
+        }
+        //return [ the_albums[0], the_albums[1] ];
+        return res;
+    }
+
+    $(document).ready(function() {
+        var search = $('input#search');
+        var search_results = $('#search_results');
+        search.focus();
+        search.keyup(function() {
+            var search_text = search.val();
+            //alert('search_text = ' + search_text);
+            found_albums = do_search(search_text);
+            var i;
+            search_results.html('');
+            for(i = 0; i < found_albums.length; i++) {
+                var a = found_albums[i];
+                search_results.append(
+                        "<li><a href='"+ a['url'] +"'>" + a['title'] + "</li>"
+                );
+            }
+        });
+    });
+</script>
+
+
+<p>
+    <input id="search" type="text" placeholder="Введите слова для поиска">
+</p>
+
+<ol id="search_results">
+
+</ol>
+
+<noscript>
+    Для работы поиска нужен включённый JavaScript.
+</noscript>
+
+{% endblock main %}

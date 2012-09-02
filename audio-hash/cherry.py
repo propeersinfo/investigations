@@ -114,8 +114,8 @@ class StaticContentGenerator:
           if tail.lower().startswith(artist.lower()):
             album['title'] = tail
 
-        if album['album_hash'] == '0F8193D06B89CA743E8D47C35B502C23' or album['album_hash'] == '9654C84839B7826CCBE7451B88AAA866':
-          print 'album[title]: %s' % [album['title']]
+        #if album['album_hash'] == '0F8193D06B89CA743E8D47C35B502C23' or album['album_hash'] == '9654C84839B7826CCBE7451B88AAA866':
+        #  print 'album[title]: %s' % [album['title']]
 
         # filter out some stuff
         subs = [
