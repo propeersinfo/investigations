@@ -19,28 +19,6 @@
 
 <script type="text/javascript">
     var the_albums = [
-        /*
-        {
-            "words": "the beatles white album onion helter skelter",
-            "title": "The Beatle - White Album",
-            "url": "/111111.html"
-        },
-        {
-            "words": "the beatles rubber soul",
-            "title": "The Beatles - Rubber Soul",
-            "url": "/22222.html"
-        },
-        {
-            "words": "queen a night at the opera",
-            "title": "Queen - A night at the opera",
-            "url": "/33333.html"
-        },
-        {
-            "words": "давид тухманов",
-            "title": "Давид Тухманов",
-            "url": "/33333.html"
-        }
-        */
         {% for album in albums %}
             {
             "words": "{{ album.words() }}",
@@ -107,7 +85,7 @@
     <input id="search" type="text" placeholder="Введите слова для поиска">
 </p>
 
-<ol id="search_results">
+<ol id="search_results" class="lotta_links">
 
 </ol>
 
