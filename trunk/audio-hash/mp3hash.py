@@ -11,10 +11,12 @@ import glob
 import hashlib
 import struct
 import os
+import math
 from mutagen.id3 import ID3NoHeaderError
 from mutagen.easyid3 import EasyID3
+import time
 
-from common import check_hex_digest
+from common import check_hex_digest, empty_files
 from common import SafeStreamFilter
 from common import append_file
 
@@ -22,7 +24,11 @@ from common import append_file
 AUDIO_HASH_ID3_TAG = 'AUDIOHASH'
 AUDIO_HASH_MUTAGEN_KEY = AUDIO_HASH_ID3_TAG.lower()
 
+AUDIO_HASH_TIME_ID3_TAG = 'AUDIOHASHTIME'
+AUDIO_HASH_TIME_MUTAGEN_KEY = AUDIO_HASH_TIME_ID3_TAG.lower()
+
 EasyID3.RegisterTXXXKey(AUDIO_HASH_MUTAGEN_KEY, AUDIO_HASH_ID3_TAG)
+EasyID3.RegisterTXXXKey(AUDIO_HASH_TIME_MUTAGEN_KEY, AUDIO_HASH_TIME_ID3_TAG)
 
 
 def read_flac_audio_hash(file):
@@ -35,27 +41,49 @@ def read_flac_audio_hash(file):
     return hash if check_hex_digest(hash) else None
 
 
-def read_audio_hash_tag(mp3):
+def read_mp3_audio_hash_tag(mp3):
+  def get_recheck_flag(audio):
+    TIME_DIFFERENCE_TSHLD = 5 # in seconds; because writing tags to mp3 could take some time
+    recheck = True
     try:
-        value = EasyID3(mp3).get(AUDIO_HASH_MUTAGEN_KEY)
-        return value[0] if value else None
-    except ID3NoHeaderError:
-        return None
+      time_tagged = audio[AUDIO_HASH_TIME_MUTAGEN_KEY][0]
+    except KeyError:
+      return True
+    #print 'time_tagged: %s' % time_tagged
+    if time_tagged:
+      diff = os.path.getmtime(mp3) - float(time_tagged)
+      #print 'time difference: %s' % diff
+      if abs(diff) < TIME_DIFFERENCE_TSHLD:
+        recheck = False
+    #print 'recheck? %s' % recheck
+    return recheck
+
+  try:
+    audio = EasyID3(mp3)
+    hash = audio.get(AUDIO_HASH_MUTAGEN_KEY)
+    if hash:
+      return hash[0], get_recheck_flag(audio)
+    else:
+      return None, None
+  except ID3NoHeaderError:
+    return None, None
 
 
-def write_audio_hash_tag(mp3, hash):
+def write_mp3_audio_hash_tag(mp3, hash):
     try:
         audio = EasyID3(mp3)
     except ID3NoHeaderError:
         audio = EasyID3()
     audio[AUDIO_HASH_MUTAGEN_KEY] = hash
+    audio[AUDIO_HASH_TIME_MUTAGEN_KEY] = str(time.time())
     audio.save(mp3)
 
 
 def read_audio_data_hash_by_extension(file):
     ext = os.path.splitext(file)[1].lower()
     if ext == '.mp3':
-        return read_audio_hash_tag(file)
+        hash, recheck = read_mp3_audio_hash_tag(file)
+        return hash
     elif ext == '.flac':
         return read_flac_audio_hash(file)
     else:
@@ -258,11 +286,15 @@ def main_update():
 
     def do_mp3(file):
         append_file(GENERAL_LOG, 'File %s ...' % file)
-        h_tag = read_audio_hash_tag(file)
+        h_tag, recheck = read_mp3_audio_hash_tag(file)
+        do_write = True
         if h_tag:
+            do_write = False
             if not check_hex_digest(h_tag):
                 append_file(ERROR_LOG, 'ERROR: invalid hash %s stored in file %s' % (h_tag, file))
-        else:
+            elif recheck:
+              do_write = True
+        if do_write:
             h_123 = calc_mp3_audio_hash_mpg123(file)
             if h_123:
                 assert check_hex_digest(h_123)
@@ -270,11 +302,11 @@ def main_update():
                 try:
                     # mp3 tagging is dangerous so do a test write first
                     shutil.copy(file, tmp)
-                    write_audio_hash_tag(tmp, h_123)
+                    write_mp3_audio_hash_tag(tmp, h_123)
 
                     h_re = calc_mp3_audio_hash_mpg123(tmp)
                     if h_re == h_123:
-                        write_audio_hash_tag(file, h_123)
+                        write_mp3_audio_hash_tag(file, h_123)
                     else:
                         append_file(ERROR_LOG, u'# ERROR: file got different hash sum after tagging! Original file not affected: %s' % file)
                         append_file(ERROR_LOG, win32api.GetShortPathName(file))
@@ -285,9 +317,10 @@ def main_update():
                 append_file(BADMP3_LOG, "# %s" % file)
                 append_file(BADMP3_LOG, win32api.GetShortPathName(file))
 
-    append_file(ERROR_LOG,  '#-----------------------------')
-    append_file(BADMP3_LOG, '#-----------------------------')
-    append_file(GENERAL_LOG, '#-----------------------------')
+    empty_files(ERROR_LOG, BADMP3_LOG, GENERAL_LOG)
+    #append_file(ERROR_LOG,  '#-----------------------------')
+    #append_file(BADMP3_LOG, '#-----------------------------')
+    #append_file(GENERAL_LOG, '#-----------------------------')
 
     def collect_mp3s(root_dir):
         files = []
@@ -326,19 +359,21 @@ def main_show_hash():
     target = sys.argv[2]
     def do_mp3(mp3):
         #print '%s...' % mp3
-        tagged_hash = read_audio_hash_tag(mp3)
+        tagged_hash, recheck = read_mp3_audio_hash_tag(mp3)
         #actual_hash = calc_mp3_audio_hash(mp3)
         #actual_hash_2 = calc_mp3_audio_hash_mplayer(mp3)
-        actual_hash = calc_mp3_audio_hash_mpg123(mp3)
+        #actual_hash = calc_mp3_audio_hash_mpg123(mp3)
         eq1 = '?'
-        if tagged_hash and actual_hash:
-            eq1 = 'eq' if tagged_hash == actual_hash else 'NE'
+        #if tagged_hash and actual_hash:
+        #    eq1 = 'eq' if tagged_hash == actual_hash else 'NE'
         #eq2 = 'eq' if actual_hash == actual_hash_2 else 'NE'
         #print '%s %s %s %-2s %-2s %s' % (actual_hash, actual_hash_2, actual_hash_3, eq1, eq2, mp3)
         #print '(print a value from id3 also!)'
 
         #print '%s %-2s %s' % (actual_hash, eq1, mp3)
-        print '%s %s' % (actual_hash, mp3)
+        #print '%s %s' % (actual_hash, mp3)
+        recheck_str = 'RE' if recheck else 'ok'
+        print '%s %s %s' % (tagged_hash, recheck_str, mp3)
 
     if os.path.isfile(target):
         do_mp3(target)
@@ -356,8 +391,10 @@ def main_check_tag():
     target = sys.argv[2]
     def do_mp3(mp3):
         status = '?'
+        recheck_str = None
         try:
-            h_tag = read_audio_hash_tag(mp3)
+            h_tag, recheck = read_mp3_audio_hash_tag(mp3)
+            recheck_str = 'RE' if recheck else 'ok'
             if not h_tag:
                 return None
             h_123 = calc_mp3_audio_hash_mpg123(mp3)
@@ -369,7 +406,7 @@ def main_check_tag():
             status = 'eq' if eq else 'NE'
             return eq
         finally:
-            print '%-2s %s' % (status, win32api.GetShortPathName(mp3))
+            print '%-2s %2s %s' % (status, recheck_str, win32api.GetShortPathName(mp3))
 
     class Stat:
         def __init__(self):
@@ -425,9 +462,9 @@ if __name__ == '__main__':
         #'test_external':  main_self_test_against_external_programs,
         'update':    main_update,
         #'update': main_update_files,
-        'hash':   main_show_hash,
+        'show':   main_show_hash,
         'strip':  main_strip_tags,
-        'info':   main_info,
+        'debug':  main_info,
         'check': main_check_tag,
     }
     actions[sys.argv[1]]()
