@@ -50,6 +50,7 @@ ul {
 
 body {
 	background: url('/static/punkte_pink_edit.jpg');
+	background: url('/static/waves.jpg');
 	background-attachment:fixed;
 	margin: 20px;
 }
@@ -64,9 +65,10 @@ body {
 
 a {
 	color: #CC345D;
+	color: #871628;
+	color: #EF212E;
 }
 a:hover {
-	color: #CC345D;
 }
 .path a {
 	color: #111;
@@ -75,12 +77,16 @@ a:hover {
 .path a:hover {
 	text-decoration: none;
 	color: #CC345D;
+	color: #871628;
+	color: #EF212E;
 }
 .path .text {
 	vertical-align: 9px;
 }
 .active_path {
 	color: #CC345D;
+	color: #871628;
+	color: #EF212E;
 }
 .lotta_links a {
 	color: black;
@@ -88,6 +94,8 @@ a:hover {
 }
 .lotta_links a:hover {
 	color: #CC345D;
+	color: #871628;
+	color: #EF212E;
 	text-decoration: none;
 }
 
@@ -114,5 +122,6 @@ h2.path {
 /* title of an album */
 h1 {
 	color: #CC345D;
+	color: #EF212E;
 	margin-top: 0.2em;
 }
