@@ -32,6 +32,8 @@ def cat_title(cat_name):
         u'vocalists': u'Вокалисты',
         u'instrumental': u'Инструментальная музыка',
         u'ukraine': u'Украина',
+        u'composers': u'Композиторы',
+        u'via': u'ВИА',
     }
     return CAT_TITLES.get(cat_name, cat_name)
 
@@ -101,14 +103,25 @@ class StaticContentGenerator:
             album['category'] = 'misc'
         #album['category'] = cat_title(album['category'])
 
-        title = re.sub(r'\\', ' / ', title)
         album['title'] = title
+        album['title'] = re.sub(r'\\', '/', album['title'])
+
+        # 'John Doe/John Doe - Album' ==> 'John Doe - Album'
+        slash = album['title'].find('/')
+        if slash > 0:
+          artist = album['title'][0:slash]
+          tail = album['title'][slash+1 : ]
+          if tail.lower().startswith(artist.lower()):
+            album['title'] = tail
 
         # filter out some stuff
         subs = [
-            [  u'\s*-\s*?.искография', '', re.IGNORECASE ],
-            [  u'\s*\(.искография\)', '', re.IGNORECASE ],
-            [  u'\s*FLAC$', '', re.IGNORECASE ],
+            [  ur'\s*-\s*?.искография', '', re.I ],
+            [  ur'\s*\(.искография\)', '', re.I ],
+            [  ur'\s*FLAC$', '', re.I ],
+            [  ur'\s+\dCD/CD', ' CD', re.I ], # '3CD/CD1' => 'CD1'
+            # apply it among last ones
+            [  ur'/', ' / ', re.I ],
         ]
         for sub in subs:
             album['title'] = re.sub(sub[0], sub[1], album['title'], flags=sub[2])
@@ -135,6 +148,7 @@ def generate_static_site():
         write_file(file_long, content)
 
     save_page('index.html', gen_index_page())
+    save_page('search.html', gen_search_page())
     for cat_name in scg.categories.keys():
         save_page('%s.html' % cat_name, gen_category_page(cat_name))
     for album_hash in scg.albums.keys():
@@ -185,6 +199,38 @@ def gen_album_page(album_hash):
     return render_template('album.html', template_variables)
 
 
+def filter_search_input(s):
+  ''' NB: do not joint the words because something unexpected results could be found '''
+  s = re.sub(ur'[^0-9a-zA-Zа-яА-Я]+', ' ', s)
+  s = s.strip()
+  words = re.split(' +', s)
+  return ' '.join(set(words)).lower()
+
+
+class SearchableAlbum:
+  def __init__(self, real_album):
+    self.real_album = real_album
+  def words(self):
+    s = self.real_album['title']
+    for track in self.real_album['tracks']:
+      s += ' %s' % track['file_name']
+    return filter_search_input(s)
+  def title(self):
+    return self.real_album['title']
+  def html_location(self):
+    return '/%s.html' % self.real_album['album_hash']
+
+def gen_search_page():
+  scg = StaticContentGenerator.get_instance(DB_ROOT)
+  albums = sorted(scg.albums.values(), key=lambda album: album['title'].lower())
+  albums = [ SearchableAlbum(album) for album in albums ]
+  vars = {
+    'scg': scg,
+    'albums': albums,
+  }
+  return render_template('search.html', vars)
+
+
 def cut_mandatory_html_extension(s):
     m = re.match('(.+)\.html', s, re.IGNORECASE)
     if m:
@@ -218,6 +264,10 @@ class Root:
             return gen_category_page(slug)
         else:
             raise cherrypy.NotFound()
+
+    @cherrypy.expose(alias="search.html")
+    def search(self):
+      return gen_search_page()
 
     # @cherrypy.expose
     # def reset(self):
