@@ -32,6 +32,11 @@ def write_file(file, content):
         f.write(content)
 
 
+def empty_files(*files):
+  for file in files:
+    write_file(file, '')
+
+
 # try to cut off the given start of the string
 # case insensitive
 def cut_start(title, pattern):
