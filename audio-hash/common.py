@@ -224,8 +224,13 @@ def archive_dir(dir, arc_name):
 
 class Album(dict):
   def get_audio_format(self):
+    '''
+    Actually return extension of the first file.
+    It is assumed every file in an album has the same extension.
+    '''
     if len(self['tracks']) > 0:
-      return os.path.splitext(self['tracks'][0]['file_name'])[1][1:].upper()
+      a_fname = self['tracks'][0]['file_name']
+      return os.path.splitext(a_fname)[1][1:].upper()
     else:
       return None
 

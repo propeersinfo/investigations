@@ -61,6 +61,7 @@ body {
 	margin: auto;
 	padding: 10px 50px 30px 50px;
 	background: white;
+	border-radius: 5px;
 }
 
 a {
