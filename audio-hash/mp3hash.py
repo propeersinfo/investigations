@@ -17,9 +17,7 @@ from mutagen.easyid3 import EasyID3
 import time
 
 from common import check_hex_digest, empty_files
-from common import SafeStreamFilter
 from common import append_file
-
 
 AUDIO_HASH_ID3_TAG = 'AUDIOHASH'
 AUDIO_HASH_MUTAGEN_KEY = AUDIO_HASH_ID3_TAG.lower()
@@ -343,7 +341,9 @@ def main_update():
       else:
         sys.stdout.write('.')
 
-      do_mp3(file)
+      if os.path.exists(file):
+        # file may disappear after its name has been collected
+        do_mp3(file)
 
     except KeyboardInterrupt:
       print >> sys.stderr, 'KeyboardInterrupt happened'

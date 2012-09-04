@@ -8,15 +8,34 @@ import zipfile
 import glob
 import codecs
 import hashlib
-import unicodedata
 from StringIO import StringIO
+from mutagen.flac import FLAC
+from mutagen.mp3 import MP3
+from utils import pretty_print_json_as_readable_unicode
 
 MIN_FILES_IN_ALBUM = 2
-RECOGNIZED_AUDIO_EXTENSIONS = ['mp3', 'flac', 'ape']
+RECOGNIZED_AUDIO_EXTENSIONS = [ 'mp3', 'flac', 'ape' ]
+ALLOWED_AUDIO_EXTENSIONS    = [ 'mp3', 'flac' ]
+
+
+def tmpfile():
+  from tempfile import NamedTemporaryFile
+  return NamedTemporaryFile(delete=False).name
+
+
+def list_multiple_lists(list1, list2):
+  assert len(list1) == len(list2)
+  for i,elem1 in enumerate(list1):
+    yield elem1, list2[i]
 
 
 def check_hex_digest(hex_str):
   return not not re.match('^[0-9A-Fa-f]{32}$', hex_str)
+
+
+def listdir(dir):
+  for file in os.listdir(dir):
+    yield file, os.path.join(dir, file)
 
 
 def append_file(file, content):
@@ -50,36 +69,6 @@ def cut_start(title, pattern):
   return title
 
 
-#class CaseInsensitiveDict(dict):
-#    def __setitem__(self, key, value):
-#        return super(CaseInsensitiveDict, self).__setitem__(key.lower(), value)
-#    def __getitem__(self, key):
-#        return super(CaseInsensitiveDict, self).__getitem__(key.lower())
-#    def get(self, key, default=None):
-#        return super(CaseInsensitiveDict, self).get(key.lower(), default)
-#    def __contains__(self):
-#        raise Exception('is not implemented yet')
-#    def has_key(self, key):
-#        raise Exception('is not implemented yet')
-#
-#
-#def collect_audio_hashes(audio_hash_file):
-#    hash_by_file = CaseInsensitiveDict()
-#    #hash_by_file = {}
-#    with codecs.open(audio_hash_file, 'r', 'utf-8') as f:
-#        for line in f:
-#            hash, fname = line.strip().split(' ', 1)
-#            hash = hash.strip()
-#            fname = fname.strip()
-#            if len(hash) > 0 and ord(hash[0]) == 65279:
-#                # strip first three fucking unicode bytes written by mp3tag
-#                hash = hash[1:]
-#            if hash != '<ERROR>':
-#                assert len(hash) == 32, u'Bad hash %s' % hash
-#                hash_by_file[fname] = hash
-#    return hash_by_file
-
-
 class AudioHashFromFileDictionary(dict):
   def __getitem__(self, key):
     return self.get(key)
@@ -103,12 +92,28 @@ def collect_audio_hashes():
   return AudioHashFromFileDictionary()
 
 
-def get_audio_files(dir, warnings=None):
-  def warn(msg):
-    if warnings:
-      print >> warnings, msg
+class NotAlbumException(Exception):
+  class Cause:
+    def __init__(self, name, serious=True):
+      self.name = name
+      self.serious = serious
+    def __str__(self):
+      return self.name
+  NO_AUDIO_FILES = Cause("NA", False)
+  NOT_CONTINUOUS = Cause("NC")
+  COUNTER_FAILED = Cause("CF")
+  A1_NOT_IMPLEMENTED = Cause("A1")
+  UNKNOWN_PATTERN = Cause("UP")
+  AUDIO_FORMAT = Cause("AF")
+  MIN_FILES = Cause("MF")
+  def __init__(self, code, dir, msg = None):
+    super(Exception, self).__init__('%s for %s ' % (msg, dir))
+    self.code = code
+    self.dir = dir
+    self.msg = msg
 
-  deprecated_ext = ['ape']
+
+def get_audio_files(dir):
   files_by_ext = {}
   for ext in RECOGNIZED_AUDIO_EXTENSIONS:
     mask = '*.%s' % ext
@@ -117,21 +122,18 @@ def get_audio_files(dir, warnings=None):
       files_by_ext[ext] = files
 
   if len(files_by_ext) == 0:
-    return [], None
+    raise NotAlbumException(NotAlbumException.NO_AUDIO_FILES, dir)
   elif len(files_by_ext) == 1:
     ext = files_by_ext.keys()[0]
-    if ext.lower() in deprecated_ext:
-      warn('format %s is deprecated' % ext)
-      return [], None
+    if ext.lower() not in ALLOWED_AUDIO_EXTENSIONS:
+      raise NotAlbumException(NotAlbumException.AUDIO_FORMAT, dir, "extension=%s" % ext)
     files = files_by_ext.values()[0]
     if len(files) >= MIN_FILES_IN_ALBUM:
       return sorted(files), ext
     else:
-      warn('not enough files in directory to be an album: %s' % dir)
-      return [], None
+      raise NotAlbumException(NotAlbumException.MIN_FILES, dir, "files=%d" % len(files))
   else:
-    warn('mixed audio codecs in %s' % dir)
-    return [], None
+    raise NotAlbumException(NotAlbumException.MIXED_CODECS, dir)
 
 
 # def get_album_format(dir):
@@ -140,15 +142,11 @@ def get_audio_files(dir, warnings=None):
 # 	return ext.upper()
 
 
-class TrackContinuosityError(Exception):
-  def __init__(self, msg):
-    super(Exception, self).__init__(msg)
-
-
 def check_files_continuosity(dir, files):
   ''' it is expected param 'files' is sorted already '''
   REGEX_01 = '^([0-9]{1,2})[ -_.].+'
   REGEX_A1 = '^([a-dA-D])([0-9]{1,2})[ -_.].+'
+  assert len(files) > 0
   if re.search(REGEX_01, files[0]):
     cnt = 1
     for file in files:
@@ -156,48 +154,33 @@ def check_files_continuosity(dir, files):
       if m:
         pos = int(m.group(1))
         if pos != cnt:
-          raise TrackContinuosityError(u'files are not continuous in %s' % dir)
+          raise NotAlbumException(NotAlbumException.COUNTER_FAILED, dir, 'files are not continuous: %d->%d' % (cnt-1, pos))
         cnt += 1
       else:
-        raise TrackContinuosityError('files are not continuous in %s' % dir)
+        raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, 'files are not continuous')
   elif re.search(REGEX_A1, files[0]):
-    raise TrackContinuosityError(u'patterm A1 is not implemented yet for %s' % dir)
+    cur_chr = ord('A')
+    cur_dig = 0
+    for i,file in enumerate(files):
+      m = re.search(REGEX_A1, file)
+      if m:
+        chr = ord(m.group(1).upper())
+        dig = int(m.group(2))
+        # check character pater
+        if chr != cur_chr:
+          if chr != cur_chr + 1:
+            raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '%s%s' % (m.group(1), m.group(2)))
+          cur_chr = chr
+          cur_dig = 0
+        # check the number part
+        if dig != cur_dig + 1:
+          raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '%s%s' % (m.group(1), m.group(2)))
+        cur_dig += 1
+      else:
+        raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, 'files are not continuous')
   else:
-    raise TrackContinuosityError(u'unknown file pattern "%s" in %s' % (files[0][0:10], dir))
-
-
-def calc_album_hash(hash_db, dir, afiles_short, warnings=None):
-  def warn(msg):
-    if warnings:
-      print >> warnings, msg
-
-  # if afiles_short == None:
-  # 	afiles_short = get_audio_files(dir)
-
-  ah = hashlib.md5()
-  for i, file in enumerate(afiles_short):
-    assert isinstance(dir, basestring)
-    assert isinstance(file, basestring), 'actual type %s' % type(file)
-    file_abs = os.path.join(dir, file)
-    #print file_abs
-    one_hash = hash_db.get(file_abs)
-    if not one_hash:
-      warn(u'audio hash not found for files[%d] in %s' % (i, dir))
-      # print '- %s' % file_abs
-      # for key in hash_db.keys():
-      # 	print '-- %s' % key
-      return None
-    one_hash = one_hash.upper()
-    #assert len(one_hash) == 32, 'Bad hash %s' % one_hash
-    assert check_hex_digest(one_hash), 'Bad hash %s' % one_hash
-    #assert int(one_hash,16) != 0, Exception(u'bad hash %s for file %s' % (one_hash, file_abs))
-    if int(one_hash, 16) == 0:
-      # this may happen for wma, ogg or 24 bit flac encoded by foobar2000
-      warn('zero audio hash in %s' % dir)
-      return None
-      #print one_hash, file
-    ah.update(one_hash)
-  return ah.hexdigest().upper()
+    start = files[0][0:10]
+    raise NotAlbumException(NotAlbumException.UNKNOWN_PATTERN, dir, u'unknown file pattern "%s"' % start)
 
 
 def archive_dir(dir, arc_name):
@@ -222,6 +205,33 @@ def archive_dir(dir, arc_name):
   zf.close()
 
 
+#def diff(a, b, path='/root'):
+#  ka = set(a.keys())
+#  kb = set(b.keys())
+#  if ka != kb:
+#    diff1 = ka - kb
+#    diff2 = kb - ka
+#    print '%s' % path
+#    for key in diff1:
+#      print '< %s => ...' % key
+#    for key in diff2:
+#      print '> %s => ...' % key
+#  else:
+#    for key in ka:
+#      val_a = a[key]
+#      val_b = b[key]
+#      if type(val_a) == type(val_b):
+#        if type(val_a) == dict:
+#          diff(val_a, val_b, '%s/%s' % (path, key))
+#        elif val_a != val_b:
+#          print '%s' % path
+#          print '< %s => %s' % (key, val_a)
+#          print '> %s => %s' % (key, val_b)
+#      else:
+#        print '%s' % path
+#        print '< %s => %s' % (key, type(val_a))
+#        print '> %s => %s' % (key, type(val_b))
+
 class Album(dict):
   def get_audio_format(self):
     '''
@@ -233,112 +243,138 @@ class Album(dict):
       return os.path.splitext(a_fname)[1][1:].upper()
     else:
       return None
+#  def __eq__(self, other):
+#    assert type(other) == Album
+#    d1 = json.loads(json.dumps(self))
+#    d2 = json.loads(json.dumps(other))
+#
+##    write_file('cmp.self', json.dumps(self))
+##    write_file('cmp.other', json.dumps(other))
+#
+#    eq = d1 == d2
+#    return eq
+#    #return False
 
 
-def scan_album_dir(dir, hash_db, warnings=sys.stderr):
+def __calc_album_hash(hash_db, dir, afiles_short, warnings=None):
+  def warn(msg):
+    if warnings:
+      print >> warnings, msg
+
+  # if afiles_short == None:
+  # 	afiles_short = get_audio_files(dir)
+
+  ah = hashlib.md5()
+  for i, file in enumerate(afiles_short):
+    assert isinstance(dir, basestring)
+    assert isinstance(file, basestring), 'actual type %s' % type(file)
+    file_abs = os.path.join(dir, file)
+    #print file_abs
+    one_hash = hash_db.get(file_abs)
+    if not one_hash:
+      warn(u'audio hash not found for files[%d] in %s' % (i, dir))
+      return None
+    one_hash = one_hash.upper()
+    #assert len(one_hash) == 32, 'Bad hash %s' % one_hash
+    assert check_hex_digest(one_hash), 'Bad hash %s' % one_hash
+    #assert int(one_hash,16) != 0, Exception(u'bad hash %s for file %s' % (one_hash, file_abs))
+    if int(one_hash, 16) == 0:
+      # this may happen for wma, ogg or 24 bit flac encoded by foobar2000
+      warn('zero audio hash in %s' % dir)
+      return None
+    ah.update(one_hash)
+  return ah.hexdigest().upper()
+
+
+def get_media_info(file):
+  ext = os.path.splitext(file)[1][1:].lower()
+  if ext == 'mp3':
+    audio = MP3(file)
+    return {
+      'bit_rate': audio.info.bitrate / 1000,
+      'sample_rate': audio.info.sample_rate,
+      'length': audio.info.length,
+      }
+  elif ext == 'flac':
+    audio = FLAC(file)
+    return {
+      #'bit_rate': audio.info.bitrate / 1000, # N/A for flac in mutagen
+      'bits_per_sample': audio.info.bits_per_sample,
+      'sample_rate': audio.info.sample_rate,
+      'length': audio.info.length,
+    }
+  else:
+    return {}
+
+
+def scan_album_from_dir(dir):
   assert type(dir) == unicode
-  #print u'Directory %s' % dir
-  afiles_short, ext = get_audio_files(dir)
-  if afiles_short:
-    try:
-      check_files_continuosity(dir, afiles_short)
-      ah = calc_album_hash(hash_db, dir, afiles_short, warnings=warnings)
-      if ah:
-        dir_size, audio_size = get_album_sizes(dir)
-        album = Album({
-          'album_hash': ah,
-          'path': dir,
-          'total_size': dir_size,
-          'audio_size': audio_size,
-          })
-        album['tracks'] = []
-        for afile_short in afiles_short:
-          afile_full = os.path.join(dir, afile_short)
-          album['tracks'].append({
-            'file_name': afile_short,
-            'audio_hash': hash_db[afile_full],
-            'file_size': os.stat(afile_full).st_size,
-            })
-        return album
-    except TrackContinuosityError, e:
-      if warnings:
-        print >> warnings, u'%s' % e
+  hash_db = collect_audio_hashes()
+  files_short, ext = get_audio_files(dir)
+  if files_short:
+    check_files_continuosity(dir, files_short)
+    ah = __calc_album_hash(hash_db, dir, files_short)
+    assert ah is not None
+    if ah:
+      dir_size, audio_size = get_album_sizes(dir)
+      album = Album({
+        'album_hash': ah,
+        'path': dir,
+        'total_size': dir_size,
+        'audio_size': audio_size,
+        })
+      album['tracks'] = []
+      for file_short in files_short:
+        file_full = os.path.join(dir, file_short)
+        track = {'file_name': file_short,
+                 'audio_hash': hash_db[file_full],
+                 'file_size': os.stat(file_full).st_size, }
+        track = dict(track.items() + get_media_info(file_full).items())
+        album['tracks'].append(track)
+      return album
   return None
 
 
-def save_db_album(db_root, volume_name, album):
-  json_file = os.path.join(db_root, volume_name, album['album_hash'])
+def calc_album_hash(dir):
+  album = scan_album_from_dir(dir)
+  return album['album_hash'] if album else None
+
+
+def list_db_volume(dir):
+  for fs,fl in listdir(dir):
+    if check_hex_digest(fs):
+      with codecs.open(fl, 'r', 'utf-8') as f:
+        json_text = f.read()
+      json_obj = json.loads(json_text)
+      album = Album(json_obj)
+      yield album
+
+
+def save_db_album(db_root, volume_name, album, suffix=None):
+  assert album['album_hash']
+  assert len(album['tracks'])
+
+  json_file_tmp = tmpfile()
+  json_file_real = os.path.join(db_root, volume_name, album['album_hash'])
+  if suffix:
+    json_file_real = '%s.%s' % (json_file_real, suffix)
+
   #json_text = json.dumps(album, indent=2)
   json_text = pretty_print_json_as_readable_unicode(album)
-
-  with codecs.open(json_file, 'w', 'utf-8') as f:
-    f.write(json_text)
-  print 'file %s written' % json_file
+  write_file(json_file_tmp, json_text)
 
   # make sure it could be parsed back
-  json.loads(json_text)
+  json.loads(read_file(json_file_tmp))
 
+  if os.path.exists(json_file_real):
+    os.remove(json_file_real)
+  assert os.path.exists(json_file_tmp)
+  assert not os.path.exists(json_file_real)
+  os.rename(json_file_tmp, json_file_real)
 
-class StreamTee:
-  """Intercept a stream."""
-
-  def __init__(self, target):
-    self.target = target
-
-  def write(self, s):
-    s = self.intercept(s)
-    self.target.write(s)
-
-  def intercept(self, s):
-    """Pass-through -- Overload this."""
-    return s
-
-  def flush(self):
-    return self.target.flush()
-
-
-class SafeStreamFilter(StreamTee):
-  """Convert string traffic to to something safe."""
-
-  def __init__(self, target):
-    StreamTee.__init__(self, target)
-    self.encoding = 'utf-8'
-    self.errors = 'replace'
-    self.encode_to = self.target.encoding
-    print 'self.encode_to:', self.encode_to
-    if not self.encode_to:
-      #raise Exception('target.encoding is None (because of redirect)')
-      self.encode_to = 'cp866'
-
-  def intercept(self, s):
-    return s.encode(self.encode_to, self.errors).decode(self.encode_to)
-
-  @classmethod
-  def substitute_stdout(cls):
-    sys.stdout = SafeStreamFilter(sys.stdout)
-
-
-# class counting_hash(dict):
-#     def __init__(self):
-#         super(counting_hash, self).__init__()
-#     def increment(self, key):
-#         if self.has_key(key):
-#             assert isinstance(self[key], int)
-#             self[key] = self[key] + 1
-#         else:
-#             self[key] = 1
-
-
-class dict_of_lists(dict):
-  def __init__(self):
-    super(dict_of_lists, self).__init__()
-
-  def append(self, key, value):
-    if self.has_key(key):
-      assert isinstance(self[key], list)
-      self[key].append(value)
-    else:
-      self[key] = [value]
+  # make sure it could be parsed back
+  with codecs.open(json_file_real, 'r', 'utf-8') as f:
+    json.loads(f.read())
 
 
 def get_album_sizes(dir):
@@ -357,51 +393,4 @@ def get_album_sizes(dir):
 
   return total_sz, audio_sz
 
-
-def format_size(num):
-  for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
-    if num < 1024.0:
-      return "%3.0f%s" % (num, x)
-    num /= 1024.0
-
-
-def format_size_mb(num):
-  num = num / 1024.0 / 1024.0
-  return "%3.0f" % (num)
-
-
-# format an str/unicode json-string as one readable by humans
-# because the standard json.sumps() produces all these '\xUUUU'
-def pretty_print_json_as_readable_unicode(json_object):
-  def do_level(out, root, level=0):
-    offset = '  ' * level
-    offset2 = '  ' * (level + 1)
-    if isinstance(root, list):
-      out.write('%s[\n' % (offset,))
-      for i, item in enumerate(root):
-        if i > 0: out.write('%s,\n' % offset)
-        do_level(out, item, level + 1)
-      out.write('\n%s]' % (offset,))
-    elif isinstance(root, dict):
-      out.write('%s{\n' % (offset,))
-      for i, key in enumerate(root.keys()):
-        if i > 0: out.write('%s,\n' % '')
-        out.write('%s"%s": ' % (offset2, key))
-        do_level(out, root[key], level + 1)
-      out.write('\n%s}' % offset)
-    elif isinstance(root, basestring):
-      root = root.replace('\\', '\\\\').replace('"', '\\"').replace('\r', '\\r').replace('\n', '\\n')
-      out.write('"%s"' % (root,))
-    elif isinstance(root, (int, long, float)):
-      out.write('%s%s' % (offset, root))
-    else:
-      raise Exception('unsupported yet type %s' % type(root))
-
-  #assert isinstance(json_text, (basestring))
-  out = StringIO()
-  try:
-    do_level(out, json_object)
-    return out.getvalue()
-  finally:
-    out.close()
 

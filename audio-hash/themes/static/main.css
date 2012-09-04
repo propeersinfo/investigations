@@ -37,7 +37,7 @@ ul {
 }
 
 .footer {
-	margin-top: 2em;
+	margin-top: 3em;
 	font-size: 85%;
 	color: #444;
 }
@@ -90,14 +90,12 @@ a:hover {
 	color: #EF212E;
 }
 .lotta_links a {
-	color: black;
+	/*color: black;*/
 	text-decoration: none;
 }
 .lotta_links a:hover {
-	color: #CC345D;
-	color: #871628;
-	color: #EF212E;
-	text-decoration: none;
+	/*color: #EF212E;*/
+	text-decoration: underline;
 }
 
 .columns {

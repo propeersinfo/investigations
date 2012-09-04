@@ -25,7 +25,11 @@
 		<p>
 			<a href="{{ album.url }}">Скачать</a>
 			{{ album.audio_format|upper }}
-			<i>x</i> kbps,
+{% if album.audio_format == 'flac' %}
+			{{ album.tracks[0].bits_per_sample }}/{{ album.tracks[0].khz }},
+{% else %}
+			{{ album.tracks[0].bit_rate }} kbps,
+{% endif %}
 			{{ album.total_size | format_size_mb }} MB
 		</p>
 	</div>
