@@ -2,6 +2,7 @@ import json
 import os
 
 import common
+import utils
 
 '''
 Check DB entries against a real directory (referred by key 'path')
@@ -9,7 +10,7 @@ Check DB entries against a real directory (referred by key 'path')
 
 volume = "DB\\narod"
 
-common.SafeStreamFilter.substitute_stdout()
+utils.SafeStreamFilter.substitute_stdout()
 
 for file in os.listdir(volume):
   if common.check_hex_digest(file):
@@ -22,7 +23,7 @@ for file in os.listdir(volume):
       assert a['album_hash']
       assert a['url'].find('narod') >= 0
 
-      a2 = common.scan_album_dir(a['path'], common.collect_audio_hashes())
+      a2 = common.scan_album_from_dir(a['path'])
       assert a2
       assert a['album_hash'] == a2['album_hash'], '%s vs %s' % (a['album_hash'], a2['album_hash'])
       assert len(a['tracks']) == len(a2['tracks'])

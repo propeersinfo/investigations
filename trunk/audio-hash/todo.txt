@@ -1,9 +1,30 @@
-audio hash
-+ read flac via metaflac
-- mass test against foobar2000
-- mass test against mplayer
-- mass self test hash before and after the tag written
-- make sure albums uploaded onto narod are hashed correctly to the new algorithm
-+ when calculating hash by my algorithm, test the result against mplayer's one
+NORMAL
+- obtain md5 via FLAC.info.md5_signature
++ command to update DB/narod from files
++ checking of the links to be alive
+- periodic automated checking of the links to be alive
++ report folders not recognized as albums (scan-volume.py)
+- ftp upload script
+- command to be able to clean Edge from album of three instances (wd, edge, narod)
+- browser blinks when loading pages somteimes
+- option to check unque against narod only
++ show bitrate for mp3, bit/khz for flac
+- throw off mixed bitrate albums
+- save total count of tracks in folders
+- prevent ctrl+c while updating files -> http://stackoverflow.com/questions/842557/
 
+get short path returns illega value for ".\baltic\!new\Vanemõde\17. Sõbrad, Sõbrad, Tuttavad.mp3" --> .\baltic\!new\Vanemõde\17SBRA~1.MP3
+
+
+LOW
+- async JS to show if an archive link is alive
+- folders like "CD1" they are confusing when a user unpacks them
+- RSS
+- English version
+- group album links by artist
+- optimize hash generation by using a pre-run executable
+
+DONE
 + case insensitive search in audio hash files made by mp3tag
++ add DEVEL/PRODUCTION flag into cherry.py
++ implement pattern A1

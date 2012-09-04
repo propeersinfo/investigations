@@ -14,10 +14,10 @@ from common import archive_dir
 from common import calc_album_hash
 from common import get_audio_files
 from common import collect_audio_hashes
-from common import scan_album_dir
+from common import scan_album_from_dir
 from common import save_db_album
 from common import append_file
-from common import SafeStreamFilter
+from utils import SafeStreamFilter
 
 QUEUE_FILE = 'upload.queue'
 ACTUAL_ZIP_AND_UPLOAD = True
@@ -62,7 +62,7 @@ def do_upload(zip_file):
 
 def handle_dir(dir, hash1, hash_db, last_iteration):
   audio_files, _ = get_audio_files(dir)
-  hash2 = calc_album_hash(hash_db, dir, audio_files, warnings=sys.stdout)
+  hash2 = calc_album_hash(dir) # todo: handle NotAlbumException
   assert hash1 == hash2, '%s vs %s' % (hash1, hash2)
 
   db_album_file = os.path.join(DB_ROOT, NAROD_VOLUME, hash1)
@@ -83,7 +83,7 @@ def handle_dir(dir, hash1, hash_db, last_iteration):
     narod_url = do_upload(archive_file)
     if narod_url:
       if ACTUAL_ZIP_AND_UPLOAD:
-        album_obj = scan_album_dir(dir, hash_db)
+        album_obj = scan_album_from_dir(dir)
         album_obj['url'] = narod_url
         album_obj['total_size'] = os.stat(archive_file).st_size
         #print 'WARNING! db file not written!'

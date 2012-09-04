@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# this must go first - this var is to be checked in defs.py
-# import os
-# os.environ.setdefault('SERVER_PROFILE', 'DEVELOPMENT')
-
 import os
 import sys
 import json
@@ -20,14 +16,16 @@ from jinja2 import Environment, FileSystemLoader
 # import utils
 import time
 
+from utils import format_size
+from utils import format_size_mb
+from utils import dict_of_lists
+import common
 from common import Album
-from common import format_size
-from common import format_size_mb
-from common import dict_of_lists
 from common import write_file
 from common import cut_start
 
-DB_ROOT = 'DB\\narod'
+#DB_ROOT = 'DB\\narod'
+DB_ROOT = 'DB\\temp'
 
 
 def cat_title(cat_name):
@@ -66,19 +64,35 @@ class StaticContentGenerator:
     self.categories = dict_of_lists()
     self.total_size = 0
     self.mtime = os.path.getmtime(db_root)
-    for file_short in os.listdir(self.db_root):
-      if len(file_short) == 32:
-        file_long = os.path.join(self.db_root, file_short)
-        with codecs.open(file_long, 'r', 'utf-8') as f:
-          json_text = f.read()
-          json_obj = json.loads(json_text)
-          album = Album(json_obj)
-          self.__class__.augment_album_object(album)
-          self.albums[album['album_hash']] = album
-          self.categories.append(album['category'].lower(), album)
-          if album.has_key('total_size'):
-            self.total_size += album['total_size']
+    for album in common.list_db_volume(self.db_root):
+      self.__class__.augment_album_object(album)
+      self.albums[album['album_hash']] = album
+      self.categories.append(album['category'].lower(), album)
+      if album.has_key('total_size'):
+        self.total_size += album['total_size']
 
+#  def __init__(self, db_root):
+#    self.db_root = db_root
+#    self.albums = {}
+#    self.categories = dict_of_lists()
+#    self.total_size = 0
+#    self.mtime = os.path.getmtime(db_root)
+#    for file_short in os.listdir(self.db_root):
+#      if len(file_short) == 32:
+#        file_long = os.path.join(self.db_root, file_short)
+#        with codecs.open(file_long, 'r', 'utf-8') as f:
+#          json_text = f.read()
+#          json_obj = json.loads(json_text)
+#          album = Album(json_obj)
+#          self.__class__.augment_album_object(album)
+#          self.albums[album['album_hash']] = album
+#          self.categories.append(album['category'].lower(), album)
+#          if album.has_key('total_size'):
+#            self.total_size += album['total_size']
+
+  def is_production(self):
+    return IS_PRODUCTION
+  
   @classmethod
   def get_instance(cls, db_root):
     ''' do not cache instance of this class but call this method each time instead
@@ -126,8 +140,7 @@ class StaticContentGenerator:
       [ur'\s*FLAC$', '', re.I],
       [ur'\s+\dCD/CD', ' CD', re.I], # '3CD/CD1' => 'CD1'
                                      # apply it among last ones
-      [ur'/', ' / ', re.I],
-                                     ]
+      [ur'/', ' / ', re.I],]
     for sub in subs:
       album['title'] = re.sub(sub[0], sub[1], album['title'], flags=sub[2])
 
@@ -140,6 +153,11 @@ class StaticContentGenerator:
     # cut off file extensions
     for t in album['tracks']:
       t['file_name'] = os.path.splitext(t['file_name'])[0]
+
+    # setup human friendly values like 44, 48, 96, 192
+    for t in album['tracks']:
+      if t.has_key('bits_per_sample'):
+        t['khz'] = int(t['sample_rate'] / 1000)
 
 
 def generate_static_site():
@@ -274,8 +292,10 @@ class Root:
 
 if __name__ == '__main__':
   if len(sys.argv) == 2 and sys.argv[1] == 'static':
+    IS_PRODUCTION = True
     generate_static_site()
   else:
+    IS_PRODUCTION = False
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root = Root()
     cherrypy.quickstart(root)
