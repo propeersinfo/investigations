@@ -1,14 +1,9 @@
 NORMAL
 - obtain md5 via FLAC.info.md5_signature
-+ command to update DB/narod from files
-+ checking of the links to be alive
 - periodic automated checking of the links to be alive
-+ report folders not recognized as albums (scan-volume.py)
 - ftp upload script
 - command to be able to clean Edge from album of three instances (wd, edge, narod)
-- browser blinks when loading pages somteimes
 - option to check unque against narod only
-+ show bitrate for mp3, bit/khz for flac
 - throw off mixed bitrate albums
 - save total count of tracks in folders
 - prevent ctrl+c while updating files -> http://stackoverflow.com/questions/842557/
@@ -17,6 +12,7 @@ get short path returns illega value for ".\baltic\!new\Vanemõde\17. Sõbrad, S�
 
 
 LOW
+- browser blinks when loading pages somteimes
 - async JS to show if an archive link is alive
 - folders like "CD1" they are confusing when a user unpacks them
 - RSS
@@ -28,3 +24,7 @@ DONE
 + case insensitive search in audio hash files made by mp3tag
 + add DEVEL/PRODUCTION flag into cherry.py
 + implement pattern A1
++ show bitrate for mp3, bit/khz for flac
++ command to update DB/narod from files
++ checking of the links to be alive
++ report folders not recognized as albums (scan-volume.py)

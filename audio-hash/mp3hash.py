@@ -60,7 +60,7 @@ def read_mp3_audio_hash_tag(mp3):
     audio = EasyID3(mp3)
     hash = audio.get(AUDIO_HASH_MUTAGEN_KEY)
     if hash:
-      return hash[0], get_recheck_flag(audio)
+      return hash[0].upper(), get_recheck_flag(audio)
     else:
       return None, None
   except ID3NoHeaderError:
@@ -398,6 +398,7 @@ def main_check_tag():
       recheck_str = 'RE' if recheck else 'ok'
       if not h_tag:
         return None
+      h_tag = h_tag.upper()
       h_123 = calc_mp3_audio_hash_mpg123(mp3)
       if not h_123:
         return None
