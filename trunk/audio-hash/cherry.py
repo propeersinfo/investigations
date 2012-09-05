@@ -24,8 +24,8 @@ from common import Album
 from common import write_file
 from common import cut_start
 
-#DB_ROOT = 'DB\\narod'
-DB_ROOT = 'DB\\temp'
+DB_ROOT = 'DB\\narod'
+#DB_ROOT = 'DB\\temp'
 
 
 def cat_title(cat_name):

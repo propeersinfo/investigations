@@ -61,6 +61,11 @@ body {
 	margin: auto;
 	padding: 10px 50px 30px 50px;
 	background: white;
+	/*
+	background: url(http://siryx.ru/_ph/29/54364739.jpg);
+	background: url(http://www.webtexture.net/wp-content/uploads/2011/04/5GrungePaperBackground_banner_thumb02.jpg);
+	background-size: 100%;
+	*/
 	border-radius: 5px;
 }
 

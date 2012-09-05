@@ -106,6 +106,7 @@ class NotAlbumException(Exception):
   UNKNOWN_PATTERN = Cause("UP")
   AUDIO_FORMAT = Cause("AF")
   MIN_FILES = Cause("MF")
+  MIXED_CODECS = Cause("MC")
   def __init__(self, code, dir, msg = None):
     super(Exception, self).__init__('%s for %s ' % (msg, dir))
     self.code = code
@@ -314,6 +315,7 @@ def scan_album_from_dir(dir):
   if files_short:
     check_files_continuosity(dir, files_short)
     ah = __calc_album_hash(hash_db, dir, files_short)
+    print "dir: %s" % dir
     assert ah is not None
     if ah:
       dir_size, audio_size = get_album_sizes(dir)
