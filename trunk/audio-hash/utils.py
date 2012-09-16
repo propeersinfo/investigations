@@ -1,5 +1,21 @@
+# -*- coding: utf-8 -*-
+
 from StringIO import StringIO
 import sys
+import unicodedata
+
+
+def normalize_unicode_except_cyrillic(s):
+  res = StringIO()
+  for ch in unicodedata.normalize('NFKD', s):
+    n = ord(ch)
+    ascii = 0 <= n < 128
+    cyr_lo = ord(u'а') <= n <= ord(u'я')
+    cyr_hi = ord(u'А') <= n <= ord(u'Я')
+    if ascii or cyr_lo or cyr_hi:
+      res.write(ch)
+  return res.getvalue()
+
 
 class StreamTee:
   """Intercept a stream."""
@@ -27,13 +43,18 @@ class SafeStreamFilter(StreamTee):
     self.encoding = 'utf-8'
     self.errors = 'replace'
     self.encode_to = self.target.encoding
+    #if self.encode_to == 'cp65001':
+    #  self.encode_to = 'utf-8'
     print 'self.encode_to:', self.encode_to
-    if not self.encode_to:
-      #raise Exception('target.encoding is None (because of redirect)')
-      self.encode_to = 'cp866'
+    #if not self.encode_to:
+    #  #raise Exception('target.encoding is None (because of redirect)')
+    #  self.encode_to = 'cp866'
 
   def intercept(self, s):
-    return s.encode(self.encode_to, self.errors).decode(self.encode_to)
+    if self.encode_to:
+      return s.encode(self.encode_to, self.errors).decode(self.encode_to)
+    else:
+      return s
 
   @classmethod
   def substitute_stdout(cls):
