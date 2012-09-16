@@ -9,9 +9,10 @@ import glob
 import codecs
 import hashlib
 from StringIO import StringIO
+import Image
 from mutagen.flac import FLAC
 from mutagen.mp3 import MP3
-from utils import pretty_print_json_as_readable_unicode
+from utils import pretty_print_json_as_readable_unicode, dict_of_lists
 
 MIN_FILES_IN_ALBUM = 2
 RECOGNIZED_AUDIO_EXTENSIONS = [ 'mp3', 'flac', 'ape' ]
@@ -34,6 +35,7 @@ def check_hex_digest(hex_str):
 
 
 def listdir(dir):
+  assert os.path.exists(dir), dir
   for file in os.listdir(dir):
     yield file, os.path.join(dir, file)
 
@@ -107,6 +109,8 @@ class NotAlbumException(Exception):
   AUDIO_FORMAT = Cause("AF")
   MIN_FILES = Cause("MF")
   MIXED_CODECS = Cause("MC")
+  HASH_MISSED = Cause("HM")
+  ILLEGAL_HASH = Cause("IH")
   def __init__(self, code, dir, msg = None):
     super(Exception, self).__init__('%s for %s ' % (msg, dir))
     self.code = code
@@ -144,9 +148,10 @@ def get_audio_files(dir):
 
 
 def check_files_continuosity(dir, files):
-  ''' it is expected param 'files' is sorted already '''
-  REGEX_01 = '^([0-9]{1,2})[ -_.].+'
-  REGEX_A1 = '^([a-dA-D])([0-9]{1,2})[ -_.].+'
+  """ it is expected param 'files' is sorted already """
+  REGEX_01  = '^([0-9][0-9]?)[^0-9].+' # 1, 01
+  REGEX_101 = '^([0-9])([0-9][0-9])[ -_.].+' # 101, 102, 201, 202
+  REGEX_A1  = '^([a-dA-D])([0-9]{1,2})[ -_.].+'
   assert len(files) > 0
   if re.search(REGEX_01, files[0]):
     cnt = 1
@@ -159,6 +164,26 @@ def check_files_continuosity(dir, files):
         cnt += 1
       else:
         raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, 'files are not continuous')
+  elif re.search(REGEX_101, files[0]):
+    cur_dsc = 0
+    cur_trk = 0
+    for i,file in enumerate(files):
+      m = re.search(REGEX_101, file)
+      if m:
+        dsc = int(m.group(1))
+        trk = int(m.group(2))
+        #print 'track %s %s' % (dsc, trk)
+        if dsc != cur_dsc:
+          if dsc != cur_dsc + 1:
+            raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '(5) %s%s' % (dsc,trk))
+          cur_dsc = dsc
+          cur_trk = 0
+          #print 'rewritten to: %s %s' % (dsc, trk)
+        if trk != cur_trk + 1:
+          raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '(6) files are not continuous: %s and %s' % (cur_trk, trk))
+        cur_trk += 1
+      else:
+        raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '(4) files are not continuous')
   elif re.search(REGEX_A1, files[0]):
     cur_chr = ord('A')
     cur_dig = 0
@@ -170,15 +195,15 @@ def check_files_continuosity(dir, files):
         # check character pater
         if chr != cur_chr:
           if chr != cur_chr + 1:
-            raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '%s%s' % (m.group(1), m.group(2)))
+            raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '(1) %s%s' % (m.group(1), m.group(2)))
           cur_chr = chr
           cur_dig = 0
         # check the number part
         if dig != cur_dig + 1:
-          raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '%s%s' % (m.group(1), m.group(2)))
+          raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '(2) %s%s' % (m.group(1), m.group(2)))
         cur_dig += 1
       else:
-        raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, 'files are not continuous')
+        raise NotAlbumException(NotAlbumException.NOT_CONTINUOUS, dir, '(3) files are not continuous')
   else:
     start = files[0][0:10]
     raise NotAlbumException(NotAlbumException.UNKNOWN_PATTERN, dir, u'unknown file pattern "%s"' % start)
@@ -257,36 +282,6 @@ class Album(dict):
 #    #return False
 
 
-def __calc_album_hash(hash_db, dir, afiles_short, warnings=None):
-  def warn(msg):
-    if warnings:
-      print >> warnings, msg
-
-  # if afiles_short == None:
-  # 	afiles_short = get_audio_files(dir)
-
-  ah = hashlib.md5()
-  for i, file in enumerate(afiles_short):
-    assert isinstance(dir, basestring)
-    assert isinstance(file, basestring), 'actual type %s' % type(file)
-    file_abs = os.path.join(dir, file)
-    #print file_abs
-    one_hash = hash_db.get(file_abs)
-    if not one_hash:
-      warn(u'audio hash not found for files[%d] in %s' % (i, dir))
-      return None
-    one_hash = one_hash.upper()
-    #assert len(one_hash) == 32, 'Bad hash %s' % one_hash
-    assert check_hex_digest(one_hash), 'Bad hash %s' % one_hash
-    #assert int(one_hash,16) != 0, Exception(u'bad hash %s for file %s' % (one_hash, file_abs))
-    if int(one_hash, 16) == 0:
-      # this may happen for wma, ogg or 24 bit flac encoded by foobar2000
-      warn('zero audio hash in %s' % dir)
-      return None
-    ah.update(one_hash)
-  return ah.hexdigest().upper()
-
-
 def get_media_info(file):
   ext = os.path.splitext(file)[1][1:].lower()
   if ext == 'mp3':
@@ -308,33 +303,69 @@ def get_media_info(file):
     return {}
 
 
+#def __calc_album_hash(hash_db, dir, afiles_short, warnings=None):
+#  def warn(msg):
+#    #if warnings:
+#    #  print >> warnings, msg
+#    print >>sys.stdout, msg
+#
+#  # if afiles_short == None:
+#  # 	afiles_short = get_audio_files(dir)
+#
+#  ah = hashlib.md5()
+#  for i, file in enumerate(afiles_short):
+#    assert isinstance(dir, basestring)
+#    assert isinstance(file, basestring), 'actual type %s' % type(file)
+#    file_abs = os.path.join(dir, file)
+#    #print file_abs
+#    one_hash = hash_db.get(file_abs)
+#    if not one_hash:
+#      warn(u'audio hash not found for files[%d] in %s' % (i, dir))
+#      return None
+#    one_hash = one_hash.upper()
+#    #assert len(one_hash) == 32, 'Bad hash %s' % one_hash
+#    assert check_hex_digest(one_hash), 'Bad hash %s' % one_hash
+#    #assert int(one_hash,16) != 0, Exception(u'bad hash %s for file %s' % (one_hash, file_abs))
+#    if int(one_hash, 16) == 0:
+#      # this may happen for wma, ogg or 24 bit flac encoded by foobar2000
+#      warn('zero audio hash in %s' % dir)
+#      return None
+#    ah.update(one_hash)
+#  return ah.hexdigest().upper()
+
+
 def scan_album_from_dir(dir):
   assert type(dir) == unicode
   hash_db = collect_audio_hashes()
   files_short, ext = get_audio_files(dir)
-  if files_short:
-    check_files_continuosity(dir, files_short)
-    ah = __calc_album_hash(hash_db, dir, files_short)
-    print "dir: %s" % dir
-    assert ah is not None
-    if ah:
-      dir_size, audio_size = get_album_sizes(dir)
-      album = Album({
-        'album_hash': ah,
-        'path': dir,
-        'total_size': dir_size,
-        'audio_size': audio_size,
-        })
-      album['tracks'] = []
-      for file_short in files_short:
-        file_full = os.path.join(dir, file_short)
-        track = {'file_name': file_short,
-                 'audio_hash': hash_db[file_full],
-                 'file_size': os.stat(file_full).st_size, }
-        track = dict(track.items() + get_media_info(file_full).items())
-        album['tracks'].append(track)
-      return album
-  return None
+  if len(files_short) <= 0:
+    raise NotAlbumException(NotAlbumException.NO_AUDIO_FILES, dir)
+  check_files_continuosity(dir, files_short)
+  #print "dir: %s" % dir
+  dir_size, audio_size = get_album_sizes(dir)
+  ah = hashlib.md5()
+  album = Album({
+    #'album_hash': ah,
+    'path': dir,
+    'total_size': dir_size,
+    'audio_size': audio_size,
+    })
+  album['tracks'] = []
+  for file_short in files_short:
+    file_full = os.path.join(dir, file_short)
+    one_hash = hash_db.get(file_full)
+    if not one_hash:
+      raise NotAlbumException(NotAlbumException.HASH_MISSED, dir)
+    if not check_hex_digest(one_hash):
+      raise NotAlbumException(NotAlbumException.ILLEGAL_HASH, dir)
+    ah.update(one_hash)
+    track = {'file_name': file_short,
+             'audio_hash': hash_db[file_full],
+             'file_size': os.stat(file_full).st_size, }
+    track = dict(track.items() + get_media_info(file_full).items())
+    album['tracks'].append(track)
+  album['album_hash'] = ah.hexdigest().upper()
+  return album
 
 
 def calc_album_hash(dir):
@@ -349,7 +380,38 @@ def list_db_volume(dir):
         json_text = f.read()
       json_obj = json.loads(json_text)
       album = Album(json_obj)
+      album['ctime'] = os.path.getctime(fl)
       yield album
+
+
+def load_db_volumes(db_root, *volume_names):
+  volume_objects = []
+  albums_by_hash = dict_of_lists()
+
+  if not volume_names:
+    volume_names = [ name for name in os.listdir(db_root) ]
+
+  #assert len(volume_names) > 0
+  #assert isinstance(volume_names[0], basestring)
+
+  for volume_name in volume_names:
+    volume_dir = os.path.join(db_root, volume_name)
+    if not os.path.isdir(volume_dir):
+      continue
+    volume = {
+      'name': volume_name,
+      'entries': {}
+    }
+    volume_objects.append(volume)
+    for album_json_short in os.listdir(volume_dir):
+      if check_hex_digest(album_json_short):
+        album_json_long = os.path.join(volume_dir, album_json_short)
+        album_obj = json.loads(read_file(album_json_long))
+        ah = album_obj['album_hash']
+        assert ah == album_json_short, '%s vs %s' % (ah, album_json_short)
+        volume['entries'][ah] = album_obj
+        albums_by_hash.append(ah, album_obj)
+  return volume_objects, albums_by_hash
 
 
 def save_db_album(db_root, volume_name, album, suffix=None):
@@ -375,8 +437,7 @@ def save_db_album(db_root, volume_name, album, suffix=None):
   os.rename(json_file_tmp, json_file_real)
 
   # make sure it could be parsed back
-  with codecs.open(json_file_real, 'r', 'utf-8') as f:
-    json.loads(f.read())
+  json.loads(read_file(json_file_real))
 
 
 def get_album_sizes(dir):
@@ -394,5 +455,49 @@ def get_album_sizes(dir):
       total_sz += info.st_size
 
   return total_sz, audio_sz
+
+
+class CoverImage:
+  def __init__(self, dir, file_short):
+    self.dir = dir
+    self.file_short = file_short
+    self.image = Image.open(os.path.join(dir, file_short))
+  def is_quad(self):
+    ratio = float(self.image.size[0]) / self.image.size[1]
+    diff = abs(1.0 - ratio)
+    return diff < 0.1
+  def resize(self, side_size):
+    w, h = self.image.size
+    if w != side_size or h != side_size:
+      self.image = self.image.resize((side_size,side_size), Image.ANTIALIAS)
+  def save(self, dir, base_name):
+    assert os.path.isdir(dir), dir
+    fname = os.path.join(dir, '%s.jpg' % base_name)
+    self.image.save(fname)
+  def exists_at(self, dir, base_name):
+    fname = os.path.join(dir, '%s.jpg' % base_name)
+    return os.path.exists(fname)
+
+
+def find_cover_image(dir):
+  # collect
+  images = []
+  for ext in [ 'jpg', 'jpeg', 'png', 'bmp' ]:
+    images += [ CoverImage(dir, short_name) for short_name in glob.glob1(dir, '*.%s' % ext) ]
+
+  images = sorted(images, key=lambda img: img.file_short.lower())
+
+  # filter those looking like covers
+  images = filter(lambda img: img.is_quad(), images)
+
+  # order by file name
+  order = [ 'front', 'cover', 'folder', 'side', 'rear', 'back' ]
+  for pattern in order:
+    for img in images:
+      pattern = '.*%s.*' % pattern
+      if re.search(pattern, img.file_short, re.I):
+        return img
+
+  return images[0] if len(images) else None # any
 
 

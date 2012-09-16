@@ -16,6 +16,7 @@ from jinja2 import Environment, FileSystemLoader
 # import utils
 import time
 
+import utils
 from utils import format_size
 from utils import format_size_mb
 from utils import dict_of_lists
@@ -30,11 +31,14 @@ DB_ROOT = 'DB\\narod'
 
 def cat_title(cat_name):
   CAT_TITLES = {
+    u'baltic': u'Прибалтика',
     u'vocalists': u'Вокалисты',
     u'instrumental': u'Инструментальная музыка',
     u'ukraine': u'Украина',
     u'composers': u'Композиторы',
     u'via': u'ВИА',
+    u'jazz': u'Джаз',
+    u'georgia': u'Грузия',
     }
   return CAT_TITLES.get(cat_name, cat_name)
 
@@ -65,30 +69,36 @@ class StaticContentGenerator:
     self.total_size = 0
     self.mtime = os.path.getmtime(db_root)
     for album in common.list_db_volume(self.db_root):
-      self.__class__.augment_album_object(album)
+      self.__class__._augment_album_object(album)
       self.albums[album['album_hash']] = album
       self.categories.append(album['category'].lower(), album)
       if album.has_key('total_size'):
         self.total_size += album['total_size']
+    self.albums_by_date = self.__class__._make_albums_by_date(self.albums.values())
 
-#  def __init__(self, db_root):
-#    self.db_root = db_root
-#    self.albums = {}
-#    self.categories = dict_of_lists()
-#    self.total_size = 0
-#    self.mtime = os.path.getmtime(db_root)
-#    for file_short in os.listdir(self.db_root):
-#      if len(file_short) == 32:
-#        file_long = os.path.join(self.db_root, file_short)
-#        with codecs.open(file_long, 'r', 'utf-8') as f:
-#          json_text = f.read()
-#          json_obj = json.loads(json_text)
-#          album = Album(json_obj)
-#          self.__class__.augment_album_object(album)
-#          self.albums[album['album_hash']] = album
-#          self.categories.append(album['category'].lower(), album)
-#          if album.has_key('total_size'):
-#            self.total_size += album['total_size']
+  @classmethod
+  def _make_albums_by_date(cls, albums):
+    """
+     return sorted list of dicts like {'date':'2012-01-01', 'albums':[]}
+     they are grouped by date
+     the most recent groupd goes first
+    """
+    aa = list(albums)
+    aa = sorted(aa, key=lambda album: album['ctime'])
+    last_date = None
+    res = []
+    for album in aa:
+      tm = time.localtime(album['ctime'])
+      this_date = time.strftime('%Y-%m-%d', tm)
+      if not last_date:
+        last_date = this_date
+        res.append({'date':last_date, 'albums':[]})
+      last_block = res[-1]
+      if last_block['date'] == this_date:
+        last_block['albums'].append(album)
+      else:
+        res.append({'date':this_date, 'albums':[album]})
+    return res[::-1] # reversed
 
   def is_production(self):
     return IS_PRODUCTION
@@ -107,7 +117,7 @@ class StaticContentGenerator:
     return cls.instance
 
   @classmethod
-  def augment_album_object(cls, album):
+  def _augment_album_object(cls, album):
     title = album['path']
 
     title = cut_start(title, 'w:\\retro\\')
@@ -138,11 +148,19 @@ class StaticContentGenerator:
       [ur'\s*-\s*?.искография', '', re.I],
       [ur'\s*\(.искография\)', '', re.I],
       [ur'\s*FLAC$', '', re.I],
-      [ur'\s+\dCD/CD', ' CD', re.I], # '3CD/CD1' => 'CD1'
+      #[ur'\s+\dCD/CD', ' CD', re.I], # '3CD/CD1' => 'CD1'
+      [ur'\s+(\d+)CD/CD(\d+)', u' \\1CD №\\2', re.I], # '3CD/CD1' => 'CD1'
                                      # apply it among last ones
       [ur'/', ' / ', re.I],]
     for sub in subs:
       album['title'] = re.sub(sub[0], sub[1], album['title'], flags=sub[2])
+
+    # try cut substring like [D-12345-60] from title
+    album['title_short'] = album['title']
+    m = re.match(ur'^(.+) \[(.{5,15})\](.*)$', album['title'])
+    if m:
+      album['title_short'] = m.group(1) + m.group(3)
+      album['cat_no'] = m.group(2)
 
     # recognize audio format
     # before to cut off files extensions
@@ -159,6 +177,15 @@ class StaticContentGenerator:
       if t.has_key('bits_per_sample'):
         t['khz'] = int(t['sample_rate'] / 1000)
 
+    def get_cover_url(album):
+      cover_file = os.path.join('covers', 'all', '%s.jpg' % album['album_hash'])
+      if os.path.exists(cover_file):
+        return '/covers/%s.jpg' % album['album_hash']
+      else:
+        return '/static/generic.jpg'
+
+    album['cover_url'] = get_cover_url(album)
+
 
 def generate_static_site():
   HTML_DIR = 'static_site'
@@ -172,6 +199,8 @@ def generate_static_site():
 
   save_page('index.html', gen_index_page())
   save_page('search.html', gen_search_page())
+  save_page('feedback.html', gen_feedback_page())
+  save_page('updates.html', gen_updates_page())
   for cat_name in scg.categories.keys():
     save_page('%s.html' % cat_name, gen_category_page(cat_name))
   for album_hash in scg.albums.keys():
@@ -221,12 +250,14 @@ def gen_album_page(album_hash):
   return render_template('album.html', template_variables)
 
 
-def filter_search_input(s):
-  ''' NB: do not joint the words because something unexpected results could be found '''
+def _filter_search_input(s):
+  ''' NB: do not join the words because unexpected results could be found '''
+  s = utils.normalize_unicode_except_cyrillic(s)
   s = re.sub(ur'[^0-9a-zA-Zа-яА-Я]+', ' ', s)
   s = s.strip()
-  words = re.split(' +', s)
-  return ' '.join(set(words)).lower()
+  words = re.split('\s+', s)
+  s = ' '.join(set(words)).lower()
+  return s
 
 
 class SearchableAlbum:
@@ -237,7 +268,7 @@ class SearchableAlbum:
     s = self.real_album['title']
     for track in self.real_album['tracks']:
       s += ' %s' % track['file_name']
-    return filter_search_input(s)
+    return _filter_search_input(s)
 
   def title(self):
     return self.real_album['title']
@@ -255,6 +286,22 @@ def gen_search_page():
     'albums': albums,
     }
   return render_template('search.html', vars)
+
+
+def gen_feedback_page():
+  scg = StaticContentGenerator.get_instance(DB_ROOT)
+  template_variables = {
+    'scg': scg,
+    }
+  return render_template('feedback.html', template_variables)
+
+
+def gen_updates_page():
+  scg = StaticContentGenerator.get_instance(DB_ROOT)
+  template_variables = {
+    'scg': scg,
+    }
+  return render_template('updates.html', template_variables)
 
 
 def cut_mandatory_html_extension(s):
@@ -285,9 +332,22 @@ class Root:
   def search(self):
     return gen_search_page()
 
+  @cherrypy.expose(alias="feedback.html")
+  def search(self):
+    return gen_feedback_page()
+
+  @cherrypy.expose(alias="updates.html")
+  def search(self):
+    return gen_updates_page()
+
   @cherrypy.expose
   def static(self, *url_path, **url_params):
     file_path = os.path.join(current_dir, 'themes', 'static', *url_path)
+    return serve_file(file_path)
+
+  @cherrypy.expose
+  def covers(self, *url_path, **url_params):
+    file_path = os.path.join(current_dir, 'covers', 'all', *url_path)
     return serve_file(file_path)
 
 if __name__ == '__main__':

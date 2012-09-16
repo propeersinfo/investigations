@@ -36,22 +36,22 @@ ul {
 	padding-left: 0;
 }
 
-.footer {
-	margin-top: 3em;
-	font-size: 85%;
-	color: #444;
+a.ajax {
+	text-decoration: none;
+	border-bottom: 1px dashed;
+	color: #111;
 }
-.footer p {
-	margin: 0.3em;
-}
-.footer a {
-	color: black;
+
+.hidden {
+	display: none;
 }
 
 body {
-	background: url('/static/punkte_pink_edit.jpg');
-	background: url('/static/waves.jpg');
+	/*
+	background: url(/static/punkte_pink_edit.jpg);
+	background: url(/static/waves.jpg);
 	background-attachment:fixed;
+	*/
 	margin: 20px;
 }
 
@@ -59,7 +59,7 @@ body {
 	height: 100%;
 	width: 800px;
 	margin: auto;
-	padding: 10px 50px 30px 50px;
+	padding: 15px 50px 35px 50px;
 	background: white;
 	/*
 	background: url(http://siryx.ru/_ph/29/54364739.jpg);
@@ -128,4 +128,30 @@ h1 {
 	color: #CC345D;
 	color: #EF212E;
 	margin-top: 0.2em;
+}
+
+/* footer */
+
+.footer {
+	margin-top: 3em;
+	font-size: 85%;
+	color: #444;
+}
+.footer p {
+	margin: 0.3em;
+}
+.footer a {
+	color: #444;
+}
+.footer a:hover {
+	color: #EF212E;
+}
+
+table.grey {
+	background:#f4f4f4;
+	border-radius: 5px;
+}
+
+.caps {
+	font-variant: small-caps;
 }
