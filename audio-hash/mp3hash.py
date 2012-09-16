@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import codecs
 
 import re
 import traceback
@@ -18,6 +19,7 @@ import time
 
 from common import check_hex_digest, empty_files
 from common import append_file
+from utils import SafeStreamFilter
 
 AUDIO_HASH_ID3_TAG = 'AUDIOHASH'
 AUDIO_HASH_MUTAGEN_KEY = AUDIO_HASH_ID3_TAG.lower()
@@ -282,8 +284,6 @@ def main_update():
   # 	print "warning: FORCE_REWRITE is on"
   # 	append_file(ERROR_LOG, "warning: FORCE_REWRITE is on")
 
-  root_dir = sys.argv[2]
-
   def do_mp3(file):
     append_file(GENERAL_LOG, 'File %s ...' % file)
     h_tag, recheck = read_mp3_audio_hash_tag(file)
@@ -318,6 +318,8 @@ def main_update():
         append_file(BADMP3_LOG, "# %s" % file)
         append_file(BADMP3_LOG, win32api.GetShortPathName(file))
 
+  root_dir = sys.argv[2]
+
   empty_files(ERROR_LOG, BADMP3_LOG, GENERAL_LOG)
   #append_file(ERROR_LOG,  '#-----------------------------')
   #append_file(BADMP3_LOG, '#-----------------------------')
@@ -325,9 +327,18 @@ def main_update():
 
   def collect_mp3s(root_dir):
     files = []
-    for dir, subdirs, subfiles in os.walk(unicode(root_dir)):
-      for file in glob.glob1(dir, u'*.mp3'):
-        files.append(os.path.join(dir, file))
+    if os.path.isfile(root_dir) and os.path.splitext(root_dir)[1].lower() == '.m3u':
+      with open(root_dir, 'r') as f:
+        for fname in f:
+          fname = fname.strip()
+          if os.path.isfile(fname):
+            files.append(fname)
+    elif os.path.isdir(root_dir):
+      for dir, subdirs, subfiles in os.walk(unicode(root_dir)):
+        for file in glob.glob1(dir, u'*.mp3'):
+          files.append(os.path.join(dir, file))
+    else:
+      assert False, root_dir
     return files
 
   print 'collecting mp3 names...'
@@ -358,7 +369,7 @@ def main_update():
 
 
 def main_show_hash():
-  #SafeStreamFilter.substitute_stdout()
+  SafeStreamFilter.substitute_stdout()
   target = sys.argv[2]
 
   total = [0]

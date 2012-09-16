@@ -10,6 +10,8 @@ from common import save_db_album
 from utils import SafeStreamFilter
 
 DB_ROOT = '.\\DB'
+SHOW_ONLY_FAILS = False
+#SHOW_ONLY_FAILS = True
 
 
 def init_db_volume(db_root, volume_name):
@@ -26,7 +28,6 @@ def init_db_volume(db_root, volume_name):
 
 
 def main():
-  SHOW_ONLY_FAILS = False
   assert len(sys.argv) >= 3
   root_dir = sys.argv[1]
   volume_name = sys.argv[2]
@@ -38,6 +39,7 @@ def main():
   album_cnt = 0
   for dir, subdirs, subfiles in os.walk(unicode(root_dir)):
     try:
+      #print 'scanning %s' % dir
       album = scan_album_from_dir(dir)
       if not SHOW_ONLY_FAILS:
         assert album is not None
@@ -47,8 +49,7 @@ def main():
     except NotAlbumException, e:
       if SHOW_ONLY_FAILS and e.code.serious:
         print u'%s: %s -> %s' % (e.code, dir, e.msg)
-  print 'volume %s updated' % volume_name
-  print '%d albums found' % album_cnt
+  print 'rescanned volume %s with %s albums' % (volume_name, album_cnt)
 
 
 if __name__ == '__main__':

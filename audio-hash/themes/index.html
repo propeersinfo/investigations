@@ -2,21 +2,24 @@
 
 {% block main %}
 
-	<p>Сайт периодически пополняется. Последний раз это случилось {{up_date.strftime('%Y-%m-%d')}}.
-
-	<p>Прошу сообщать о серьёзных ошибках, таких как:<br>
-		— отсутствие какой либо страницы,<br>
-		— архив не найден или был удалён,<br>
-		— несоответствие содержимого архива странице с которой он был скачан.
-
+<table class="grey" border=0 cellpadding=0 cellspacing=0><tr><td valign=top width="50%">
 	<ol class="lotta_links">
 	{% for cat in cats %}
 		<li><a href="/{{cat.name}}.html">{{cat.title}} ({{cat.count}})</a></li>
 	{% endfor %}
 	</ol>
+</td><td valign=top width="50%">
+	<p>Сайт периодически <a href="/updates.html">дополняется</a>.
 
-	{% if scg.is_production() %}
-	{% include 'disqus.html' %}
-	{% endif %}
-        
+	<p>Прошу сообщать о серьёзных ошибках, таких как:
+	
+	<ol>
+		<li>отсутствие какой либо страницы,
+		<li>архив не найден или был удалён,
+		<li>несоответствие архива странице с которой он был скачан,
+		<li>неверный каталожный номер,
+		<li>неполный альбом и т.п.
+	</ol>
+</td></tr></table>
+
 {% endblock main %}

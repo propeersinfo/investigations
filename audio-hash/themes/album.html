@@ -10,11 +10,14 @@
 
 {% block main %}
 
-<h1>{{ album.title|typo }}</h1>
+<h1>{{ album.title_short|typo }}</h1>
 
 <div class="columns">
 	<div class="left">
+		<!--
 		<img src="/static/generic.jpg" width="200">
+		-->
+		<img src="{{album.cover_url}}" width="200">
 	</div>
 	<div class="right">
 		<ul>
@@ -22,6 +25,13 @@
 			<li>{{ track.file_name|typo }}
 		{% endfor %}
 		</ul>
+		
+{% if album.cat_no %}
+		<p>
+			<small>{{ album.cat_no }}</small>
+		</p>
+{% endif %}
+			
 		<p>
 			<a href="{{ album.url }}">Скачать</a>
 			{{ album.audio_format|upper }}

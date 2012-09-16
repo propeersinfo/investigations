@@ -1,17 +1,20 @@
 NORMAL
+- a way to upload an album from a directory
 - obtain md5 via FLAC.info.md5_signature
 - periodic automated checking of the links to be alive
-- ftp upload script
-- command to be able to clean Edge from album of three instances (wd, edge, narod)
+- ftp folder upload script
 - option to check unque against narod only
 - throw off mixed bitrate albums
 - save total count of tracks in folders
 - prevent ctrl+c while updating files -> http://stackoverflow.com/questions/842557/
-
-get short path returns illega value for ".\baltic\!new\Vanemõde\17. Sõbrad, Sõbrad, Tuttavad.mp3" --> .\baltic\!new\Vanemõde\17SBRA~1.MP3
+- safe actions - DB update, mp3 update
+- use file names like ABCDEFGHABCDEFGH-in.zip
++ normalize baltic unicode to ascii when making data for search
+- normalize baltic unicode to ascii when filtering user input
 
 
 LOW
+- replace CD1, CD2, CD3 with single zip
 - browser blinks when loading pages somteimes
 - async JS to show if an archive link is alive
 - folders like "CD1" they are confusing when a user unpacks them
@@ -28,3 +31,5 @@ DONE
 + command to update DB/narod from files
 + checking of the links to be alive
 + report folders not recognized as albums (scan-volume.py)
++ command to be able to clean Edge from album of three instances (wd, edge, narod)
++ implement cover images

@@ -10,8 +10,11 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 </head>
 
+<body style="background: #260808 url(/static/waves.jpg); background-attachment:fixed;">
 
+<!--
 <body>
+-->
 
 <div id="everything">
 
@@ -19,10 +22,13 @@
 <table border=0 cellspacing=0 cellpadding=0><tr><td width="100%" valign="bottom">
 	<h2>
 		<a href="/">
-			<img src="/static/crash.png" style="margin-left:0px;">
+			<img src="/static/crash.png" style="border:none; margin-left:0px;">
 		</a>
 		<span class="text" style="">
+			{#
 			{% block category %}<img src="/static/years.png">{% endblock %}
+			#}
+			{% block category %}1965&ndash;1985{% endblock %}
 		</span>
 	</h2>
 </td><td valign="bottom">
@@ -36,14 +42,28 @@
 
 <div class="footer">
 	<p>	2012—... <a href="mailto:arkiv@yandex.ru">arkiv@yandex.ru</a>
+		| <a href="/feedback.html">гостевая</a>
+		| <a href="/updates.html">обновления</a>
+		| <a href="/search.html">поиск</a>
+	<p> Расшифровка. EP, 000, С62, Г62, М62 — миньоны 7". LP, С60, М30 — гиганты 12".
 	<p>	Сайт создан исключительно для ознакомления россиян с культурным наследием своей страны
 		и не преследует целей заработка.
 		После прослушивания данных музыкальных материалов пользователь обязан удалить их
-		со своих устройств.
-	<p> Расшифровка. EP, 000, С62, Г62, М62 — миньоны 7". LP, С60, М30 — гиганты 12".
+		со своих устройств и скататься на барахолку за оригиналами.
 	<p style="display:none;">
 		Всего здесь {{scg.total_size|format_size}}.
-	<p> Высококачественные рипы пластинок — сайт <a href="http://plastinka.org/">plastinka.org</a>.
+	{#
+	<p>	Копирайты релизеров по возможности сохранены. Спасибы: 
+		skameikin, limonka, tkonst-fm, parazita kusok, nikanuf, mvaleryi, oplombee, sssrviapesni,
+		samopal&nbsp;records, jazoman, andy, koloboga, gar-kir, stojak, юрий&nbsp;1963,
+		plastinka, sertse, ollleg, sergjazz, gavic, svarnoy, adey, sphere,
+		manfred06, tatyko, gosha-k, luckless, yurich,
+		dingo, valdas, andris, оборотень,
+		m.&thinsp;joela, k.&thinsp;jansen, baran&nbsp;records, weedska, funkofun, mr.&thinsp;and-7,
+		многим другим и себе тоже.
+	#}
+	<p> Высококачественные рипы пластинок — сайт <a href="http://plastinka.org/" target="_blank">plastinka.org</a>
+
 	<!--
 	<p>	<center>
 			<a href="http://vk.com/share.php?url=http%3A%2F%2Farkiv.narod.ru&title=Soviet%20Archives"><img src="/static/vk.png"></a>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+/ Последние обновления
+{% endblock %}
+
+
+{% block category %}
+/ <span class="active_path">Обновления</span>
+{% endblock %}
+
+
+{% block main %}
+
+<ul>
+{% for block in scg.albums_by_date %}
+	<li>
+		<h3><a class="ajax" href="javascript:$('#toggle_{{block.date}}').toggle(100);">{{ block.date }} <small>— {{ block.albums|length }} шт.</small></a></h3>
+		<ol class="lotta_links hidden" id="toggle_{{block.date}}">
+		{% for album in block.albums %}
+			<li><a href="/{{album.album_hash}}.html">{{album.title|escape|typo}}</a>
+		{% endfor %}
+		</ol>
+	</li>
+{% endfor %}
+</ul>
+
+{% endblock main %}
