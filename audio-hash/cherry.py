@@ -228,11 +228,12 @@ def gen_index_page():
 
 def gen_category_page(category):
   scg = StaticContentGenerator.get_instance(DB_ROOT)
+  sort_by_last_name = lambda album: os.path.split(album['path'])[1]
   template_variables = {
     'scg': scg,
     'category': category,
     'category_title': cat_title(category),
-    'albums': sorted(scg.categories[category], key=lambda album: album['path']),
+    'albums': sorted(scg.categories[category], key=sort_by_last_name),
     }
   return render_template('category.html', template_variables)
 

@@ -6,4 +6,4 @@
 ::@type %OUT%
 ::tail -F %OUT%
 
-python %~n0.py
+python %~n0.py %1 %2 %3 %4 %5 %6 %7 %8 %9

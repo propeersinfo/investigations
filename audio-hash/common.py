@@ -119,6 +119,7 @@ class NotAlbumException(Exception):
 
 
 def get_audio_files(dir):
+  assert os.path.exists(dir)
   files_by_ext = {}
   for ext in RECOGNIZED_AUDIO_EXTENSIONS:
     mask = '*.%s' % ext
