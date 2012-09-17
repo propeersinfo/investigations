@@ -10,7 +10,7 @@ import hashlib
 import subprocess
 from time import sleep
 
-from common import archive_dir
+from common import archive_dir, empty_files
 from common import calc_album_hash
 from common import get_audio_files
 from common import collect_audio_hashes
@@ -60,12 +60,15 @@ def do_upload(zip_file):
     return None
 
 
-def handle_dir(dir, hash1, hash_db, last_iteration):
+def handle_dir(dir, hash_check, is_last_iteration):
   audio_files, _ = get_audio_files(dir)
-  hash2 = calc_album_hash(dir) # todo: handle NotAlbumException
-  assert hash1 == hash2, '%s vs %s' % (hash1, hash2)
+  hash_actual = calc_album_hash(dir) # todo: handle NotAlbumException
+  if hash_check:
+    assert type(hash_check) == str, type(hash_check)
+    assert type(hash_actual) == str, type(hash_actual)
+    assert hash_check == hash_actual, '%s vs %s' % (hash_check, hash_actual)
 
-  db_album_file = os.path.join(DB_ROOT, NAROD_VOLUME, hash1)
+  db_album_file = os.path.join(DB_ROOT, NAROD_VOLUME, hash_actual)
   if os.path.exists(db_album_file):
     #append_file(FAILURE_LIST, '%s %s' % (hash1, dir))
     print ''
@@ -73,7 +76,7 @@ def handle_dir(dir, hash1, hash_db, last_iteration):
     print 'No zip, no upload'
     print ''
   else:
-    archive_file = os.path.join(ARCHIVE_TEMP_DIR, '%s.zip' % hash1)
+    archive_file = os.path.join(ARCHIVE_TEMP_DIR, '%s.zip' % hash_actual)
     print 'zipping into %s...' % archive_file
     if ACTUAL_ZIP_AND_UPLOAD:
       archive_dir(dir, archive_file)
@@ -88,62 +91,74 @@ def handle_dir(dir, hash1, hash_db, last_iteration):
         album_obj['total_size'] = os.stat(archive_file).st_size
         #print 'WARNING! db file not written!'
         save_db_album(DB_ROOT, NAROD_VOLUME, album_obj)
-      append_file(SUCCESS_LIST, '%s %s' % (hash1, dir))
+      append_file(SUCCESS_LIST, '%s %s' % (hash_actual, dir))
 
-      if not last_iteration and ACTUAL_ZIP_AND_UPLOAD:
+      if not is_last_iteration and ACTUAL_ZIP_AND_UPLOAD:
         print 'sleeping for %s seconds' % SLEEP_SEC
         sleep(SLEEP_SEC)
 
     else:
-      append_file(FAILURE_LIST, '%s %s' % (hash1, dir))
+      append_file(FAILURE_LIST, '%s %s' % (hash_actual, dir))
 
     if os.path.exists(archive_file):
       os.remove(archive_file)
 
 
-def main():
-  SafeStreamFilter.substitute_stdout()
-
-  assert os.path.exists(QUEUE_FILE)
-
-  hash_db = collect_audio_hashes()
-
-  volume_dir = os.path.join(DB_ROOT, NAROD_VOLUME)
-  if not os.path.exists(volume_dir):
-    os.mkdir(volume_dir)
-
-  if os.path.exists(SUCCESS_LIST): os.remove(SUCCESS_LIST)
-  if os.path.exists(FAILURE_LIST): os.remove(FAILURE_LIST)
-
-  append_file(SUCCESS_LIST, '')
-  append_file(FAILURE_LIST, '')
-
+def get_dirs_from_list(queue_file):
   entries = []
-  with codecs.open(QUEUE_FILE, 'r', 'utf-8') as f:
+  with codecs.open(queue_file, 'r', 'utf-8') as f:
     try:
       for line in f:
         hash1, size, fmt, dir = re.split(r'\s+', line.strip(), 3)
+        hash1 = str(hash1)
         if dir:
           if not os.path.exists(dir):
             print 'directory does not exist: %s' % dir
             raise Exception('directory does not exist: %s' % dir)
           entries.append((hash1, size, fmt, dir))
     except UnicodeDecodeError:
-      print 'Make sure "%s" is UTF-8' % QUEUE_FILE
-      return
+      raise Exception('Make sure "%s" is UTF-8' % queue_file)
+  return entries
+
+
+def main():
+  SafeStreamFilter.substitute_stdout()
+
+  target = sys.argv[1] if len(sys.argv) >= 2 else QUEUE_FILE
+  assert os.path.exists(target)
+
+  volume_dir = os.path.join(DB_ROOT, NAROD_VOLUME)
+  if not os.path.exists(volume_dir):
+    os.mkdir(volume_dir)
+
+  empty_files(SUCCESS_LIST, FAILURE_LIST)
+
+  if os.path.isdir(target):
+    # upload single dir
+    hash = None
+    size = -1
+    fmt = '?'
+    dir = target.decode('1251')
+    print dir
+    assert os.path.exists(dir)
+    entries = [ (hash, size, fmt, dir) ]
+  else:
+    # upload dirs from a list
+    entries = get_dirs_from_list(target)
 
   for i, tuple in enumerate(entries):
+    assert tuple
     hash1, size, fmt, dir = tuple
     print '--------------- Album %d/%d ----------------' % (i + 1, len(entries))
     print '%s (%s MB)' % (dir, size)
 
     last_iteration = i + 1 == len(entries)
-    handle_dir(dir, hash1, hash_db, last_iteration)
+    #print 'hash1 = ', hash1
+    handle_dir(dir, hash1, last_iteration)
 
     sys.stdout.flush()
 
-  print 'FINISHED'
-  print 'Press Enter'
+  print 'Finished. Press Enter'
   sys.stdout.flush()
   sys.stdin.readline()
 

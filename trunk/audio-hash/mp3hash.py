@@ -90,43 +90,43 @@ def read_audio_data_hash_by_extension(file):
     return None
 
 
-def get_mp3_audio_data(mp3_file):
-  with open(mp3_file, 'rb') as f:
-    buf = f.read()
-  assert len(buf) == os.stat(mp3_file).st_size
+#def get_mp3_audio_data(mp3_file):
+#  with open(mp3_file, 'rb') as f:
+#    buf = f.read()
+#  assert len(buf) == os.stat(mp3_file).st_size
+#
+#  audio_start = 0
+#  audio_end = len(buf)
+#
+#  if buf[0:3] == 'ID3':
+#    id3_v2_len = 20 if ord(buf[5]) & 0x10 else 10
+#    id3_v2_len += ((ord(buf[6]) * 128 + ord(buf[7])) * 128 + ord(buf[8])) * 128 + ord(buf[9])
+#    audio_start += id3_v2_len
+#
+#  if buf[-128:-125] == 'TAG':
+#    audio_end -= 128
+#
+#  ape_pos = buf.find('APETAGEX', audio_start, audio_end)
+#  if ape_pos >= 0:
+#    audio_end = ape_pos
+#
+#  lyr = buf.find('LYRICSBEGIN', audio_start, audio_end)
+#  if lyr >= 0:
+#    audio_end = lyr
+#
+#  # some taggers like Mutagen does place ID3v1 before APE
+#  # so let's try to recognize ID3v1 again
+#  p = audio_end - 128
+#  if p >= 0 and buf[p:p + 3] == 'TAG':
+#    audio_end = p
+#
+#  return buf[audio_start:audio_end]
 
-  audio_start = 0
-  audio_end = len(buf)
 
-  if buf[0:3] == 'ID3':
-    id3_v2_len = 20 if ord(buf[5]) & 0x10 else 10
-    id3_v2_len += ((ord(buf[6]) * 128 + ord(buf[7])) * 128 + ord(buf[8])) * 128 + ord(buf[9])
-    audio_start += id3_v2_len
-
-  if buf[-128:-125] == 'TAG':
-    audio_end -= 128
-
-  ape_pos = buf.find('APETAGEX', audio_start, audio_end)
-  if ape_pos >= 0:
-    audio_end = ape_pos
-
-  lyr = buf.find('LYRICSBEGIN', audio_start, audio_end)
-  if lyr >= 0:
-    audio_end = lyr
-
-  # some taggers like Mutagen does place ID3v1 before APE
-  # so let's try to recognize ID3v1 again
-  p = audio_end - 128
-  if p >= 0 and buf[p:p + 3] == 'TAG':
-    audio_end = p
-
-  return buf[audio_start:audio_end]
-
-
-def calc_mp3_audio_hash(file):
-  h = hashlib.md5()
-  h.update(get_mp3_audio_data(file))
-  return h.hexdigest().upper()
+#def calc_mp3_audio_hash(file):
+#  h = hashlib.md5()
+#  h.update(get_mp3_audio_data(file))
+#  return h.hexdigest().upper()
 
 
 def calc_mp3_audio_hash_external_program(mp3_file, cmd_line_maker):
@@ -273,16 +273,11 @@ def calc_mp3_audio_hash_mpg123(mp3_file):
 
 
 def main_update():
-  ''' update given mp3's with md5 of their audio content '''
+  """ update given mp3's with md5 of their audio content """
 
-  ERROR_LOG = '~errors.m3u'
-  BADMP3_LOG = '~incorrect.m3u'
-  GENERAL_LOG = '~general.log'
-  # FORCE_REWRITE = True
-
-  # if FORCE_REWRITE:
-  # 	print "warning: FORCE_REWRITE is on"
-  # 	append_file(ERROR_LOG, "warning: FORCE_REWRITE is on")
+  ERROR_LOG = 'c:\\temp\\mp3hash.errors.m3u'
+  BAD_MP3_LOG = 'c:\\temp\\mp3hash.incorrect.m3u'
+  GENERAL_LOG = 'c:\\temp\\mp3hash.general.log'
 
   def do_mp3(file):
     append_file(GENERAL_LOG, 'File %s ...' % file)
@@ -315,15 +310,8 @@ def main_update():
           if os.path.exists(tmp):
             os.remove(tmp)
       else:
-        append_file(BADMP3_LOG, "# %s" % file)
-        append_file(BADMP3_LOG, win32api.GetShortPathName(file))
-
-  root_dir = sys.argv[2]
-
-  empty_files(ERROR_LOG, BADMP3_LOG, GENERAL_LOG)
-  #append_file(ERROR_LOG,  '#-----------------------------')
-  #append_file(BADMP3_LOG, '#-----------------------------')
-  #append_file(GENERAL_LOG, '#-----------------------------')
+        append_file(BAD_MP3_LOG, "# %s" % file)
+        append_file(BAD_MP3_LOG, win32api.GetShortPathName(file))
 
   def collect_mp3s(root_dir):
     files = []
@@ -340,6 +328,10 @@ def main_update():
     else:
       assert False, root_dir
     return files
+
+  root_dir = sys.argv[2]
+
+  empty_files(ERROR_LOG, BAD_MP3_LOG, GENERAL_LOG)
 
   print 'collecting mp3 names...'
   files = collect_mp3s(root_dir)
