@@ -42,9 +42,12 @@
 
 <div class="footer">
 	<p>	2012—... <a href="mailto:arkiv@yandex.ru">arkiv@yandex.ru</a>
-		| <a href="/feedback.html">гостевая</a>
+		| <a href="/comments.html">сообщить</a>
 		| <a href="/updates.html">обновления</a>
 		| <a href="/search.html">поиск</a>
+{% if not scg.is_production() %}
+		| <a href="http://metrika.yandex.ru/stat/dashboard/?counter_id=16741039">статистика</a>
+{% endif %}
 	<p> Расшифровка. EP, 000, С62, Г62, М62 — миньоны 7". LP, С60, М30 — гиганты 12".
 	<p>	Сайт создан исключительно для ознакомления россиян с культурным наследием своей страны
 		и не преследует целей заработка.

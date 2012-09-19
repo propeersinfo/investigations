@@ -76,7 +76,7 @@ def handle_dir(dir, hash_check, is_last_iteration):
     print 'No zip, no upload'
     print ''
   else:
-    archive_file = os.path.join(ARCHIVE_TEMP_DIR, '%s.zip' % hash_actual)
+    archive_file = os.path.join(ARCHIVE_TEMP_DIR, 'arkiv.narod.ru %s.zip' % hash_actual)
     print 'zipping into %s...' % archive_file
     if ACTUAL_ZIP_AND_UPLOAD:
       archive_dir(dir, archive_file)
@@ -85,6 +85,8 @@ def handle_dir(dir, hash_check, is_last_iteration):
 
     narod_url = do_upload(archive_file)
     if narod_url:
+      if narod_url.find(hash_actual) < 0:
+        raise Exception('uploaded url does not contain hash! %s in %s' % (hash_actual, narod_url))
       if ACTUAL_ZIP_AND_UPLOAD:
         album_obj = scan_album_from_dir(dir)
         album_obj['url'] = narod_url
@@ -114,49 +116,59 @@ def get_dirs_from_list(queue_file):
         if dir:
           if not os.path.exists(dir):
             print 'directory does not exist: %s' % dir
-            raise Exception('directory does not exist: %s' % dir)
-          entries.append((hash1, size, fmt, dir))
+            #raise Exception('directory does not exist: %s' % dir)
+          else:
+            entries.append((hash1, size, fmt, dir))
     except UnicodeDecodeError:
       raise Exception('Make sure "%s" is UTF-8' % queue_file)
   return entries
 
 
 def main():
-  SafeStreamFilter.substitute_stdout()
+  try:
+    SafeStreamFilter.substitute_stdout()
 
-  target = sys.argv[1] if len(sys.argv) >= 2 else QUEUE_FILE
-  assert os.path.exists(target)
+    target = sys.argv[1] if len(sys.argv) >= 2 else QUEUE_FILE
+    assert os.path.exists(target)
 
-  volume_dir = os.path.join(DB_ROOT, NAROD_VOLUME)
-  if not os.path.exists(volume_dir):
-    os.mkdir(volume_dir)
+    volume_dir = os.path.join(DB_ROOT, NAROD_VOLUME)
+    if not os.path.exists(volume_dir):
+      os.mkdir(volume_dir)
 
-  empty_files(SUCCESS_LIST, FAILURE_LIST)
+    empty_files(SUCCESS_LIST, FAILURE_LIST)
 
-  if os.path.isdir(target):
-    # upload single dir
-    hash = None
-    size = -1
-    fmt = '?'
-    dir = target.decode('1251')
-    print dir
-    assert os.path.exists(dir)
-    entries = [ (hash, size, fmt, dir) ]
-  else:
-    # upload dirs from a list
-    entries = get_dirs_from_list(target)
+    if os.path.isdir(target):
+      # upload single dir
+      hash = None
+      size = 0
+      fmt = '?'
+      dir = target.decode('1251')
+      print dir
+      assert os.path.exists(dir)
+      entries = [ (hash, size, fmt, dir) ]
+    else:
+      # upload dirs from a list
+      entries = get_dirs_from_list(target)
 
-  for i, tuple in enumerate(entries):
-    assert tuple
-    hash1, size, fmt, dir = tuple
-    print '--------------- Album %d/%d ----------------' % (i + 1, len(entries))
-    print '%s (%s MB)' % (dir, size)
+    # sort by folder size - tinies first
+    entries = sorted(entries, key=lambda tuple: int(tuple[1]))
 
-    last_iteration = i + 1 == len(entries)
-    #print 'hash1 = ', hash1
-    handle_dir(dir, hash1, last_iteration)
+    for i, tuple in enumerate(entries):
+      assert tuple
+      hash1, size, fmt, dir = tuple
+      print '--------------- Album %d/%d ----------------' % (i + 1, len(entries))
+      print '%s (%s MB)' % (dir, size)
 
-    sys.stdout.flush()
+      last_iteration = i + 1 == len(entries)
+      handle_dir(dir, hash1, last_iteration)
+
+      sys.stdout.flush()
+
+      #raise Exception('just breaking the loop after the first iteration')
+
+  except BaseException, e:
+    print 'exception occured; breaking the loop'
+    print e
 
   print 'Finished. Press Enter'
   sys.stdout.flush()
