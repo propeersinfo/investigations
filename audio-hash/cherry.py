@@ -31,14 +31,14 @@ DB_ROOT = 'DB\\narod'
 
 def cat_title(cat_name):
   CAT_TITLES = {
-    u'baltic': u'Прибалтика',
+    u'baltic': u'Прибалты',
     u'vocalists': u'Вокалисты',
-    u'instrumental': u'Инструментальная музыка',
-    u'ukraine': u'Украина',
+    u'instrumental': u'Инструментальная',
+    u'ukraine': u'Укры',
     u'composers': u'Композиторы',
     u'via': u'ВИА',
     u'jazz': u'Джаз',
-    u'georgia': u'Грузия',
+    u'georgia': u'Грузины',
     }
   return CAT_TITLES.get(cat_name, cat_name)
 
@@ -98,6 +98,10 @@ class StaticContentGenerator:
         last_block['albums'].append(album)
       else:
         res.append({'date':this_date, 'albums':[album]})
+        
+    for block in res:
+      block['albums'] = sorted(block['albums'], key=lambda album: album['title'])
+    
     return res[::-1] # reversed
 
   def is_production(self):
@@ -150,7 +154,8 @@ class StaticContentGenerator:
       [ur'\s*FLAC$', '', re.I],
       #[ur'\s+\dCD/CD', ' CD', re.I], # '3CD/CD1' => 'CD1'
       [ur'\s+(\d+)CD/CD(\d+)', u' \\1CD №\\2', re.I], # '3CD/CD1' => 'CD1'
-                                     # apply it among last ones
+      [ur'#', '/', re.I],
+      # apply it among last ones
       [ur'/', ' / ', re.I],]
     for sub in subs:
       album['title'] = re.sub(sub[0], sub[1], album['title'], flags=sub[2])
@@ -199,7 +204,7 @@ def generate_static_site():
 
   save_page('index.html', gen_index_page())
   save_page('search.html', gen_search_page())
-  save_page('feedback.html', gen_feedback_page())
+  save_page('comments.html', gen_feedback_page())
   save_page('updates.html', gen_updates_page())
   for cat_name in scg.categories.keys():
     save_page('%s.html' % cat_name, gen_category_page(cat_name))
@@ -228,12 +233,12 @@ def gen_index_page():
 
 def gen_category_page(category):
   scg = StaticContentGenerator.get_instance(DB_ROOT)
-  sort_by_last_name = lambda album: os.path.split(album['path'])[1]
+  sort_by_title = lambda album: album['title']
   template_variables = {
     'scg': scg,
     'category': category,
     'category_title': cat_title(category),
-    'albums': sorted(scg.categories[category], key=sort_by_last_name),
+    'albums': sorted(scg.categories[category], key=sort_by_title),
     }
   return render_template('category.html', template_variables)
 
@@ -333,7 +338,7 @@ class Root:
   def search(self):
     return gen_search_page()
 
-  @cherrypy.expose(alias="feedback.html")
+  @cherrypy.expose(alias="comments.html")
   def search(self):
     return gen_feedback_page()
 
