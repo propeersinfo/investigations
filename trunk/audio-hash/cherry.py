@@ -352,6 +352,11 @@ class Root:
     return serve_file(file_path)
 
   @cherrypy.expose
+  def previews(self, *url_path, **url_params):
+    file_path = os.path.join(current_dir, 'previews', *url_path)
+    return serve_file(file_path)
+
+  @cherrypy.expose
   def covers(self, *url_path, **url_params):
     file_path = os.path.join(current_dir, 'covers', 'all', *url_path)
     return serve_file(file_path)
