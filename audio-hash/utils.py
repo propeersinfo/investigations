@@ -5,6 +5,17 @@ import sys
 import unicodedata
 
 
+def format_time_hms(time_seconds):
+  sec = time_seconds % 60
+
+  min = time_seconds / 60
+  min %= 60
+
+  hrs = int(float(time_seconds) / 60 / 60)
+
+  return '%d:%02d:%02d' % (hrs, min, sec)
+
+
 def normalize_unicode_except_cyrillic(s):
   res = StringIO()
   for ch in unicodedata.normalize('NFKD', s):

@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import json
-import sys
 import re
 import os
 import zipfile
 import glob
 import codecs
 import hashlib
-from StringIO import StringIO
 import Image
 from mutagen.flac import FLAC
 from mutagen.mp3 import MP3
@@ -19,7 +17,7 @@ RECOGNIZED_AUDIO_EXTENSIONS = [ 'mp3', 'flac', 'ape' ]
 ALLOWED_AUDIO_EXTENSIONS    = [ 'mp3', 'flac' ]
 
 
-def tmpfile():
+def tempfilename():
   from tempfile import NamedTemporaryFile
   return NamedTemporaryFile(delete=False).name
 
@@ -142,12 +140,6 @@ def get_audio_files(dir):
     raise NotAlbumException(NotAlbumException.MIXED_CODECS, dir)
 
 
-# def get_album_format(dir):
-# 	print 'dir is ', dir
-# 	_, ext = get_audio_files(dir)
-# 	return ext.upper()
-
-
 def check_files_continuosity(dir, files):
   """ it is expected param 'files' is sorted already """
   REGEX_01  = '^([0-9][0-9]?)[^0-9].+' # 1, 01
@@ -232,55 +224,17 @@ def archive_dir(dir, arc_name):
   zf.close()
 
 
-#def diff(a, b, path='/root'):
-#  ka = set(a.keys())
-#  kb = set(b.keys())
-#  if ka != kb:
-#    diff1 = ka - kb
-#    diff2 = kb - ka
-#    print '%s' % path
-#    for key in diff1:
-#      print '< %s => ...' % key
-#    for key in diff2:
-#      print '> %s => ...' % key
-#  else:
-#    for key in ka:
-#      val_a = a[key]
-#      val_b = b[key]
-#      if type(val_a) == type(val_b):
-#        if type(val_a) == dict:
-#          diff(val_a, val_b, '%s/%s' % (path, key))
-#        elif val_a != val_b:
-#          print '%s' % path
-#          print '< %s => %s' % (key, val_a)
-#          print '> %s => %s' % (key, val_b)
-#      else:
-#        print '%s' % path
-#        print '< %s => %s' % (key, type(val_a))
-#        print '> %s => %s' % (key, type(val_b))
-
 class Album(dict):
   def get_audio_format(self):
-    '''
+    """
     Actually return extension of the first file.
     It is assumed every file in an album has the same extension.
-    '''
+    """
     if len(self['tracks']) > 0:
       a_fname = self['tracks'][0]['file_name']
       return os.path.splitext(a_fname)[1][1:].upper()
     else:
       return None
-#  def __eq__(self, other):
-#    assert type(other) == Album
-#    d1 = json.loads(json.dumps(self))
-#    d2 = json.loads(json.dumps(other))
-#
-##    write_file('cmp.self', json.dumps(self))
-##    write_file('cmp.other', json.dumps(other))
-#
-#    eq = d1 == d2
-#    return eq
-#    #return False
 
 
 def get_media_info(file):
@@ -302,37 +256,6 @@ def get_media_info(file):
     }
   else:
     return {}
-
-
-#def __calc_album_hash(hash_db, dir, afiles_short, warnings=None):
-#  def warn(msg):
-#    #if warnings:
-#    #  print >> warnings, msg
-#    print >>sys.stdout, msg
-#
-#  # if afiles_short == None:
-#  # 	afiles_short = get_audio_files(dir)
-#
-#  ah = hashlib.md5()
-#  for i, file in enumerate(afiles_short):
-#    assert isinstance(dir, basestring)
-#    assert isinstance(file, basestring), 'actual type %s' % type(file)
-#    file_abs = os.path.join(dir, file)
-#    #print file_abs
-#    one_hash = hash_db.get(file_abs)
-#    if not one_hash:
-#      warn(u'audio hash not found for files[%d] in %s' % (i, dir))
-#      return None
-#    one_hash = one_hash.upper()
-#    #assert len(one_hash) == 32, 'Bad hash %s' % one_hash
-#    assert check_hex_digest(one_hash), 'Bad hash %s' % one_hash
-#    #assert int(one_hash,16) != 0, Exception(u'bad hash %s for file %s' % (one_hash, file_abs))
-#    if int(one_hash, 16) == 0:
-#      # this may happen for wma, ogg or 24 bit flac encoded by foobar2000
-#      warn('zero audio hash in %s' % dir)
-#      return None
-#    ah.update(one_hash)
-#  return ah.hexdigest().upper()
 
 
 def scan_album_from_dir(dir):
@@ -419,7 +342,7 @@ def save_db_album(db_root, volume_name, album, suffix=None):
   assert album['album_hash']
   assert len(album['tracks'])
 
-  json_file_tmp = tmpfile()
+  json_file_tmp = tempfilename()
   json_file_real = os.path.join(db_root, volume_name, album['album_hash'])
   if suffix:
     json_file_real = '%s.%s' % (json_file_real, suffix)
@@ -500,5 +423,3 @@ def find_cover_image(dir):
         return img
 
   return images[0] if len(images) else None # any
-
-

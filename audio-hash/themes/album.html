@@ -18,6 +18,13 @@
 		<img src="/static/generic.jpg" width="200">
 		-->
 		<img src="{{album.cover_url}}" width="200">
+		
+		<p>	<audio controls style="width:200px">
+				<source src="/previews/{{album.album_hash}}.ogg"/>
+				Your browser does not support audio tag.
+			</audio>
+		</p>
+		
 	</div>
 	<div class="right">
 		<ul>
@@ -32,8 +39,7 @@
 		</p>
 {% endif %}
 			
-		<p>
-			<a href="{{ album.url }}">Скачать</a>
+		<p>	<a href="{{ album.url }}">Скачать</a>
 			{{ album.audio_format|upper }}
 {% if album.audio_format == 'flac' %}
 			{{ album.tracks[0].bits_per_sample }}/{{ album.tracks[0].khz }},
