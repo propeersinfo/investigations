@@ -13,4 +13,4 @@ python gen_static.py
 copy .\themes\grid\static\favicon.png .\html
 
 :: review result
-browser.bat "http://localhost/"
+::browser.bat "http://localhost/"

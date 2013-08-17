@@ -3,17 +3,19 @@ import os
 import re
 import urllib
 import datetime
+from wsgiref.handlers import format_date_time
+
 from google.appengine.api import users
 import simplejson as json
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext import db
-from wsgiref.handlers import format_date_time
+
 
 # todo: consider handling over quota exc
 
 # format an str/unicode json-string as one readable by humans
-# standard json.sumps() produces all these '\xUUUU'
+# because the standard json.sumps() produces all these '\xUUUU'
 def pretty_print_json_readable_unicode(json_text):
     def do_level(out, root, level = 0):
         offset = '  ' * level

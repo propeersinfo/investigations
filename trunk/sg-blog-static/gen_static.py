@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # this must go first - this var is to be checked in defs.py
 import os
 import random
@@ -6,10 +8,8 @@ from operaimport import tags_categorized
 
 os.environ.setdefault('SERVER_PROFILE', 'PRODUCTION')
 
-import codecs
 import glob
 import datetime
-import re
 import sys
 import jinja2
 from jinja2 import Environment, FileSystemLoader
@@ -18,9 +18,8 @@ import defs
 import clevermarkup
 from comment_db import CommentDB
 from userinfo import UserInfo
+from MarkdownFile import MarkdownFile
 import utils
-from operaimport.post_parser import parse_date_string
-from operaimport.tag_rewrite import rewrite_tag
 
 #register = template.Library()
 #register.filter('typographus', typographus.typo)
@@ -30,6 +29,7 @@ from operaimport.tag_rewrite import rewrite_tag
 #    @contextfunction
 #    def parse(self, parser):
 #        return Output("My Owl Extension")
+
 
 def page_url(page1):
     return '/page/%d.html' % page1 if page1 > 1 else '/'
@@ -54,31 +54,39 @@ def render_template(template_name, variables):
 
     # Jinja2
     env = Environment(loader=FileSystemLoader(['themes/grid', 'themes']), extensions=[])
+
     def static_resource(value):
         return '/static/%s?v=%s' % (value, urllib.quote_plus(defs.APP_VERSION))
+
     def typographus(value):
         from typographus import typo
+
         if isinstance(value, jinja2.runtime.Undefined):
             value = ''
         if type(value) == str:
             value = unicode(value)
         return typo(value)
-    def blog_tag(value, tag_name, tag_title = None):
+
+    def blog_tag(value, tag_name, tag_title=None):
         if not tag_title:
             tag_title = tag_name
         return '<a href="/tag/%s.html">%s</a>' % (tag_name, tag_title)
-    def blog_tag_cnt(value, tag_cloud, blog_tag_name, blog_tag_title = None):
+
+    def blog_tag_cnt(value, tag_cloud, blog_tag_name, blog_tag_title=None):
         if not blog_tag_title:
             blog_tag_title = blog_tag_name
         mapp = tag_cloud.articles_by_tags
         count = len(mapp[blog_tag_name]) if mapp.has_key(blog_tag_name) else 0
         if count > 0:
-            return '<a href="/tag/%s.html">%s</a> <span class="count">%s</span>' % (blog_tag_name, blog_tag_title, count)
+            return '<a href="/tag/%s.html">%s</a> <span class="count">%s</span>' % (
+                blog_tag_name, blog_tag_title, count)
         else:
             return '%s' % blog_tag_title
+
     def sidebar_link(value, title, description, url):
         #return '<li><a href="%s">%s</a><br>\n<span class="description">%s</span></li>\n' % (url, title, description.lower())
         return '<li><a href="%s" title="%s">%s</a>' % (url, description.lower(), title)
+
     def urlencode(value):
         if isinstance(value, unicode):
             value = value.encode('utf-8')
@@ -97,6 +105,7 @@ def render_template(template_name, variables):
 #webapp.template.register_template_library('my_tags')
 
 DEFAULT_COUNTRY_TAG = 'russia'
+
 
 # info about tags used in articles, etc
 class BlogMeta:
@@ -136,76 +145,29 @@ class BlogMeta:
         articles_by_tags = {}
         for md_short in glob.glob1(defs.MARKDOWN_DIR, '*'):
             md_full = os.path.join(defs.MARKDOWN_DIR, md_short)
-            if os.path.isdir(md_full):
-                continue
-            print >>sys.stderr, 'md:', md_full
-            md = MarkdownFile.parse(md_full, read_content=False)
-            articles_by_slugs[md.meta['slug']] = md
-            #print >>sys.stderr, '  tags:', md.meta['tags']
-            #print >>sys.stderr, '  date:', md.meta['date']
+            if os.path.isfile(md_full):
+                print >> sys.stderr, 'md:', md_full
 
-            if md.meta.has_key('tags'):
-                # add tag 'russia' to certain articles
-                region_tags = tags_categorized.get_region_tags()
-                intersection = set(md.meta['tags']) & set(region_tags)
-                if not len(intersection):
-                    countryable = len( set(md.meta['tags']) & {'info', 'mix'}) == 0
-                    if countryable:
-                        md.meta['tags'].append(DEFAULT_COUNTRY_TAG)
+                md = MarkdownFile.parse(md_full, read_content=False)
+                articles_by_slugs[md.meta['slug']] = md
 
-                for tag in md.meta['tags']:
-                    if articles_by_tags.has_key(tag):
-                        articles_by_tags[tag].append(md)
-                    else:
-                        articles_by_tags[tag] = [md]
+                if 'tags' in md.meta:
+                    # add tag 'russia' to certain articles
+                    region_tags = tags_categorized.get_region_tags()
+                    intersection = set(md.meta['tags']) & set(region_tags)
+                    if not len(intersection):
+                        countryable = len(set(md.meta['tags']) & {'info', 'mix'}) == 0
+                        if countryable:
+                            md.meta['tags'].append(DEFAULT_COUNTRY_TAG)
+
+                    for tag in md.meta['tags']:
+                        if articles_by_tags.has_key(tag):
+                            articles_by_tags[tag].append(md)
+                        else:
+                            articles_by_tags[tag] = [md]
 
         return BlogMeta(articles_by_slugs, articles_by_tags)
 
-
-class MarkdownFile():
-    def __init__(self, meta, text):
-        self.meta = meta
-        self.text = text
-
-    @classmethod
-    def parse(cls, file, read_content = True):
-
-        read_content = True # todo: the param rewritten!
-
-        MD_PROPERTY_REGEX = re.compile('\s*#\s*'  '([a-zA-Z0-9_-]+)'  '\s*:\s*'  '(.*)'  '\s*')
-        slug = os.path.split(file)[-1]
-        #raise Exception('setting slug to: %s' % (slug,))
-        meta = {
-            'slug': slug,
-            'mtime': os.path.getmtime(file),
-        }
-        f = codecs.open(file, "r", defs.HTML_ENCODING)
-        try:
-            while True:
-                line = f.readline().strip()
-                m = re.match(MD_PROPERTY_REGEX, line)
-                if m:
-                    key = m.group(1).lower()
-                    value = m.group(2)
-                    if key == 'tags':
-                        value = cls._handle_tags(value)
-                    elif key == 'date':
-                        value = parse_date_string(value)
-                    meta[key] = value
-                elif line == '':
-                    break
-                else:
-                    raise Exception('markup file format error for %s -> "%s"' % (file, line))
-            text = f.read(6000000).strip() if read_content else None # todo: what the fuck with that read?!
-            return MarkdownFile(meta, text)
-        finally:
-            f.close()
-
-    @classmethod
-    def _handle_tags(cls, string_value):
-        tags = utils.split_and_strip_tags(string_value.lower(), ',')
-        tags = map(rewrite_tag, tags)
-        return tags
 
 def get_related_articles(article):
 #    # choose a single tag among all ones
@@ -223,17 +185,18 @@ def get_related_articles(article):
     blog_meta = BlogMeta.instance()
 
     if article.see_list:
-        ra = [ blog_meta.articles_by_slugs[slug] for slug in article.see_list ]
+        ra = [blog_meta.articles_by_slugs[slug] for slug in article.see_list]
         ra = map(lambda md: article_from_markup(md), ra)
     else:
         the_tag = tags_categorized.get_tag_for_related_articles(article.tags)
         if the_tag:
             ra = blog_meta.articles_by_tags[the_tag]
-            ra = [ a for a in ra if a.meta['slug'] != article.slug ]
+            ra = [a for a in ra if a.meta['slug'] != article.slug]
             random.shuffle(ra)
             return ra[:3]
         else:
             return []
+
 
 class ArticleDataStoreMock():
     def __init__(self, clever_object, meta):
@@ -254,9 +217,12 @@ class ArticleDataStoreMock():
             self.path = utils.get_article_path(self)
             self.url = utils.get_article_url(self)
             self.guid = utils.get_article_guid(self)
-            self.see_list = ['my-electro-proto-rap-mix-1982-92'] if meta.has_key('see') else None
+            #self.see_list = ['my-electro-proto-rap-mix-1982-92'] if meta.has_key('see') else None
+            self.see_list = None
 
             self.related_articles = get_related_articles(self)
+
+            self.title = self.title.replace(u'/', u'•')
 
 
 def generate_article(slug):
@@ -265,7 +231,7 @@ def generate_article(slug):
 
     md_file = os.path.join(defs.MARKDOWN_DIR, slug)
 
-    print >>sys.stderr, 'Generating for %s ...' % md_file
+    print >> sys.stderr, 'Generating for %s ...' % md_file
 
     #md = MarkdownFile.parse(md_file)
     md = blog_meta.get_article_by_slug(slug)
@@ -290,7 +256,7 @@ def generate_article(slug):
         html = render_template('redirect.html', template_variables)
 
     else:
-        articles = [ article ]
+        articles = [article]
 
         comments_db = CommentDB.get_instance('operaimport/comments4json.result.json')
         db_path = '/%s.html' % slug
@@ -300,21 +266,21 @@ def generate_article(slug):
         #raise Exception('%s' % (article.complex_html['named']['info'],))
 
         template_variables = {
-            'defs'         : defs,
+            'defs': defs,
             #'current_path'      : utils.get_article_path(slug),
             #'current_path_full' : utils.get_article_url(slug),
-            'articles'     : articles,
-            'user_info'    : UserInfo(),
+            'articles': articles,
+            'user_info': UserInfo(),
             #'comment_author'  : utils.get_unicode_cookie(self.request, 'comment_author', ''),
-            'comment_author'  : 'fake',
-            'prev_page_url'   : None, #page_info.prev_page_url,
-            'next_page_url'   : None, #page_info.next_page_url,
-            'current_page_1'  : None, #page_info.current_page,
-            'pages_total'     : None, #page_info.pages_total,
-            'tag_cloud'       : blog_meta,
-            'single_article'  : article,
-            'comments'        : comments if comments else [],
-            }
+            'comment_author': 'fake',
+            'prev_page_url': None, #page_info.prev_page_url,
+            'next_page_url': None, #page_info.next_page_url,
+            'current_page_1': None, #page_info.current_page,
+            'pages_total': None, #page_info.pages_total,
+            'tag_cloud': blog_meta,
+            'single_article': article,
+            'comments': comments if comments else [],
+        }
         html = render_template('articles.html', template_variables)
 
     html_file = os.path.join(defs.STATIC_HTML_DIR, '%s.html' % slug)
@@ -323,30 +289,35 @@ def generate_article(slug):
 
 
 def generate_tag(tag_name):
+    html = generate_tag_page_content(tag_name)
+    html_file = os.path.join(defs.STATIC_HTML_TAG_DIR, '%s.html' % tag_name)
+    utils.write_file(html_file, html)
+    return html_file
+
+
+def generate_tag_page_content(tag_name):
     blog_meta = BlogMeta.instance()
     articles_by_tags = blog_meta.articles_by_tags
 
     # generate tag page(s)
     mds = articles_by_tags[tag_name]
     mds = sorted(mds, key=lambda md: md.meta['date'], reverse=True)
-    articles = [ article_from_markup(md) for md in mds ]
+    articles = [article_from_markup(md) for md in mds]
     #raise Exception('%s' % (len(mds),))
 
     about_text = tags_categorized.get_about_text(tag_name)
 
     template_variables = {
-    	'tag_title':    tag_name,
-        'about_text':   about_text,
-    	'articles_count': len(mds),
+        'tag_title': tag_name,
+        'about_text': about_text,
+        'articles_count': len(mds),
         'paging_title': 'There are %d articles tagged <b>%s</b>:' % (len(mds), tag_name),
-        'articles':     articles,
-        'tag_cloud':    blog_meta,
-        'defs':         defs,
+        'articles': articles,
+        'tag_cloud': blog_meta,
+        'defs': defs,
     }
-    html = render_template('tag.html', template_variables)
-    html_file = os.path.join(defs.STATIC_HTML_TAG_DIR, '%s.html' % tag_name)
-    utils.write_file(html_file, html)
-    return html_file
+    return render_template('tag.html', template_variables)
+
 
 def generate_tag_cat():
     html_file = os.path.join(defs.STATIC_HTML_TAG_DIR, 'all.html')
@@ -355,17 +326,19 @@ def generate_tag_cat():
     tpl_vars = {
         'defs': defs,
         'tag_cloud': BlogMeta.instance(),
-        'categories' : cats,
+        'categories': cats,
         'uncategorized': uncat,
     }
     html = render_template('tag-listing.html', tpl_vars)
     utils.write_file(html_file, html)
     return html_file
 
+
 def article_from_markup(md):
     assert isinstance(md, MarkdownFile)
     clever_object = clevermarkup.markup2html(md.text, for_comment=False)
     return ArticleDataStoreMock(clever_object, md.meta)
+
 
 def fetch_articles_sorted():
     mds = []
@@ -388,20 +361,20 @@ def fetch_articles_sorted():
 
 
 # param one_page1_required allows us optimize HTML generation by just one page
-def generate_listings(one_page1_required = None):
+def generate_listings(one_page1_required=None):
     def generate_page(articles, current_page_1, pages_total):
         html_file_short = page_file(current_page_1)
         template_variables = {
-            'articles'       : articles,
-            'current_page_1' : current_page_1,
-            'pages_total'    : pages_total,
-            'prev_page_url'  : page_url(current_page_1-1) if current_page_1 >= 2 else None,
-            'next_page_url'  : page_url(current_page_1+1) if current_page_1 < pages_total else None,
-            'single_article' : False,
-            'tag_cloud'      : BlogMeta.instance(),
-            'defs'           : defs,
-            'a_listing_page' : True, # a marker for pages '/' and '/page/15.html'
-            }
+            'articles': articles,
+            'current_page_1': current_page_1,
+            'pages_total': pages_total,
+            'prev_page_url': page_url(current_page_1 - 1) if current_page_1 >= 2 else None,
+            'next_page_url': page_url(current_page_1 + 1) if current_page_1 < pages_total else None,
+            'single_article': False,
+            'tag_cloud': BlogMeta.instance(),
+            'defs': defs,
+            'a_listing_page': True, # a marker for pages '/' and '/page/15.html'
+        }
         html = render_template('articles.html', template_variables)
         html_file = os.path.join(defs.STATIC_HTML_DIR, html_file_short)
         utils.write_file(html_file, html)
@@ -413,8 +386,8 @@ def generate_listings(one_page1_required = None):
         mds = filter(lambda md: not md.meta.has_key('redirect'), mds)
         mds = sorted(mds, key=lambda md: md.meta['date'], reverse=True)
         start = (one_page1_required - 1) * defs.MAX_ARTICLES_PER_PAGE
-        mds = mds[ start :  start + defs.MAX_ARTICLES_PER_PAGE ]
-        page = [ article_from_markup(md) for md in mds]
+        mds = mds[start:  start + defs.MAX_ARTICLES_PER_PAGE]
+        page = [article_from_markup(md) for md in mds]
         pages_total = len(blog_meta.articles_by_slugs.values())
         generate_page(page, one_page1_required, pages_total)
     else:
@@ -473,7 +446,7 @@ def generate_all():
     # generate every tag
     print 'generating tags...'
     for tag in articles_by_tags.keys():
-        print >>sys.stderr, ' a tag "%s"' % tag
+        print >> sys.stderr, ' a tag "%s"' % tag
         generate_tag(tag)
 
     # tag categories (site map)

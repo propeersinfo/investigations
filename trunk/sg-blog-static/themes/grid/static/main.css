@@ -1,5 +1,11 @@
 /* Fonts */
 
+/*
+@import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&subset=latin,cyrillic,latin-ext);
+*/
+
+@import url(http://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800&subset=latin,latin-ext);
+
 @font-face {
     font-family: 'DroidSans';
     src: url('fonts/DroidSans-webfont.eot');
@@ -165,6 +171,11 @@ img.logo:hover {
 	font-weight: bold;
 	font-size: 150%;
 	letter-spacing: 0px;
+
+	/*
+	font-family: 'PT Sans Narrow', DroidSans, DinPro-Bold, Helvetica, Arial, sans-serif !important;
+	font-size: 170%;
+	*/
 }
 .below-top h1 a {
 	color: #111 !important;
