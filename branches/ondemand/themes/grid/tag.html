@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+	{{ defs.BLOG_NAME }} - {{ tag_title }}
+{% endblock %}
+
+
+{% block main %}
+
+	{#
+	{% if paging_title %}
+		<p>There are {{articles_count}} articles tagged <b>{{tag_title}}</b>:</p>
+	{% endif %}
+	#}
+
+	{% if about_text %}
+		<p>{{ about_text }}</p>
+	{% else %}
+		<p>There are {{articles_count}} articles tagged <b>{{tag_title}}</b>:</p>
+	{% endif %}
+
+	<ul class="archive">
+	{% for article in articles %}
+		<li><em class="date">{{article.published_date.strftime("%Y")}}</em> <a href="{{article.path}}">{{article.title|typographus}}</a>
+	{% endfor %}
+	</ul>
+  
+{% endblock %}

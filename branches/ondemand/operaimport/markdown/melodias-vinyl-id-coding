@@ -1,0 +1,70 @@
+# title: Melodia's vinyl ID coding
+# date:  2009-12-10 03:04:54
+# tags:  info
+
+A description how Melodia — the only record label in USSR — marked their releases.
+
+[img/melodia-coding.png]
+
+Stereo/mono (cyrillic letters):
+
+С — stereo
+М — mono
+СМ — stereo made backward compatible with mono players
+А — made from a digital master
+Г — flexible disk
+
+Genre:
+
+0 — hymnes, documental, political recordings
+1 — symphonic, opera, choirs
+2 — russian folk music
+3 — non-russian folk music, but USSR's still
+4 — poetry, novel, drama
+5 — for children
+6 — estrada, songs by soviet composers, jazz, operetta (you're here!)
+7 — educational
+8 — non-USSR folk music
+9 — other
+
+Physical size:
+
+0 — 300 mm (giant) ≈12” (LP 33 rpm / Maxi-Single 45 rpm)
+1 — 250 mm (grand) ≈10”
+2 — 175 mm (mignon) ≈7” (EP 33 rpm / Single 45 rpm)
+
+The table below lets find out the year of release by its 3-, 4- or 5-digit unique id (matrix id to be exact). Each side of a vinyl has its own id. Re-release's id doesn't change if the same matrix used.
+
+Year . Mono .. Stereo
+1961 . 9965 .. 101
+1962 . 10927 . 235
+1963 . 12246 . 473
+1964 . 13149 . 793
+1965 . 14939 . 911
+1966 . 16093 . 1161
+1967 . 19069 . 1411
+1968 . 21253 . 1629
+1969 . 24023 . 1663
+1970 . 27047 . 1865
+1971 . 29491 . 2417
+1972 . 31565 . 3057
+1973 . 33489 . 3755
+1974 . 35207 . 4593
+1975 . 36849 . 5507
+1976 . 38213 . 6607
+1977 . 39551 . 8267
+1978 . 40507 . 9901
+1979 . 41387 . 11593
+1980 . 42279 . 13333
+1981 . 43015 . 15231
+1982 . 43923 . 17003
+1983 . 44813 . 18983
+1984 . 45689 . 20729
+1985 . 46081 . 21293
+1986 . 46621 . 22915
+1987 . 47417 . 24301
+1988 . 48023 . 26129
+1989 . 48477 . 27787
+1990 . 48971 . 29059
+
+It follows the example release relies to 1981.

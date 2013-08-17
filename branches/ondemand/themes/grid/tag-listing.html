@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}All Tags - {{ defs.BLOG_NAME }}{% endblock %}
+
+{% block main %}
+
+<div class='all-tags'>
+
+<p>
+<b>Styles:</b>
+{% for tag in categories.genre|sort %}
+	<a href="/tag/{{tag.name}}.html" class="weight_{{tag.weight}}">{{tag.title}}</a>
+{% endfor %}
+</p>
+
+<p>
+<b>Time Periods:</b>
+	<a href="/tag/60s.html">60's</a>
+	<a href="/tag/70s.html">70's</a>
+	<a href="/tag/80s.html">80's</a>
+</p>
+
+<p><b>Composers:</b>
+{% for tag in categories.composer|sort %}
+    <a href="/tag/{{tag.name}}.html" class="weight_{{tag.weight}}">{{tag.title}}</a>
+{% endfor %}
+</p>
+
+<p><b>Jazz &amp; Orchestra:</b>
+{% for tag in categories.jazz|sort %}
+    <a href="/tag/{{tag.name}}.html" class="weight_{{tag.weight}}">{{tag.title}}</a>
+{% endfor %}
+</p>
+
+<p><b>Ensembles:</b>
+{% for tag in categories.ensemble|sort %}
+    <a href="/tag/{{tag.name}}.html" class="weight_{{tag.weight}}">{{tag.title}}</a>
+{% endfor %}
+</p>
+
+<p><b>Vocalists:</b>
+{% for tag in categories.vocalist|sort %}
+    <a href="/tag/{{tag.name}}.html" class="weight_{{tag.weight}}">{{tag.title}}</a>
+{% endfor %}
+</p>
+
+<p><b>Modern Artists:</b>
+{% for tag in categories.modern|sort %}
+    <a href="/tag/{{tag.name}}.html" class="weight_{{tag.weight}}">{{tag.title}}</a>
+{% endfor %}
+</p>
+
+<p><b>Series:</b>
+{% for tag in categories.series|sort %}
+    <a href="/tag/{{tag.name}}.html" class="weight_{{tag.weight}}">{{tag.title}}</a>
+{% endfor %}
+</p>
+
+<p><b>Miscellaneous:</b>
+{% for tag in categories.misc|sort %}
+    <a href="/tag/{{tag.name}}.html" class="weight_{{tag.weight}}">{{tag.title}}</a>
+{% endfor %}
+</p>
+
+<p>
+<b>Uncategorized:</b>
+{% for tag in uncategorized %}
+	<a href="/tag/{{tag}}.html">{{tag}}</a>
+{% endfor %}
+</p>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,9 @@
+	<div class="pagination">
+		{% if prev_page_url %}
+		  <span class="keyboard-shortcut">Ctrl<span class="tsp">&nbsp;</span>+<span class="tsp">&nbsp;</span>↓</span> <a href="{{next_page_url}}" id="next-link">Earlier</a>
+		{% else %}
+
+		{% if next_page_url %}
+		  <span class="keyboard-shortcut">Ctrl<span class="tsp">&nbsp;</span>+<span class="tsp">&nbsp;</span>↓</span> <a href="{{next_page_url}}" id="next-link">Earlier</a>
+		{% endif %}
+	</div>

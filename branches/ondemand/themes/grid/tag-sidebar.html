@@ -1,0 +1,45 @@
+		<div class="sidebar-panel sidebar-tags">
+{% if tag_cloud %}
+
+		<ul>
+		<li>{{ ''|blog_tag_cnt(tag_cloud, "best", "Favourites") }}</li>
+		<li>{{ ''|blog_tag_cnt(tag_cloud, "mix", "Mixes") }}</li>
+		<li><a href="/tag/all.html">Site map</a></li>
+		</ul>
+		
+		<ul>
+		<li class="title-compact">Subscribe:</li>
+		<li>
+			<a href="{{defs.RSS_URL}}" class="caps">rss</a>
+			<a href="http://sovietgroove.livejournal.com/" class="caps">жж</a>
+		</ul>
+		
+	    <ul>
+		<li class="title">Regions:</li>
+		<li>{{ ''|blog_tag_cnt(tag_cloud, "russia", "Russia") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "ukraine", "Ukraine") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "moldova", "Moldova") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "belarus", "Belarus") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "armenia", "Armenia") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "azerbaijan", "Azerbaijan") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "georgia", "Georgia") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "estonia", "Estonia") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "latvia", "Latvia") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "lithuania", "Lithuania") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "kazakhstan", "Kazakhstan") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "tajikistan", "Tajikistan") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "turkmenistan", "Turkmenistan") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "uzbekistan", "Uzbekistan") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "kyrgyzstan", "Kyrgyzstan") }}</li>
+	    <li>{{ ''|blog_tag_cnt(tag_cloud, "foreign", "Foreign") }}</li>
+	    </ul>
+
+	    {% if a_listing_page %}
+	    	&nbsp;<br>
+		    {% include "links.html" %}
+	    {% endif %}
+	    
+{% else %}
+		no tag data
+{% endif %}
+	    </div>

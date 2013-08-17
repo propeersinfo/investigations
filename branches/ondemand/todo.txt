@@ -1,0 +1,78 @@
+Priority 1
+
+- having articles tagged both 'disco petrenko' and 'disco-petrenko' only one of them will be visible thru /tag/disco-petrenko.html
+- external comments: char '+' is not saved into db
+
+Priority Middle
+
+- randomize 'see also' block
+- auto-tag 'russia' is missed at '/' but is presented at '/slug.html'
+- all javascripts delay-loaded
+- comments js: add spinner for new comment posting
+- comments js: add spinner for comment loading
+- comments.py: use ip-address in email notification (not in db)
+- page "275.html" (max) is being generated somewhow
+- move images to picasa/etc
+- markup broken 'melodia-band-complete'
+
+Priority X
+
+- email to the admin not 'a user'
+- make youtube player widescreen, not 3:4
+- edit tags "beat", "shake", "twist"
+- external links block (show only for "page/x.html"
+- thumbnails: compare mtime deciding to make a thumbnail or not
+- do handle paragraph '#download' even if layout is plain
+- markup: add meta param 'see also' refering to a tag
+- markup: add meta param 'break into n columns' for 'tracks'
+- tag: do not gen 1-item tag pages and don't show such tags (remember about tags linked from markup)
+- use a script like '/charset/utf-8/path/to/file' to rewrite HTTP charset
+- rss: give full article's text, not just the link
+- rss: fix html markup (it's kinda broken)
+- rss: use absolute links
+- split source into two different projects: markup with HTML generator and gae static project
+- similar articles block (by tags categorized as 'artist')
+- robots.txt
+- sitemap
+- typography: text like 7" is handled incorrectly
+- implement slug renaming via making HTTP redirects
+
+Completed
+
++ fasten generation of a single page
++ get contacts back (email)
++ images: add <img> dimensions automatically
++ images: auto generate 140px thumbnails for dropbox
++ article: player not loaded at http://localhost/giedrius-kuprevicius
++ swith from ctrl-right to ctrl-down
++ fix HTML title
++ use current timestamp as APP VERSION
++ tag rewrite: rewrite tags while converting html to markup also
++ tag rewrite: do it by a table, remove spaces also
++ rss: basics
++ tag cloud
++ external comments
++ implement google search
++ google analytics doesnot register any visitor
++ implement google analytics
++ external comments: import opera comments
++ ".html" suffix: add it to the tags also
++ comments.py: assert incoming data - fields 'text' and 'name'
++ adding new comment: check form before submit
++ adding new comment: scroll down if success
++ adding new comment: clear message text if success
++ remember commenter's name in cookies
++ make search input non javascript
++ comments: send email on comment received
++ markup: broken playlist 'http://localhost:8080/the-last-portion-of-qaya.html'
++ script generating new article by template
++ fix appversion for infinite static resources
++ clean RSS with http://feedvalidator.org
++ comment administration
++ external comments: protect administration with password
++ tag categorization page (for users and for me)
++ fix counter for "Russian Fed."
++ must I provide last-updated header for rss.xml? No.
++ social share buttons
++ 'see also' block implemented for each article
++ turn new RSS on (at feedburner + link to feedburner)

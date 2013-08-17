@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+	{% if single_article %}
+		{{single_article.title}} - {{defs.BLOG_NAME}}
+	{% else %}
+		{{defs.BLOG_NAME}}
+	{% endif %}
+{% endblock %}
+
+{% block main %}
+
+	{% include "search-results.html" %}
+  
+{% endblock %}

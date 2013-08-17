@@ -1,0 +1,91 @@
+﻿		<a name="comments"></a>
+
+		<!--
+        <p><b><a href="#" onclick="javascript:document.getElementById('new_comment_form').style.display = 'block'; return false;">Your comment:</a></b></p>
+        -->
+        
+        <form id="new_comment_form" action="" method="POST" accept-charset="{{defs.HTML_ENCODING}}">
+        {#
+        <div class="row">
+    		<div class="width_2">
+    			<b>Your comment:</b>
+			</div>
+    		<div class="width_6">
+    			<!--
+    			Soviet Groove <a href="#"><img src="/static/close.gif" style="margin-top:5px;"></a>
+    			-->
+    			
+    			<!--
+    			<a href="#" style="text-decoration:none; border-bottom:1px dashed;">Soviet Groove</a>
+    			-->
+
+    			<!--    			
+    			<input name="name" type="text" value="Anonymous" placeholder="Name" style="width: 98%;"/>
+    			-->
+			</div>
+        </div>
+		#}
+        <div class="row">
+    		<div class="width_2">
+    			<b>Comments:</b>
+			</div>
+    		<div class="width_6">
+    			<textarea id="comment-text" name="text" rows="2" style="width: 98%;"></textarea>
+			</div>
+        </div>
+        <div class="row">
+    		<div class="width_2"><p>
+    			&nbsp;
+			</p></div>
+    		<div class="width_6">
+    			<p style="width:99%;">
+    				{#
+	    			<input name="name" type="text" value="Anonymous" placeholder="Name" style="width:200px;"/>
+    				<input type="submit" value='Add comment' style="float:right;"/>
+    				#}
+    				<input type="submit" value='Add comment' style=""/>
+	    			as
+	    			<input name="name" type="text" value="Anonymous" placeholder="Name" style="width:200px;"/>
+				</p>
+				<span id="new-comment-error" class="error-message"></span>
+			</div>
+			
+        </div>
+		</form>
+		
+
+
+		<!-- comments count -->
+		<p>
+		<b>&nbsp;</b>
+		</p>
+      
+
+		<div id="comment-list">
+			{% for c in comments %}
+			<div class="row comment">
+				<div class="width_2"><p>
+					<span class='comment-name'>{{ c.name|escape }}</span><br>
+					<span class='comment-date'>{{ c.date.strftime('%b %d, %Y') }}</span>
+				</p></div>
+				<div class="width_6 comment-text">{{ c.text|escape }}</div>
+			</div>
+			{% endfor %}
+			
+			<div style="display: none;">
+				<!-- Template for a comment added by JavaScript. Invisible via CSS. -->
+				<div id="comment-template" class="row comment">
+					<div class="width_2"><p>
+						<span class='comment-name'>Name</span><br>
+						<span class='comment-date'>May 18, 2012</span>
+					</p></div>
+					<div class="width_6 comment-text">
+						Text
+					</div>
+				</div>
+			</div>
+			
+        </div>
+
+        <!-- it must be an inline element to take no space initially -->        
+        <span id="comment-loading-error" class="error-message"></span>

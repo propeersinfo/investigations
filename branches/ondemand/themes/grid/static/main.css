@@ -1,0 +1,334 @@
+/* Fonts */
+
+/*
+@import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&subset=latin,cyrillic,latin-ext);
+*/
+
+@import url(http://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800&subset=latin,latin-ext);
+
+@font-face {
+    font-family: 'DroidSans';
+    src: url('fonts/DroidSans-webfont.eot');
+    src: url('fonts/DroidSans-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/DroidSans-webfont.woff') format('woff'),
+         url('fonts/DroidSans-webfont.ttf') format('truetype'),
+         url('fonts/DroidSans-webfont.svg#DroidSansRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DroidSans';
+    src: url('fonts/DroidSans-Bold-webfont.eot');
+    src: url('fonts/DroidSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/DroidSans-Bold-webfont.woff') format('woff'),
+         url('fonts/DroidSans-Bold-webfont.ttf') format('truetype'),
+         url('fonts/DroidSans-Bold-webfont.svg#DroidSansBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* General rules for general tags */
+
+body {
+	background: #FCFBFD;
+	background: #EEEEEE;
+	margin: 0 0 0 0;
+}
+img { border: 0px; } /* IE special */
+input {
+	font-family: 'Helvetica', 'Arial', sans-serif;
+}
+p {
+	color: #000;
+	margin: 0 0 0.6em 0;
+	line-height: 130%;
+}
+p,
+div,
+h1, h2, h3, h4, h5, h6 {
+	font-family: DroidSans, Helvetica, Arial, sans-serif !important;
+	color: black;
+}
+/* make bold text lighter */
+p b,
+p strong,
+div b,
+div strong
+{
+    color: #333;
+}
+
+blockquote {
+	font-family: serif;
+	font-style: italic;
+}
+
+a         { color: #0000cc; }
+a:visited { color: #838; }
+a:hover   { color: #f33; }
+
+/* the top */
+
+.top {
+	padding-top: 10px;
+	margin-bottom: 0.7em;
+}
+.top div {
+	font-family: DroidSans, Helvetica, Arial, sans-serif !important;
+	font-size: 14px;
+}
+.below-top {
+	margin-top: 1.5em;
+}
+div.article {
+	margin-bottom: 3em;
+}
+.search_input { margin-top: 4px; }
+
+/* Top-left logo */
+
+img.logo {
+	background: #222;
+}
+img.logo:hover {
+	background: #f33;
+}
+
+/* Basement */
+
+.bottom {
+	padding-top: 3em;
+	padding-bottom: 2em;
+	font-size: 85%;
+}
+
+/* sidebars */
+
+.sidebar-panel {
+	font-size: 14px;
+	margin-top: 0.29em; /* w/out that sidebars looks above the main content because of smaller font */
+	font-family: DroidSans, Helvetica, Arial, sans-serif !important;
+}
+.sidebar-tags {
+	font-size: 14px;
+}
+.sidebar-tags ul {
+	list-style-type: none;
+	padding-left: 0;
+	margin: 0 0 0.8em 0;
+}
+.sidebar-tags ul li {
+	margin-bottom: 0.25em;
+}
+.sidebar-tags ul li .count {
+	color: grey;
+	font-size: 85%;
+}
+.sidebar-tags  li.title {
+}
+.sidebar-panel li.title {
+	font-weight: bold;
+    color: #333;
+	padding-bottom: 4px;
+}
+.sidebar-panel li.title-compact {
+	font-weight: bold;
+    color: #333;
+}
+.sidebar-panel ul {
+	margin-bottom: 20px;
+}
+
+.sidebar-panel .note {
+	font-family: serif !important;
+	font-style: italic;
+}
+
+/* Article region */
+
+.tracks p {
+	font-size: 14px;
+}
+.info p {
+	/*font-family: serif, Times New Roman, Georgia !important;*/
+	font-size: 14px;
+	font-style: italic;
+	font-style: normal;
+}
+.download {
+	font-size: 85%;
+	overflow: hidden;
+	white-space:nowrap;
+}
+
+/* Article header */
+
+.below-top h1 {
+	margin: 0 0 0.2em 0;
+	vertical-align: bottom;
+	font-family: DroidSans, DinPro-Bold, Helvetica, Arial, sans-serif !important;
+	font-weight: bold;
+	font-size: 150%;
+	letter-spacing: 0px;
+
+	/*
+	font-family: 'PT Sans Narrow', DroidSans, DinPro-Bold, Helvetica, Arial, sans-serif !important;
+	font-size: 170%;
+	*/
+}
+.below-top h1 a {
+	color: #111 !important;
+	text-decoration: none !important;
+}
+.below-top h1 a:hover {
+	color: #f33 !important;
+	text-decoration: none !important;
+}
+
+/* Comments */
+
+div.comment {
+	margin-bottom: 1em !important;
+}
+div.comment p {
+	line-height: 1.4em;
+	margin-bottom: 0.6em;
+}
+.comment-text {
+	/*white-space: pre;*/
+}
+.comment-date {
+	color: grey;
+	font-size: 80%;
+}
+#new_comment_form a { color: black; }
+#new_comment_form a:hover { color: #f33; }
+
+/* Article meta information */
+
+.article-meta {
+	margin: 0em;
+	font-size: 85%;
+	/*margin-left: 2em;*/
+	color: #333;
+}
+.article-meta .tag {
+	margin-left: 0.3em;
+}
+.article-meta a 		{ color: #333; }
+.article-meta a:hover	{ color: #f33; }
+
+/* Pagination */
+
+.pagination { font-size: 85%; }
+.pagination a 		{	color: #333; }
+.pagination a:hover {	color: #f33; }
+.pagination-top { margin-bottom: 1.5em; }
+.bottom a       {	color: #333; }
+.bottom a:hover {	color: #f33; }
+
+/* debug */
+
+.red  { background: red; }
+.blue { background: blue; }
+.hilite { background:#faa; }
+
+/* all tags listing */
+
+.all-tags p { line-height: 200%; }
+.all-tags p a {
+	color: #00a;
+	white-space: nowrap;
+	margin-right: 10px;
+}
+.all-tags p a:hover { color: #f33; }
+.all-tags b { color: #333; margin-right: 10px; }
+.all-tags .weight_3 { color: #00f; }
+.all-tags .weight_2 { color: #77f; }
+.all-tags .weight_1 { color: #ccf; }
+
+/* the archive page */
+
+ul.archive {
+	list-style-type: none;
+	padding-left: 0;
+}
+ul.archive li {
+	margin-bottom: 0.4em;
+}
+ul.archive em.date {
+	margin-right: 0.5em;
+	font-style: normal;
+	font-size: 85%;
+}
+
+/* a notification at the top */
+
+.important-notification {
+	padding: 4px;
+	text-align: center;
+	background: grey;
+	font-family: Arial, sans-serif;
+	font-size: 85%;
+	font-weight: normal;
+	color: white;
+}
+.important-notification a { color: white; }
+
+/* General rules */
+
+.caps {
+	font-variant: small-caps;
+	letter-spacing: 0.1em;
+	font-size: 115%;
+}
+.keyboard-shortcut {
+	background: #F0F0C0;
+	color: #A64;
+	background: #ccc;
+	color: black;
+	padding: 0 .33em;
+	border-radius: .33em;
+	-moz-border-radius: .33em;
+	-webkit-border-radius: .33em;
+	text-decoration: none;
+	font-size: 85%;
+}
+/* Thin space. Usage: <span class="tsp">&nbsp;</span> */
+.tsp {
+	margin-right: -0.167em;
+}
+
+.error-message {
+	display: none; /* takes no space initially */
+	background: white;
+	color: black;
+	font-size: 80%;
+	font-style: italic;
+	padding: 0.5em;
+	border-radius: 0.5em;
+}
+
+/* google search */
+
+/*#cse { background-color: black !important; }*/
+
+/* audio player */
+
+.audio-player img { vertical-align: middle; }
+
+/* Misc */
+
+.see-also li,
+.see-also p
+{
+	font-size: 90%;
+	font-style: italic;
+	font-family: serif !important;
+}
+.see-also ul {
+	margin-top: 0;
+	margin-bottom: 0.3em;
+	padding-left: 0;
+}
