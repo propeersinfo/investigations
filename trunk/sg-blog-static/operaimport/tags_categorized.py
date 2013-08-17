@@ -47,6 +47,7 @@ for cat, rows in tag_data.items():
             #else:
             #    tag_info_by_category[cat] = [tag_info ]
 
+
 # return hash category_name -> tag_info
 def get_used_tags_categories():
     tags_by_cat = dict()
@@ -70,9 +71,11 @@ def get_used_tags_categories():
 
     return tags_by_cat, uncategorized
 
+
 def get_region_tags():
     tags = [ row['tag'] for row in tag_data['region'] ]
     return list(set(tags))
+
 
 def get_tag_for_related_articles(tag_names):
     for cat in [ 'series', 'ensemble', 'jazz', 'composer', 'vocalist', 'modern', 'genre' ]:
@@ -81,6 +84,7 @@ def get_tag_for_related_articles(tag_names):
         if len(intersection):
             return intersection[0]
     return None
+
 
 def get_about_text(tag_name):
     tag_info = tag_info_by_tag_name.get(tag_name, None)

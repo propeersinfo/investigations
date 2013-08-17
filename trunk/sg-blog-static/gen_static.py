@@ -31,6 +31,18 @@ import utils
 #        return Output("My Owl Extension")
 
 
+class dict_of_lists(dict):
+    def __init__(self):
+        super(dict_of_lists, self).__init__()
+
+    def append(self, key, value):
+        if self.has_key(key):
+            assert isinstance(self[key], list)
+            self[key].append(value)
+        else:
+            self[key] = [value]
+
+
 def page_url(page1):
     return '/page/%d.html' % page1 if page1 > 1 else '/'
 
@@ -104,8 +116,6 @@ def render_template(template_name, variables):
 
 #webapp.template.register_template_library('my_tags')
 
-DEFAULT_COUNTRY_TAG = 'russia'
-
 
 # info about tags used in articles, etc
 class BlogMeta:
@@ -142,7 +152,7 @@ class BlogMeta:
     @classmethod
     def _collect_metadata(cls):
         articles_by_slugs = {}
-        articles_by_tags = {}
+        articles_by_tags = dict_of_lists()
         for md_short in glob.glob1(defs.MARKDOWN_DIR, '*'):
             md_full = os.path.join(defs.MARKDOWN_DIR, md_short)
             if os.path.isfile(md_full):
@@ -151,22 +161,24 @@ class BlogMeta:
                 md = MarkdownFile.parse(md_full, read_content=False)
                 articles_by_slugs[md.meta['slug']] = md
 
-                if 'tags' in md.meta:
-                    # add tag 'russia' to certain articles
-                    region_tags = tags_categorized.get_region_tags()
-                    intersection = set(md.meta['tags']) & set(region_tags)
-                    if not len(intersection):
-                        countryable = len(set(md.meta['tags']) & {'info', 'mix'}) == 0
-                        if countryable:
-                            md.meta['tags'].append(DEFAULT_COUNTRY_TAG)
+                cls.fix_country_tag(md)
 
+                if 'tags' in md.meta:
                     for tag in md.meta['tags']:
-                        if articles_by_tags.has_key(tag):
-                            articles_by_tags[tag].append(md)
-                        else:
-                            articles_by_tags[tag] = [md]
+                        articles_by_tags.append(tag, md)
 
         return BlogMeta(articles_by_slugs, articles_by_tags)
+
+    # add tag 'russia' to article missing country tag
+    @classmethod
+    def fix_country_tag(cls, md):
+        if 'tags' in md.meta:
+            region_tags = tags_categorized.get_region_tags()
+            intersection = set(md.meta['tags']) & set(region_tags)
+            if not len(intersection):
+                need_country = len(set(md.meta['tags']) & {'info', 'mix'}) == 0
+                if need_country:
+                    md.meta['tags'].append(defs.DEFAULT_COUNTRY_TAG)
 
 
 def get_related_articles(article):

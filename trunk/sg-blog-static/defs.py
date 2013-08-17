@@ -55,3 +55,5 @@ STATIC_HTML_TAG_DIR = os.path.join(PROJECT_DIR, 'html', 'tag')
 FORMAT_YMD_HMS = "%Y-%m-%d %H:%M:%S"
 
 DEFAULT_LOCAL_TIMEZONE_OFFSET = +4
+
+DEFAULT_COUNTRY_TAG = 'russia'
