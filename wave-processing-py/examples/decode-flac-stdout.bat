@@ -1,1 +1,0 @@
-flac -d -c 1.flac > 1.wav
