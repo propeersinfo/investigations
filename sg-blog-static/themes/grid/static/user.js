@@ -220,12 +220,14 @@ $(document).ready(function() {
 // external comments
 ////////////////////////////////////////////////////
 
-function report_error(selector, msg) {
-    $(selector).
-        css('display', 'table'). // it maybe an inline element initially
-        text(msg).
-        delay(5000).
-        fadeOut('slow');
+function report_error(selector, msg, fadeOut) {
+    var jq = $(selector)
+             .css('display', 'table')
+             .text(msg);
+
+    if (fadeOut) {
+        jq.delay(5000).fadeOut('slow');
+    }
 }
 
 function add_comment(comment, is_new) {
@@ -283,7 +285,7 @@ function load_comments() {
             });
         },
         error: function(xhr, ajaxOptions, thrownError) {
-            report_error('#comment-loading-error', 'Cannot load more comments at the moment.');
+            report_error('#comment-loading-error', 'Sorry, comments gonna be available later', false);
         }
     });
 }
@@ -324,7 +326,7 @@ function setup_new_comment_form() {
                     scroll_bottom();
                 },
                 error: function(x, y, z) {
-                    report_error('#new-comment-error', 'Cannot post new comment. Make sure every field is filled.');
+                    report_error('#new-comment-error', 'Cannot add new comment. Make sure every field is filled', true);
                 }
             });
             return false;

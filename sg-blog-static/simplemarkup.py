@@ -40,7 +40,7 @@ def handle_custom_tag_image(text, config = None):
         if addr.startswith('http'):
             return '<img src="%s">' % addr
         else:
-            url = 'http://dl.dropbox.com/u/%s/sg/%s' % (defs.DROPBOX_USER, addr)
+            url = 'http://dl.dropboxusercontent.com/u/%s/sg/%s' % (defs.DROPBOX_USER, addr)
             large_url = None
             image_file = os.path.join(defs.DROPBOX_LOCAL_DIR, addr)
 
@@ -57,7 +57,7 @@ def handle_custom_tag_image(text, config = None):
 
                 # rewrite url and file
                 large_url = url
-                url = 'http://dl.dropbox.com/u/%s/sg/img/140px/%s' % (defs.DROPBOX_USER, addr)
+                url = 'http://dl.dropboxusercontent.com/u/%s/sg/img/140px/%s' % (defs.DROPBOX_USER, addr)
                 image_file = thumbnail_file
 
             img = Image.open(image_file)
@@ -115,7 +115,7 @@ MP3 = re.compile("\[\s*([^\]]+\.mp3)\s*\]", re.IGNORECASE)
 def handle_custom_tag_mp3(input):
     def replacer(m):
         mp3_name = re.sub(r'^.*/', '', m.group(1))
-        mp3_link = "http://dl.dropbox.com/u/%s/sg/%s" % (defs.DROPBOX_USER, urllib2.quote(m.group(1), safe='/'))
+        mp3_link = "http://dl.dropboxusercontent.com/u/%s/sg/%s" % (defs.DROPBOX_USER, urllib2.quote(m.group(1), safe='/'))
         swf = my_tags.static_resource('dewplayer-mini.swf')
         flash = "<object width='160' height='18'><embed src='" + swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + mp3_link + "&autoplay=1' quality='high'></embed></object>"
         icon = '<a href="%s" class="audio-player" data-swf-html="%s"><img src="/static/play.png" alt="play"></a>' % (mp3_link, flash.replace('"', '\\"'))
@@ -152,8 +152,8 @@ MP3_PLAYLIST = re.compile('\[dewplaylist\s+([^\]]+)\]', re.IGNORECASE)
 def handle_custom_tag_playlist(input):
     # NB: this does not work when the player and xml are placed at different domains
     #swf = my_tags.static_resource('dewplayer-playlist.swf')
-    swf = "http://dl.dropbox.com/u/%s/%s" % (defs.DROPBOX_USER, 'dewplayer-playlist.swf')
-    replace = '<object width="240" height="200"><embed src="%s" width="240" height="200" type="application/x-shockwave-flash" flashvars="&xml=http://dl.dropbox.com/u/%s/sg/\\1&autoreplay=1" quality="high"></embed></object>' % (swf, defs.DROPBOX_USER)
+    swf = "http://dl.dropboxusercontent.com/u/%s/%s" % (defs.DROPBOX_USER, 'dewplayer-playlist.swf')
+    replace = '<object width="240" height="200"><embed src="%s" width="240" height="200" type="application/x-shockwave-flash" flashvars="&xml=http://dl.dropboxusercontent.com/u/%s/sg/\\1&autoreplay=1" quality="high"></embed></object>' % (swf, defs.DROPBOX_USER)
     return re.sub(MP3_PLAYLIST, replace, input)
 
 # the order is important
