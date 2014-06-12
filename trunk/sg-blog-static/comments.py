@@ -6,7 +6,11 @@ import datetime
 from wsgiref.handlers import format_date_time
 
 from google.appengine.api import users
-import simplejson as json
+
+try:
+    import json  # okay for python 2.7
+except ImportError:
+    import simplejson as json  # okay for GAE's python 2.5
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext import db
