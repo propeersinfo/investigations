@@ -9,6 +9,7 @@ from cherrypy.lib.static import serve_file
 import gen_static
 import utils
 
+
 def cut_mandatory_html_extension(s):
     m = re.match('(.+)\.html', s, re.IGNORECASE)
     if m:
@@ -16,11 +17,14 @@ def cut_mandatory_html_extension(s):
     else:
         raise cherrypy.NotFound()
 
+
 class Root:
+    # front page: paged list of articles
     @cherrypy.expose
     def index(self):
         return self.page(1)
 
+    # a paged list of articles
     @cherrypy.expose
     def page(self, page1):
         if type(page1) == str:
@@ -31,9 +35,11 @@ class Root:
                 raise Exception('illegal page url %s' % page1)
         return utils.read_file(gen_static.generate_listing(page1))
 
+    # concrete article
     @cherrypy.expose
     def default(self, path):
         slug = cut_mandatory_html_extension(path)
+        #Blog.instance().getArticleContent(slug)
         return utils.read_file(gen_static.generate_article(slug))
 
     @cherrypy.expose
@@ -41,6 +47,7 @@ class Root:
         gen_static.BlogMeta.reset()
         raise cherrypy.HTTPRedirect("/")
 
+    # list of articles marked with a tag
     @cherrypy.expose
     def tag(self, tag_name):
         tag_name = cut_mandatory_html_extension(tag_name)

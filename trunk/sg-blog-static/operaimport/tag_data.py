@@ -378,6 +378,13 @@ tag_data = {
 
 "modern": [
     {
+      "tag"      : u"yuri",
+      "title"    : u"U&amp;1989",
+      "descr_en" : u"A record collector and donator for this blog.",
+      "descr_ru" : u"",
+      "urls"     : u"https://soundcloud.com/u1989",
+    },
+    {
       "tag"      : u"jan-kit",
       "title"    : u"Jan-Kit",
       "descr_en" : u"A DJ for b-boy battles, b-boy himself, turntablist, author of breaking and hip-hop tracks and vinyl collector from Kazakhstan. "
@@ -728,15 +735,15 @@ tag_data = {
   "time": [
     {
       "tag"      : u"70s",
-      "title"    : u"70's",
+      "title"    : u"seventies",
     },
     {
       "tag"      : u"60s",
-      "title"    : u"60's",
+      "title"    : u"sixties",
     },
     {
       "tag"      : u"80s",
-      "title"    : u"80's",
+      "title"    : u"eighties",
     },
 ],
 
@@ -744,6 +751,18 @@ tag_data = {
     {
       "tag"      : u"ye-ye",
       "title"    : u"yé-yé",
+      "descr_en" : u"",
+      "descr_ru" : u"",
+      "urls"     : u"",
+    }, {
+      "tag"      : u"big-beat",
+      "title"    : u"",
+      "descr_en" : u"",
+      "descr_ru" : u"",
+      "urls"     : u"",
+    }, {
+      "tag"      : u"eurocult",
+      "title"    : u"euro cult",
       "descr_en" : u"",
       "descr_ru" : u"",
       "urls"     : u"",
