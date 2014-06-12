@@ -1,8 +1,8 @@
 import json
 import datetime
 
-import defs # needed for 'import utils'
 import utils
+
 
 DATE_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -32,5 +32,6 @@ class CommentDB:
         return self.articles_by_path.get(path)
 
 
-db = CommentDB('operaimport/comments4json.result.json')
-print db.get_comments_for_path('/alexey-mazhukov-1973')
+if __name__ == '__main__':
+  db = CommentDB('operaimport/comments4json.result.json')
+  print db.get_comments_for_path('/alexey-mazhukov-1973')

@@ -269,8 +269,10 @@ function add_comment(comment, is_new) {
 // return string like 'http://thisserver/comments/domain/path/path'
 function get_rest_url_for_current_document() {
     var host = window.location.hostname;
+    var port = window.location.port;
+    var portSuffix = (port != '80') ? (':' + port) : '';
     var path = host + window.location.pathname;
-    return 'http://' + host + '/comments/' + path;
+    return window.location.protocol + '//' + host + portSuffix + '/comments/' + path;
 }
 
 function load_comments() {
