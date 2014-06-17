@@ -1,5 +1,7 @@
 import os
+
 import utils
+
 
 HTML_ENCODING = 'UTF-8'
 
@@ -45,6 +47,7 @@ APP_VERSION = str(utils.get_seconds_since_epoch())
 #IMAGE_PLACEHOLDER = '/static/cover.jpg'
 IMAGE_PLACEHOLDER = None
 
+COMMENTS_SHOW = False
 EMAIL_NOTIFY_COMMENT = True
 
 PROJECT_DIR = os.path.dirname(__file__)
