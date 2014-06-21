@@ -53,6 +53,14 @@ def page_file(page1):
     return 'index.html' if page1 == 1 else 'page/%d.html' % page1
 
 
+def static_resource_filter(value):
+    hash_code = BlogMeta.instance().get_resource_hash(value)
+    if hash_code:
+        return '/static/%s?v=%s' % (value, hash_code)
+    else:
+        return '/static/%s' % value
+
+
 def render_template(template_name, variables):
     # GAE
     #tpl_path = os.path.join(os.path.dirname(__file__),
@@ -68,16 +76,6 @@ def render_template(template_name, variables):
 
     # Jinja2
     env = Environment(loader=FileSystemLoader(defs.THEME_DIRS), extensions=[])
-
-    def static_resource(value):
-        hash_code1 = urllib.quote_plus(defs.APP_VERSION)
-        hash_code2 = BlogMeta.instance().get_resource_hash(value)
-        #print "hash codes: %s / %s / %s" % (value, hash_code1, hash_code2)
-        hash_code = hash_code2
-        if hash_code:
-            return '/static/%s?v=%s' % (value, hash_code)
-        else:
-            return '/static/%s' % (value)
 
     def typographus(value):
         from typographus import typo
@@ -115,7 +113,7 @@ def render_template(template_name, variables):
 
     env.filters['urlencode'] = urlencode
     env.filters['sidebar_link'] = sidebar_link
-    env.filters['static_resource'] = static_resource
+    env.filters['static_resource'] = static_resource_filter
     env.filters['typographus'] = typographus
     env.filters['blog_tag'] = blog_tag
     env.filters['blog_tag_cnt'] = blog_tag_cnt

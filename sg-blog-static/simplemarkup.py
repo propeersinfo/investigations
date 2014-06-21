@@ -5,7 +5,6 @@ import urllib2
 from PIL import Image
 
 import defs
-import my_tags
 
 
 """
@@ -126,13 +125,17 @@ def handle_custom_tag_youtube(input_str):
 
 MP3 = re.compile("\[\s*([^\]]+\.mp3)\s*\]", re.IGNORECASE)
 
+
 # [dir/cool track.mp3]
 def handle_custom_tag_mp3(input_str):
+    import gen_static
+
     def replacer(m):
         mp3_name = re.sub(r'^.*/', '', m.group(1))
         mp3_link = "http://dl.dropboxusercontent.com/u/%s/sg/%s" % (
             defs.DROPBOX_USER, urllib2.quote(m.group(1), safe='/'))
-        swf = my_tags.static_resource('dewplayer-mini.swf')
+        # swf = my_tags.static_resource('dewplayer-mini.swf')
+        swf = gen_static.static_resource_filter('dewplayer-mini.swf')
         flash = "<object width='160' height='18'><embed src='" + swf + "' width='160' height='18' type='application/x-shockwave-flash' flashvars='&mp3=" + mp3_link + "&autoplay=1' quality='high'></embed></object>"
         icon = '<a href="%s" class="audio-player" data-swf-html="%s"><img src="/static/play.png" alt="play"></a>' % (
             mp3_link, flash.replace('"', '\\"'))
