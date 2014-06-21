@@ -53,3 +53,5 @@ class MarkdownFile():
         tags = map(rewrite_tag, tags)
         return tags
 
+    def __str__(self):
+        return "MarkdownFile(%s)" % self.meta.get('slug')

@@ -2,7 +2,6 @@
 
 # this must go first - this var is to be checked in defs.py
 import os
-import random
 import urllib
 
 from operaimport import tags_categorized
@@ -138,7 +137,7 @@ class ResourceMeta:
         # print "mtime old: %s" % self.last_updated
         # print "mtime new: %s" % mtime
         if self.last_updated is None or self.last_updated < mtime:
-            self.hash = utils.md5sum(self.path)
+            self.hash = utils.file_md5_hex(self.path)
             # print "new hash calculated: %s %s" % (self.path, self.hash)
         self.last_updated = mtime
         # self.hash = utils.md5sum(self.path)
@@ -221,33 +220,26 @@ class BlogMeta:
             self.resource_by_path[full_path] = rm
         return rm.get_hash()
 
-def get_related_articles(article):
-#    # choose a single tag among all ones
-#    def get_single_tag():
-#        series_tags = [ tag for tag in article.tags if tags_categorized.is_series_tag(tag) ]
-#        if len(series_tags) > 0:
-#            return series_tags[0]
-#
-#        artist_tags = [ tag for tag in article.tags if tags_categorized.is_artist_tag(tag) ]
-#        if len(artist_tags) > 0:
-#            return artist_tags[0]
-#
-#        return None
 
+def get_related_articles(article):
+    ra = []
     blog_meta = BlogMeta.instance()
+    the_tag = tags_categorized.get_tag_for_related_articles(article.tags)
 
     if article.see_list:
         ra = [blog_meta.articles_by_slugs[slug] for slug in article.see_list]
         ra = map(lambda md: article_from_markup(md), ra)
-    else:
-        the_tag = tags_categorized.get_tag_for_related_articles(article.tags)
-        if the_tag:
-            ra = blog_meta.articles_by_tags[the_tag]
-            ra = [a for a in ra if a.meta['slug'] != article.slug]
-            random.shuffle(ra)
-            return ra[:3]
-        else:
-            return []
+    elif the_tag:
+        ra = blog_meta.articles_by_tags[the_tag]
+        ra = [a for a in ra if a.meta['slug'] != article.slug]
+        ra = sorted(ra, key=lambda x: x.meta.get('slug'))
+        multi_article_hasher = lambda sum, a: "%s_%s" % (sum, utils.hexdigest(a.meta.get('slug')))
+        multi_hash = reduce(multi_article_hasher, ra)
+        ra = utils.pick_pseudo_random_elements(multi_hash, ra, 3)
+        # random.shuffle(ra)
+        # ra = ra[:3]
+
+    return ra
 
 
 class ArticleDataStoreMock():
