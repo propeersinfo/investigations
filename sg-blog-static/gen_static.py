@@ -232,12 +232,11 @@ def get_related_articles(article):
     elif the_tag:
         ra = blog_meta.articles_by_tags[the_tag]
         ra = [a for a in ra if a.meta['slug'] != article.slug]
-        ra = sorted(ra, key=lambda x: x.meta.get('slug'))
-        multi_article_hasher = lambda sum, a: "%s_%s" % (sum, utils.hexdigest(a.meta.get('slug')))
-        multi_hash = reduce(multi_article_hasher, ra)
-        ra = utils.pick_pseudo_random_elements(multi_hash, ra, 3)
-        # random.shuffle(ra)
-        # ra = ra[:3]
+        if len(ra) > 0:
+            ra = sorted(ra, key=lambda x: x.meta.get('slug'))
+            multi_article_hasher = lambda sum, a: "%s_%s" % (sum, utils.hexdigest(a.meta.get('slug')))
+            multi_hash = reduce(multi_article_hasher, ra)
+            ra = utils.pick_pseudo_random_elements(multi_hash, ra, 3)
 
     return ra
 
