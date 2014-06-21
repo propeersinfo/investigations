@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import codecs
 import logging
-
+import hashlib
 import re
 import unicodedata
 import Cookie
@@ -9,6 +9,7 @@ import datetime
 import time
 
 import defs
+
 
 #def get_class_that_defined_method(method):
 #    obj = method.im_self
@@ -279,3 +280,11 @@ def try_clone_naive_local_datetime_with_timezone_info(dt):
         utc_offset = datetime.timedelta(hours=defs.DEFAULT_LOCAL_TIMEZONE_OFFSET)
         aware = dt.replace(tzinfo=ConstantOffsetTimeZone(utc_offset))
         return aware
+
+
+def md5sum(filename):
+    md5 = hashlib.md5()
+    with open(filename, 'rb') as f:
+        for chunk in iter(lambda: f.read(128 * md5.block_size), b''):
+            md5.update(chunk)
+    return md5.hexdigest()

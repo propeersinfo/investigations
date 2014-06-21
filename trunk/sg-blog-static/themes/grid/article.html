@@ -57,23 +57,31 @@
 {% endif %}
 		
 {% if not article.pinned %}
-	    <p class="article-meta">
+	    <!--p class="article-meta">
 	    	{# F j, Y #}
 			<span title="{{ article.published_date.strftime('%Y-%m-%d %H:%M:%S %Z') }}">
 				{{ article.published_date.strftime('%B %d, %Y') }}</span>
-		</p>
-		<table brder=0 cellspacing=0 cellpadding=0 width="100%" class="article-meta"><tr><td valign=top width="100%">
-			Tags:
+		</p-->
+		<table border=0 cellspacing=0 cellpadding=0 width="100%" class="article-meta"><tr><td valign=top width="100%">
+			<p class="article-meta">
+	    	{# F j, Y #}
+			<span title="{{ article.published_date.strftime('%Y-%m-%d %H:%M:%S %Z') }}">
+				{{ article.published_date.strftime('%B %d, %Y') }}</span>
+			<img src="{{'tag-45-2.gif'|static_resource}}">
 			{% for tag in article.tags %}
 				<a href="/tag/{{tag}}.html" class="tag">{{tag}}</a>
 			{% endfor %}
+			</p>
 			</td><td valign=top nowrap>
 {#
 {% if single_article %}
 #}
-				<a href="https://twitter.com/intent/tweet?status={{article.title|urlencode}}%20{{article.url|urlencode}}" onclick="return share_popup(this.href);" title="Tweet"><img src="/static/tw.png?v={{defs.APP_VERSION}}" alt="Tweet"></a>
-				<a href="http://www.facebook.com/sharer/sharer.php?src=sp&u={{article.url|urlencode}}&t={{article.title|urlencode}}" onclick="return share_popup(this.href);" title="Share in Facebook"><img src="/static/fb.png?v={{defs.APP_VERSION}}" alt="Share in Facebook"></a>
-				<a href="http://vk.com/share.php?url={{article.url|urlencode}}&title={{article.title|urlencode}}" onclick="return share_popup(this.href);" title="Поделиться ВКонтакте"><img src="/static/vk.png?v={{defs.APP_VERSION}}" alt="Поделиться ВКонтакте"></a>
+				<a href="https://twitter.com/intent/tweet?status={{article.title|urlencode}}%20{{article.url|urlencode}}" onclick="return share_popup(this.href);" title="Tweet"
+                    ><img src="{{'tw.png'|static_resource}}" alt="Tweet"></a>
+				<a href="http://www.facebook.com/sharer/sharer.php?src=sp&u={{article.url|urlencode}}&t={{article.title|urlencode}}" onclick="return share_popup(this.href);" title="Share in Facebook"
+                        ><img src="{{'fb.png'|static_resource}}" alt="Share in Facebook"></a>
+				<a href="http://vk.com/share.php?url={{article.url|urlencode}}&title={{article.title|urlencode}}" onclick="return share_popup(this.href);" title="Поделиться ВКонтакте"
+                        ><img src="{{'vk.png'|static_resource}}" alt="Поделиться ВКонтакте"></a>
 {#
 {% endif %}
 #}
@@ -88,7 +96,7 @@
 {% endif %}
 #}
 
-{% if single_article %}
+{% if single_article and defs.COMMENTS_SHOW %}
 	&nbsp;<br>
 	{% include "comments-my.html" %}
 {% endif %}
