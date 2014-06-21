@@ -4,7 +4,9 @@
 import os
 import random
 import urllib
+
 from operaimport import tags_categorized
+
 
 os.environ.setdefault('SERVER_PROFILE', 'PRODUCTION')
 
@@ -31,9 +33,9 @@ import utils
 #        return Output("My Owl Extension")
 
 
-class dict_of_lists(dict):
+class DictOfLists(dict):
     def __init__(self):
-        super(dict_of_lists, self).__init__()
+        super(DictOfLists, self).__init__()
 
     def append(self, key, value):
         if self.has_key(key):
@@ -65,10 +67,17 @@ def render_template(template_name, variables):
     #return tpl.render(c)
 
     # Jinja2
-    env = Environment(loader=FileSystemLoader(['themes/grid', 'themes']), extensions=[])
+    env = Environment(loader=FileSystemLoader(defs.THEME_DIRS), extensions=[])
 
     def static_resource(value):
-        return '/static/%s?v=%s' % (value, urllib.quote_plus(defs.APP_VERSION))
+        hash_code1 = urllib.quote_plus(defs.APP_VERSION)
+        hash_code2 = BlogMeta.instance().get_resource_hash(value)
+        #print "hash codes: %s / %s / %s" % (value, hash_code1, hash_code2)
+        hash_code = hash_code2
+        if hash_code:
+            return '/static/%s?v=%s' % (value, hash_code)
+        else:
+            return '/static/%s' % (value)
 
     def typographus(value):
         from typographus import typo
@@ -117,6 +126,27 @@ def render_template(template_name, variables):
 #webapp.template.register_template_library('my_tags')
 
 
+class ResourceMeta:
+    def __init__(self, path):
+        self.path = path
+        self.last_updated = None
+        self.hash = None
+
+    def get_hash(self):
+        if not os.path.exists(self.path):
+            print "path does not exist: %s" % self.path
+            return None
+        mtime = os.path.getmtime(self.path)
+        # print "mtime old: %s" % self.last_updated
+        # print "mtime new: %s" % mtime
+        if self.last_updated is None or self.last_updated < mtime:
+            self.hash = utils.md5sum(self.path)
+            # print "new hash calculated: %s %s" % (self.path, self.hash)
+        self.last_updated = mtime
+        # self.hash = utils.md5sum(self.path)
+        return self.hash
+
+
 # info about tags used in articles, etc
 class BlogMeta:
     INSTANCE = None
@@ -124,6 +154,7 @@ class BlogMeta:
     def __init__(self, articles_by_slugs, articles_by_tags):
         self.articles_by_slugs = articles_by_slugs
         self.articles_by_tags = articles_by_tags
+        self.resource_by_path = dict()
 
     @classmethod
     def reset(cls):
@@ -152,7 +183,7 @@ class BlogMeta:
     @classmethod
     def _collect_metadata(cls):
         articles_by_slugs = {}
-        articles_by_tags = dict_of_lists()
+        articles_by_tags = DictOfLists()
         for md_short in glob.glob1(defs.MARKDOWN_DIR, '*'):
             md_full = os.path.join(defs.MARKDOWN_DIR, md_short)
             if os.path.isfile(md_full):
@@ -167,7 +198,8 @@ class BlogMeta:
                     for tag in md.meta['tags']:
                         articles_by_tags.append(tag, md)
 
-        return BlogMeta(articles_by_slugs, articles_by_tags)
+        res = BlogMeta(articles_by_slugs, articles_by_tags)
+        return res
 
     # add tag 'russia' to article missing country tag
     @classmethod
@@ -180,6 +212,16 @@ class BlogMeta:
                 if need_country:
                     md.meta['tags'].append(defs.DEFAULT_COUNTRY_TAG)
 
+    def get_resource_hash(self, path):
+        full_path = os.path.join(defs.THEME_DIR, 'static', path)
+        if not os.path.exists(full_path):
+            print "path does not exist: %s" % full_path
+            return None
+        rm = self.resource_by_path.get(full_path)
+        if rm is None:
+            rm = ResourceMeta(full_path)
+            self.resource_by_path[full_path] = rm
+        return rm.get_hash()
 
 def get_related_articles(article):
 #    # choose a single tag among all ones

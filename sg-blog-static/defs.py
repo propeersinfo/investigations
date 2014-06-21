@@ -10,10 +10,12 @@ BLOG_OWNER = 'Soviet Groove'
 
 DROPBOX_USER = '1883230'
 DROPBOX_LOCAL_DIR = 'D:/dropbox/Public/sg'
+THUMBNAIL_DIR = os.path.join(DROPBOX_LOCAL_DIR, 'img', '140px')
 
 EXTERNAL_FEEDBACK_LINK = 'http://sovietgroove.userecho.com/'
 
 THEME_DIR = 'themes/grid'
+THEME_DIRS = [THEME_DIR, 'themes']
 TEMPLATE_DIR = '.'
 
 TAG_URL_PATH = 'tag'
