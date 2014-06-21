@@ -1,7 +1,7 @@
 import os
+from datetime import date
 
 import utils
-
 
 HTML_ENCODING = 'UTF-8'
 
@@ -34,7 +34,7 @@ _is_production = {
     'PRODUCTION': True,
     'DEVELOPMENT': False,
 }
-#print 'os.getenv("SERVER_PROFILE"): %s' % os.getenv('SERVER_PROFILE')
+# print 'os.getenv("SERVER_PROFILE"): %s' % os.getenv('SERVER_PROFILE')
 PRODUCTION = _is_production[os.getenv('SERVER_PROFILE', 'Env var SERVER_PROFILE not set')]
 DEVSERVER = not PRODUCTION
 
@@ -42,7 +42,6 @@ if PRODUCTION:
     CANONICAL_BLOG_URL = 'http://www.sovietgroove.com'
 else:
     CANONICAL_BLOG_URL = 'http://localhost:8080'
-
 
 APP_VERSION = str(utils.get_seconds_since_epoch())
 
@@ -53,8 +52,8 @@ COMMENTS_SHOW = False
 EMAIL_NOTIFY_COMMENT = True
 
 PROJECT_DIR = os.path.dirname(__file__)
-MARKDOWN_DIR        = os.path.join(PROJECT_DIR, 'operaimport', 'markdown')
-STATIC_HTML_DIR     = os.path.join(PROJECT_DIR, 'html')
+MARKDOWN_DIR = os.path.join(PROJECT_DIR, 'operaimport', 'markdown')
+STATIC_HTML_DIR = os.path.join(PROJECT_DIR, 'html')
 STATIC_HTML_TAG_DIR = os.path.join(PROJECT_DIR, 'html', 'tag')
 
 FORMAT_YMD_HMS = "%Y-%m-%d %H:%M:%S"
@@ -62,3 +61,5 @@ FORMAT_YMD_HMS = "%Y-%m-%d %H:%M:%S"
 DEFAULT_LOCAL_TIMEZONE_OFFSET = +4
 
 DEFAULT_COUNTRY_TAG = 'russia'
+
+CURRENT_YEAR = date.today().year
