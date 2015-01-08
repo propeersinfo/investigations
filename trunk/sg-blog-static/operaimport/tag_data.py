@@ -174,6 +174,14 @@ tag_data = {
       "urls"     : u"",
     },
     {
+      "tag"      : u"collage",
+      "title"    : u"Collage",
+      "title_ru" : u"",
+      "descr_en" : u"",
+      "descr_ru" : u"",
+      "urls"     : u"",
+    },
+    {
       "tag"      : u"arsenal",
       "title"    : u"Arsenal",
       "title_ru" : u"Арсенал",
@@ -378,6 +386,13 @@ tag_data = {
 
 "modern": [
     {
+      "tag"      : u"funkofun",
+      "title"    : u"Dmitry Funkofun",
+      "descr_en" : u"A record collector and seller. Authored several rare-content mixes.",
+      "descr_ru" : u"",
+      "urls"     : u"http://youtube.com/user/funkofun",
+    },
+    {
       "tag"      : u"yuri",
       "title"    : u"U&amp;1989",
       "descr_en" : u"A record collector and donator for this blog.",
@@ -387,7 +402,7 @@ tag_data = {
     {
       "tag"      : u"jan-kit",
       "title"    : u"Jan-Kit",
-      "descr_en" : u"A DJ for b-boy battles, b-boy himself, turntablist, author of breaking and hip-hop tracks and vinyl collector from Kazakhstan. "
+      "descr_en" : u"A DJ for b-boy battles, b-boy, turntablist, author of breaking and hip-hop tracks and vinyl collector from Kazakhstan. "
                    u"Known as DJ Jankie earlier. ",
       "descr_ru" : u"",
       "urls"     : u"",
@@ -395,9 +410,9 @@ tag_data = {
     {
       "tag"      : u"schmoltz",
       "title"    : u"Schmoltz",
-      "descr_en" : u"Шмольц",
+      "descr_en" : u"A musician and DJ from Belarus.",
       "descr_ru" : u"",
-      "urls"     : u"",
+      "urls"     : ['https://soundcloud.com/schmoltz', 'http://www.mixcloud.com/schmoltz/'],
     },
     {
       "tag"      : u"eln",
@@ -416,14 +431,14 @@ tag_data = {
                    u"He's the author of the first soviet groove mix ever. "
                    u"As DJ SoULviet he has produced three dope mash-up mixes blending soviet jazz/soul beats with American rapping. ",
       "descr_ru" : u"",
-      "urls"     : u"",
+      "urls"     : ['http://tendjiz.com/', 'https://soundcloud.com/delasoulviet'],
     },
     {
       "tag"      : u"mr-and-7",
       "title"    : u"Mr. And-7",
       "descr_en" : u"A vinyl collector, house DJ (as Jay-D), funk-soul DJ (as Mr. And-7) from Moscow.",
       "descr_ru" : u"",
-      "urls"     : u"",
+      "urls"     : u"https://soundcloud.com/mrand7",
     },
     {
       "tag"      : u"weedska",
@@ -442,9 +457,16 @@ tag_data = {
     {
       "tag"      : u"yan-shrimp",
       "title"    : u"Yan Shrimp",
-      "descr_en" : u"A vinyl collector, DJ, b-boy coach and b-boy himself from Moscow.",
+      "descr_en" : u"A vinyl collector, crate digger, DJ, b-boy coach and b-boy from Moscow.",
       "descr_ru" : u"",
-      "urls"     : u"",
+      "urls"     : u"http://yantheshrimp.com/",
+    },
+    {
+      "tag"      : u"bazil",
+      "title"    : u"DJ Bazil",
+      "descr_en" : u"A vinyl collector and funk DJ from Saint Petersburg.",
+      "descr_ru" : u"",
+      "urls"     : ["http://vk.com/djbazil", "http://www.mixcloud.com/bazdj/"],
     },
 ],
 
@@ -1005,6 +1027,14 @@ tag_data = {
       "tag"      : u"abc",
       "title"    : u"ABC",
       "title_ru" : u"",
+      "descr_en" : u"",
+      "descr_ru" : u"",
+      "urls"     : u"",
+    },
+    {
+      "tag"      : u"smerichka",
+      "title"    : u"Smerichka",
+      "title_ru" : u"Смеричка",
       "descr_en" : u"",
       "descr_ru" : u"",
       "urls"     : u"",

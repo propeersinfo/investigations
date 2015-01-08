@@ -1,4 +1,4 @@
-application: sovietraregroove
+application: sgcomhrd
 version: 3
 runtime: python
 api_version: 1
@@ -36,7 +36,24 @@ handlers:
 - url: /comments/(.+)
   script: comments.py
   
-- url: /(.+)
+- url: /favicon.ico
+  static_files: html/favicon.png
+  upload: html/favicon.png
+
+- url: /(.+\.html)
   static_files: html/\1
-  upload: html/(.+)
+  upload: html/(.+\.html)
+  mime_type: text/html; charset=utf-8
+
+- url: /(.+\.txt)
+  static_files: html/\1
+  upload: html/(.+\.txt)
+  mime_type: text/plain; charset=utf-8
+
+# used to redirect
+# from http://2.sovietraregroove.appspot.com/dj-willderness-magnitizdat-mix
+# to http://www.sovietgroove.com/dj-willderness-magnitizdat-mix.html
+- url: /(.+)
+  static_files: 404.html
+  upload: 404.html
   mime_type: text/html; charset=utf-8
