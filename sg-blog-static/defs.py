@@ -3,13 +3,20 @@ from datetime import date
 
 import utils
 
+
+def __get_first_existing_file(files):
+  for f in files:
+    if os.path.exists(f):
+      return f
+  raise Exception("None existing file found among %s" % files)
+
 HTML_ENCODING = 'UTF-8'
 
 BLOG_NAME = 'Soviet Groove'
 BLOG_OWNER = 'Soviet Groove'
 
 DROPBOX_USER = '1883230'
-DROPBOX_LOCAL_DIR = 'D:/dropbox/Public/sg'
+DROPBOX_LOCAL_DIR = __get_first_existing_file(['D:/dropbox/Public/sg', 'E:/dropbox/Public/sg', '/Users/pavel/Dropbox/Public/sg'])
 THUMBNAIL_DIR = os.path.join(DROPBOX_LOCAL_DIR, 'img', '140px')
 
 EXTERNAL_FEEDBACK_LINK = 'http://sovietgroove.userecho.com/'
@@ -48,7 +55,7 @@ APP_VERSION = str(utils.get_seconds_since_epoch())
 #IMAGE_PLACEHOLDER = '/static/cover.jpg'
 IMAGE_PLACEHOLDER = None
 
-COMMENTS_SHOW = False
+COMMENTS_SHOW = True
 EMAIL_NOTIFY_COMMENT = True
 
 PROJECT_DIR = os.path.dirname(__file__)
