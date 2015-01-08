@@ -1,0 +1,7 @@
+﻿INSTALLING REQUIREMENTS
+
+install python 27
+curl https://bootstrap.pypa.io/get-pip.py | python
+pip install jinja2
+pip install pillow
+pip install cherrypy

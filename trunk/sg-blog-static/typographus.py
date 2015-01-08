@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import re, htmlentitydefs, unicodedata
+import re
+import htmlentitydefs
+import unicodedata
 
 __all__ = ('Typographus', 'typo')
 
@@ -194,7 +196,9 @@ rules_symbols = compile_ruleset(
     (ur'\(r\)', sym['reg'], re.I),
     (ur'\(tm\)', sym['trade'], re.I),
     
-    (r'\s+(?=[%s|%s|%s])' % (sym['trade'], sym['copy'], sym['reg']), ''),
+    # знаки (c), (r), (tm) - продолжение
+    # это убирает пробел перед (с) - зачем?!
+    # (r'\s+(?=[%s|%s|%s])' % (sym['trade'], sym['copy'], sym['reg']), ''),
     
     # автор неправ. скорее всего малолетки балуются
     (ur'\.{3,}', sym['hellip']),
@@ -287,7 +291,7 @@ rules_main = compile_ruleset(
     
     # не разделять 2007 г., ставить пробел, если его нет. Ставит точку, если её нет. <- это бред
     # {"pat": u'([0-9]+)\s*([гГ])\.\s', "rep": u'\g<1>%s\g<2>. ' % sym['nbsp'], "mod": re.S},
-    (ur'(?<=\d{4,4})\.?\s?(гг?)\.?([^\w]?)', r'%s\1.\2' % sym['nbsp']),
+    # (ur'(?<=\d{4,4})\.?\s?(гг?)\.?([^\w]?)', r'%s\1.\2' % sym['nbsp']),
     
     # неразрывный пробел между цифрой и единицей измерения <- и это бред тоже
     # {"pat": u'([0-9]+)\s*(%s)' % metrics, "rep": u'\g<1>%s\g<2>' % sym['nbsp'], "mod": re.S},
