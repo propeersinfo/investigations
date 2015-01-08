@@ -351,6 +351,26 @@ $(document).ready(function() {
 
 /////////////////////////////////////////////
 
+function tryRedirectToCanonicalURL() {
+    var redirectURL = null;
+
+    var host = window.location.hostname;
+    var noRedirect = (host == 'localhost' || host == '127.0.0.1' || host == 'sovietgroove.com' || host == 'www.sovietgroove.com');
+    if (!noRedirect) {
+        var canonicalBase = 'http://www.sovietgroove.com';
+        redirectURL = canonicalBase + window.location.pathname;
+    }
+
+    //console.log("url: " + window.location.href);
+    //console.log("url: " + redirectURL);
+
+    if (redirectURL) {
+        window.location.replace(redirectURL);
+    }
+}
+
+/////////////////////////////////////////////
+
 // audio player
 // respond on clicking 'play' image button by inserting a swf player instead of the button image
 $(document).ready(function() {
@@ -362,3 +382,7 @@ $(document).ready(function() {
         return false;
     });
 });
+
+/////////////////////////////////////////////
+
+tryRedirectToCanonicalURL();
