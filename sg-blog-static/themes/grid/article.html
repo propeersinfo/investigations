@@ -66,8 +66,9 @@
 			<p class="article-meta">
 	    	{# F j, Y #}
 			<span title="{{ article.published_date.strftime('%Y-%m-%d %H:%M:%S %Z') }}">
-				{{ article.published_date.strftime('%B %d, %Y') }}</span>
-			<img src="{{'tag-45-2.gif'|static_resource}}">
+				{{ article.published_date.strftime('%B %Y') }}</span>
+			{# <img src="{{'tag-45-2.gif'|static_resource}}"> #}
+			&nbsp;
 			{% for tag in article.tags %}
 				<a href="/tag/{{tag}}.html" class="tag">{{tag}}</a>
 			{% endfor %}
